@@ -107,30 +107,31 @@ const Topic& TagCursor::seek_to(Topic& ref) {
 /* Metacursor classes for groups of tags. */
 class GroupCursor : public BaseCursor {
   protected:
-    vector<TagCursor>* _cursors;
+    vector<BaseCursor*> _cursors;
   public:
-    GroupCursor(vector<TagCursor>& cursors);
+    GroupCursor(vector<BaseCursor*>& cursors);
     virtual ~GroupCursor() {}
 };
-GroupCursor::GroupCursor(vector<TagCursor>& cursors) {
-  *_cursors = cursors;
+GroupCursor::GroupCursor(vector<BaseCursor*>& cursors) {
+  _cursors = cursors;
 }
 
 class UnionCursor : public GroupCursor {
-  public:
+  protected:
     virtual const Topic& next(Topic& out);
-    virtual const Topic& next();
     virtual const Topic& seek_to(Topic& ref, Topic& out);
+    virtual const Topic& position(Topic& out) const;
+  public:
+    virtual const Topic& next();
     virtual const Topic& seek_to(Topic& ref);
     virtual const Topic& position() const;
-    virtual const Topic& position(Topic& out) const;
 };
 const Topic& UnionCursor::position(Topic& out) const {
   /* 
     Iterate through each tag in this cursor and return the lowest topic that any of the tags is pointing to.
   */
-  for (std::vector<TagCursor>::const_iterator current_tag = _cursors->cbegin(); current_tag != _cursors->cend(); ++current_tag) {
-    Topic tag_min = current_tag->position();
+  for (std::vector<BaseCursor*>::const_iterator current_cursor = _cursors.cbegin(); current_cursor != _cursors.cend(); ++current_cursor) {
+    Topic tag_min = (*current_cursor)->position();
     if (tag_min < out) {
       out = tag_min;
     }
@@ -138,8 +139,8 @@ const Topic& UnionCursor::position(Topic& out) const {
   return out;
 }
 const Topic& UnionCursor::position() const {
-  std::vector<TagCursor>::const_iterator first_tag = _cursors->cbegin();
-  Topic min_topic = first_tag->position();
+  std::vector<BaseCursor*>::const_iterator first_tag = _cursors.cbegin();
+  Topic min_topic = (*first_tag)->position();
 
   return position(min_topic);
 }
@@ -150,10 +151,10 @@ const Topic& UnionCursor::next(Topic& out) {
   */
   Topic min_topic = position();
 
-  for (std::vector<TagCursor>::iterator current_tag = _cursors->begin(); current_tag != _cursors->end(); ++current_tag) {
-    Topic current_topic = current_tag->position();
+  for (std::vector<BaseCursor*>::iterator current_tag = _cursors.begin(); current_tag != _cursors.end(); ++current_tag) {
+    Topic current_topic = (*current_tag)->position();
     if (current_topic == min_topic) {
-      current_topic = current_tag->next();
+      current_topic = (*current_tag)->next();
     }
     if (min_topic < out) {
       out = min_topic;
@@ -174,8 +175,8 @@ const Topic& UnionCursor::seek_to(Topic& ref, Topic& out) {
     Iterate through each tag in this cursor, fast-forwarding each tag to (or just past) an input topic.
     Return the cursor's position after having fast-forwarded.
   */
-  for (std::vector<TagCursor>::iterator current_tag = _cursors->begin(); current_tag != _cursors->end(); ++current_tag) {
-    Topic tag_position = current_tag->seek_to(ref);
+  for (std::vector<BaseCursor*>::iterator current_tag = _cursors.begin(); current_tag != _cursors.end(); ++current_tag) {
+    Topic tag_position = (*current_tag)->seek_to(ref);
     if (tag_position < out) {
       out = tag_position;
     }
@@ -187,12 +188,28 @@ const Topic& UnionCursor::seek_to(Topic& ref) {
   return seek_to(ref, out);
 }
 
-class IntersectCursor : public BaseCursor {
-
+class IntersectCursor : public GroupCursor {
+  protected:
+    virtual const Topic& next(Topic& out);
+    virtual const Topic& seek_to(Topic& ref, Topic& out);
+    virtual const Topic& position(Topic& out) const;
+  public:
+    virtual const Topic& next();
+    virtual const Topic& seek_to(Topic& ref);
+    virtual const Topic& position() const;
 };
 
-class DifferenceCursor : public BaseCursor {
 
+
+class DifferenceCursor : public GroupCursor {
+  protected:
+    virtual const Topic& next(Topic& out);
+    virtual const Topic& seek_to(Topic& ref, Topic& out);
+    virtual const Topic& position(Topic& out) const;
+  public:
+    virtual const Topic& next();
+    virtual const Topic& seek_to(Topic& ref);
+    virtual const Topic& position() const;
 };
 
 
