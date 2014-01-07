@@ -7,3 +7,9 @@ This repository is __not__ the official tagd on ETI; it's purely my own attempt 
 Dependencies
 ============
 tagd requires [mysql++](http://tangentsoft.net/mysql++/) to query a database and load tag-topic information upon start, and [boost program-options](http://www.boost.org/doc/libs/1_55_0/doc/html/program_options.html) to provide command-line options.
+
+Usage
+========
+To build and then use tagd:
+- Do `make` and then `make clean`
+- Do `./tagd --help` to see a list of command-line options.
