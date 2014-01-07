@@ -15,10 +15,8 @@ const Topic& TagCursor::next() {
   return *(++_position);
 }
 const Topic& TagCursor::seek_to(Topic& ref) {
-  while (_position != _topics->cend()) {
-    if (*_position >= ref) {
-      return *_position;
-    }
+  while (_position != _topics->cend() && *_position < ref) {
     _position++;
   }
+  return *_position;
 }
