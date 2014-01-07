@@ -25,7 +25,7 @@ using namespace std;
 
 
 /* Benchmark and timing data structures. */
-typedef std::pair<clock_t, std::string> Timing;
+typedef pair<clock_t, string> Timing;
 
 struct BenchInfo {
   unsigned int    Count;
@@ -34,12 +34,12 @@ struct BenchInfo {
   float           Min;
 };
 
-typedef map< std::string, BenchInfo > BenchMap;
+typedef map< string, BenchInfo > BenchMap;
 
 /* Topic data structures. */
-class Topic : public std::pair<unsigned int, unsigned int> {
+class Topic : public pair<unsigned int, unsigned int> {
   public:
-    Topic(unsigned int last_post_time, unsigned int topic_id) : std::pair<unsigned int, unsigned int>(last_post_time, topic_id) {};
+    Topic(unsigned int last_post_time, unsigned int topic_id) : pair<unsigned int, unsigned int>(last_post_time, topic_id) {};
     unsigned int time() const { return first; };
     unsigned int id() const { return second; };
 };
@@ -62,13 +62,14 @@ bool operator>= (Topic& t1, Topic& t2) {
   return t1 > t2 || t1 == t2;
 }
 
-class TopicList : public std::set<Topic> {};
+class TopicList : public set<Topic> {};
 
 
 /* Base cursor interface. */
 class BaseCursor {
   public:
     virtual ~BaseCursor() {}
+    virtual const Topic& reset() = 0;
     virtual const Topic& next() = 0;
     virtual const Topic& seek_to(Topic& ref) = 0;
     virtual const Topic& position() const = 0;
@@ -81,13 +82,18 @@ class TagCursor : public BaseCursor {
     TopicList* _topics;
   public:
     TagCursor(TopicList& topic_list);
+    virtual const Topic& reset();
     virtual const Topic& position() const;
     virtual const Topic& next();
     virtual const Topic& seek_to(Topic& ref);
 };
 TagCursor::TagCursor(TopicList& topic_list) {
   _topics = &topic_list;
+  reset();
+}
+const Topic& TagCursor::reset() {
   _position = _topics->begin();
+  return position();
 }
 const Topic& TagCursor::position() const {
   return *_position;
@@ -118,87 +124,76 @@ GroupCursor::GroupCursor(vector<BaseCursor*>& cursors) {
 
 class UnionCursor : public GroupCursor {
   protected:
-    virtual const Topic& next(Topic& out);
-    virtual const Topic& seek_to(Topic& ref, Topic& out);
     virtual const Topic& position(Topic& out) const;
   public:
+    UnionCursor(vector<BaseCursor*>& cursors);
+    virtual const Topic& position() const;
+    virtual const Topic& reset();
     virtual const Topic& next();
     virtual const Topic& seek_to(Topic& ref);
-    virtual const Topic& position() const;
 };
+UnionCursor::UnionCursor(vector<BaseCursor*>& cursors) : GroupCursor::GroupCursor(cursors) {
+}
 const Topic& UnionCursor::position(Topic& out) const {
   /* 
     Iterate through each tag in this cursor and return the lowest topic that any of the tags is pointing to.
   */
-  for (std::vector<BaseCursor*>::const_iterator current_cursor = _cursors.cbegin(); current_cursor != _cursors.cend(); ++current_cursor) {
+  for (vector<BaseCursor*>::const_iterator current_cursor = _cursors.cbegin(); current_cursor != _cursors.cend(); ++current_cursor) {
     Topic tag_min = (*current_cursor)->position();
-    if (tag_min < out) {
+    if (out.id() == 0 || (tag_min.id() != 0 && tag_min < out)) {
       out = tag_min;
     }
   }
   return out;
 }
 const Topic& UnionCursor::position() const {
-  std::vector<BaseCursor*>::const_iterator first_tag = _cursors.cbegin();
-  Topic min_topic = (*first_tag)->position();
+  vector<BaseCursor*>::const_iterator first_tag = _cursors.cbegin();
+  Topic curr_position = (*first_tag)->position();
 
-  return position(min_topic);
+  return position(curr_position);
 }
-const Topic& UnionCursor::next(Topic& out) {
-  /* 
-    Iterate through each tag in this cursor, incrementing those tags that are pointing to the current cursor's position.
-    Return the cursor's position after having incremented said tags.
-  */
-  Topic min_topic = position();
-
-  for (std::vector<BaseCursor*>::iterator current_tag = _cursors.begin(); current_tag != _cursors.end(); ++current_tag) {
-    Topic current_topic = (*current_tag)->position();
-    if (current_topic == min_topic) {
-      current_topic = (*current_tag)->next();
-    }
-    if (min_topic < out) {
-      out = min_topic;
-    }
+const Topic& UnionCursor::reset() {
+  for (vector<BaseCursor*>::const_iterator current_cursor = _cursors.cbegin(); current_cursor != _cursors.cend(); ++current_cursor) {
+    (*current_cursor)->reset();
   }
-  return out;
+  return position();
 }
 const Topic& UnionCursor::next() {
   /* 
     Iterate through each tag in this cursor, incrementing those tags that are pointing to the current cursor's position.
     Return the cursor's position after having incremented said tags.
   */
-  Topic next_topic = Topic(UINT_MAX, UINT_MAX);
-  return next(next_topic);
+  Topic curr_position = position();
+
+  for (vector<BaseCursor*>::iterator current_tag = _cursors.begin(); current_tag != _cursors.end(); ++current_tag) {
+    Topic current_topic = (*current_tag)->position();
+    if (current_topic == curr_position) {
+      (*current_tag)->next();
+    }
+  }
+  return position();
 }
-const Topic& UnionCursor::seek_to(Topic& ref, Topic& out) {
+const Topic& UnionCursor::seek_to(Topic& ref) {
   /*
     Iterate through each tag in this cursor, fast-forwarding each tag to (or just past) an input topic.
     Return the cursor's position after having fast-forwarded.
   */
-  for (std::vector<BaseCursor*>::iterator current_tag = _cursors.begin(); current_tag != _cursors.end(); ++current_tag) {
+  for (vector<BaseCursor*>::iterator current_tag = _cursors.begin(); current_tag != _cursors.end(); ++current_tag) {
     Topic tag_position = (*current_tag)->seek_to(ref);
-    if (tag_position < out) {
-      out = tag_position;
-    }
   }
-  return out;
-}
-const Topic& UnionCursor::seek_to(Topic& ref) {
-  Topic out = Topic(UINT_MAX, UINT_MAX);
-  return seek_to(ref, out);
+  return position();
 }
 
 class IntersectCursor : public GroupCursor {
   protected:
-    virtual const Topic& next(Topic& out);
-    virtual const Topic& seek_to(Topic& ref, Topic& out);
     virtual const Topic& position(Topic& out) const;
   public:
+    IntersectCursor(vector<BaseCursor*>& cursors);
+    virtual const Topic& position() const;
+    virtual const Topic& reset();
     virtual const Topic& next();
     virtual const Topic& seek_to(Topic& ref);
-    virtual const Topic& position() const;
 };
-
 
 
 class DifferenceCursor : public GroupCursor {
@@ -216,7 +211,7 @@ class DifferenceCursor : public GroupCursor {
 /* Tag data structure. */
 class Tag {
   public:
-    Tag(std::string name, TopicList topic_list);
+    Tag(string name, TopicList topic_list);
 };
 
 
@@ -234,23 +229,36 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  Topic* topic = new Topic(1, 2);
+  Topic* topic = new Topic(1, 5);
   Topic* topic2 = new Topic(2, 2);
-  Topic* topic3 = new Topic(3, 3);
-  Topic* topic4 = new Topic(5, 4);
+  Topic* topic3 = new Topic(2, 3);
+  Topic* topic4 = new Topic(3, 4);
 
-  TopicList* topic_list = new TopicList();
-  topic_list->insert(*topic);
-  topic_list->insert(*topic2);
-  topic_list->insert(*topic3);
+  TopicList* topic_list_one = new TopicList();
+  topic_list_one->insert(*topic);
+  topic_list_one->insert(*topic2);
+  topic_list_one->insert(*topic3);
 
-  TagCursor* cursor = new TagCursor(*topic_list);
+  TagCursor* cursor = new TagCursor(*topic_list_one);
 
-  const Topic sought_topic = cursor->seek_to(*topic2);
-  cout << sought_topic.id() << endl;
+  cout << "Tag position: " << cursor->position().id() << endl;
+  cout << "Tag next: " << cursor->next().id() << endl;
+  cout << "Tag next: " << cursor->next().id() << endl;
+  cursor->reset();
 
-  const Topic sought_topic2 = cursor->seek_to(*topic4);
-  cout << sought_topic2.id() << endl;
+  TopicList* topic_list_two = new TopicList();
+  topic_list_two->insert(*topic2);
+  topic_list_two->insert(*topic3);
+  topic_list_two->insert(*topic4);
+  TagCursor* cursor_two = new TagCursor(*topic_list_two);
+
+  vector<BaseCursor*> cursor_vector {cursor, cursor_two};
+  UnionCursor* union_cursor = new UnionCursor(cursor_vector);
+
+  cout << "Union cursor position: " << union_cursor->position().id() << endl;
+  cout << "Union cursor next: " << union_cursor->next().id() << endl;
+  cout << "Union cursor next: " << union_cursor->next().id() << endl;
+  cout << "Union cursor next: " << union_cursor->next().id() << endl;
 
   return 0;
 }
