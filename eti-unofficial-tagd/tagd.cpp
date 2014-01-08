@@ -26,7 +26,7 @@ namespace options = boost::program_options;
 #include "tag_cursor.h"
 #include "meta_cursor.h"
 #include "union_cursor.h"
-#include "difference_cursor.h"
+#include "intersect_cursor.h"
 #include "tag.h"
 
 using namespace mysqlpp;
@@ -91,6 +91,7 @@ int main(int argc, char* argv[]) {
   std::cout << "Tag pos: " << cursor->position().id() << std::endl;
   std::cout << "Tag next: " << cursor->next().id() << std::endl;
   std::cout << "Tag next: " << cursor->next().id() << std::endl;
+  std::cout << "Tag next: " << cursor->next().id() << std::endl;
   cursor->reset();
 
   TopicList* topic_list_two = new TopicList();
@@ -106,6 +107,15 @@ int main(int argc, char* argv[]) {
   std::cout << "Union next: " << union_cursor->next().id() << std::endl;
   std::cout << "Union next: " << union_cursor->next().id() << std::endl;
   std::cout << "Union next: " << union_cursor->next().id() << std::endl;
+  std::cout << "Union next: " << union_cursor->next().id() << std::endl;
+
+  cursor->reset();
+  cursor_two->reset();
+  IntersectCursor* intersect_cursor = new IntersectCursor(cursor_vector);
+
+  std::cout << "Intersect pos: " << intersect_cursor->position().id() << std::endl;
+  std::cout << "Intersect next: " << intersect_cursor->next().id() << std::endl;
+  std::cout << "Intersect next: " << intersect_cursor->next().id() << std::endl;
 
   return 0;
 }
