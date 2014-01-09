@@ -37,18 +37,15 @@ const Topic& DifferenceCursor::position(Topic& out) const {
 }
 const Topic& DifferenceCursor::next() {
   /* 
-    Iterate through each tag in this cursor, incrementing those tags that are pointing to the current cursor's position.
-    Return the cursor's position after having incremented said tags.
+    Increments the first cursor (from which all topics are selected) until the current position differs from the previous position (or the current position is zero)
   */
-  Topic curr_position = position();
+  Topic prev_position = position();
 
-  for (std::vector<BaseCursor*>::iterator current_tag = _cursors.begin(); current_tag != _cursors.end(); ++current_tag) {
-    Topic current_topic = (*current_tag)->position();
-    if (current_topic == curr_position) {
-      // this can match at most one (the first) cursor.
-      (*current_tag)->next();
-      break;
-    }
+  std::vector<BaseCursor*>::const_iterator current_cursor = _cursors.cbegin();
+  BaseCursor* first_cursor = *current_cursor;
+
+  for (Topic current_position = first_cursor->next(); position().id() != 0 && position().id() != prev_position.id(); first_cursor->next()) {
   }
+  
   return position();
 }
