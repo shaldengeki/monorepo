@@ -27,6 +27,7 @@ namespace options = boost::program_options;
 #include "meta_cursor.h"
 #include "union_cursor.h"
 #include "intersect_cursor.h"
+#include "difference_cursor.h"
 #include "tag.h"
 
 using namespace mysqlpp;
@@ -116,6 +117,13 @@ int main(int argc, char* argv[]) {
   std::cout << "Intersect pos: " << intersect_cursor->position().id() << std::endl;
   std::cout << "Intersect next: " << intersect_cursor->next().id() << std::endl;
   std::cout << "Intersect next: " << intersect_cursor->next().id() << std::endl;
+
+  cursor->reset();
+  cursor_two->reset();
+  DifferenceCursor* difference_cursor = new DifferenceCursor(cursor_vector);
+
+  std::cout << "Difference pos: " << difference_cursor->position().id() << std::endl;
+  std::cout << "Difference next: " << difference_cursor->next().id() << std::endl;
 
   return 0;
 }
