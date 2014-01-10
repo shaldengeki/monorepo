@@ -1,6 +1,6 @@
 #include "intersect_cursor.h"
 
-IntersectCursor::IntersectCursor(std::vector<BaseCursor*>& cursors) : MetaCursor::MetaCursor(cursors) {
+IntersectCursor::IntersectCursor(std::vector<Cursor*>& cursors) : MetaCursor::MetaCursor(cursors) {
 }
 const Topic& IntersectCursor::position() const { 
   return MetaCursor::position();
@@ -15,7 +15,7 @@ const Topic& IntersectCursor::position(Topic& out) const {
     // We've run out of topics in at least one cursor.
     return out;
   }
-  for (std::vector<BaseCursor*>::const_iterator current_cursor = _cursors.cbegin(); current_cursor != _cursors.cend(); ++current_cursor) {
+  for (std::vector<Cursor*>::const_iterator current_cursor = _cursors.cbegin(); current_cursor != _cursors.cend(); ++current_cursor) {
     Topic tag_min = (*current_cursor)->seek_to(out);
     if (tag_min > out) {
       // this tag points past out.
@@ -32,7 +32,7 @@ const Topic& IntersectCursor::next() {
   */
   Topic curr_position = position();
 
-  for (std::vector<BaseCursor*>::iterator current_tag = _cursors.begin(); current_tag != _cursors.end(); ++current_tag) {
+  for (std::vector<Cursor*>::iterator current_tag = _cursors.begin(); current_tag != _cursors.end(); ++current_tag) {
     Topic current_topic = (*current_tag)->position();
     if (current_topic == curr_position) {
       (*current_tag)->next();

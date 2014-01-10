@@ -7,7 +7,7 @@ class DifferenceCursor : public MetaCursor {
   protected:
     virtual const Topic& position(Topic& out) const;
   public:
-    DifferenceCursor(std::vector<BaseCursor*>& cursors);
+    DifferenceCursor(std::vector<Cursor*>& cursors);
     virtual const Topic& position() const;
     virtual const Topic& next();
 };

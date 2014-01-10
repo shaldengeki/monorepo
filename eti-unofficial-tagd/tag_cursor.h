@@ -1,11 +1,11 @@
 #ifndef TAG_CURSOR_H
 #define TAG_CURSOR_H
 
-#include "base_cursor.h"
+#include "cursor.h"
 #include "topic.h"
 
 /* Cursor for single tags. */
-class TagCursor : public BaseCursor {
+class TagCursor : public Cursor {
   private:
     TopicList::iterator _position;
     TopicList* _topics;

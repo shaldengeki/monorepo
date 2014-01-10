@@ -22,7 +22,7 @@
 namespace options = boost::program_options;
 
 #include "topic.h"
-#include "base_cursor.h"
+#include "cursor.h"
 #include "tag_cursor.h"
 #include "meta_cursor.h"
 #include "union_cursor.h"

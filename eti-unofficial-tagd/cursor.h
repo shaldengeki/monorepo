@@ -1,12 +1,12 @@
-#ifndef BASE_CURSOR_H
-#define BASE_CURSOR_H
+#ifndef CURSOR_H
+#define CURSOR_H
 
 #include "topic.h"
 
 /* Base cursor interface. */
-class BaseCursor {
+class Cursor {
   public:
-    virtual ~BaseCursor() {}
+    virtual ~Cursor() {}
     virtual const Topic& reset() = 0;
     virtual const Topic& next() = 0;
     virtual const Topic& seek_to(Topic& ref) = 0;

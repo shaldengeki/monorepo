@@ -7,7 +7,7 @@ class IntersectCursor : public MetaCursor {
   protected:
     virtual const Topic& position(Topic& out) const;
   public:
-    IntersectCursor(std::vector<BaseCursor*>& cursors);
+    IntersectCursor(std::vector<Cursor*>& cursors);
     virtual const Topic& position() const;
     virtual const Topic& next();
 };
