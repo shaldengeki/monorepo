@@ -12,8 +12,8 @@ class MetaCursor : public Cursor {
   public:
     MetaCursor(std::vector<Cursor*>& cursors);
     virtual ~MetaCursor() {}
-    virtual const Topic& reset();
-    virtual const Topic& position() const;
-    virtual const Topic& seek_to(Topic& ref);
+    const Topic& reset();
+    const Topic& position() const;
+    const Topic& seek_to(Topic& ref);
 };
 #endif

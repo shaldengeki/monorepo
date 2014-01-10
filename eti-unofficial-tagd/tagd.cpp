@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
   topic_list_two->insert(*topic4);
   TagCursor* cursor_two = new TagCursor(*topic_list_two);
 
-  std::vector<BaseCursor*> cursor_vector {cursor, cursor_two};
+  std::vector<Cursor*> cursor_vector {cursor, cursor_two};
   UnionCursor* union_cursor = new UnionCursor(cursor_vector);
 
   std::cout << "Union pos: " << union_cursor->position().id() << std::endl;
