@@ -16,26 +16,26 @@ const Topic& IntersectCursor::position(Topic& out) const {
     return out;
   }
   for (std::vector<Cursor*>::const_iterator current_cursor = _cursors.cbegin(); current_cursor != _cursors.cend(); ++current_cursor) {
-    Topic tag_min = (*current_cursor)->seek_to(out);
-    if (tag_min > out) {
-      // this tag points past out.
-      return position(tag_min);
+    Topic cursor_min = (*current_cursor)->seek_to(out);
+    if (cursor_min > out) {
+      // this cursor points past out.
+      return position(cursor_min);
     }
   }
-  // all the contained tags point to out.
+  // all the contained cursors point to out.
   return out;
 }
 const Topic& IntersectCursor::next() {
   /* 
-    Iterate through each tag in this cursor, incrementing those tags that are pointing to the current cursor's position.
-    Return the cursor's position after having incremented said tags.
+    Iterate through each cursor in this cursor, incrementing those cursors that are pointing to the current cursor's position.
+    Return the cursor's position after having incremented said cursors.
   */
   Topic curr_position = position();
 
-  for (std::vector<Cursor*>::iterator current_tag = _cursors.begin(); current_tag != _cursors.end(); ++current_tag) {
-    Topic current_topic = (*current_tag)->position();
+  for (std::vector<Cursor*>::iterator current_cursor = _cursors.begin(); current_cursor != _cursors.end(); ++current_cursor) {
+    Topic current_topic = (*current_cursor)->position();
     if (current_topic == curr_position) {
-      (*current_tag)->next();
+      (*current_cursor)->next();
     }
   }
   return position();
