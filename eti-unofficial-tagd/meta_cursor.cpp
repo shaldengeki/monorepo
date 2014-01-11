@@ -1,3 +1,8 @@
+/*
+  meta_cursor.cpp
+  Provides implementation of cursor-containing cursors.
+*/
+
 #include "meta_cursor.h"
 
 MetaCursor::MetaCursor(std::vector<Cursor*>& cursors) {

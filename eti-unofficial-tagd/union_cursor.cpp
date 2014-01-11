@@ -1,3 +1,8 @@
+/*
+  union_cursor.cpp
+  Provides implementation for a cursor that performs set union on a set of cursors.
+*/
+
 #include "union_cursor.h"
 
 UnionCursor::UnionCursor(std::vector<Cursor*>& cursors) : MetaCursor::MetaCursor(cursors) {

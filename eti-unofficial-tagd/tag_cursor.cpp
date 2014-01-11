@@ -1,3 +1,8 @@
+/*
+  tag_cursor.cpp
+  Provides implementation of tag cursors.
+*/
+
 #include "tag_cursor.h"
 
 TagCursor::TagCursor(TopicList& topic_list) {

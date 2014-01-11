@@ -1,3 +1,8 @@
+/*
+  tag_cursor.h
+  Provides tag-cursor interface for reading the topics in a tag.
+*/
+
 #ifndef TAG_CURSOR_H
 #define TAG_CURSOR_H
 
@@ -11,6 +16,7 @@ class TagCursor : public Cursor {
     TopicList* _topics;
   public:
     TagCursor(TopicList& topic_list);
+    ~TagCursor() {}
     virtual const Topic& reset();
     virtual const Topic& position() const;
     virtual const Topic& next();

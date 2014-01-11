@@ -1,3 +1,8 @@
+/*
+  cursor.h
+  Provides cursor interface for scrolling-forward of topics.
+*/
+
 #ifndef CURSOR_H
 #define CURSOR_H
 

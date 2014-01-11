@@ -1,3 +1,8 @@
+/*
+  meta_cursor.h
+  Provides interface for cursors that contain other cursors.
+*/
+
 #ifndef META_CURSOR_H
 #define META_CURSOR_H
 

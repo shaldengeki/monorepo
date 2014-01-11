@@ -1,3 +1,8 @@
+/*
+  difference_cursor.cpp
+  Provides implementation of set-difference metacursor.
+*/
+
 #include "difference_cursor.h"
 
 DifferenceCursor::DifferenceCursor(std::vector<Cursor*>& cursors) : MetaCursor::MetaCursor(cursors) {

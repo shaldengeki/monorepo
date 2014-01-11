@@ -1,3 +1,8 @@
+/*
+  intersect_cursor.cpp
+  Provides implementation for a cursor that performs set intersection on a set of cursors.
+*/
+
 #include "intersect_cursor.h"
 
 IntersectCursor::IntersectCursor(std::vector<Cursor*>& cursors) : MetaCursor::MetaCursor(cursors) {
