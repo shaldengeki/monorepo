@@ -4,9 +4,4 @@
   Then returns specified topics from that graph.
 */
 
-#ifndef TAGD_H
-#define TAGD_H
-
 #include "tagd.h"
-
-#endif

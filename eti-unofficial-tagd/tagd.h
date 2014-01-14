@@ -4,3 +4,21 @@
   Then returns specified topics from that graph.
 */
 
+#ifndef TAGD_H
+#define TAGD_H
+
+#include <map>
+#include <string>
+#include "tag.h"
+
+class TagD {
+  private:
+    std::map<std::string, Tag> _tags;
+  public:
+    TagD();
+    ~TagD() {}
+    void set(Tag& tag);
+    
+};
+
+#endif
