@@ -22,14 +22,13 @@ const Topic& DifferenceCursor::position(Topic& out) const {
 
   out = first_cursor->seek_to(out);
 
-  if (out.id() == 0) {
+  if (out.id() == end().id()) {
     // We've run out of topics in the first cursor.
-    return out;
+    return end();
   }
 
   // compare out to every cursor past the first in our list.
-  ++current_cursor;
-  for (; current_cursor != _cursors.cend(); ++current_cursor) {
+  for (++current_cursor; current_cursor != _cursors.cend(); ++current_cursor) {
     Topic cursor_min = (*current_cursor)->seek_to(out);
     if (cursor_min == out) {
       // this cursor points to out. get the next one (if there is any).
@@ -49,8 +48,10 @@ const Topic& DifferenceCursor::next() {
   std::vector<Cursor*>::const_iterator current_cursor = _cursors.cbegin();
   Cursor* first_cursor = *current_cursor;
 
-  for (Topic current_position = first_cursor->next(); position().id() != 0 && position().id() != prev_position.id(); first_cursor->next()) {
+  for (Topic current_position = first_cursor->next(); position().id() != end().id(); first_cursor->next()) {
+    if (position().id() != prev_position.id()) {
+      break;
+    }
   }
-  
   return position();
 }

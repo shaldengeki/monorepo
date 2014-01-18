@@ -16,7 +16,7 @@ const Topic& UnionCursor::position(Topic& out) const {
   */
   for (std::vector<Cursor*>::const_iterator current_cursor = _cursors.cbegin(); current_cursor != _cursors.cend(); ++current_cursor) {
     Topic cursor_min = (*current_cursor)->position();
-    if (out.id() == 0 || (cursor_min.id() != 0 && cursor_min < out)) {
+    if (out.id() == end().id() || (cursor_min.id() != end().id() && cursor_min < out)) {
       out = cursor_min;
     }
   }
@@ -27,11 +27,11 @@ const Topic& UnionCursor::next() {
     Iterate through each cursor in this metacursor, incrementing those cursors that are pointing to the current cursor's position.
     Return the cursor's position after having incremented said cursors.
   */
-  Topic curr_position = position();
+  Topic original_position = position();
 
   for (std::vector<Cursor*>::iterator current_cursor = _cursors.begin(); current_cursor != _cursors.end(); ++current_cursor) {
     Topic current_topic = (*current_cursor)->position();
-    if (current_topic == curr_position) {
+    if (current_topic == original_position) {
       (*current_cursor)->next();
     }
   }

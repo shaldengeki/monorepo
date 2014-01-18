@@ -4,6 +4,7 @@
 */
 
 #include "intersect_cursor.h"
+#include "topic.h"
 
 IntersectCursor::IntersectCursor(std::vector<Cursor*>& cursors) : MetaCursor::MetaCursor(cursors) {
 }
@@ -16,12 +17,16 @@ const Topic& IntersectCursor::position(Topic& out) const {
     For each of the cursors in this metacursor, seek_to out and see if the resultant topic is out.
     If any of the cursors seek past out, set this sought-to topic as the new "reference topic" and repeat.
   */
-  if (out.id() == 0) {
+  if (out.id() == end().id()) {
     // We've run out of topics in at least one cursor.
     return out;
   }
   for (std::vector<Cursor*>::const_iterator current_cursor = _cursors.cbegin(); current_cursor != _cursors.cend(); ++current_cursor) {
     Topic cursor_min = (*current_cursor)->seek_to(out);
+    if (cursor_min.id() == end().id()) {
+      return end();
+    }
+
     if (cursor_min > out) {
       // this cursor points past out.
       return position(cursor_min);

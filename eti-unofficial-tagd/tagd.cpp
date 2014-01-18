@@ -79,24 +79,37 @@ Cursor& TagD::parse(std::string& tag_query) {
   }
 
   // create metacursors.
-  UnionCursor* union_cursor = new UnionCursor(union_tags);
-  if (union_tags.size() < 1) {
-    return *union_cursor;
+  Cursor* union_result;
+  if (union_tags.size() == 0) {
+    union_result = new UnionCursor(union_tags);
+    return *union_result;
+  } else if (union_tags.size() == 1) {
+    union_result = union_tags[0];
+  } else {
+    union_result = new UnionCursor(union_tags);
   }
 
-  std::vector<Cursor*> union_and_diff_cursors {union_cursor};
+  std::vector<Cursor*> union_and_diff_cursors {union_result};
+  Cursor* diff_result;
   if (difference_tags.size() > 0) {
-    UnionCursor* difference_cursors = new UnionCursor(difference_tags);
-    union_and_diff_cursors.push_back(difference_cursors);
+    for (std::vector<Cursor*>::iterator diff_iter = difference_tags.begin(); diff_iter != difference_tags.end(); ++diff_iter) {
+      union_and_diff_cursors.push_back(*diff_iter);
+    }
+    diff_result = new DifferenceCursor(union_and_diff_cursors);
+  } else {
+    diff_result = union_result;
   }
-  DifferenceCursor* diff_cursor = new DifferenceCursor(union_and_diff_cursors);
 
-  std::vector<Cursor*> diff_and_intersect_cursors {diff_cursor};
+  std::vector<Cursor*> diff_and_intersect_cursors {diff_result};
+  Cursor* inter_result;
   if (intersect_tags.size() > 0) {
-    UnionCursor* intersect_cursors = new UnionCursor(intersect_tags);
-    diff_and_intersect_cursors.push_back(intersect_cursors);
+    for (std::vector<Cursor*>::iterator intersect_iter = intersect_tags.begin(); intersect_iter != intersect_tags.end(); ++intersect_iter) {
+      diff_and_intersect_cursors.push_back(*intersect_iter);
+    }
+    inter_result = new IntersectCursor(diff_and_intersect_cursors);
+  } else {
+    inter_result = diff_result;
   }
-  IntersectCursor* intersect_cursor = new IntersectCursor(diff_and_intersect_cursors);
 
-  return *intersect_cursor;
+  return *inter_result;
 }
