@@ -10,10 +10,13 @@
 
 class Tag {
   private:
-    std::string name;
-    TopicList topic_list;
+    unsigned long _id;
+    TopicList _topic_list;
   public:
-    Tag(std::string& name) : name(name) {};
-    Tag(std::string& name, TopicList& topic_list);
+    Tag(unsigned long& id);
+    Tag(unsigned long& id, TopicList& topic_list);
+    ~Tag();
+    unsigned long& id();
+    TopicList& topic_list();
 };
 #endif

@@ -7,15 +7,15 @@
 #define TAG_CURSOR_H
 
 #include "cursor.h"
-#include "topic.h"
+#include "tag.h"
 
 /* Cursor for single tags. */
 class TagCursor : public Cursor {
   private:
     TopicList::iterator _position;
-    TopicList* _topics;
+    Tag* _tag;
   public:
-    TagCursor(TopicList& topic_list);
+    TagCursor(Tag& tag);
     ~TagCursor() {}
     virtual const Topic& reset();
     virtual const Topic& position() const;

@@ -82,8 +82,10 @@ int main(int argc, char* argv[]) {
   topic_list_one->insert(*topic);
   topic_list_one->insert(*topic2);
   topic_list_one->insert(*topic3);
+  unsigned long tag_id_one {1};
+  Tag* tag_one = new Tag(tag_id_one, *topic_list_one);
 
-  TagCursor* cursor = new TagCursor(*topic_list_one);
+  TagCursor* cursor = new TagCursor(*tag_one);
 
   std::cout << "Tag pos: " << cursor->position().id() << std::endl;
   std::cout << "Tag next: " << cursor->next().id() << std::endl;
@@ -95,7 +97,9 @@ int main(int argc, char* argv[]) {
   topic_list_two->insert(*topic2);
   topic_list_two->insert(*topic3);
   topic_list_two->insert(*topic4);
-  TagCursor* cursor_two = new TagCursor(*topic_list_two);
+  unsigned long tag_id_two {2};
+  Tag* tag_two = new Tag(tag_id_two, *topic_list_two);
+  TagCursor* cursor_two = new TagCursor(*tag_two);
 
   std::vector<Cursor*> cursor_vector {cursor, cursor_two};
   UnionCursor* union_cursor = new UnionCursor(cursor_vector);
@@ -120,6 +124,20 @@ int main(int argc, char* argv[]) {
 
   std::cout << "Difference pos: " << difference_cursor->position().id() << std::endl;
   std::cout << "Difference next: " << difference_cursor->next().id() << std::endl;
+
+  TagD* tagd = new TagD();
+  tagd->set(*tag_one);
+  tagd->set(*tag_two);
+
+  std::string tag_query = "1-2";
+  Cursor& tagd_cursor = tagd->parse(tag_query);
+  std::cout << "TagD pos: " << tagd_cursor.position().id() << std::endl;
+  std::cout << "TagD next: " << tagd_cursor.next().id() << std::endl;
+
+  std::string tag_query_two = "1+2";
+  Cursor& tagd_cursor_two = tagd->parse(tag_query_two);
+  std::cout << "TagD pos: " << tagd_cursor_two.position().id() << std::endl;
+  std::cout << "TagD next: " << tagd_cursor_two.next().id() << std::endl;
 
   return 0;
 }
