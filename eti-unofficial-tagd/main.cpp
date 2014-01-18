@@ -5,13 +5,15 @@
   For up-to-date help: tagd --help
 */
 
-#include <iostream>
-#include <string>
-#include <map>
-#include <ctime>
 #include <algorithm> 
-#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <locale>
+#include <map>
+#include <string>
 #include <utility>
+#include <vector>
 
 #include <mysql++.h>
 
@@ -61,8 +63,15 @@ bool operator>= (Topic& t1, Topic& t2) {
 
 int main(int argc, char* argv[]) {
   options::options_description allOptions("Options");
+
   allOptions.add_options()
     ("help", "produce this help message")
+    ("host", options::value<std::string>()->default_value("localhost"), "MySQL host")
+    ("username", options::value<std::string>()->default_value("root"), "MySQL username")
+    ("password", options::value<std::string>()->default_value(""), "MySQL password")
+    ("database", options::value<std::string>()->default_value("eti"), "MySQL database")
+    ("join-table", options::value<std::string>(), "tags-topics join table")
+    ("topic-table", options::value<std::string>(), "topics table")
   ;
   options::variables_map vm;
   options::store(options::parse_command_line(argc, argv, allOptions), vm);
@@ -73,50 +82,57 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  Topic* topic = new Topic(1, 1);
-  Topic* topic2 = new Topic(2, 2);
-  Topic* topic3 = new Topic(2, 3);
-  Topic* topic4 = new Topic(3, 4);
+  // load tag, topic data from the database.
+  mysqlpp::Connection database;
+  mysqlpp::UseQueryResult tag_iter;
+  try {
+    database = mysqlpp::Connection(vm["database"].as<std::string>().c_str(), vm["host"].as<std::string>().c_str(), vm["username"].as<std::string>().c_str(), vm["password"].as<std::string>().c_str());
+    mysqlpp::Query tag_query = database.query();
+    tag_query << "LOCK TABLES tags_topics READ, topics READ;";
+    tag_query.exec();
 
-  TopicList* topic_list_one = new TopicList();
-  topic_list_one->insert(*topic);
-  topic_list_one->insert(*topic2);
-  topic_list_one->insert(*topic3);
-  unsigned long tag_id_one {1};
-  Tag* tag_one = new Tag(tag_id_one, *topic_list_one);
+    tag_query.reset();
+    tag_query << "SELECT tag_id, topic_id, topics.lastPostTime AS last_post_time FROM tags_topics INNER JOIN topics ON topics.ll_topicid = tags_topics.topic_id ORDER BY tag_id ASC, last_post_time DESC, topic_id DESC";
+    tag_iter = tag_query.use();
+  } catch (mysqlpp::ConnectionFailed er) {
+    std::cerr << "Could not connect to MySQL database." << std::endl;
+    throw er;
+  }
 
-  TopicList* topic_list_two = new TopicList();
-  topic_list_two->insert(*topic2);
-  topic_list_two->insert(*topic3);
-  topic_list_two->insert(*topic4);
-  unsigned long tag_id_two {2};
-  Tag* tag_two = new Tag(tag_id_two, *topic_list_two);
-
-  TopicList* topic_list_three = new TopicList();
-  topic_list_three->insert(*topic);
-  topic_list_three->insert(*topic3);
-  unsigned long tag_id_three {3};
-  Tag* tag_three = new Tag(tag_id_three, *topic_list_three);
-
-  TopicList* topic_list_four = new TopicList();
-  topic_list_four->insert(*topic2);
-  topic_list_four->insert(*topic4);
-  unsigned long tag_id_four {4};
-  Tag* tag_four = new Tag(tag_id_four, *topic_list_four);  
-
+  // insert tag, topic data into TagD.
   TagD* tagd = new TagD();
-  tagd->set(*tag_one);
-  tagd->set(*tag_two);
-  tagd->set(*tag_three);
-  tagd->set(*tag_four);
+  unsigned long curr_tag_id = 1;
+  TopicList tag_topics = TopicList();
+  while (mysqlpp::Row row = tag_iter.fetch_row()) {
+    unsigned long tag_id = std::strtoul(row["tag_id"].c_str(), NULL, 0);
+    if (tag_id != curr_tag_id) {
+      // new tag. create tag with all prior topics and reset topic list.
+      Tag* curr_tag = new Tag(curr_tag_id, tag_topics);
+      tagd->set(*curr_tag);
+      curr_tag_id = tag_id;
+      tag_topics = TopicList();
+    }
 
-  std::string tag_query_two = "1&2&3-4";
-  Cursor& tagd_cursor_two = tagd->parse(tag_query_two);
-  std::cout << "TagD pos: " << tagd_cursor_two.position().id() << std::endl;
-  std::cout << "TagD next: " << tagd_cursor_two.next().id() << std::endl;
-  std::cout << "TagD next: " << tagd_cursor_two.next().id() << std::endl;
-  std::cout << "TagD next: " << tagd_cursor_two.next().id() << std::endl;
-  std::cout << "TagD next: " << tagd_cursor_two.next().id() << std::endl;
+    unsigned int last_post_time = (unsigned int) std::strtoul(row["last_post_time"].c_str(), NULL, 0);
+    unsigned int topic_id = (unsigned int) std::strtoul(row["topic_id"].c_str(), NULL, 0);
+
+    Topic curr_topic = Topic(last_post_time, topic_id);
+    tag_topics.insert(curr_topic);
+  }
+  Tag* curr_tag = new Tag(curr_tag_id, tag_topics);
+  tagd->set(*curr_tag);
+
+  mysqlpp::Query tag_query = database.query();
+  tag_query << "UNLOCK TABLES;";
+  tag_query.exec();
+
+  std::string query_string = "5-99";
+  Cursor& tagd_cursor = tagd->parse(query_string);
+  std::cout << "TagD pos: " << tagd_cursor.position().id() << std::endl;
+  std::cout << "TagD next: " << tagd_cursor.next().id() << std::endl;
+  std::cout << "TagD next: " << tagd_cursor.next().id() << std::endl;
+  std::cout << "TagD next: " << tagd_cursor.next().id() << std::endl;
+  std::cout << "TagD next: " << tagd_cursor.next().id() << std::endl;
 
   return 0;
 }
