@@ -21,6 +21,7 @@ class TagD {
     void set(Tag& tag);
     Tag& get(unsigned long tag_id);
     Cursor& parse(std::string& tag_query);
+    unsigned int size();
 };
 
 #endif

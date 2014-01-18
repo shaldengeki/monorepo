@@ -83,21 +83,23 @@ int main(int argc, char* argv[]) {
   }
 
   // load tag, topic data from the database.
+  std::cout << "Connecting to database and loading tag-topic data..." << std::endl;
   mysqlpp::Connection database;
   mysqlpp::UseQueryResult tag_iter;
   try {
     database = mysqlpp::Connection(vm["database"].as<std::string>().c_str(), vm["host"].as<std::string>().c_str(), vm["username"].as<std::string>().c_str(), vm["password"].as<std::string>().c_str());
-    mysqlpp::Query tag_query = database.query();
-    tag_query << "LOCK TABLES tags_topics READ, topics READ;";
-    tag_query.exec();
-
-    tag_query.reset();
-    tag_query << "SELECT tag_id, topic_id, topics.lastPostTime AS last_post_time FROM tags_topics INNER JOIN topics ON topics.ll_topicid = tags_topics.topic_id ORDER BY tag_id ASC, last_post_time DESC, topic_id DESC";
-    tag_iter = tag_query.use();
   } catch (mysqlpp::ConnectionFailed er) {
     std::cerr << "Could not connect to MySQL database." << std::endl;
     throw er;
   }
+
+  mysqlpp::Query tag_query = database.query();
+  tag_query << "LOCK TABLES tags_topics READ, topics READ;";
+  tag_query.exec();
+
+  tag_query.reset();
+  tag_query << "SELECT tag_id, topic_id, topics.lastPostTime AS last_post_time FROM tags_topics INNER JOIN topics ON topics.ll_topicid = tags_topics.topic_id ORDER BY tag_id ASC, last_post_time DESC, topic_id DESC";
+  tag_iter = tag_query.use();
 
   // insert tag, topic data into TagD.
   TagD* tagd = new TagD();
@@ -122,11 +124,14 @@ int main(int argc, char* argv[]) {
   Tag* curr_tag = new Tag(curr_tag_id, tag_topics);
   tagd->set(*curr_tag);
 
-  mysqlpp::Query tag_query = database.query();
+  tag_query.reset();
   tag_query << "UNLOCK TABLES;";
   tag_query.exec();
 
-  std::string query_string = "5-99";
+  // All done!
+  std::cout << "Loaded " << tagd->size() << " tags." << std::endl;
+
+  std::string query_string = "5+128-99";
   Cursor& tagd_cursor = tagd->parse(query_string);
   std::cout << "TagD pos: " << tagd_cursor.position().id() << std::endl;
   std::cout << "TagD next: " << tagd_cursor.next().id() << std::endl;

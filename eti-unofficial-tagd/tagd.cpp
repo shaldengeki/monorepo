@@ -38,6 +38,10 @@ Tag& TagD::get(unsigned long tag_id) {
   return *(tag_iter->second);
 }
 
+unsigned int TagD::size() {
+  return _tags.size();
+}
+
 Cursor& TagD::parse(std::string& tag_query) {
   /*
   Parses a string tag_query into a cursor graph.
