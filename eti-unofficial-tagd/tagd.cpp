@@ -12,11 +12,33 @@
 #include "intersect_cursor.h"
 #include "difference_cursor.h"
 
+#include <algorithm>
+#include <functional>
+#include <cctype>
 #include <locale>
 #include <set>
 #include <stdexcept>
 #include <string>
 #include <vector>
+
+#include <iostream>
+
+// trim from start
+static inline std::string &ltrim(std::string &s) {
+  s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+  return s;
+}
+
+// trim from end
+static inline std::string &rtrim(std::string &s) {
+  s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+  return s;
+}
+
+// trim from both ends
+static inline std::string &trim(std::string &s) {
+  return ltrim(rtrim(s));
+}
 
 TagD::TagD() {
 
@@ -47,6 +69,8 @@ Cursor& TagD::parse(std::string& tag_query) {
   Parses a string tag_query into a cursor graph.
   Returns the resultant cursor.
   */
+  tag_query = trim(tag_query);
+
   std::vector<Cursor*> union_tags;
   std::vector<Cursor*> difference_tags;
   std::vector<Cursor*> intersect_tags;
@@ -54,15 +78,18 @@ Cursor& TagD::parse(std::string& tag_query) {
   // pick up first tag if it's not a negative.
   std::string first_char {tag_query[0]};
 
-  if (std::isdigit(tag_query[0])) {
+  std::string::iterator operator_it = tag_query.begin();
+  if (std::isdigit(*operator_it)) {
     union_tags.push_back(new TagCursor(get(std::stoul(first_char))));
+    ++operator_it;
   }
 
-  for (std::string::iterator operator_it = tag_query.begin(); operator_it < tag_query.end(); ++operator_it) {
+  for (; operator_it < tag_query.end(); ++operator_it) {
     // scroll forwards till we hit an operator.
     if (std::isdigit(*operator_it)) {
       continue;
     }
+
     // operator_it points to an operator.
     // scroll forwards till we hit an operator to fetch the tag id.
     std::string::iterator id_it;
@@ -71,7 +98,12 @@ Cursor& TagD::parse(std::string& tag_query) {
         break;
       }
     }
-    unsigned long tag_id = std::stoul(std::string(operator_it + 1, id_it));
+
+    if (id_it >= tag_query.end()) {
+      break;
+    }
+    std::string id_chunk = std::string(operator_it + 1, id_it);
+    unsigned long tag_id = std::stoul(id_chunk);
 
     if (*operator_it == '+') {
       union_tags.push_back(new TagCursor(get(tag_id)));

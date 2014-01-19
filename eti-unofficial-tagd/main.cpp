@@ -16,9 +16,16 @@
 #include <vector>
 
 #include <mysql++.h>
-
 #include <boost/program_options.hpp>
+#include <boost/algorithm/string/join.hpp>
 namespace options = boost::program_options;
+
+#include <sys/un.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
 
 #include "topic.h"
 #include "cursor.h"
@@ -131,13 +138,77 @@ int main(int argc, char* argv[]) {
   // All done!
   std::cout << "Loaded " << tagd->size() << " tags." << std::endl;
 
-  std::string query_string = "5+128-99";
-  Cursor& tagd_cursor = tagd->parse(query_string);
-  std::cout << "TagD pos: " << tagd_cursor.position().id() << std::endl;
-  std::cout << "TagD next: " << tagd_cursor.next().id() << std::endl;
-  std::cout << "TagD next: " << tagd_cursor.next().id() << std::endl;
-  std::cout << "TagD next: " << tagd_cursor.next().id() << std::endl;
-  std::cout << "TagD next: " << tagd_cursor.next().id() << std::endl;
+  unsigned int local_sock, client_sock, t, len;
+  struct sockaddr_un local, remote;
+  if ((local_sock = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
+    perror("socket");
+    exit(1);
+  }  
+
+  local.sun_family = AF_UNIX;  /* local is declared before socket() ^ */
+  strcpy(local.sun_path, "/home/shaldengeki/tagd.sock");
+  unlink(local.sun_path);
+  len = strlen(local.sun_path) + sizeof(local.sun_family);
+  if (bind(local_sock, (struct sockaddr *)&local, len) == -1) {
+    perror("bind");
+    exit(1);
+  }
+
+ if (listen(local_sock, 5) == -1) {
+    perror("listen");
+    exit(1);
+  }
+
+  const int query_max_len = 500;
+  char raw_query[query_max_len];
+  for(;;) {
+    int done, n;
+    printf("Waiting for a connection...\n");
+    t = sizeof(remote);
+    if ((client_sock = accept(local_sock, (struct sockaddr *)&remote, &t)) == -1) {
+      perror("accept");
+      exit(1);
+    }
+
+    printf("Connected.\n");
+
+    done = 0;
+    do {
+      n = recv(client_sock, raw_query, query_max_len, 0);
+      if (n <= 0) {
+        if (n < 0) {
+          perror("recv");
+        }
+        done = 1;
+      }
+
+      if (!done) {
+        std::string query_string {raw_query};
+        Cursor& tagd_cursor = tagd->parse(query_string);
+
+        std::vector<std::string> topic_ids {std::to_string(tagd_cursor.position().id())};
+        for (int i = 0; i < 50; i++) {
+          Topic next_topic = tagd_cursor.next();
+          if (next_topic.id() == 0) {
+            break;
+          }
+          topic_ids.push_back(std::to_string(next_topic.id()));
+        }
+
+        std::string tag_ids = boost::algorithm::join(topic_ids, ",");
+        char * writable = new char[tag_ids.size() + 1];
+        std::copy(tag_ids.begin(), tag_ids.end(), writable);
+        writable[tag_ids.size()] = '\0'; // don't forget the terminating 0
+
+        if (send(client_sock, writable, strlen(writable), 0) < 0) {
+          perror("send");
+          done = 1;
+        }
+        delete[] writable;
+      }
+    } while (!done);
+    close(client_sock);
+  }
 
   return 0;
 }
