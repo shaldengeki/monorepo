@@ -15,4 +15,5 @@ To build and then use tagd:
 - Do `./tagd --help` to see a list of command-line options.
 
 A small client is included. To compile:
-- g++ -o client client.cpp
+- `g++ -o client client.cpp`
+- `./client`
