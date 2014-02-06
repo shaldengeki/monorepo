@@ -79,6 +79,7 @@ int main(int argc, char* argv[]) {
     ("database", options::value<std::string>()->default_value("eti"), "MySQL database")
     ("join-table", options::value<std::string>(), "tags-topics join table")
     ("topic-table", options::value<std::string>(), "topics table")
+    ("socket", options::value<std::string>()->default_value("/tmp/tagd.sock"), "path to socket")
   ;
   options::variables_map vm;
   options::store(options::parse_command_line(argc, argv, allOptions), vm);
@@ -146,7 +147,7 @@ int main(int argc, char* argv[]) {
   }  
 
   local.sun_family = AF_UNIX;  /* local is declared before socket() ^ */
-  strcpy(local.sun_path, "/home/shaldengeki/tagd.sock");
+  strcpy(local.sun_path, vm["socket"].as<std::string>().c_str());
   unlink(local.sun_path);
   len = strlen(local.sun_path) + sizeof(local.sun_family);
   if (bind(local_sock, (struct sockaddr *)&local, len) == -1) {
@@ -186,25 +187,20 @@ int main(int argc, char* argv[]) {
         std::string query_string {raw_query};
         Cursor& tagd_cursor = tagd->parse(query_string);
 
-        std::vector<std::string> topic_ids {std::to_string(tagd_cursor.position().id())};
+        unsigned int topic_ids[50];
         for (int i = 0; i < 50; i++) {
           Topic next_topic = tagd_cursor.next();
           if (next_topic.id() == 0) {
             break;
           }
-          topic_ids.push_back(std::to_string(next_topic.id()));
+          topic_ids[i] = next_topic.id();
         }
-
-        std::string tag_ids = boost::algorithm::join(topic_ids, ",");
-        char * writable = new char[tag_ids.size() + 1];
-        std::copy(tag_ids.begin(), tag_ids.end(), writable);
-        writable[tag_ids.size()] = '\0'; // don't forget the terminating 0
-
-        if (send(client_sock, writable, strlen(writable), 0) < 0) {
+        char* intBuffer = reinterpret_cast<char*>(&topic_ids);
+        int sizeOfIntBuffer = sizeof(&topic_ids) * 50;
+        if (send(client_sock, intBuffer, sizeOfIntBuffer, 0) < 0) {
           perror("send");
           done = 1;
         }
-        delete[] writable;
       }
     } while (!done);
     close(client_sock);
