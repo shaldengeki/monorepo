@@ -3,7 +3,7 @@
   Provides implementation of cursor-containing cursors.
 */
 
-#include "meta_cursor.h"
+#include "meta_cursor.hpp"
 
 MetaCursor::MetaCursor(std::vector<Cursor*>& cursors) {
   _cursors = cursors;

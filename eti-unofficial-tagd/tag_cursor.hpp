@@ -6,8 +6,8 @@
 #ifndef TAG_CURSOR_H
 #define TAG_CURSOR_H
 
-#include "cursor.h"
-#include "tag.h"
+#include "cursor.hpp"
+#include "tag.hpp"
 
 /* Cursor for single tags. */
 class TagCursor : public Cursor {

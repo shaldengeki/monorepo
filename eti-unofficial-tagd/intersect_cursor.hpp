@@ -7,7 +7,7 @@
 #ifndef INTERSECT_CURSOR_H
 #define INTERSECT_CURSOR_H
 
-#include "meta_cursor.h"
+#include "meta_cursor.hpp"
 
 class IntersectCursor : public MetaCursor {
   protected:

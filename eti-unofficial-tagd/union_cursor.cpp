@@ -3,7 +3,7 @@
   Provides implementation for a cursor that performs set union on a set of cursors.
 */
 
-#include "union_cursor.h"
+#include "union_cursor.hpp"
 
 UnionCursor::UnionCursor(std::vector<Cursor*>& cursors) : MetaCursor::MetaCursor(cursors) {
 }

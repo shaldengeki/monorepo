@@ -4,13 +4,13 @@
   Then returns specified topics from that graph.
 */
 
-#include "tagd.h"
-#include "tag.h"
-#include "cursor.h"
-#include "tag_cursor.h"
-#include "union_cursor.h"
-#include "intersect_cursor.h"
-#include "difference_cursor.h"
+#include "tagd.hpp"
+#include "tag.hpp"
+#include "cursor.hpp"
+#include "tag_cursor.hpp"
+#include "union_cursor.hpp"
+#include "intersect_cursor.hpp"
+#include "difference_cursor.hpp"
 
 #include <algorithm>
 #include <functional>
@@ -20,8 +20,8 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-
 #include <iostream>
+#include <cstddef>
 
 // trim from start
 static inline std::string &ltrim(std::string &s) {
@@ -75,13 +75,17 @@ Cursor& TagD::parse(std::string& tag_query) {
   std::vector<Cursor*> difference_tags;
   std::vector<Cursor*> intersect_tags;
 
-  // pick up first tag if it's not a negative.
-  std::string first_char {tag_query[0]};
-
+  // pick up first tag if it's not an operator.
   std::string::iterator operator_it = tag_query.begin();
   if (std::isdigit(*operator_it)) {
-    union_tags.push_back(new TagCursor(get(std::stoul(first_char))));
-    ++operator_it;
+    std::size_t first_op = tag_query.find_first_of("+-&");
+    if (first_op == std::string::npos) {
+      first_op = tag_query.length();
+    }
+    std::string first_tag = tag_query.substr(0, first_op);
+    
+    union_tags.push_back(new TagCursor(get(std::stoul(first_tag))));
+    operator_it += first_op;
   }
 
   for (; operator_it < tag_query.end(); ++operator_it) {

@@ -7,7 +7,7 @@
 #ifndef UNION_CURSOR_H
 #define UNION_CURSOR_H
 
-#include "meta_cursor.h"
+#include "meta_cursor.hpp"
 
 class UnionCursor : public MetaCursor {
   protected:

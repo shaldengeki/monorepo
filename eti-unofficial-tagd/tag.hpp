@@ -6,7 +6,7 @@
 #define TAG_H
 
 #include <string>
-#include "topic.h"
+#include "topic.hpp"
 
 class Tag {
   private:
@@ -18,5 +18,6 @@ class Tag {
     ~Tag();
     unsigned long& id();
     TopicList& topic_list();
+    void insert(unsigned int& last_post_time, unsigned int& topic_id);
 };
 #endif

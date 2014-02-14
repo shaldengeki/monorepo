@@ -3,7 +3,7 @@
   Provides implementation of tags.
 */
 
-#include "tag.h"
+#include "tag.hpp"
 
 Tag::Tag(unsigned long& id) : _id(id) {
 
@@ -18,4 +18,8 @@ unsigned long& Tag::id() {
 
 TopicList& Tag::topic_list() {
   return _topic_list;
+}
+
+void Tag::insert(unsigned int& last_post_time, unsigned int& topic_id) {
+  _topic_list.insert(Topic(last_post_time, topic_id));
 }

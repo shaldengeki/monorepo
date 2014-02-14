@@ -3,8 +3,8 @@
   Provides implementation for a cursor that performs set intersection on a set of cursors.
 */
 
-#include "intersect_cursor.h"
-#include "topic.h"
+#include "intersect_cursor.hpp"
+#include "topic.hpp"
 
 IntersectCursor::IntersectCursor(std::vector<Cursor*>& cursors) : MetaCursor::MetaCursor(cursors) {
 }

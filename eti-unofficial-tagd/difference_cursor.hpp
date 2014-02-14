@@ -7,7 +7,7 @@
 #ifndef DIFFERENCE_CURSOR_H
 #define DIFFERENCE_CURSOR_H
 
-#include "meta_cursor.h"
+#include "meta_cursor.hpp"
 
 class DifferenceCursor : public MetaCursor {
   protected:

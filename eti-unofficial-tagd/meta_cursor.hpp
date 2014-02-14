@@ -6,7 +6,7 @@
 #ifndef META_CURSOR_H
 #define META_CURSOR_H
 
-#include "cursor.h"
+#include "cursor.hpp"
 #include <vector>
 
 /* Metacursor classes for groups of cursors. */

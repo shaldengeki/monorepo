@@ -3,7 +3,7 @@
   Provides implementation of set-difference metacursor.
 */
 
-#include "difference_cursor.h"
+#include "difference_cursor.hpp"
 
 DifferenceCursor::DifferenceCursor(std::vector<Cursor*>& cursors) : MetaCursor::MetaCursor(cursors) {
 }

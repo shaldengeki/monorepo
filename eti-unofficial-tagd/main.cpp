@@ -23,19 +23,20 @@ namespace options = boost::program_options;
 #include <sys/un.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/select.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 
-#include "topic.h"
-#include "cursor.h"
-#include "tag_cursor.h"
-#include "meta_cursor.h"
-#include "union_cursor.h"
-#include "intersect_cursor.h"
-#include "difference_cursor.h"
-#include "tag.h"
-#include "tagd.h"
+#include "topic.hpp"
+#include "cursor.hpp"
+#include "tag_cursor.hpp"
+#include "meta_cursor.hpp"
+#include "union_cursor.hpp"
+#include "intersect_cursor.hpp"
+#include "difference_cursor.hpp"
+#include "tag.hpp"
+#include "tagd.hpp"
 
 /* Benchmark and timing data structures. */
 typedef std::pair<clock_t, std::string> Timing;
@@ -139,7 +140,7 @@ int main(int argc, char* argv[]) {
   // All done!
   std::cout << "Loaded " << tagd->size() << " tags." << std::endl;
 
-  unsigned int local_sock, client_sock, t, len;
+  int local_sock, client_sock, t, len;
   struct sockaddr_un local, remote;
   if ((local_sock = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
     perror("socket");
@@ -157,54 +158,88 @@ int main(int argc, char* argv[]) {
 
  if (listen(local_sock, 5) == -1) {
     perror("listen");
-    exit(1);
+    exit(2);
   }
 
   const int query_max_len = 500;
   char raw_query[query_max_len];
-  for(;;) {
-    int done, n;
-    printf("Waiting for a connection...\n");
-    t = sizeof(remote);
-    if ((client_sock = accept(local_sock, (struct sockaddr *)&remote, &t)) == -1) {
-      perror("accept");
-      exit(1);
+
+  fd_set master, read_fds;
+  int fdmax;
+
+  FD_SET(local_sock, &master);
+  fdmax = local_sock;
+
+  int new_fd, curr_fd, n;
+  char remote_ip[INET6_ADDRSTRLEN];
+  socklen_t addr_len;
+
+  while(true) {
+    read_fds = master;
+    if (select(fdmax + 1, &read_fds, NULL, NULL, NULL) == -1) {
+      perror("select");
+      exit(3);
     }
 
-    printf("Connected.\n");
-
-    done = 0;
-    do {
-      n = recv(client_sock, raw_query, query_max_len, 0);
-      if (n <= 0) {
-        if (n < 0) {
-          perror("recv");
-        }
-        done = 1;
-      }
-
-      if (!done) {
-        std::string query_string {raw_query};
-        Cursor& tagd_cursor = tagd->parse(query_string);
-
-        unsigned int topic_ids[50];
-        for (int i = 0; i < 50; i++) {
-          Topic next_topic = tagd_cursor.next();
-          if (next_topic.id() == 0) {
-            break;
+    for (curr_fd = 0; curr_fd <= fdmax; ++curr_fd) {
+      if (FD_ISSET(curr_fd, &read_fds)) {
+        // something's here!
+        if (curr_fd == local_sock) {
+          // new connection.
+          addr_len = sizeof(remote);
+          new_fd = accept(local_sock, (struct sockaddr*) &remote, &addr_len);
+          if (new_fd == -1) {
+            perror("accept");
+          } else {
+            // add this connection to the master set.
+            FD_SET(new_fd, &master);
+            if (new_fd > fdmax) {
+              fdmax = new_fd;
+            }
+            printf("selectserver: new connection on socket %d\n", new_fd);
           }
-          topic_ids[i] = next_topic.id();
-        }
-        char* intBuffer = reinterpret_cast<char*>(&topic_ids);
-        int sizeOfIntBuffer = sizeof(&topic_ids) * 50;
-        if (send(client_sock, intBuffer, sizeOfIntBuffer, 0) < 0) {
-          perror("send");
-          done = 1;
+
+        } else {
+          // handle data from a client.
+          n = recv(curr_fd, raw_query, query_max_len, 0);
+          if (n <= 0) {
+            // client has hung up or some error occurred.
+            if (n < 0) {
+              perror("recv");
+            } else {
+              printf("selectserver: socket %d hung up\n", curr_fd);
+            }
+            close(curr_fd);
+            FD_CLR(curr_fd, &master);
+          } else {
+            // client has sent us a tag query string.
+            std::string query_string {raw_query};
+            unsigned int topic_ids[50];
+
+            try {
+              Cursor& tagd_cursor = tagd->parse(query_string);
+
+              for (int curr_topic = 0; curr_topic < 50; curr_topic++) {
+                Topic next_topic = tagd_cursor.next();
+                if (next_topic.id() == 0) {
+                  break;
+                }
+                topic_ids[curr_topic] = next_topic.id();
+              }
+            } catch (std::out_of_range& e) {
+              // client specified a tag that doesn't exist.
+              perror("tag out of range");
+              std::fill_n(topic_ids, 50, 0);
+            }
+            char* intBuffer = reinterpret_cast<char*>(&topic_ids);
+            int sizeOfIntBuffer = sizeof(&topic_ids) * 50;
+            if (send(curr_fd, intBuffer, sizeOfIntBuffer, 0) < 0) {
+              perror("send");
+            }
+          }
         }
       }
-    } while (!done);
-    close(client_sock);
+    }
   }
-
   return 0;
 }

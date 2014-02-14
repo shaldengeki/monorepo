@@ -6,7 +6,7 @@
 #ifndef CURSOR_H
 #define CURSOR_H
 
-#include "topic.h"
+#include "topic.hpp"
 
 /* Base cursor interface. */
 class Cursor {

@@ -3,7 +3,7 @@
   Provides implementation of tag cursors.
 */
 
-#include "tag_cursor.h"
+#include "tag_cursor.hpp"
 
 TagCursor::TagCursor(Tag& tag) {
   _tag = &tag;

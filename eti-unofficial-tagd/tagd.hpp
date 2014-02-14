@@ -9,8 +9,8 @@
 
 #include <map>
 #include <string>
-#include "tag.h"
-#include "cursor.h"
+#include "tag.hpp"
+#include "cursor.hpp"
 
 class TagD {
   private:

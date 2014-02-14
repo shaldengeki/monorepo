@@ -3,8 +3,8 @@
   Provides cursor implementation for scrolling-forward of topics.
 */
 
-#include "cursor.h"
-#include "topic.h"
+#include "cursor.hpp"
+#include "topic.hpp"
 
 const Topic& Cursor::end() const {
   /*
