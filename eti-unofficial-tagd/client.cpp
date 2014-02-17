@@ -11,7 +11,7 @@
 #include <boost/program_options.hpp>
 namespace options = boost::program_options;
 
-int main(void)
+int main(int argc, char* argv[]) {
 {
   options::options_description allOptions("Options");
 
