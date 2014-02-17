@@ -12,7 +12,6 @@
 namespace options = boost::program_options;
 
 int main(int argc, char* argv[]) {
-{
   options::options_description allOptions("Options");
 
   allOptions.add_options()
