@@ -4,6 +4,7 @@
 */
 
 #include "tag.hpp"
+#include "topic.hpp"
 
 Tag::Tag(unsigned long& id) : _id(id) {
 
@@ -20,6 +21,18 @@ TopicList& Tag::topic_list() {
   return _topic_list;
 }
 
-void Tag::insert(unsigned int& last_post_time, unsigned int& topic_id) {
-  _topic_list.insert(Topic(last_post_time, topic_id));
+void Tag::insert(Topic& topic) {
+  /*
+    find the given topic_id with the given last_post_time
+    if it exists, remove it
+    insert the given topic.
+  */
+  TopicList::iterator search_iter = _topic_list.find_topic(topic);
+
+  if (search_iter != _topic_list.end() && (*search_iter).time() != topic.time()) {
+    _topic_list.erase(search_iter);
+    _topic_list.insert(topic);
+  } else {
+    _topic_list.insert(topic);
+  }
 }

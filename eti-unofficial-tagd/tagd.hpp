@@ -10,6 +10,7 @@
 #include <map>
 #include <string>
 #include "tag.hpp"
+#include "topic.hpp"
 #include "cursor.hpp"
 
 class TagD {
@@ -20,7 +21,9 @@ class TagD {
     ~TagD() {}
     void set(Tag& tag);
     Tag& get(unsigned long tag_id);
-    Cursor& parse(std::string& tag_query);
+    void insert_topic(unsigned long tag_id, Topic& topic);
+    void parse_insert(std::string& insert_query);
+    Cursor& parse_query(std::string& tag_query);
     unsigned int size();
 };
 

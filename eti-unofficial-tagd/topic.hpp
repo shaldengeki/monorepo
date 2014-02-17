@@ -15,5 +15,9 @@ class Topic : public std::pair<unsigned int, unsigned int> {
     unsigned int time() const { return first; };
     unsigned int id() const { return second; };
 };
-class TopicList : public std::set<Topic> {};
+
+class TopicList : public std::set<Topic> {
+  public:
+    TopicList::iterator find_topic(Topic& search_topic);
+};
 #endif

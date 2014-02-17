@@ -6,6 +6,7 @@
 
 #include "tagd.hpp"
 #include "tag.hpp"
+#include "topic.hpp"
 #include "cursor.hpp"
 #include "tag_cursor.hpp"
 #include "union_cursor.hpp"
@@ -60,11 +61,22 @@ Tag& TagD::get(unsigned long tag_id) {
   return *(tag_iter->second);
 }
 
+void TagD::insert_topic(unsigned long tag_id, Topic& topic) {
+  /*
+    Inserts a given topic into a tag.
+  */
+  get(tag_id).insert(topic);
+}
+
 unsigned int TagD::size() {
   return _tags.size();
 }
 
-Cursor& TagD::parse(std::string& tag_query) {
+void TagD::parse_insert(std::string& insert_query) {
+  
+}
+
+Cursor& TagD::parse_query(std::string& tag_query) {
   /*
   Parses a string tag_query into a cursor graph.
   Returns the resultant cursor.

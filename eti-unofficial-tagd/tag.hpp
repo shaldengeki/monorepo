@@ -18,6 +18,6 @@ class Tag {
     ~Tag();
     unsigned long& id();
     TopicList& topic_list();
-    void insert(unsigned int& last_post_time, unsigned int& topic_id);
+    void insert(Topic& topic);
 };
 #endif

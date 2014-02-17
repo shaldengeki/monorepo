@@ -220,3 +220,5 @@ Vagrantfile
 bootstrap.sh
 tagd
 *.o
+*.sublime-project
+*.sublime-workspace

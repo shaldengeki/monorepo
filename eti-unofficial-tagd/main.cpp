@@ -17,8 +17,10 @@
 
 #include <mysql++.h>
 #include <boost/program_options.hpp>
-#include <boost/algorithm/string/join.hpp>
 namespace options = boost::program_options;
+#include <boost/algorithm/string/join.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <sys/un.h>
 #include <sys/types.h>
@@ -212,29 +214,43 @@ int main(int argc, char* argv[]) {
             close(curr_fd);
             FD_CLR(curr_fd, &master);
           } else {
-            // client has sent us a tag query string.
             std::string query_string {raw_query};
-            unsigned int topic_ids[50];
-
-            try {
-              Cursor& tagd_cursor = tagd->parse(query_string);
-
-              for (int curr_topic = 0; curr_topic < 50; curr_topic++) {
-                Topic next_topic = tagd_cursor.next();
-                if (next_topic.id() == 0) {
-                  break;
+            if (boost::starts_with(query_string, "insert")) {
+              // client has sent us a topic update.
+              try {
+                tagd->parse_insert(query_string);
+                std::string message {"OK"};
+                if (send(curr_fd, message.c_str(), message.length(), 0) < 0) {
+                  perror("send");
                 }
-                topic_ids[curr_topic] = next_topic.id();
+              } catch (std::out_of_range& e) {
+                // client has specified a tag that doesn't exist.
+                perror("tag out of range");
               }
-            } catch (std::out_of_range& e) {
-              // client specified a tag that doesn't exist.
-              perror("tag out of range");
-              std::fill_n(topic_ids, 50, 0);
-            }
-            char* intBuffer = reinterpret_cast<char*>(&topic_ids);
-            int sizeOfIntBuffer = sizeof(&topic_ids) * 50;
-            if (send(curr_fd, intBuffer, sizeOfIntBuffer, 0) < 0) {
-              perror("send");
+            } else {
+              // client has sent us a tag query string.
+              unsigned int topic_ids[50];
+              try {
+                Cursor& tagd_cursor = tagd->parse_query(query_string);
+
+                for (int curr_topic = 0; curr_topic < 50; curr_topic++) {
+                  Topic next_topic = tagd_cursor.next();
+                  if (next_topic.id() == 0) {
+                    break;
+                  }
+                  topic_ids[curr_topic] = next_topic.id();
+                }
+              } catch (std::out_of_range& e) {
+                // client specified a tag that doesn't exist.
+                perror("tag out of range");
+                std::fill_n(topic_ids, 50, 0);
+              }
+              char* intBuffer = reinterpret_cast<char*>(&topic_ids);
+              int sizeOfIntBuffer = sizeof(&topic_ids) * 50;
+              if (send(curr_fd, intBuffer, sizeOfIntBuffer, 0) < 0) {
+                perror("send");
+              }
+
             }
           }
         }
