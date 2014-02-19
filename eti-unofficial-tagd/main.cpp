@@ -244,7 +244,7 @@ int main(int argc, char* argv[]) {
                 // client specified a tag that doesn't exist.
                 perror("tag out of range");
               }
-              std::string joined_ids = "{" + boost::algorithm::join(topic_ids, ", ") + "}";
+              std::string joined_ids = "[" + boost::algorithm::join(topic_ids, ",") + "]";
               if (send(curr_fd, joined_ids.c_str(), joined_ids.size(), 0) < 0) {
                 perror("send");
               }
