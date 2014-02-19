@@ -229,7 +229,7 @@ int main(int argc, char* argv[]) {
               }
             } else {
               // client has sent us a tag query string.
-              unsigned int topic_ids[50];
+              std::vector<std::string> topic_ids;
               try {
                 Cursor& tagd_cursor = tagd->parse_query(query_string);
 
@@ -238,16 +238,14 @@ int main(int argc, char* argv[]) {
                   if (next_topic.id() == 0) {
                     break;
                   }
-                  topic_ids[curr_topic] = next_topic.id();
+                  topic_ids.push_back(std::to_string(next_topic.id()));
                 }
               } catch (std::out_of_range& e) {
                 // client specified a tag that doesn't exist.
                 perror("tag out of range");
-                std::fill_n(topic_ids, 50, 0);
               }
-              char* intBuffer = reinterpret_cast<char*>(&topic_ids);
-              int sizeOfIntBuffer = sizeof(&topic_ids) * 50;
-              if (send(curr_fd, intBuffer, sizeOfIntBuffer, 0) < 0) {
+              std::string joined_ids = "{" + boost::algorithm::join(topic_ids, ", ") + "}";
+              if (send(curr_fd, joined_ids.c_str(), joined_ids.size(), 0) < 0) {
                 perror("send");
               }
 

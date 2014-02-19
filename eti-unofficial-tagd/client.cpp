@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
 
   int s, t, len;
   struct sockaddr_un remote;
+  char* response = new char[500];
   char* message = new char[500];
 
   if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
@@ -56,11 +57,8 @@ int main(int argc, char* argv[]) {
       exit(1);
     }
 
-    if ((t=recv(s, message, 500, 0)) > 0) {
-      unsigned int* int_buffer = reinterpret_cast<unsigned int*>(message);
-      for (int i = 0; i < 50; ++i) {
-        std::cout << int_buffer[i] << std::endl;
-      }
+    if ((t=recv(s, response, 500, 0)) > 0) {
+      std::cout << response << std::endl;
     } else {
       if (t < 0) perror("recv");
       else printf("Server closed connection\n");
