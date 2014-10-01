@@ -15,24 +15,23 @@ class Topic : public std::pair<unsigned int, unsigned int> {
     unsigned int time() const { return first; };
     unsigned int id() const { return second; };
 
-
-    bool operator< (Topic& t) {
+    inline bool operator< (Topic& t) {
       return (this->time() < t.time()) || (this->time() == t.time() && this->id() < t.id());
     }
-    bool operator> (Topic& t) {
-      return (this->time() > t.time()) || (this->time() == t.time() && this->id() > t.id());
+    inline bool operator> (Topic& t) {
+      return (t < *this);
     }
-    bool operator== (Topic& t) {
+    inline bool operator== (Topic& t) {
       return (this->time() == t.time()) && (this->id() == t.id());
     }
-    bool operator!= (Topic& t) {
+    inline bool operator!= (Topic& t) {
       return !(*this == t);
     }
-    bool operator<= (Topic& t) {
-      return *this < t || *this == t;
+    inline bool operator<= (Topic& t) {
+      return !(*this > t);
     }
-    bool operator>= (Topic& t) {
-      return *this > t || *this == t;
+    inline bool operator>= (Topic& t) {
+      return !(*this < t);
     }
 };
 
