@@ -52,25 +52,6 @@ struct BenchInfo {
 
 typedef std::map<std::string, BenchInfo> BenchMap;
 
-bool operator< (Topic& t1, Topic& t2) {
-  return (t1.time() < t2.time()) || (t1.time() == t2.time() && t1.id() < t2.id());
-}
-bool operator> (Topic& t1, Topic& t2) {
-  return (t1.time() > t2.time()) || (t1.time() == t2.time() && t1.id() > t2.id());
-}
-bool operator== (Topic& t1, Topic& t2) {
-  return (t1.time() == t2.time()) && (t1.id() == t2.id());
-}
-bool operator!= (Topic& t1, Topic& t2) {
-  return !(t1 == t2);
-}
-bool operator<= (Topic& t1, Topic& t2) {
-  return t1 < t2 || t1 == t2;
-}
-bool operator>= (Topic& t1, Topic& t2) {
-  return t1 > t2 || t1 == t2;
-}
-
 int main(int argc, char* argv[]) {
   options::options_description allOptions("Options");
 
