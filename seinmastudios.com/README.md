@@ -2,8 +2,25 @@ seinmastudios.com
 =================
 Source code for my personal website.
 
-Deployments require [Ansible](https://www.ansible.com). To run it, you can do:
+Writing a post
+--------------
+Requires:
+
+- [Hugo](https://gohugo.io)
+
+1. `hugo new posts/my-new-post.md && nano content/posts/my-new-post.md`
+2. Commit to master & deploy
+
+Deployment
+----------
+Requires:
+
+- [Ansible](https://www.ansible.com).
+- SSH key at `~/.ssh/seinmastudios.production.pem`
+- Secrets vault password
+
+To run:
 ```
 ansible-playbook site.yml
 ```
-This requires an SSH key at `~/.ssh/seinmastudios.production.pem`, and the secrets vault password.
+
