@@ -42,11 +42,11 @@ September 2017: Took the GRE general exam and did exactly as well as I did on pr
 
 ![A few of us at Github Universe](/images/2017-10-11-github-universe.jpg)
 
-October 2017: Went to Github Universe, a tech conference, with two coworkers; later, went to GraphQL Summit with a few other coworkers. My mother came to visit us, and we went to take a look at wedding ceremony sites in Golden Gate Park's Botanical Gardens. Went to see Atul Gawande in SF. Signed up for a South SF library card! Started on the wedding dress hunt.
+October 2017: Went to Github Universe, a tech conference, with two coworkers; later, went to GraphQL Summit with a few other coworkers. Also, Guanqing and I got engaged!!! Probably should have led with that. My mother came to visit us, and we went to take a look at wedding ceremony sites in Golden Gate Park's Botanical Gardens. Went to see Atul Gawande in SF. Signed up for a South SF library card! Started on the wedding dress hunt.
 
 ![Guanqing and I at Macy's right next to the Christmas tree downtown](/images/2017-11-24-macys-christmas-tree.jpg)
 
-November 2017: Went to Lovejoy's Cafe for my birthday! Ugh that place is so, so good. Went hiking in the Zwierlein Picnic area in the South Bay, and walked around the Japanese Friendship Garden down by San Jose. My mother and sister came down for Thanksgiving, so we went to see the Christmas tree lighting downtown. 
+November 2017: Went to Lovejoy's Cafe for my birthday! Ugh that place is so, so good. Went hiking in the Zwierlein Picnic area in the South Bay, and walked around the Japanese Friendship Garden down by San Jose. My mother and sister came down for Thanksgiving, so we went to see the Christmas tree lighting downtown.
 
 ![All of us at Phantom](/images/2017-12-28-phantom.jpg)
 
