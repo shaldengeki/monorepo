@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://seinmastudios.com/posts/spring-break/</loc>
+    <lastmod>2018-01-01T18:32:06-08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://seinmastudios.com/posts/end-of-winter-quarter-update/</loc>
+    <lastmod>2008-11-25T11:56:21-08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://seinmastudios.com/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://seinmastudios.com/posts/</loc>
+    <lastmod>2018-01-01T18:32:06-08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://seinmastudios.com/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://seinmastudios.com/</loc>
+    <lastmod>2018-01-01T18:32:06-08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

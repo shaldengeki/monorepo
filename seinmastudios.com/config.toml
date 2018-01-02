@@ -1,0 +1,4 @@
+baseURL = "https://seinmastudios.com"
+languageCode = "en-us"
+title = "and some change"
+theme = "heather-hugo"
