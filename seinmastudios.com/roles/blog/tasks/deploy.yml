@@ -1,0 +1,5 @@
+---
+- name: Compile blog
+  command: hugo
+  args:
+    chdir: "{{app_dir}}"

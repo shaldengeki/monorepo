@@ -1,0 +1,25 @@
+---
+- name: "Check for existence of hugo"
+  stat:
+    path: /usr/local/bin/hugo
+  register: hugo_existence
+
+- name: "Download hugo"
+  get_url:
+    url: "https://github.com/gohugoio/hugo/releases/download/{{hugo_version}}"
+    dest: "{{hugo_tmp}}/hugo.deb"
+  when: hugo_existence.stat.exists == False
+
+- name: "Install hugo"
+  become: yes
+  apt:
+    deb: "{{hugo_tmp}}/hugo.deb"
+  when: hugo_existence.stat.exists == False
+
+- name: Clone git repository
+  git:
+    repo: https://github.com/shaldengeki/seinmastudios.com.git
+    version: "{{app_branch}}"
+    dest: "{{app_dir}}"
+    force: yes
+

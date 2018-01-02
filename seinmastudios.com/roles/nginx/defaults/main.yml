@@ -1,0 +1,11 @@
+---
+nginx_prefix: /usr/local/nginx
+nginx_sbin_path: /usr/local/sbin/nginx
+nginx_conf_path: /usr/local/nginx/conf
+nginx_error_path: /var/log/nginx/error.log
+nginx_log_path: /var/log/nginx/access.log
+nginx_pid_path: /var/run/nginx.pid
+nginx_lock_path: /var/run/nginx.lock
+nginx_user: www-data
+nginx_group: www-data
+nginx_version: "1.13.4"

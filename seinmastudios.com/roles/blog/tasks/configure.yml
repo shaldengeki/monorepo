@@ -1,0 +1,26 @@
+---
+- name: "Check for existence of nginx configs"
+  stat:
+    path: "{{nginx_conf_path}}/sites-enabled/seinmastudios.com"
+  register: blog_nginx_conf
+
+- name: Add nginx configuration
+  become: true
+  template:
+    src: usr/local/nginx/conf/sites-available/seinmastudios.com
+    dest: "{{nginx_conf_path}}/sites-available/seinmastudios.com"
+    mode: 0644
+  when: blog_nginx_conf.stat.exists == False
+
+- name: Enable blog through nginx
+  become: true
+  file:
+    state: link
+    src: "{{nginx_conf_path}}/sites-available/seinnmastudios.com"
+    dest: "{{nginx_conf_path}}/sites-enabled/seinnmastudios.com"
+  when: blog_nginx_conf.stat.exists == False
+
+- name: Restart nginx
+  notify: "restart nginx"
+  command: /bin/true
+  when: blog_nginx_conf.stat.exists == False

@@ -1,0 +1,4 @@
+---
+- name: Reload configuration
+  notify: "reload nginx"
+  command: /bin/true
