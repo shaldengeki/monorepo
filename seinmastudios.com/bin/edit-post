@@ -1,0 +1,5 @@
+#!/bin/bash
+
+POST_NAME=$1
+
+$EDITOR content/posts/$POST_NAME.md

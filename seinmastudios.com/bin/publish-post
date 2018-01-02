@@ -1,0 +1,8 @@
+#!/bin/bash
+
+POST_NAME=$1
+
+git add content/posts/$POST_NAME.md
+git commit -m "Add post $POST_NAME"
+git push origin master
+ansible-playbook site.yml
