@@ -1,7 +1,7 @@
 ---
 title: "Catching Us Up to 2018"
 date: 2018-01-02T12:03:41-08:00
-draft: true
+draft: false
 ---
 
 Well, it's been a year since my last blogpost, which caught us up to 2017. Let's bring us up to speed again, shall we? Here's the month-by-month highlights once again:
