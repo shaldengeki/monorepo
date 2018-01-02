@@ -8,19 +8,18 @@ Requires:
 
 - [Hugo](https://gohugo.io)
 
-1. `hugo new posts/my-new-post.md && nano content/posts/my-new-post.md`
-2. Commit to master & deploy
+1. `./bin/new-post my-new-post`
+2. (optional) `./bin/edit-post my-new-post`
 
-Deployment
+Publishing
 ----------
+
 Requires:
 
 - [Ansible](https://www.ansible.com).
 - SSH key at `~/.ssh/seinmastudios.production.pem`
 - Secrets vault password
 
-To run:
-```
-ansible-playbook site.yml
-```
+To publish:
 
+1. `./bin/publish-post my-new-post`
