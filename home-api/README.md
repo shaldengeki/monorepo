@@ -6,5 +6,16 @@ API for home dashboard.
 python -m venv venv
 . venv/bin/activate
 pip install -r requirements.txt
-./bin/start_server
+```
+
+# Running
+
+To start the API:
+```bash
+./bin/start_api
+```
+
+To start the frontend:
+```bash
+./bin/start_frontend
 ```
