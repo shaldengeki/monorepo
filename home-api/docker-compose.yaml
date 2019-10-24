@@ -12,6 +12,18 @@ services:
     environment:
       - PORT=5000
       - FLASK_ENV=development
+  migration:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: home_api
+    volumes:
+      - ./api:/usr/src/app
+    command: ["flask", "db", "migrate"]
+    environment:
+      - FLASK_ENV=development
+    depends_on:
+      - pg
   pg:
     image: postgres:alpine
     restart: always
