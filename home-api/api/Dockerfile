@@ -6,7 +6,7 @@ RUN apk update && \
 
 WORKDIR /usr/src/app
 
-ENV FLASK_APP=api/app.py
+ENV FLASK_APP=app.py
 ENV PORT=5000
 
 COPY requirements.txt ./
