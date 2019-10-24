@@ -3,8 +3,7 @@ API for home dashboard.
 
 # Setup
 ```bash
-python -m venv venv
-. venv/bin/activate
+cd api
 pip install -r requirements.txt
 ```
 
