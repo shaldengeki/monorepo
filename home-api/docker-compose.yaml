@@ -3,7 +3,7 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: ./api/Dockerfile
+      dockerfile: Dockerfile
     image: home_api
     ports:
       - "5000:5000"
