@@ -5,7 +5,7 @@ from flask_graphql import GraphQLView
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from .schema import schema
+from schema import schema
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://{user}:{password}@{host}/{db}'.format(
