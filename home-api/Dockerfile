@@ -1,5 +1,8 @@
 FROM python:3.7-alpine
 
+RUN apk update && \
+    apk add postgresql-dev
+
 WORKDIR /usr/src/app
 
 ENV FLASK_APP=api/app.py
