@@ -9,3 +9,12 @@ services:
       - .:/usr/src/app
     environment:
       - PORT=5000
+  pg:
+    image: postgres:alpine
+    restart: always
+    ports:
+        - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=development
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=api_development
