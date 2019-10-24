@@ -1,3 +1,6 @@
 Flask
+Flask-Migrate
+sqlalchemy
+Flask-SQLAlchemy
 graphql-core==2.2
 flask_graphql
