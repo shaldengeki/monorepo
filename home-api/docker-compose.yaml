@@ -8,9 +8,10 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - .:/usr/src/app
+      - ./api:/usr/src/app
     environment:
       - PORT=5000
+      - FLASK_ENV=development
   pg:
     image: postgres:alpine
     restart: always

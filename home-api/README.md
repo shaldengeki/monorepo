@@ -1,17 +1,11 @@
 # home-api
 API for home dashboard.
 
-# Setup
-```bash
-cd api
-pip install -r requirements.txt
-```
-
 # Running
 
 To start the API:
 ```bash
-./bin/start_api
+docker-compose up
 ```
 
 To start the frontend:
