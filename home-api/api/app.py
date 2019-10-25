@@ -13,6 +13,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://{user}:{password}@{host}/{db
     host=os.getenv('DB_HOST', 'pg'),
     db=os.getenv('DB_NAME', 'api_development')
 )
+CORS(
+    app,
+    resources={
+        "/graphql": {
+            "origins": [
+                "http://{host}:{port}".format(
+                    host=os.getenv('FRONTEND_HOST', 'localhost'),
+                    port=os.getenv('FRONTEND_PORT', 5001)
+                )
+            ],
+        }
+    }
+)
 
 db = SQLAlchemy(app)
 
@@ -26,12 +39,4 @@ app.add_url_rule(
         schema=graphql.Schema(models),
         graphiql=True
     )
-)
-CORS(
-    app,
-    resources={
-        r"*": {
-            "origins": "192.168.1.5:*"
-        }
-    }
 )
