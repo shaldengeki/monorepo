@@ -1,4 +1,5 @@
 from graphql import (
+    GraphQLArgument,
     GraphQLObjectType,
     GraphQLEnumType,
     GraphQLEnumValue,
@@ -66,8 +67,27 @@ transactionType = GraphQLObjectType(
     }
 )
 
+def fetch_transactions(models, params):
+    query_obj = models.Transaction.query
+    if params['earliestDate']:
+        query_obj = query_obj.filter(models.Transaction.date >= int(params['earliestDate']))
+    if params['latestDate']:
+        query_obj = query_obj.filter(models.Transaction.date <= int(params['latestDate']))
+    return query_obj.all()
+
+
 def transactionsType(models):
     return GraphQLField(
         GraphQLList(transactionType),
-        resolver=lambda *args: models.Transaction.query.all()
+        args={
+            "earliestDate"; GraphQLArgument(
+                description="Earliest date that a transaction should have.",
+                type=GraphQLInt
+            ),
+            "latestDate"; GraphQLArgument(
+                description="Latest date that a transaction should have.",
+                type=GraphQLInt
+            ),
+        },
+        resolver=lambda root, info, **args: fetch_transactions(models, args)
     )
