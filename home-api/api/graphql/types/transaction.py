@@ -1,4 +1,5 @@
 import datetime
+import itertools
 from graphql import (
     GraphQLArgument,
     GraphQLObjectType,
@@ -68,6 +69,26 @@ transactionType = GraphQLObjectType(
     }
 )
 
+amountOverTimeType = GraphQLObjectType(
+    "AmountOverTime",
+    description="A summed-up amount representing transactions grouped over some time bucket.",
+    fields=lambda: {
+        "date": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The start of the time bucket, in unix epoch time.",
+            resolver=lambda transaction, info, **args: int(transaction.date.timestamp()),
+        ),
+        "amount": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The summed amount of transactions within the bucket, in cents USD."
+        ),
+        "transactions": GraphQLField(
+            GraphQLNonNull(GraphQLList(transactionType)),
+            description="The transactions that fall within the current bucket"
+        )
+    }
+)
+
 def fetch_transactions(models, params):
     query_obj = models.Transaction.query
     if params.get('earliestDate', False):
@@ -88,43 +109,61 @@ def fetch_transactions(models, params):
         query_obj = query_obj.filter(models.Transaction.account == params['account'])
     return query_obj.all()
 
+def aggregate_transactions(transactions):
+    results = []
+    for group, items in itertools.groupby(transactions, lambda t: datetime.datetime.utcfromtimestamp(t.date).strftime('%Y-%m')):
+        results.append({
+            'date': datetime.datetime.strptime(group, '%Y-%m').timestamp(),
+            'amount': sum(t.amount for t in items),
+            'transactions': items,
+        })
+    return results
+
+transactionsFilters = {
+    "earliestDate": GraphQLArgument(
+        description="Earliest date that a transaction should have.",
+        type=GraphQLInt
+    ),
+    "latestDate": GraphQLArgument(
+        description="Latest date that a transaction should have.",
+        type=GraphQLInt
+    ),
+    "minAmount": GraphQLArgument(
+        description="Lowest amount that a transaction should have.",
+        type=GraphQLInt
+    ),
+    "maxAmount": GraphQLArgument(
+        description="Highest amount that a transaction should have.",
+        type=GraphQLInt
+    ),
+    "description": GraphQLArgument(
+        description="Value for description that a transaction should have.",
+        type=GraphQLString
+    ),
+    "type": GraphQLArgument(
+        description="Value for type that a transaction should have.",
+        type=GraphQLString
+    ),
+    "category": GraphQLArgument(
+        description="Value for category that a transaction should have.",
+        type=GraphQLString
+    ),
+    "account": GraphQLArgument(
+        description="Value for account that a transaction should have.",
+        type=GraphQLString
+    ),
+}
 
 def transactionsType(models):
     return GraphQLField(
         GraphQLList(transactionType),
-        args={
-            "earliestDate": GraphQLArgument(
-                description="Earliest date that a transaction should have.",
-                type=GraphQLInt
-            ),
-            "latestDate": GraphQLArgument(
-                description="Latest date that a transaction should have.",
-                type=GraphQLInt
-            ),
-            "minAmount": GraphQLArgument(
-                description="Lowest amount that a transaction should have.",
-                type=GraphQLInt
-            ),
-            "maxAmount": GraphQLArgument(
-                description="Highest amount that a transaction should have.",
-                type=GraphQLInt
-            ),
-            "description": GraphQLArgument(
-                description="Value for description that a transaction should have.",
-                type=GraphQLString
-            ),
-            "type": GraphQLArgument(
-                description="Value for type that a transaction should have.",
-                type=GraphQLString
-            ),
-            "category": GraphQLArgument(
-                description="Value for category that a transaction should have.",
-                type=GraphQLString
-            ),
-            "account": GraphQLArgument(
-                description="Value for account that a transaction should have.",
-                type=GraphQLString
-            ),
-        },
+        args=transactionsFilters,
         resolver=lambda root, info, **args: fetch_transactions(models, args)
+    )
+
+def amountByMonthType(models):
+    return GraphQLField(
+        GraphQLList(amountOverTimeType),
+        args=transactionsFilters,
+        resolver=lambda root, info, **args: aggregate_transactions(fetch_transactions(models, args))
     )
