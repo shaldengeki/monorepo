@@ -80,11 +80,11 @@ def transactionsType(models):
     return GraphQLField(
         GraphQLList(transactionType),
         args={
-            "earliestDate"; GraphQLArgument(
+            "earliestDate": GraphQLArgument(
                 description="Earliest date that a transaction should have.",
                 type=GraphQLInt
             ),
-            "latestDate"; GraphQLArgument(
+            "latestDate": GraphQLArgument(
                 description="Latest date that a transaction should have.",
                 type=GraphQLInt
             ),
