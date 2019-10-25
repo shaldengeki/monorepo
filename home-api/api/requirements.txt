@@ -1,0 +1,7 @@
+Flask
+Flask-Migrate
+psycopg2
+sqlalchemy
+Flask-SQLAlchemy
+graphql-core==2.2
+flask_graphql

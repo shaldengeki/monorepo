@@ -1,3 +1,0 @@
-Flask
-graphql-core==2.2
-flask_graphql
