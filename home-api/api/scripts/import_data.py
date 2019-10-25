@@ -3,24 +3,25 @@ import csv
 import datetime
 import sys
 
-from app import db
-from models.transaction import Transaction
+from app.app import db
+from app.models.transaction import Transaction
 
 def read_file(filename):
     rows_written = 0
     with open(filename, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
+            print(row)
             t = Transaction(
-                datetime.datetime.strptime(row['Date'], '%m/%d/%Y'),
-                row['Description'],
-                row['Original Description'],
-                round(float(row["Amount"]*100)),
-                row["Transaction Type"],
-                row["Category"],
-                row["Account Name"],
-                row["Labels"],
-                row["Notes"]
+                date=datetime.datetime.strptime(row['Date'], '%m/%d/%Y'),
+                description=row['Description'],
+                original_description=row['Original Description'],
+                amount=round(float(row["Amount"])*100),
+                type=row["Transaction Type"],
+                category=row["Category"],
+                account=row["Account Name"],
+                labels=row["Labels"],
+                notes=row["Notes"]
             )
             db.session.add(t)
             rows_written += 1
@@ -28,6 +29,7 @@ def read_file(filename):
     print("Wrote {num} transactions to database".format(
         num=rows_written
     ))
+
 
 if __name__ == '__main__':
     read_file(sys.argv[1])
