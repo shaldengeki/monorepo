@@ -12,6 +12,7 @@ from graphql import (
     GraphQLNonNull,
     GraphQLString
 )
+from sqlalchemy import desc
 
 transactionTypeEnum = GraphQLEnumType(
     "TransactionType",
@@ -118,7 +119,7 @@ def fetch_transactions(models, params):
         query_obj = query_obj.filter(models.Transaction.category == params['category'])
     if params.get('account', False):
         query_obj = query_obj.filter(models.Transaction.account == params['account'])
-    return query_obj.all()
+    return query_obj.order_by(desc(models.Transaction.date)).all()
 
 AggregatedTransaction = collections.namedtuple('AggregatedTransaction', ['date', 'amount', 'transactions'])
 
