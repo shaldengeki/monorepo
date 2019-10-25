@@ -86,7 +86,7 @@ amountOverTimeType = GraphQLObjectType(
         "formattedMonth": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="The start of the time bucket, YYYY-MM format.",
-            resolver=lambda x: datetime.datetime.utcfromtimestamp(x.date).strftime("%Y-%m"),
+            resolver=lambda obj, info, **args: datetime.datetime.utcfromtimestamp(obj.date).strftime("%Y-%m"),
         ),
         "amount": GraphQLField(
             GraphQLNonNull(GraphQLInt),
