@@ -23,7 +23,7 @@ services:
     image: home_api
     volumes:
       - ./api:/usr/src/app
-    command: ["flask", "db", "migrate"]
+    command: ["flask", "db", "upgrade"]
     environment:
       - FLASK_ENV=development
       - DB_HOST=pg
