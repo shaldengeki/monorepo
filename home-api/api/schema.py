@@ -30,6 +30,7 @@ transactionType = GraphQLObjectType(
         "date": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The time that the transaction was made, in unix epoch time."
+            resolver=lambda transaction, info, **args: int(transaction.date.timestamp()),
         ),
         "description": GraphQLField(
             GraphQLNonNull(GraphQLString),
