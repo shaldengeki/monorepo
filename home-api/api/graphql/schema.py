@@ -4,7 +4,10 @@ from graphql import (
     GraphQLSchema,
     GraphQLString
 )
-from .types.transaction import transactionsType
+from .types.transaction import (
+    transactionsType,
+    amountByMonthType
+)
 
 def Schema(models):
     return GraphQLSchema(
@@ -12,6 +15,7 @@ def Schema(models):
             name='RootQueryType',
             fields={
                 'transactions': transactionsType(models),
+                'amountByMonth': amountByMonthType(models),
             }
         )
     )
