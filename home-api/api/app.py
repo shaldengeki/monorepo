@@ -5,8 +5,6 @@ from flask_graphql import GraphQLView
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from .schema import schema
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://{user}:{password}@{host}/{db}'.format(
     user=os.getenv('DB_USER', 'admin'),
@@ -20,10 +18,11 @@ db = SQLAlchemy(app)
 from . import models
 migrate = Migrate(app, db)
 
+from . import graphql
 app.add_url_rule(
     '/graphql',
     view_func=GraphQLView.as_view('graphql',
-        schema=schema(models),
+        schema=graphql.Schema(models),
         graphiql=True
     )
 )

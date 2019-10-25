@@ -6,7 +6,6 @@ from graphql import (
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
-    GraphQLSchema,
     GraphQLString
 )
 
@@ -67,19 +66,8 @@ transactionType = GraphQLObjectType(
     }
 )
 
-def schema(models):
-    return GraphQLSchema(
-        query=GraphQLObjectType(
-            name='RootQueryType',
-            fields={
-                'hello': GraphQLField(
-                    GraphQLString,
-                    resolver=lambda *args: 'world'
-                ),
-                'transactions': GraphQLField(
-                    GraphQLList(transactionType),
-                    resolver=lambda *args: models.Transaction.query.all()
-                )
-            }
-        )
+def transactionsType(models):
+    return GraphQLField(
+        GraphQLList(transactionType),
+        resolver=lambda *args: models.Transaction.query.all()
     )
