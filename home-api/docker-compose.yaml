@@ -43,3 +43,16 @@ services:
       - POSTGRES_DB=api_development
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: home_frontend
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./frontend:/usr/src/app
+    environment:
+      - PORT=5001
+      - API_HOST=api
+      - API_PORT=5000
