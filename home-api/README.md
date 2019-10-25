@@ -3,12 +3,7 @@ API for home dashboard.
 
 # Running
 
-To start the API:
+To start everything:
 ```bash
 docker-compose up
-```
-
-To start the frontend:
-```bash
-./bin/start_frontend
 ```
