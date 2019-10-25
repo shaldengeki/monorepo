@@ -32,8 +32,13 @@ transactionType = GraphQLObjectType(
         ),
         "date": GraphQLField(
             GraphQLNonNull(GraphQLInt),
-            description="The time that the transaction was made, in unix epoch time.",
+            description="The date that the transaction was made, in unix epoch time.",
             resolver=lambda transaction, info, **args: int(transaction.date.timestamp()),
+        ),
+        "formattedDate": GraphQLField(
+            GraphQLNonNull(GraphQLString),
+            description="The date that the transaction was made, in YYYY-MM-DD format.",
+            resolver=lambda transaction, info, **args: transaction.date.strftime("%Y-%m-%d"),
         ),
         "description": GraphQLField(
             GraphQLNonNull(GraphQLString),
@@ -77,6 +82,11 @@ amountOverTimeType = GraphQLObjectType(
         "date": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The start of the time bucket, in unix epoch time."
+        ),
+        "formattedMonth": GraphQLField(
+            GraphQLNonNull(GraphQLString),
+            description="The start of the time bucket, YYYY-MM format.",
+            resolver=lambda x: datetime.datetime.utcfromtimestamp(x.date).strftime("%Y-%m"),
         ),
         "amount": GraphQLField(
             GraphQLNonNull(GraphQLInt),
