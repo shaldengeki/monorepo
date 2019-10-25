@@ -17,14 +17,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://{user}:{password}@{host}/{db
 
 db = SQLAlchemy(app)
 
-from .models.transaction import Transaction
-
+import models
 migrate = Migrate(app, db)
 
 app.add_url_rule(
     '/graphql',
     view_func=GraphQLView.as_view('graphql',
-        schema=schema,
+        schema=schema(models),
         graphiql=True
     )
 )
