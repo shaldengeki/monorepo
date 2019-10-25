@@ -1,3 +1,4 @@
+import collections
 import datetime
 import itertools
 from graphql import (
@@ -109,14 +110,16 @@ def fetch_transactions(models, params):
         query_obj = query_obj.filter(models.Transaction.account == params['account'])
     return query_obj.all()
 
+AggregatedTransaction = collections.namedtuple('AggregatedTransaction', ['date', 'amount', 'transactions'])
+
 def aggregate_transactions(transactions):
     results = []
     for group, items in itertools.groupby(transactions, lambda t: t.date.strftime('%Y-%m')):
-        results.append({
-            'date': datetime.datetime.strptime(group, '%Y-%m').timestamp(),
-            'amount': sum(t.amount for t in items),
-            'transactions': items,
-        })
+        results.append(AggregatedTransaction(
+            date=datetime.datetime.strptime(group, '%Y-%m').timestamp(),
+            amount=sum(t.amount for t in items),
+            transactions=items
+        ))
     return results
 
 transactionsFilters = {
