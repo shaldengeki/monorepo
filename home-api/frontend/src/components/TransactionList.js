@@ -23,9 +23,9 @@ const renderTransaction = (txn) => {
     )
 }
 
-export default TransactionList = () => {
+const TransactionList = () => {
     const { data, loading, error } = useQuery(GET_TRANSACTIONS);
-    const loadingDisplay = <h1>Loading...</h1>;
+    const loadingDisplay = <h1>Loading transactions...</h1>;
     const errorDisplay = <h1>Error loading transactions!</h1>;
     
     if (loading) return loadingDisplay;
@@ -39,3 +39,5 @@ export default TransactionList = () => {
         </Fragment>
     );
 }
+
+export default TransactionList;
