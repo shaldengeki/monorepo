@@ -1,7 +1,6 @@
 from graphql import (
     GraphQLObjectType,
     GraphQLField,
-    GraphQLList,
     GraphQLSchema,
     GraphQLString
 )
@@ -12,10 +11,6 @@ def Schema(models):
         query=GraphQLObjectType(
             name='RootQueryType',
             fields={
-                'hello': GraphQLField(
-                    GraphQLString,
-                    resolver=lambda *args: 'world'
-                ),
                 'transactions': transactionsType(models),
             }
         )
