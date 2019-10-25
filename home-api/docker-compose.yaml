@@ -51,7 +51,7 @@ services:
     ports:
       - "5001:5001"
     volumes:
-      - ./frontend:/usr/src/app
+      - ./frontend/src:/usr/src/app/src
     environment:
       - PORT=5001
       - API_HOST=api
