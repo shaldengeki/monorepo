@@ -1,3 +1,4 @@
+import datetime
 from graphql import (
     GraphQLArgument,
     GraphQLObjectType,
@@ -69,10 +70,10 @@ transactionType = GraphQLObjectType(
 
 def fetch_transactions(models, params):
     query_obj = models.Transaction.query
-    if params['earliestDate']:
-        query_obj = query_obj.filter(models.Transaction.date >= int(params['earliestDate']))
-    if params['latestDate']:
-        query_obj = query_obj.filter(models.Transaction.date <= int(params['latestDate']))
+    if params.get('earliestDate', False):
+        query_obj = query_obj.filter(models.Transaction.date >= datetime.datetime.utcfromtimestamp(int(params['earliestDate'])))
+    if params.get('latestDate', False):
+        query_obj = query_obj.filter(models.Transaction.date <= datetime.datetime.utcfromtimestamp(int(params['latestDate'])))
     return query_obj.all()
 
 
