@@ -111,7 +111,7 @@ def fetch_transactions(models, params):
 
 def aggregate_transactions(transactions):
     results = []
-    for group, items in itertools.groupby(transactions, lambda t: datetime.datetime.utcfromtimestamp(t.date).strftime('%Y-%m')):
+    for group, items in itertools.groupby(transactions, lambda t: t.date.strftime('%Y-%m')):
         results.append({
             'date': datetime.datetime.strptime(group, '%Y-%m').timestamp(),
             'amount': sum(t.amount for t in items),
