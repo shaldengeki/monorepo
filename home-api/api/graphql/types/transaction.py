@@ -1,4 +1,6 @@
+import datetime
 from graphql import (
+    GraphQLArgument,
     GraphQLObjectType,
     GraphQLEnumType,
     GraphQLEnumValue,
@@ -6,7 +8,6 @@ from graphql import (
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
-    GraphQLSchema,
     GraphQLString
 )
 
@@ -67,19 +68,27 @@ transactionType = GraphQLObjectType(
     }
 )
 
-def schema(models):
-    return GraphQLSchema(
-        query=GraphQLObjectType(
-            name='RootQueryType',
-            fields={
-                'hello': GraphQLField(
-                    GraphQLString,
-                    resolver=lambda *args: 'world'
-                ),
-                'transactions': GraphQLField(
-                    GraphQLList(transactionType),
-                    resolver=lambda *args: models.Transaction.query.all()
-                )
-            }
-        )
+def fetch_transactions(models, params):
+    query_obj = models.Transaction.query
+    if params.get('earliestDate', False):
+        query_obj = query_obj.filter(models.Transaction.date >= datetime.datetime.utcfromtimestamp(int(params['earliestDate'])))
+    if params.get('latestDate', False):
+        query_obj = query_obj.filter(models.Transaction.date <= datetime.datetime.utcfromtimestamp(int(params['latestDate'])))
+    return query_obj.all()
+
+
+def transactionsType(models):
+    return GraphQLField(
+        GraphQLList(transactionType),
+        args={
+            "earliestDate": GraphQLArgument(
+                description="Earliest date that a transaction should have.",
+                type=GraphQLInt
+            ),
+            "latestDate": GraphQLArgument(
+                description="Latest date that a transaction should have.",
+                type=GraphQLInt
+            ),
+        },
+        resolver=lambda root, info, **args: fetch_transactions(models, args)
     )
