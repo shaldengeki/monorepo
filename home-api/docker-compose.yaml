@@ -41,3 +41,5 @@ services:
       - POSTGRES_PASSWORD=development
       - POSTGRES_USER=admin
       - POSTGRES_DB=api_development
+    volumes:
+      - /var/lib/postgresql/data
