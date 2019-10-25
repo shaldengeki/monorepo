@@ -3,6 +3,7 @@ from graphql import (
     GraphQLEnumType,
     GraphQLEnumValue,
     GraphQLField,
+    GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
     GraphQLSchema,
