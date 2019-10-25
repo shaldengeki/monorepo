@@ -76,8 +76,7 @@ amountOverTimeType = GraphQLObjectType(
     fields=lambda: {
         "date": GraphQLField(
             GraphQLNonNull(GraphQLInt),
-            description="The start of the time bucket, in unix epoch time.",
-            resolver=lambda transaction, info, **args: int(transaction.date.timestamp()),
+            description="The start of the time bucket, in unix epoch time."
         ),
         "amount": GraphQLField(
             GraphQLNonNull(GraphQLInt),
