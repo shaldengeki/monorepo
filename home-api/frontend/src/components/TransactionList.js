@@ -19,7 +19,7 @@ const GET_TRANSACTIONS = gql`
 
 const renderTransaction = (txn) => {
     return (
-        <p>{txn.formattedDate}: {txn.description} (${txn.amount / 100.0})</p>
+        <p>{txn.formattedDate}: {txn.description} - {txn.category} (${txn.amount / 100.0})</p>
     )
 }
 
