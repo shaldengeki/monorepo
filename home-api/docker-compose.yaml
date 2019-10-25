@@ -54,5 +54,5 @@ services:
       - ./frontend/src:/usr/src/app/src
     environment:
       - PORT=5001
-      - API_HOST=api
-      - API_PORT=5000
+      - REACT_APP_API_HOST=api
+      - REACT_APP_API_PORT=5000
