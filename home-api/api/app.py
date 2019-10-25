@@ -30,7 +30,7 @@ app.add_url_rule(
 CORS(
     app,
     resources={
-        r"/graphql*": {
+        r"*": {
             "origins": "192.168.1.5:*"
         }
     }
