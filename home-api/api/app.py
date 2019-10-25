@@ -16,6 +16,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://{user}:{password}@{host}/{db
 )
 
 db = SQLAlchemy(app)
+
+from .models.transaction import Transaction
+
 migrate = Migrate(app, db)
 
 app.add_url_rule(
