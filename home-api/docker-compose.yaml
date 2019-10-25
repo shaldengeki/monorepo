@@ -42,4 +42,4 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_DB=api_development
     volumes:
-      - /var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
