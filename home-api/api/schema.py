@@ -4,12 +4,13 @@ from graphql import (
     GraphQLEnumValue,
     GraphQLField,
     GraphQLList,
+    GraphQLNonNull,
     GraphQLSchema,
     GraphQLString
 )
 
 transactionTypeEnum = GraphQLEnumType(
-    "Transaction type",
+    "TransactionType",
     description="Types of transactions",
     values={
         "debit": GraphQLEnumValue('debit', description='A transaction that took money out of an account'),
