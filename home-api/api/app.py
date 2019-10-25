@@ -4,6 +4,7 @@ from flask import Flask
 from flask_graphql import GraphQLView
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://{user}:{password}@{host}/{db}'.format(
@@ -25,4 +26,12 @@ app.add_url_rule(
         schema=graphql.Schema(models),
         graphiql=True
     )
+)
+CORS(
+    app,
+    resources={
+        r"/graphql*": {
+            "origins": "192.168.1.5:*"
+        }
+    }
 )
