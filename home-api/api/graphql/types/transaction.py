@@ -44,9 +44,10 @@ transactionType = GraphQLObjectType(
             GraphQLNonNull(GraphQLString),
             description="The cleaned-up description for the transaction."
         ),
-        "original_description": GraphQLField(
+        "originalDescription": GraphQLField(
             GraphQLNonNull(GraphQLString),
-            description="The original description for the transaction, retrieved from the account."
+            description="The original description for the transaction, retrieved from the account.",
+            resolver=lambda transaction, info, **args: transaction.original_description,
         ),
         "amount": GraphQLField(
             GraphQLNonNull(GraphQLInt),
