@@ -74,6 +74,18 @@ def fetch_transactions(models, params):
         query_obj = query_obj.filter(models.Transaction.date >= datetime.datetime.utcfromtimestamp(int(params['earliestDate'])))
     if params.get('latestDate', False):
         query_obj = query_obj.filter(models.Transaction.date <= datetime.datetime.utcfromtimestamp(int(params['latestDate'])))
+    if params.get('minAmount', False):
+        query_obj = query_obj.filter(models.Transaction.amount >= int(params['minAmount']))
+    if params.get('maxAmount', False):
+        query_obj = query_obj.filter(models.Transaction.amount <= int(params['maxAmount']))
+    if params.get('description', False):
+        query_obj = query_obj.filter(models.Transaction.description == params['description'])
+    if params.get('type', False):
+        query_obj = query_obj.filter(models.Transaction.type == params['type'])
+    if params.get('category', False):
+        query_obj = query_obj.filter(models.Transaction.category == params['category'])
+    if params.get('account', False):
+        query_obj = query_obj.filter(models.Transaction.account == params['account'])
     return query_obj.all()
 
 
@@ -88,6 +100,30 @@ def transactionsType(models):
             "latestDate": GraphQLArgument(
                 description="Latest date that a transaction should have.",
                 type=GraphQLInt
+            ),
+            "minAmount": GraphQLArgument(
+                description="Lowest amount that a transaction should have.",
+                type=GraphQLInt
+            ),
+            "maxAmount": GraphQLArgument(
+                description="Highest amount that a transaction should have.",
+                type=GraphQLInt
+            ),
+            "description": GraphQLArgument(
+                description="Value for description that a transaction should have.",
+                type=GraphQLString
+            ),
+            "type": GraphQLArgument(
+                description="Value for type that a transaction should have.",
+                type=GraphQLString
+            ),
+            "category": GraphQLArgument(
+                description="Value for category that a transaction should have.",
+                type=GraphQLString
+            ),
+            "account": GraphQLArgument(
+                description="Value for account that a transaction should have.",
+                type=GraphQLString
             ),
         },
         resolver=lambda root, info, **args: fetch_transactions(models, args)
