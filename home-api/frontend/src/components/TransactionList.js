@@ -20,17 +20,6 @@ const GET_TRANSACTIONS = gql`
     }
 `;
 
-const renderTransaction = (txn) => {
-    return (
-        <tr>
-            <td class="border px-4 py-2">{txn.formattedDate}</td>
-            <td class="border px-4 py-2">{txn.description}</td>
-            <td class="border px-4 py-2">{txn.category}</td>
-            <td class="border px-4 py-2">${txn.amount / 100.0}</td>
-        </tr>
-    );
-}
-
 const TransactionList = () => {
     const cols = [
         'formattedDate',
@@ -56,7 +45,7 @@ const TransactionList = () => {
     });
 
     return (
-        <Table cols={cols} rows={data.transactions || []} renderRow={renderTransaction} />
+        <Table cols={cols} rows={transactions} />
     );
 }
 
