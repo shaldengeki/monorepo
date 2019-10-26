@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from "graphql-tag";
 
@@ -19,8 +19,13 @@ const GET_TRANSACTIONS = gql`
 
 const renderTransaction = (txn) => {
     return (
-        <p>{txn.formattedDate}: {txn.description} - {txn.category} (${txn.amount / 100.0})</p>
-    )
+        <tr>
+            <td class="border px-4 py-2">{txn.formattedDate}</td>
+            <td class="border px-4 py-2">{txn.description}</td>
+            <td class="border px-4 py-2">{txn.category}</td>
+            <td class="border px-4 py-2">${txn.amount / 100.0}</td>
+        </tr>
+    );
 }
 
 const TransactionList = () => {
@@ -32,10 +37,20 @@ const TransactionList = () => {
     if (error) return errorDisplay;
 
     return (
-        <Fragment>
-          {data.transactions &&
-            data.transactions.map(txn => renderTransaction(txn))}
-        </Fragment>
+        <table class="table-auto">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Date</th>
+                    <th class="px-4 py-2">Description</th>
+                    <th class="px-4 py-2">Category</th>
+                    <th class="px-4 py-2">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {data.transactions &&
+                    data.transactions.map(txn => renderTransaction(txn))}
+            </tbody>
+        </table>
     );
 }
 
