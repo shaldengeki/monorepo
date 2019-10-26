@@ -1,9 +1,12 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from "graphql-tag";
+import _ from 'lodash';
+
+import Table from './Table';
 
 const GET_TRANSACTIONS = gql`
-    {
+    query Transactions {
         transactions {
             date
             formattedDate
@@ -29,7 +32,14 @@ const renderTransaction = (txn) => {
 }
 
 const TransactionList = () => {
+    const cols = [
+        'formattedDate',
+        'description',
+        'category',
+        'amount'
+    ];
     const { data, loading, error } = useQuery(GET_TRANSACTIONS);
+
     const loadingDisplay = <h1>Loading transactions...</h1>;
     const errorDisplay = <h1>Error loading transactions!</h1>;
 
@@ -37,20 +47,7 @@ const TransactionList = () => {
     if (error) return errorDisplay;
 
     return (
-        <table class="table-auto">
-            <thead>
-                <tr>
-                    <th class="px-4 py-2">Date</th>
-                    <th class="px-4 py-2">Description</th>
-                    <th class="px-4 py-2">Category</th>
-                    <th class="px-4 py-2">Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                {data.transactions &&
-                    data.transactions.map(txn => renderTransaction(txn))}
-            </tbody>
-        </table>
+        <Table cols={cols} rows={data.transactions || []} renderRow={renderTransaction} />
     );
 }
 
