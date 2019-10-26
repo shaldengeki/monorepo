@@ -16,7 +16,7 @@ const renderColumn = (col, filters, setFilter) => {
     )
 }
 
-function useColumnFilters(cols) {
+const useColumnFilters = (cols) => {
     const defaultFilters = _.fromPairs(_.map(cols, (c) => { return [c, '']; }));
     const [filters, setFilters] = useState(defaultFilters);
     function setFilter(name, value) {
@@ -38,7 +38,7 @@ const renderRow = (row, cols) => {
 }
 
 const Table = (props) => {
-    const {cols, rows, renderRow} = props;
+    const {cols, rows} = props;
     const [filters, setFilter] = useColumnFilters(cols);
 
     let shownRows = rows || [];
