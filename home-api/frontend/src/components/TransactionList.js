@@ -1,9 +1,12 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from "graphql-tag";
+import _ from 'lodash';
+
+import Table from './Table';
 
 const GET_TRANSACTIONS = gql`
-    {
+    query Transactions {
         transactions {
             date
             formattedDate
@@ -19,12 +22,24 @@ const GET_TRANSACTIONS = gql`
 
 const renderTransaction = (txn) => {
     return (
-        <p>{txn.formattedDate}: {txn.description} - {txn.category} (${txn.amount / 100.0})</p>
-    )
+        <tr>
+            <td class="border px-4 py-2">{txn.formattedDate}</td>
+            <td class="border px-4 py-2">{txn.description}</td>
+            <td class="border px-4 py-2">{txn.category}</td>
+            <td class="border px-4 py-2">${txn.amount / 100.0}</td>
+        </tr>
+    );
 }
 
 const TransactionList = () => {
+    const cols = [
+        'formattedDate',
+        'description',
+        'category',
+        'amount'
+    ];
     const { data, loading, error } = useQuery(GET_TRANSACTIONS);
+
     const loadingDisplay = <h1>Loading transactions...</h1>;
     const errorDisplay = <h1>Error loading transactions!</h1>;
 
@@ -32,10 +47,7 @@ const TransactionList = () => {
     if (error) return errorDisplay;
 
     return (
-        <Fragment>
-          {data.transactions &&
-            data.transactions.map(txn => renderTransaction(txn))}
-        </Fragment>
+        <Table cols={cols} rows={data.transactions || []} renderRow={renderTransaction} />
     );
 }
 
