@@ -4,7 +4,7 @@ import TransactionList from './components/TransactionList';
 
 function App() {
   return (
-    <div className="App">
+    <div className="text-center">
       <TransactionList />
     </div>
   );
