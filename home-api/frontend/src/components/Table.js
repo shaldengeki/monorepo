@@ -27,6 +27,16 @@ function useColumnFilters(cols) {
     return [filters, setFilter];
 }
 
+const renderRow = (row, cols) => {
+    return (
+        <tr>
+            {cols.map(col => {
+                return <td class="border px-4 py-2">{row[col]}</td>;
+            })}
+        </tr>
+    );
+}
+
 const Table = (props) => {
     const {cols, rows, renderRow} = props;
     const [filters, setFilter] = useColumnFilters(cols);
@@ -46,7 +56,7 @@ const Table = (props) => {
                 </tr>
             </thead>
             <tbody>
-                {shownRows.map(txn => renderRow(txn))}
+                {shownRows.map(txn => renderRow(txn, cols))}
             </tbody>
         </table>
     );

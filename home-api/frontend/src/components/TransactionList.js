@@ -46,6 +46,15 @@ const TransactionList = () => {
     if (loading) return loadingDisplay;
     if (error) return errorDisplay;
 
+    const transactions = _.map(data.transactions || [], (txn) => {
+        return {
+            formattedDate: txn.formattedDate,
+            description: txn.description,
+            category: txn.category,
+            amount: `\$${txn.amount / 100.0}`
+        };
+    });
+
     return (
         <Table cols={cols} rows={data.transactions || []} renderRow={renderTransaction} />
     );
