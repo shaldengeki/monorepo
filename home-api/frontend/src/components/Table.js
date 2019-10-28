@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import _ from 'lodash';
 
-const renderColumn = (col, filters, setFilter) => {
+const renderColumn = (col, filters, setFilter, tablePrefix) => {
     return (
-        <th class="px-4 py-2">
+        <th key={`${tablePrefix}-col-${col}`} className="px-4 py-2">
             <p>{_.startCase(col)}</p>
             <input
-                class="border"
+                className="border"
                 type="text"
                 name="filter[{}]"
                 value={filters[col]}
@@ -27,19 +27,21 @@ const useColumnFilters = (cols) => {
     return [filters, setFilter];
 }
 
-const renderRow = (row, cols) => {
+const renderRow = (row, idx, cols, tablePrefix) => {
+    let rowPrefix = (row['id'] === undefined) ? `${tablePrefix}-row-${idx}` : `${tablePrefix}-row-${row['id']}`
     return (
-        <tr>
-            {cols.map(col => {
-                return <td class="border px-4 py-2">{row[col]}</td>;
+        <tr key={rowPrefix}>
+            {cols.map((col) => {
+                return <td key={`${rowPrefix}-col-${col}`} className="border px-4 py-2">{row[col]}</td>;
             })}
         </tr>
     );
 }
 
 const Table = (props) => {
-    const {cols, rows} = props;
+    const {cols, rows, keyPrefix} = props;
     const [filters, setFilter] = useColumnFilters(cols);
+    const tablePrefix = `Table-${keyPrefix}`;
 
     let shownRows = rows || [];
     _.forEach(cols, (col) => {
@@ -49,14 +51,14 @@ const Table = (props) => {
     });
 
     return (
-        <table class="table-auto">
+        <table key={tablePrefix} className="table-auto">
             <thead>
                 <tr>
-                    {cols.map(col => renderColumn(col, filters, setFilter))}
+                    {cols.map(col => renderColumn(col, filters, setFilter, tablePrefix))}
                 </tr>
             </thead>
             <tbody>
-                {shownRows.map(txn => renderRow(txn, cols))}
+                {shownRows.map((row, idx) => renderRow(row, idx, cols, tablePrefix))}
             </tbody>
         </table>
     );

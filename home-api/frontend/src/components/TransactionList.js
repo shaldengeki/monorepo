@@ -40,12 +40,12 @@ const TransactionList = () => {
             formattedDate: txn.formattedDate,
             description: txn.description,
             category: txn.category,
-            amount: `\$${txn.amount / 100.0}`
+            amount: `$${txn.amount / 100.0}`
         };
     });
 
     return (
-        <Table cols={cols} rows={transactions} />
+        <Table cols={cols} rows={transactions} key='transactions' />
     );
 }
 
