@@ -73,7 +73,7 @@ transactionType = GraphQLObjectType(
         "notes": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="Notes defined on the transaction."
-        ),
+        )
     }
 )
 
@@ -87,8 +87,8 @@ amountOverTimeType = GraphQLObjectType(
         ),
         "formattedMonth": GraphQLField(
             GraphQLNonNull(GraphQLString),
-            description="The start of the time bucket, YYYY-MM format.",
-            resolver=lambda obj, info, **args: datetime.datetime.utcfromtimestamp(obj.date).strftime("%Y-%m"),
+            description="The start of the time bucket, YYYY-MM-01 format.",
+            resolver=lambda obj, info, **args: datetime.datetime.utcfromtimestamp(obj.date).strftime("%Y-%m-01"),
         ),
         "amount": GraphQLField(
             GraphQLNonNull(GraphQLInt),
@@ -128,7 +128,7 @@ def aggregate_transactions(transactions):
     for group, items in itertools.groupby(transactions, lambda t: t.date.strftime('%Y-%m')):
         results.append(AggregatedTransaction(
             date=datetime.datetime.strptime(group, '%Y-%m').timestamp(),
-            amount=sum(t.amount for t in items),
+            amount=sum(t.amount if t.type == 'debit' else -1 * t.amount for t in items),
             transactions=items
         ))
     return results

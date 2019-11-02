@@ -1,11 +1,11 @@
 import React from 'react';
 
-import TransactionList from './components/TransactionList';
+import TransactionDisplay from './components/TransactionDisplay';
 
 function App() {
   return (
     <div className="text-center">
-      <TransactionList />
+      <TransactionDisplay />
     </div>
   );
 }
