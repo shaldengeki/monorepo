@@ -12,9 +12,16 @@ const GET_TRANSACTIONS = gql`
             description
             amount
             category
+            type
+            account
         }
     }
 `;
+
+const formatCurrency = (amt, type) => {
+    const dollarAmt = amt / 100.0;
+    return `$${type === 'debit' ? dollarAmt : -1 * dollarAmt}`
+}
 
 const TransactionList = () => {
     const { data, loading, error } = useQuery(GET_TRANSACTIONS);
@@ -28,14 +35,16 @@ const TransactionList = () => {
     const formattedTransactions = _.map(data.transactions || [], (txn) => {
         return {
             formattedDate: txn.formattedDate,
+            account: txn.account,
             description: txn.description,
             category: txn.category,
-            amount: `$${txn.amount / 100.0}`
+            amount: formatCurrency(txn.amount, txn.type),
         };
     });
 
     const cols = [
         'formattedDate',
+        'account',
         'description',
         'category',
         'amount'
