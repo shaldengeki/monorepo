@@ -19,8 +19,8 @@ const GET_TRANSACTIONS = gql`
 `;
 
 const formatCurrency = (amt, type) => {
-    const dollarAmt = amt / 100.0;
-    return `$${type === 'debit' ? dollarAmt : -1 * dollarAmt}`
+    const dollarAmt = `$${amt / 100.0}`;
+    return (type === 'debit') ? dollarAmt : '-' + dollarAmt;
 }
 
 const TransactionList = () => {
