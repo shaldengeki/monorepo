@@ -26,8 +26,11 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     -
-      name: Prepare
-      id: prepare
+      name: Set up Docker Buildx
+      uses: crazy-max/ghaction-docker-buildx@v3
+    -
+      name: Prepare API build
+      id: prepare_api
       run: |
         DOCKER_IMAGE=shaldengeki/home-api
         DOCKER_PLATFORMS=linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/386,linux/ppc64le,linux/s390x
@@ -53,14 +56,42 @@ jobs:
           --build-arg VCS_REF=${GITHUB_SHA::8} \
           ${TAGS} --file ./api/Dockerfile ./api
     -
-      name: Set up Docker Buildx
-      uses: crazy-max/ghaction-docker-buildx@v3
-    -
-      name: Docker Buildx (build)
+      name: Prepare frontend build
+      id: prepare_frontend
       run: |
-        docker buildx build --output "type=image,push=false" ${{ steps.prepare.outputs.buildx_args }}
+        DOCKER_IMAGE=shaldengeki/home-frontend
+        DOCKER_PLATFORMS=linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/386,linux/ppc64le,linux/s390x
+        VERSION=edge
+
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+        if [ "${{ github.event_name }}" = "schedule" ]; then
+          VERSION=nightly
+        fi
+
+        TAGS="--tag ${DOCKER_IMAGE}:${VERSION}"
+        if [[ $VERSION =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+          TAGS="$TAGS --tag ${DOCKER_IMAGE}:latest"
+        fi
+
+        echo ::set-output name=docker_image::${DOCKER_IMAGE}
+        echo ::set-output name=version::${VERSION}
+        echo ::set-output name=buildx_args::--platform ${DOCKER_PLATFORMS} \
+          --build-arg VERSION=${VERSION} \
+          --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+          --build-arg VCS_REF=${GITHUB_SHA::8} \
+          ${TAGS} --file ./frontend/Dockerfile ./frontend
     -
-      name: Docker Login
+      name: Build API image
+      run: |
+        docker buildx build --output "type=image,push=false" ${{ steps.prepare_api.outputs.buildx_args }}
+    -
+      name: Build frontend image
+      run: |
+        docker buildx build --output "type=image,push=false" ${{ steps.prepare_Frontend.outputs.buildx_args }}
+    -
+      name: Log in to DockerHub
       if: success() && github.event_name != 'pull_request'
       env:
         DOCKER_USERNAME: shaldengeki
@@ -68,15 +99,25 @@ jobs:
       run: |
         echo "${DOCKER_PASSWORD}" | docker login --username "shaldengeki" --password-stdin
     -
-      name: Docker Buildx (push)
+      name: Push API image to DockerHub
       if: success() && github.event_name != 'pull_request'
       run: |
-        docker buildx build --output "type=image,push=true" ${{ steps.prepare.outputs.buildx_args }}
+        docker buildx build --output "type=image,push=true" ${{ steps.prepare_api.outputs.buildx_args }}
     -
-      name: Docker Check Manifest
+      name: Check API manifest
       if: always() && github.event_name != 'pull_request'
       run: |
-        docker run --rm mplatform/mquery ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}
+        docker run --rm mplatform/mquery ${{ steps.prepare_api.outputs.docker_image }}:${{ steps.prepare_api.outputs.version }}
+    -
+      name: Push frontend image to DockerHub
+      if: success() && github.event_name != 'pull_request'
+      run: |
+        docker buildx build --output "type=image,push=true" ${{ steps.prepare_frontend.outputs.buildx_args }}
+    -
+      name: Check frontend manifest
+      if: always() && github.event_name != 'pull_request'
+      run: |
+        docker run --rm mplatform/mquery ${{ steps.prepare_frontend.outputs.docker_image }}:${{ steps.prepare_frontend.outputs.version }}
     -
       name: Clear
       if: always() && github.event_name != 'pull_request'
