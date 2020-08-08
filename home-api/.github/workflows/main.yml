@@ -33,7 +33,7 @@ jobs:
       id: prepare_api
       run: |
         DOCKER_IMAGE=shaldengeki/home-api
-        DOCKER_PLATFORMS=linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/386,linux/ppc64le,linux/s390x
+        DOCKER_PLATFORMS=linux/amd64,linux/arm64
         VERSION=edge
 
         if [[ $GITHUB_REF == refs/tags/* ]]; then
@@ -60,7 +60,7 @@ jobs:
       id: prepare_frontend
       run: |
         DOCKER_IMAGE=shaldengeki/home-frontend
-        DOCKER_PLATFORMS=linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/386,linux/ppc64le,linux/s390x
+        DOCKER_PLATFORMS=linux/amd64,linux/arm64
         VERSION=edge
 
         if [[ $GITHUB_REF == refs/tags/* ]]; then
