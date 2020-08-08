@@ -6,8 +6,8 @@ import gql from "graphql-tag";
 import Table from './Table';
 
 const GET_TRANSACTIONS = gql`
-    query Transactions {
-        transactions {
+    query Transactions($earliestDate: Int!, $latestDate: Int!) {
+        transactions(earliestDate: $earliestDate, latestDate: $latestDate) {
             formattedDate
             description
             amount
@@ -23,8 +23,11 @@ const formatCurrency = (amt, type) => {
     return (type === 'debit') ? dollarAmt : '-' + dollarAmt;
 }
 
-const TransactionList = () => {
-    const { data, loading, error } = useQuery(GET_TRANSACTIONS);
+const TransactionList = (props) => {
+    const {earliestDate, latestDate} = props;
+    const { data, loading, error } = useQuery(GET_TRANSACTIONS, {
+        variables: {earliestDate, latestDate}
+    });
 
     const loadingDisplay = <h1>Loading transactions...</h1>;
     const errorDisplay = <h1>Error loading transactions!</h1>;
