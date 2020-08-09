@@ -1,6 +1,26 @@
 import React from 'react';
+import _ from 'lodash';
+import gql from "graphql-tag";
+import { useQuery } from '@apollo/react-hooks';
+
 
 import DatePicker from './DatePicker';
+
+const GET_FILTERS = gql`
+    query TransactionFilters() {
+        amountRange {
+            min
+            max
+        }
+        accounts
+        categories
+        types
+        dateRange {
+            start
+            end
+        }
+    }
+`;
 
 const TransactionFilters = (props) => {
     const {
@@ -19,6 +39,20 @@ const TransactionFilters = (props) => {
         accounts,
         onChangeAccounts
     } = props;
+
+    const { data, loading, error } = useQuery(GET_FILTERS);
+
+    const loadingDisplay = <h1>Loading filters...</h1>;
+    const errorDisplay = <h1>Error loading filters!</h1>;
+
+    if (loading) return loadingDisplay;
+    if (error) return errorDisplay;
+
+    const typesElement = (
+        <select multiple={true} name="types" value={types} onChange={(e) => {onChangeTypes(e.target.value)}}>
+            {_.map(data.types, (type) => {<option value={type}>{type}</option>})}
+        </select>
+    );
 
     return (
         <div>
@@ -49,6 +83,10 @@ const TransactionFilters = (props) => {
                     value={maxAmount}
                     onChange={(e) => {onChangeMaxAmount(e.target.value)}}
                 />
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2" for="types">Types</label>
+                {typesElement}
             </div>
         </div>
     )
