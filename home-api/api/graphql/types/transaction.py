@@ -127,6 +127,23 @@ dateRangeType = GraphQLObjectType(
 
 DateRange = collections.namedtuple("DateRange", ["start", "end"])
 
+amountRangeType = GraphQLObjectType(
+    "AmountRange",
+    description="An amount range, represented by a minimum and maximum amount.",
+    fields=lambda: {
+        "min": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The minimum of the amount range, in cents USD.",
+        ),
+        "max": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The maximum of the amount range, in cents USD.",
+        ),
+    },
+)
+
+AmountRange = collections.namedtuple("AmountRange", ["min", "max"])
+
 
 def fetch_transactions(models, params):
     query_obj = models.Transaction.query
@@ -240,8 +257,23 @@ def fetch_transaction_date_range(models):
     return DateRange(start=dates.min_date, end=dates.max_date)
 
 
+def fetch_transaction_amount_range(models):
+    amounts = models.Transaction.query(
+        func.max(models.Transaction.amount).label("max_amount"),
+        func.min(models.Transaction.amount).label("min_amount"),
+    ).one()
+    return AmountRange(min=amounts.min_amount, max=amounts.max_amount)
+
+
 def dateRangeField(models):
     return GraphQLField(
         dateRangeType,
         resolver=lambda root, info, **args: fetch_transaction_date_range(models),
+    )
+
+
+def amountRangeField(models):
+    return GraphQLField(
+        amountRangeType,
+        resolver=lambda root, info, **args: fetch_transaction_amount_range(models),
     )

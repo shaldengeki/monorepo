@@ -1,5 +1,10 @@
 from graphql import GraphQLObjectType, GraphQLField, GraphQLSchema, GraphQLString
-from .types.transaction import transactionsField, amountByMonthField, dateRangeField
+from .types.transaction import (
+    transactionsField,
+    amountByMonthField,
+    dateRangeField,
+    amountRangeField,
+)
 
 
 def Schema(models):
@@ -10,6 +15,7 @@ def Schema(models):
                 "transactions": transactionsField(models),
                 "amountByMonth": amountByMonthField(models),
                 "dateRange": dateRangeField(models),
+                "amountRange": amountRangeField(models),
             },
         )
     )
