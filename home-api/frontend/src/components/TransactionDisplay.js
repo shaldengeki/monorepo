@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import _ from 'lodash';
 
-import DatePicker from './DatePicker';
+import TransactionFilters from './TransactionFilters';
 import TransactionList from './TransactionList';
 import TransactionChart from './TransactionChart';
 
@@ -12,6 +12,11 @@ const TransactionDisplay = () => {
 
     const [start, setStart] = useState(earliestDate);
     const [end, setEnd] = useState(latestDate);
+    const [minAmount, setMinAmount] = useState(0);
+    const [maxAmount, setMaxAmount] = useState(1000000);
+    const [types, setTypes] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [accounts, setAccounts] = useState([]);
 
     const parsedStart = Date.parse(start);
     const parsedEnd = Date.parse(end);
@@ -28,13 +33,26 @@ const TransactionDisplay = () => {
         <div class="px-2">
             <div class="flex -mx-2">
                 <div class="w-1/4 px-2">
-                    <DatePicker start={start} end={end} onChangeStart={setStart} onChangeEnd={setEnd} />
-                </div>
-                <div class="w-1/2 px-2">
-                    {listElement}
-                </div>
-                <div class="w-1/4 px-2">
+                    <TransactionFilters
+                        start={start}
+                        onChangeStart={setStart}
+                        end={end}
+                        onChangeEnd={setEnd}
+                        minAmount={minAmount}
+                        onChangeMinAmount={setMinAmount}
+                        maxAmount={maxAmount}
+                        onChangeMaxAmount={setMaxAmount}
+                        types={types}
+                        onChangeTypes={setTypes}
+                        categories={categories}
+                        onChangeCategories={setCategories}
+                        accounts={accounts}
+                        onChangeAccounts={setAccounts}
+                    />
                     {chartElement}
+                </div>
+                <div class="w-3/4 px-2">
+                    {listElement}
                 </div>
             </div>
         </div>
