@@ -176,7 +176,9 @@ def fetch_transactions(models, params):
     if params.get("category", False):
         query_obj = query_obj.filter(models.Transaction.category == params["category"])
     elif params.get("categories", False):
-        query_obj = query_obj.filter(models.Transaction.category.in_(params["categories"]))
+        query_obj = query_obj.filter(
+            models.Transaction.category.in_(params["categories"])
+        )
     if params.get("account", False):
         query_obj = query_obj.filter(models.Transaction.account == params["account"])
     elif params.get("accounts", False):
