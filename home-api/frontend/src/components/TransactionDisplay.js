@@ -25,10 +25,18 @@ const TransactionDisplay = () => {
     const listElement = validDates ? (<TransactionList earliestDate={parsedStartSeconds} latestDate={parsedEndSeconds} />) : (<div />);
 
     return (
-        <div>
-            <DatePicker start={start} end={end} onChangeStart={setStart} onChangeEnd={setEnd} />
-            {chartElement}
-            {listElement}
+        <div class="px-2">
+            <div class="flex -mx-2">
+                <div class="w-1/4 px-2">
+                    <DatePicker start={start} end={end} onChangeStart={setStart} onChangeEnd={setEnd} />
+                </div>
+                <div class="w-1/2 px-2">
+                    {listElement}
+                </div>
+                <div class="w-1/4 px-2">
+                    {chartElement}
+                </div>
+            </div>
         </div>
     );
 }
