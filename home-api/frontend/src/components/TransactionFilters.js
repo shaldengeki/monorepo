@@ -5,9 +5,9 @@ import DatePicker from './DatePicker';
 const TransactionFilters = (props) => {
     const {
         start,
-        setStart,
+        onChangeStart,
         end,
-        setEnd,
+        onChangeEnd,
         minAmount,
         onChangeMinAmount,
         maxAmount,
@@ -24,8 +24,8 @@ const TransactionFilters = (props) => {
         <DatePicker
             start={start}
             end={end}
-            onChangeStart={setStart}
-            onChangeEnd={setEnd}
+            onChangeStart={onChangeStart}
+            onChangeEnd={onChangeEnd}
         />
     )
 }
