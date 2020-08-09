@@ -26,7 +26,7 @@ const TransactionDisplay = () => {
     const parsedStartSeconds = Math.round(parsedStart / 1000);
     const parsedEndSeconds = Math.round(parsedEnd / 1000);
 
-    const chartElement = validDates ? (<TransactionChart earliestDate={parsedStartSeconds} latestDate={parsedEndSeconds} />) : (<div />);
+    const chartElement = validDates ? (<TransactionChart earliestDate={parsedStartSeconds} latestDate={parsedEndSeconds} minAmount={minAmount*100} maxAmount={maxAmount*100} />) : (<div />);
     const listElement = validDates ? (<TransactionList earliestDate={parsedStartSeconds} latestDate={parsedEndSeconds} />) : (<div />);
 
     return (
