@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import _ from 'lodash';
 
+import DatePicker from './DatePicker';
 import TransactionList from './TransactionList';
 import TransactionChart from './TransactionChart';
 
