@@ -48,9 +48,16 @@ const TransactionFilters = (props) => {
     if (loading) return loadingDisplay;
     if (error) return errorDisplay;
 
+    const optionElement = (type) => {
+        return (<option value={type}>{type}</option>);
+    }
+
     const typesElement = (
         <select multiple={true} name="types" value={types} onChange={(e) => {onChangeTypes(e.target.value)}}>
-            {_.map(data.types, (type) => {return (<option value={type}>{type}</option>);})}
+            {_.map(
+                data.types,
+                optionElement
+            )}
         </select>
     );
 
