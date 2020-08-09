@@ -6,6 +6,7 @@ from .types.transaction import (
     amountRangeField,
     categoriesField,
     dateRangeField,
+    typesField,
 )
 
 
@@ -20,6 +21,7 @@ def Schema(models):
                 "amountRange": amountRangeField(models),
                 "categories": categoriesField(models),
                 "dateRange": dateRangeField(models),
+                "types": typesField(models),
             },
         )
     )

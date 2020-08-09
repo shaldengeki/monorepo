@@ -311,3 +311,19 @@ def categoriesField(models):
         GraphQLList(GraphQLString),
         resolver=lambda root, info, **args: fetch_transaction_categories(models),
     )
+
+
+def fetch_transaction_types(models):
+    types = (
+        models.Transaction.query(distinct(models.Transaction.type).label("type"))
+        .order_by(asc(models.Transaction.type))
+        .all()
+    )
+    return [t.type for t in types]
+
+
+def typesField(models):
+    return GraphQLField(
+        GraphQLList(GraphQLString),
+        resolver=lambda root, info, **args: fetch_transaction_types(models),
+    )
