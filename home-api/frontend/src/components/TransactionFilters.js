@@ -52,7 +52,14 @@ const TransactionFilters = (props) => {
     }
 
     const typesElement = (
-        <select multiple={true} name="types" value={types} onChange={(e) => {onChangeTypes(e.target.value)}}>
+        <select
+            multiple={true}
+            name="types"
+            value={types}
+            onChange={(e) => {
+                console.log('types', e, 'target', e.target, 'value', e.target.value, 'currentTarget', e.currentTarget);
+                onChangeTypes(e.target.value)
+            }}>
             {_.map(
                 data.types,
                 optionElement
