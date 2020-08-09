@@ -4,6 +4,7 @@ from .types.transaction import (
     amountByMonthField,
     dateRangeField,
     amountRangeField,
+    categoriesField,
 )
 
 
@@ -16,6 +17,7 @@ def Schema(models):
                 "amountByMonth": amountByMonthField(models),
                 "dateRange": dateRangeField(models),
                 "amountRange": amountRangeField(models),
+                "categories": categoriesField(models),
             },
         )
     )

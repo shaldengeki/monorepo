@@ -12,7 +12,7 @@ from graphql import (
     GraphQLNonNull,
     GraphQLString,
 )
-from sqlalchemy import desc
+from sqlalchemy import asc, desc, distinct
 from sqlalchemy.sql import func
 
 transactionTypeEnum = GraphQLEnumType(
@@ -276,4 +276,20 @@ def amountRangeField(models):
     return GraphQLField(
         amountRangeType,
         resolver=lambda root, info, **args: fetch_transaction_amount_range(models),
+    )
+
+
+def fetch_transaction_categories(models):
+    categories = (
+        models.Transaction.query(distinct(Transaction.category).label("category"))
+        .order_by(asc(models.Transaction.category))
+        .all()
+    )
+    return [t.category for t in categories]
+
+
+def categoriesField(models):
+    return GraphQLField(
+        GraphQLList(GraphQLString),
+        resolver=lambda root, info, **args: fetch_transaction_categories(models),
     )
