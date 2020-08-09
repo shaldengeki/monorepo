@@ -13,6 +13,7 @@ from graphql import (
     GraphQLString,
 )
 from sqlalchemy import desc
+from sqlalchemy.sql import func
 
 transactionTypeEnum = GraphQLEnumType(
     "TransactionType",
@@ -109,6 +110,24 @@ amountOverTimeType = GraphQLObjectType(
     },
 )
 
+dateRangeType = GraphQLObjectType(
+    "DateRange",
+    description="A date range, represented by a start and end date.",
+    fields=lambda: {
+        "start": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The start of the date range, in unix epoch time.",
+        ),
+        "end": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The end of the date range, in unix epoch time.",
+        ),
+    }
+)
+
+DateRange = collections.namedtuple(
+    "DateRange", ["start", "end"]
+)
 
 def fetch_transactions(models, params):
     query_obj = models.Transaction.query
@@ -196,7 +215,7 @@ transactionsFilters = {
 }
 
 
-def transactionsType(models):
+def transactionsField(models):
     return GraphQLField(
         GraphQLList(transactionType),
         args=transactionsFilters,
@@ -204,11 +223,25 @@ def transactionsType(models):
     )
 
 
-def amountByMonthType(models):
+def amountByMonthField(models):
     return GraphQLField(
         GraphQLList(amountOverTimeType),
         args=transactionsFilters,
         resolver=lambda root, info, **args: aggregate_transactions(
             fetch_transactions(models, args)
         ),
+    )
+
+def fetch_transaction_date_range(models):
+    dates = models.Transaction.query(
+        func.max(models.Transaction.date).label("max_date"),
+        func.min(models.Transaction.date).label("min_date")
+    ).one()
+    return DateRange(start=dates.min_date, end=dates.max_date)
+
+
+def dateRangeField(models):
+    return GraphQLField(
+        dateRangeType,
+        resolver=lambda root, info, **args: fetch_transaction_date_range(models)
     )

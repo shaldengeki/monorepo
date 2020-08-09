@@ -1,5 +1,5 @@
 from graphql import GraphQLObjectType, GraphQLField, GraphQLSchema, GraphQLString
-from .types.transaction import transactionsType, amountByMonthType
+from .types.transaction import transactionsField, amountByMonthField, dateRangeField
 
 
 def Schema(models):
@@ -7,8 +7,9 @@ def Schema(models):
         query=GraphQLObjectType(
             name="RootQueryType",
             fields={
-                "transactions": transactionsType(models),
-                "amountByMonth": amountByMonthType(models),
+                "transactions": transactionsField(models),
+                "amountByMonth": amountByMonthField(models),
+                "dateRange": dateRangeField(models),
             },
         )
     )
