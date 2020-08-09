@@ -16,6 +16,6 @@ jobs:
           # Root directory to lint files in.
           source-root: frontend
       - name: black
-        uses: lgeiger/black-action@v1.0.1
+        uses: lgeiger/black-action@master
         with:
           args: "api"
