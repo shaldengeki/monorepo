@@ -14,4 +14,4 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           # Root directory to lint files in.
-          source-root: frontend/src
+          source-root: frontend
