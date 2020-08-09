@@ -1,5 +1,13 @@
 from graphql import GraphQLObjectType, GraphQLField, GraphQLSchema, GraphQLString
-from .types.transaction import transactionsType, amountByMonthType
+from .types.transaction import (
+    transactionsField,
+    amountByMonthField,
+    accountsField,
+    amountRangeField,
+    categoriesField,
+    dateRangeField,
+    typesField,
+)
 
 
 def Schema(models):
@@ -7,8 +15,13 @@ def Schema(models):
         query=GraphQLObjectType(
             name="RootQueryType",
             fields={
-                "transactions": transactionsType(models),
-                "amountByMonth": amountByMonthType(models),
+                "transactions": transactionsField(models),
+                "amountByMonth": amountByMonthField(models),
+                "accounts": accountsField(models),
+                "amountRange": amountRangeField(models),
+                "categories": categoriesField(models),
+                "dateRange": dateRangeField(models),
+                "types": typesField(models),
             },
         )
     )
