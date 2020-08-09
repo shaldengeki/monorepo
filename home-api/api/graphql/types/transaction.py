@@ -171,10 +171,18 @@ def fetch_transactions(models, params):
         )
     if params.get("type", False):
         query_obj = query_obj.filter(models.Transaction.type == params["type"])
+    elif params.get("types", False):
+        query_obj = query_obj.filter(models.Transaction.type.in_(params["types"]))
     if params.get("category", False):
         query_obj = query_obj.filter(models.Transaction.category == params["category"])
+    elif params.get("categories", False):
+        query_obj = query_obj.filter(
+            models.Transaction.category.in_(params["categories"])
+        )
     if params.get("account", False):
         query_obj = query_obj.filter(models.Transaction.account == params["account"])
+    elif params.get("accounts", False):
+        query_obj = query_obj.filter(models.Transaction.account.in_(params["accounts"]))
     return query_obj.order_by(desc(models.Transaction.date)).all()
 
 
@@ -220,13 +228,25 @@ transactionsFilters = {
     "type": GraphQLArgument(
         description="Value for type that a transaction should have.", type=GraphQLString
     ),
+    "types": GraphQLArgument(
+        description="Transactions will have at least one of the provided types",
+        type=GraphQLList(GraphQLString),
+    ),
     "category": GraphQLArgument(
         description="Value for category that a transaction should have.",
         type=GraphQLString,
     ),
+    "categories": GraphQLArgument(
+        description="Transactions will have at least one of the provided categories",
+        type=GraphQLList(GraphQLString),
+    ),
     "account": GraphQLArgument(
         description="Value for account that a transaction should have.",
         type=GraphQLString,
+    ),
+    "accounts": GraphQLArgument(
+        description="Transactions will have at least one of the provided accounts",
+        type=GraphQLList(GraphQLString),
     ),
 }
 
