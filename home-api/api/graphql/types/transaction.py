@@ -279,9 +279,27 @@ def amountRangeField(models):
     )
 
 
+def fetch_transaction_accounts(models):
+    accounts = (
+        models.Transaction.query(distinct(models.Transaction.account).label("account"))
+        .order_by(asc(models.Transaction.account))
+        .all()
+    )
+    return [t.account for t in accounts]
+
+
+def accountsField(models):
+    return GraphQLField(
+        GraphQLList(GraphQLString),
+        resolver=lambda root, info, **args: fetch_transaction_accounts(models),
+    )
+
+
 def fetch_transaction_categories(models):
     categories = (
-        models.Transaction.query(distinct(Transaction.category).label("category"))
+        models.Transaction.query(
+            distinct(models.Transaction.category).label("category")
+        )
         .order_by(asc(models.Transaction.category))
         .all()
     )
