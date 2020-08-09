@@ -122,12 +122,11 @@ dateRangeType = GraphQLObjectType(
             GraphQLNonNull(GraphQLInt),
             description="The end of the date range, in unix epoch time.",
         ),
-    }
+    },
 )
 
-DateRange = collections.namedtuple(
-    "DateRange", ["start", "end"]
-)
+DateRange = collections.namedtuple("DateRange", ["start", "end"])
+
 
 def fetch_transactions(models, params):
     query_obj = models.Transaction.query
@@ -232,10 +231,11 @@ def amountByMonthField(models):
         ),
     )
 
+
 def fetch_transaction_date_range(models):
     dates = models.Transaction.query(
         func.max(models.Transaction.date).label("max_date"),
-        func.min(models.Transaction.date).label("min_date")
+        func.min(models.Transaction.date).label("min_date"),
     ).one()
     return DateRange(start=dates.min_date, end=dates.max_date)
 
@@ -243,5 +243,5 @@ def fetch_transaction_date_range(models):
 def dateRangeField(models):
     return GraphQLField(
         dateRangeType,
-        resolver=lambda root, info, **args: fetch_transaction_date_range(models)
+        resolver=lambda root, info, **args: fetch_transaction_date_range(models),
     )
