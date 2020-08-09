@@ -9,8 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-
     - name: eslint + fix
       uses: getsentry/action-eslint-fix@v1
       with:
