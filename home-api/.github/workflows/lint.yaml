@@ -17,3 +17,4 @@ jobs:
           source-root: frontend
       - name: black
         uses: lgeiger/black-action@v1.0.1
+        args: "api"
