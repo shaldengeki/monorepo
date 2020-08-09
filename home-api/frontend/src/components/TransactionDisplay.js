@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import _ from 'lodash';
 
 import TransactionList from './TransactionList';
 import TransactionChart from './TransactionChart';
