@@ -3,11 +3,10 @@ import _ from 'lodash';
 import gql from "graphql-tag";
 import { useQuery } from '@apollo/react-hooks';
 
-
 import DatePicker from './DatePicker';
 
 const GET_FILTERS = gql`
-    query TransactionFilters() {
+    query TransactionFilters {
         amountRange {
             min
             max
@@ -61,6 +60,24 @@ const TransactionFilters = (props) => {
         </select>
     );
 
+    const categoriesElement = (
+        <select multiple={true} name="categories" value={categories} onChange={(e) => {onChangeCategories(e.target.value)}}>
+            {_.map(
+                data.categories,
+                optionElement
+            )}
+        </select>
+    );
+
+    const accountsElement = (
+        <select multiple={true} name="accounts" value={accounts} onChange={(e) => {onChangeAccounts(e.target.value)}}>
+            {_.map(
+                data.accounts,
+                optionElement
+            )}
+        </select>
+    );
+
     return (
         <div>
             <DatePicker
@@ -94,6 +111,14 @@ const TransactionFilters = (props) => {
             <div class="mb-6">
                 <label class="block mb-2" for="types">Types</label>
                 {typesElement}
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2" for="types">Accounts</label>
+                {accountsElement}
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2" for="types">Categories</label>
+                {categoriesElement}
             </div>
         </div>
     )
