@@ -15,10 +15,13 @@ const TransactionDisplay = () => {
     const parsedStart = Date.parse(start);
     const parsedEnd = Date.parse(end);
 
-    const validDates = !(_.isNaN(start) || _.isNaN(end));
+    const validDates = !(_.isNaN(parsedStart) || _.isNaN(parsedEnd));
 
-    const chartElement = validDates ? (<TransactionChart earliestDate={parsedStart} latestDate={parsedEnd} />) : (<div />);
-    const listElement = validDates ? (<TransactionList earliestDate={parsedStart} latestDate={parsedEnd} />) : (<div />);
+    const parsedStartSeconds = Math.round(parsedStart / 1000);
+    const parsedEndSeconds = Math.round(parsedEnd / 1000);
+
+    const chartElement = validDates ? (<TransactionChart earliestDate={parsedStartSeconds} latestDate={parsedEndSeconds} />) : (<div />);
+    const listElement = validDates ? (<TransactionList earliestDate={parsedStartSeconds} latestDate={parsedEndSeconds} />) : (<div />);
 
     return (
         <div>
