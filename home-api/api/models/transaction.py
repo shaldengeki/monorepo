@@ -1,7 +1,8 @@
 from ..app import db
 
+
 class Transaction(db.Model):
-    __tablename__ = 'transactions'
+    __tablename__ = "transactions"
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.TIMESTAMP(timezone=True), nullable=False)
     description = db.Column(db.Unicode(500), nullable=False)
@@ -14,6 +15,4 @@ class Transaction(db.Model):
     notes = db.Column(db.Unicode(500), nullable=True)
 
     def __repr__(self):
-        return '<Transaction {id}>'.format(
-            id=self.id
-        )
+        return "<Transaction {id}>".format(id=self.id)

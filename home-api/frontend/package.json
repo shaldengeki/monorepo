@@ -16,10 +16,11 @@
     "moment": "^2.24.0",
     "lodash": "^4.17.15",
     "plotly.js-basic-dist": "^1.51.0",
-    "react-plotlyjs": "^0.4.4"
+    "react-plotlyjs": "^0.4.4",
+    "typescript": "^3.9.7"
   },
   "scripts": {
-    "tailwind:css":"npx tailwind build src/App.src.css -o src/App.css",
+    "tailwind:css": "npx tailwind build src/App.src.css -o src/App.css",
     "start": "npm run tailwind:css && react-scripts start",
     "build": "npm run tailwind:css && react-scripts build",
     "test": "react-scripts test",
