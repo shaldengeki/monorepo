@@ -250,19 +250,15 @@ def amountByMonthField(models):
 
 
 def fetch_transaction_date_range(models):
-    dates = models.Transaction.query(
-        func.max(models.Transaction.date).label("max_date"),
-        func.min(models.Transaction.date).label("min_date"),
-    ).one()
-    return DateRange(start=dates.min_date, end=dates.max_date)
+    min_txn = models.Transaction.query.order_by(asc(models.Transaction.date)).first()
+    max_txn = models.Transaction.query.order_by(desc(models.Transaction.date)).first()
+    return DateRange(start=min_txn.date, end=max_txn.date)
 
 
 def fetch_transaction_amount_range(models):
-    amounts = models.Transaction.query(
-        func.max(models.Transaction.amount).label("max_amount"),
-        func.min(models.Transaction.amount).label("min_amount"),
-    ).one()
-    return AmountRange(min=amounts.min_amount, max=amounts.max_amount)
+    min_txn = models.Transaction.query.order_by(asc(models.Transaction.amount)).first()
+    max_txn = models.Transaction.query.order_by(desc(models.Transaction.amount)).first()
+    return AmountRange(min=min_txn.amount, max=max_txn.amount)
 
 
 def dateRangeField(models):
@@ -280,11 +276,7 @@ def amountRangeField(models):
 
 
 def fetch_transaction_accounts(models):
-    accounts = (
-        models.Transaction.query(distinct(models.Transaction.account).label("account"))
-        .order_by(asc(models.Transaction.account))
-        .all()
-    )
+    accounts = models.Transaction.query.order_by(asc(models.Transaction.account)).distinct(models.Transaction.account).all()
     return [t.account for t in accounts]
 
 
@@ -296,13 +288,7 @@ def accountsField(models):
 
 
 def fetch_transaction_categories(models):
-    categories = (
-        models.Transaction.query(
-            distinct(models.Transaction.category).label("category")
-        )
-        .order_by(asc(models.Transaction.category))
-        .all()
-    )
+    categories = models.Transaction.query.order_by(asc(models.Transaction.category)).distinct(models.Transaction.category).all()
     return [t.category for t in categories]
 
 
@@ -314,11 +300,7 @@ def categoriesField(models):
 
 
 def fetch_transaction_types(models):
-    types = (
-        models.Transaction.query(distinct(models.Transaction.type).label("type"))
-        .order_by(asc(models.Transaction.type))
-        .all()
-    )
+    types = models.Transaction.query.order_by(asc(models.Transaction.type)).distinct(models.Transaction.type).all()
     return [t.type for t in types]
 
 
