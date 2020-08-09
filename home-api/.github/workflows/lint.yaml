@@ -7,9 +7,11 @@ on:
 jobs:
   eslint:
     runs-on: ubuntu-latest
-
     steps:
-    - name: eslint + fix
-      uses: getsentry/action-eslint-fix@v1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - name: lint and fix
+        uses: hallee/eslint-action@1.0.3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          # Root directory to lint files in.
+          source-root: frontend/src
