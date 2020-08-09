@@ -51,6 +51,8 @@ const TransactionFilters = (props) => {
         return (<option value={type}>{type}</option>);
     }
 
+    console.log("TransactionFilters types", types);
+
     const typesElement = (
         <select
             multiple={true}
