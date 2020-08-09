@@ -7,8 +7,8 @@ import TransactionChart from './TransactionChart';
 
 const TransactionDisplay = () => {
     const defaultDate = new Date();
-    const latestDate = defaultDate.getFullYear() + '-' + defaultDate.getMonth() + '-' + defaultDate.getDay();
-    const earliestDate = (defaultDate.getFullYear() - 1) + '-' + defaultDate.getMonth() + '-' + defaultDate.getDay();
+    const latestDate = defaultDate.getFullYear() + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
+    const earliestDate = (defaultDate.getFullYear() - 1) + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
 
     const [start, setStart] = useState(earliestDate);
     const [end, setEnd] = useState(latestDate);
