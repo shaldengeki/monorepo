@@ -276,7 +276,11 @@ def amountRangeField(models):
 
 
 def fetch_transaction_accounts(models):
-    accounts = models.Transaction.query.order_by(asc(models.Transaction.account)).distinct(models.Transaction.account).all()
+    accounts = (
+        models.Transaction.query.order_by(asc(models.Transaction.account))
+        .distinct(models.Transaction.account)
+        .all()
+    )
     return [t.account for t in accounts]
 
 
@@ -288,7 +292,11 @@ def accountsField(models):
 
 
 def fetch_transaction_categories(models):
-    categories = models.Transaction.query.order_by(asc(models.Transaction.category)).distinct(models.Transaction.category).all()
+    categories = (
+        models.Transaction.query.order_by(asc(models.Transaction.category))
+        .distinct(models.Transaction.category)
+        .all()
+    )
     return [t.category for t in categories]
 
 
@@ -300,7 +308,11 @@ def categoriesField(models):
 
 
 def fetch_transaction_types(models):
-    types = models.Transaction.query.order_by(asc(models.Transaction.type)).distinct(models.Transaction.type).all()
+    types = (
+        models.Transaction.query.order_by(asc(models.Transaction.type))
+        .distinct(models.Transaction.type)
+        .all()
+    )
     return [t.type for t in types]
 
 
