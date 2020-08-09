@@ -1,10 +1,15 @@
 #!/usr/bin/env python
+# Imports Mint transactions.
+# Expects a Mint-exported CSV as the first argument.
+# To invoke, do something like:
+# docker run -it shaldengeki/home-api:edge /usr/bin/env python -m api.scripts.import_data /path/to/transactions.csv
+
 import csv
 import datetime
 import sys
 
-from app.app import db
-from app.models.transaction import Transaction
+from ..app import db
+from ..models.transaction import Transaction
 
 
 def read_file(filename):
