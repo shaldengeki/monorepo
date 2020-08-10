@@ -10,13 +10,19 @@ const GET_TRANSACTIONS = gql`
         $earliestDate: Int,
         $latestDate: Int,
         $minAmount: Int,
-        $maxAmount: Int
+        $maxAmount: Int,
+        $types: [String],
+        $categories: [String],
+        $accounts: [String]
     ) {
         transactions(
             earliestDate: $earliestDate,
             latestDate: $latestDate,
             minAmount: $minAmount,
-            maxAmount: $maxAmount
+            maxAmount: $maxAmount,
+            types: $types,
+            categories: $categories,
+            accounts: $accounts
         ) {
             formattedDate
             description
@@ -34,9 +40,25 @@ const formatCurrency = (amt, type) => {
 }
 
 const TransactionList = (props) => {
-    const {earliestDate, latestDate, minAmount, maxAmount} = props;
+    const {
+        earliestDate,
+        latestDate,
+        minAmount,
+        maxAmount,
+        types,
+        categories,
+        accounts
+    } = props;
     const { data, loading, error } = useQuery(GET_TRANSACTIONS, {
-        variables: {earliestDate, latestDate, minAmount, maxAmount}
+        variables: {
+            earliestDate,
+            latestDate,
+            minAmount,
+            maxAmount,
+            types,
+            categories,
+            accounts
+        }
     });
 
     const loadingDisplay = <h1>Loading transactions...</h1>;

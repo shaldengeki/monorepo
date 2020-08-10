@@ -32,6 +32,9 @@ const TransactionDisplay = () => {
             latestDate={parsedEndSeconds}
             minAmount={minAmount*100}
             maxAmount={maxAmount*100}
+            types={types}
+            categories={categories}
+            accounts={accounts}
         />
     ) : (<div />);
     const listElement = validDates ? (
@@ -40,6 +43,9 @@ const TransactionDisplay = () => {
             latestDate={parsedEndSeconds}
             minAmount={minAmount*100}
             maxAmount={maxAmount*100}
+            types={types}
+            categories={categories}
+            accounts={accounts}
         />
     ) : (<div />);
 

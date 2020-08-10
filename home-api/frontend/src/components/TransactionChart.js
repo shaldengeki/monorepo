@@ -12,13 +12,19 @@ const GET_MONTHLY_SPEND = gql`
         $earliestDate: Int,
         $latestDate: Int,
         $minAmount: Int,
-        $maxAmount: Int
+        $maxAmount: Int,
+        $types: [String],
+        $categories: [String],
+        $accounts: [String]
     ) {
         amountByMonth(
             earliestDate: $earliestDate,
             latestDate: $latestDate,
             minAmount: $minAmount,
-            maxAmount: $maxAmount
+            maxAmount: $maxAmount,
+            types: $types,
+            categories: $categories,
+            accounts: $accounts
         ) {
             formattedMonth
             amount
@@ -27,10 +33,26 @@ const GET_MONTHLY_SPEND = gql`
 `;
 
 const TransactionChart = (props) => {
-    const {earliestDate, latestDate, minAmount, maxAmount} = props;
+    const {
+        earliestDate,
+        latestDate,
+        minAmount,
+        maxAmount,
+        types,
+        categories,
+        accounts
+    } = props;
 
     const { data, loading, error } = useQuery(GET_MONTHLY_SPEND, {
-        variables: {earliestDate, latestDate, minAmount, maxAmount},
+        variables: {
+            earliestDate,
+            latestDate,
+            minAmount,
+            maxAmount,
+            types,
+            categories,
+            accounts
+        },
     });
 
     const loadingDisplay = <h1>Loading transactions...</h1>;
