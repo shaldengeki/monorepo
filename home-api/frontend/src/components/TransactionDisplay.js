@@ -19,19 +19,23 @@ const TransactionDisplay = () => {
 
     const [start, setStart] = useState(query.get('start') || earliestDate);
     const [end, setEnd] = useState(query.get('end') || latestDate);
-    const [minAmount, setMinAmount] = useState(query.get('minAmount') || 0);
-    const [maxAmount, setMaxAmount] = useState(query.get('maxAmount') || 1000000);
-    const [types, setTypes] = useState(query.get('types') || []);
-    const [categories, setCategories] = useState(query.get('categories') || []);
-    const [accounts, setAccounts] = useState(query.get('accounts') || []);
-
     const parsedStart = Date.parse(start);
     const parsedEnd = Date.parse(end);
-
     const validDates = !(_.isNaN(parsedStart) || _.isNaN(parsedEnd));
-
     const parsedStartSeconds = Math.round(parsedStart / 1000);
     const parsedEndSeconds = Math.round(parsedEnd / 1000);
+
+    const [minAmount, setMinAmount] = useState(parseInt(query.get('minAmount'), 10) || 0);
+    const [maxAmount, setMaxAmount] = useState(parseInt(query.get('maxAmount'), 10) || 1000000);
+
+    const defaultTypes = (query.get('types') === null) ? [] : query.get('types').split(",")
+    const [types, setTypes] = useState(defaultTypes);
+
+    const defaultCategories = (query.get('categories') === null) ? [] : query.get('categories').split(",")
+    const [categories, setCategories] = useState(defaultCategories);
+
+    const defaultAccounts = (query.get('accounts') === null) ? [] : query.get('accounts').split(",")
+    const [accounts, setAccounts] = useState(defaultAccounts);
 
     const chartElement = validDates ? (
         <TransactionChart
