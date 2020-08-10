@@ -6,36 +6,58 @@ import TransactionFilters from './TransactionFilters';
 import TransactionList from './TransactionList';
 import TransactionChart from './TransactionChart';
 
-function useStart(initialStart) {
+function updateStateInUrl(param, stateFn) {
     const history = createBrowserHistory();
     const query = new URLSearchParams(history.location.search)
+    function update(value) {
+        if (Array.isArray(value)) {
+            query.set(param, value.join(','))
+        } else {
+            query.set(param, value);
+        }
+        history.replace({...history.location, search: query.toString()})
+        stateFn(value);
+    }
+    return update;
+}
+
+function useStart(initialStart) {
     const defaultDate = new Date();
     const earliestDate = (defaultDate.getFullYear() - 1) + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
     const [start, setStart] = useState(initialStart || earliestDate);
-
-    function updateStart(value) {
-        query.set('start', value);
-        history.replace({...history.location, search: query.toString()})
-        setStart(value);
-    }
-
-    return [start, updateStart];
+    return [start, updateStateInUrl('start', setStart)];
 }
 
 function useEnd(initialEnd) {
-    const history = createBrowserHistory();
-    const query = new URLSearchParams(history.location.search)
     const defaultDate = new Date();
     const latestDate = defaultDate.getFullYear() + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
     const [end, setEnd] = useState(initialEnd || latestDate);
+    return [end, updateStateInUrl('end', setEnd)];
+}
 
-    function updateEnd(value) {
-        query.set('end', value);
-        history.replace({...history.location, search: query.toString()})
-        setEnd(value);
-    }
+function useMinAmount(initialMinAmount) {
+    const [minAmount, setMinAmount] = useState(initialMinAmount || 0);
+    return [minAmount, updateStateInUrl('minAmount', setMinAmount)];
+}
 
-    return [end, updateEnd];
+function useMaxAmount(initialMaxAmount) {
+    const [maxAmount, setMaxAmount] = useState(initialMaxAmount || 1000000);
+    return [maxAmount, updateStateInUrl('maxAmount', setMaxAmount)];
+}
+
+function useTypes(initialTypes) {
+    const [types, setTypes] = useState(initialTypes || []);
+    return [types, updateStateInUrl('types', setTypes)];
+}
+
+function useCategories(initialCategories) {
+    const [categories, setCategories] = useState(initialCategories || []);
+    return [categories, updateStateInUrl('categories', setCategories)];
+}
+
+function useAccounts(initialAccounts) {
+    const [accounts, setAccounts] = useState(initialAccounts || []);
+    return [accounts, updateStateInUrl('accounts', setAccounts)];
 }
 
 const TransactionDisplay = () => {
@@ -52,17 +74,17 @@ const TransactionDisplay = () => {
     const parsedStartSeconds = Math.round(parsedStart / 1000);
     const parsedEndSeconds = Math.round(parsedEnd / 1000);
 
-    const [minAmount, setMinAmount] = useState(parseInt(query.get('minAmount'), 10) || 0);
-    const [maxAmount, setMaxAmount] = useState(parseInt(query.get('maxAmount'), 10) || 1000000);
+    const [minAmount, setMinAmount] = useMinAmount(parseInt(query.get('minAmount'), 10));
+    const [maxAmount, setMaxAmount] = useMaxAmount(parseInt(query.get('maxAmount'), 10));
 
     const defaultTypes = (query.get('types') === null) ? [] : query.get('types').split(",")
-    const [types, setTypes] = useState(defaultTypes);
+    const [types, setTypes] = useTypes(defaultTypes);
 
     const defaultCategories = (query.get('categories') === null) ? [] : query.get('categories').split(",")
-    const [categories, setCategories] = useState(defaultCategories);
+    const [categories, setCategories] = useCategories(defaultCategories);
 
     const defaultAccounts = (query.get('accounts') === null) ? [] : query.get('accounts').split(",")
-    const [accounts, setAccounts] = useState(defaultAccounts);
+    const [accounts, setAccounts] = useAccounts(defaultAccounts);
 
     const chartElement = validDates ? (
         <TransactionChart
