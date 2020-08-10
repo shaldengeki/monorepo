@@ -62,18 +62,13 @@ const TransactionFilters = (props) => {
         );
     }
 
-    console.log("TransactionFilters types", types);
-
     const typesElement = (
         <select
             multiple={true}
             name="types"
             value={types}
-            onChange={(e) => {
-                const selectedOptions = getSelectedOptions(e.target);
-                console.log('typesElement change', e.target, 'selectedOptions', selectedOptions);
-                onChangeTypes(selectedOptions);
-            }}>
+            onChange={(e) => {onChangeTypes(getSelectedOptions(e.target));}}
+        >
             {_.map(
                 data.types,
                 (type) => {return optionElement(type, types);}
@@ -82,7 +77,12 @@ const TransactionFilters = (props) => {
     );
 
     const categoriesElement = (
-        <select multiple={true} name="categories" value={categories} onChange={(e) => {onChangeCategories(e.target.value)}}>
+        <select
+            multiple={true}
+            name="categories"
+            value={categories}
+            onChange={(e) => {onChangeCategories(getSelectedOptions(e.target));}}
+        >
             {_.map(
                 data.categories,
                 (category) => {return optionElement(category, categories);}
@@ -91,7 +91,12 @@ const TransactionFilters = (props) => {
     );
 
     const accountsElement = (
-        <select multiple={true} name="accounts" value={accounts} onChange={(e) => {onChangeAccounts(e.target.value)}}>
+        <select
+            multiple={true}
+            name="accounts"
+            value={accounts}
+            onChange={(e) => {onChangeAccounts(getSelectedOptions(e.target));}}
+        >
             {_.map(
                 data.accounts,
                 (account) => {return optionElement(account, accounts);}
