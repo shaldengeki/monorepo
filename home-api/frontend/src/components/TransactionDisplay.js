@@ -6,19 +6,44 @@ import TransactionFilters from './TransactionFilters';
 import TransactionList from './TransactionList';
 import TransactionChart from './TransactionChart';
 
+function useStart(initialStart) {
+    const history = createBrowserHistory();
+    const query = new URLSearchParams(history.location.search)
+    const defaultDate = new Date();
+    const earliestDate = (defaultDate.getFullYear() - 1) + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
+    const [start, setStart] = useState(initialStart || earliestDate);
+
+    function updateStart(value) {
+        query.set('start', value);
+        setStart(value);
+    }
+
+    return [start, updateStart];
+}
+
+function useEnd(initialEnd) {
+    const history = createBrowserHistory();
+    const query = new URLSearchParams(history.location.search)
+    const defaultDate = new Date();
+    const latestDate = defaultDate.getFullYear() + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
+    const [end, setEnd] = useState(initialEnd || latestDate);
+
+    function updateEnd(value) {
+        query.set('end', value);
+        setEnd(value);
+    }
+
+    return [end, updateEnd];
+}
+
 const TransactionDisplay = () => {
 
     const history = createBrowserHistory();
     const query = new URLSearchParams(history.location.search)
-    // query.set('foo', 'bar')
-    // history.replace({...history.location, search: query.toString()})
 
-    const defaultDate = new Date();
-    const latestDate = defaultDate.getFullYear() + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
-    const earliestDate = (defaultDate.getFullYear() - 1) + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
+    const [start, setStart] = useStart(query.get('start'));
+    const [end, setEnd] = useEnd(query.get('end'));
 
-    const [start, setStart] = useState(query.get('start') || earliestDate);
-    const [end, setEnd] = useState(query.get('end') || latestDate);
     const parsedStart = Date.parse(start);
     const parsedEnd = Date.parse(end);
     const validDates = !(_.isNaN(parsedStart) || _.isNaN(parsedEnd));
