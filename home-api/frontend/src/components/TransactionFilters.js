@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 import { useQuery } from '@apollo/react-hooks';
 
 import DatePicker from './DatePicker';
+import MultiSelect from './MultiSelect';
 
 const GET_FILTERS = gql`
     query TransactionFilters {
@@ -47,63 +48,6 @@ const TransactionFilters = (props) => {
     if (loading) return loadingDisplay;
     if (error) return errorDisplay;
 
-    const optionElement = (type, selectedValues) => {
-        if (selectedValues.includes(type)) {
-            return (<option value={type} selected>{type}</option>);
-        } else {
-            return (<option value={type}>{type}</option>);
-        }
-    }
-
-    const getSelectedOptions = (select) => {
-        return _.map(
-            _.filter(select.options, (opt) => {return opt.selected;}),
-            (opt) => { return opt.value; }
-        );
-    }
-
-    const typesElement = (
-        <select
-            multiple={true}
-            name="types"
-            value={types}
-            onChange={(e) => {onChangeTypes(getSelectedOptions(e.target));}}
-        >
-            {_.map(
-                data.types,
-                (type) => {return optionElement(type, types);}
-            )}
-        </select>
-    );
-
-    const categoriesElement = (
-        <select
-            multiple={true}
-            name="categories"
-            value={categories}
-            onChange={(e) => {onChangeCategories(getSelectedOptions(e.target));}}
-        >
-            {_.map(
-                data.categories,
-                (category) => {return optionElement(category, categories);}
-            )}
-        </select>
-    );
-
-    const accountsElement = (
-        <select
-            multiple={true}
-            name="accounts"
-            value={accounts}
-            onChange={(e) => {onChangeAccounts(getSelectedOptions(e.target));}}
-        >
-            {_.map(
-                data.accounts,
-                (account) => {return optionElement(account, accounts);}
-            )}
-        </select>
-    );
-
     return (
         <div>
             <DatePicker
@@ -136,15 +80,30 @@ const TransactionFilters = (props) => {
             </div>
             <div class="mb-6">
                 <label class="block mb-2" for="types">Types</label>
-                {typesElement}
+                <MultiSelect
+                    name="types"
+                    value={types}
+                    onChange={onChangeTypes}
+                    allValues={data.types}
+                />
             </div>
             <div class="mb-6">
                 <label class="block mb-2" for="types">Accounts</label>
-                {accountsElement}
+                <MultiSelect
+                    name="accounts"
+                    value={accounts}
+                    onChange={onChangeAccounts}
+                    allValues={data.accounts}
+                />
             </div>
             <div class="mb-6">
                 <label class="block mb-2" for="types">Categories</label>
-                {categoriesElement}
+                <MultiSelect
+                    name="categories"
+                    value={categories}
+                    onChange={onChangeCategories}
+                    allValues={data.categories}
+                />
             </div>
         </div>
     )
