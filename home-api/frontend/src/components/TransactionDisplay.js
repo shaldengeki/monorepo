@@ -15,6 +15,7 @@ function useStart(initialStart) {
 
     function updateStart(value) {
         query.set('start', value);
+        history.replace({...history.location, search: query.toString()})
         setStart(value);
     }
 
@@ -30,6 +31,7 @@ function useEnd(initialEnd) {
 
     function updateEnd(value) {
         query.set('end', value);
+        history.replace({...history.location, search: query.toString()})
         setEnd(value);
     }
 
