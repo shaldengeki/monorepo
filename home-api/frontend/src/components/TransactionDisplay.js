@@ -46,17 +46,17 @@ function useMaxAmount(initialMaxAmount) {
 }
 
 function useTypes(initialTypes) {
-    const [types, setTypes] = useState(initialTypes || []);
+    const [types, setTypes] = useState(initialTypes);
     return [types, updateStateInUrl('types', setTypes)];
 }
 
 function useCategories(initialCategories) {
-    const [categories, setCategories] = useState(initialCategories || []);
+    const [categories, setCategories] = useState(initialCategories);
     return [categories, updateStateInUrl('categories', setCategories)];
 }
 
 function useAccounts(initialAccounts) {
-    const [accounts, setAccounts] = useState(initialAccounts || []);
+    const [accounts, setAccounts] = useState(initialAccounts);
     return [accounts, updateStateInUrl('accounts', setAccounts)];
 }
 
@@ -77,13 +77,13 @@ const TransactionDisplay = () => {
     const [minAmount, setMinAmount] = useMinAmount(parseInt(query.get('minAmount'), 10));
     const [maxAmount, setMaxAmount] = useMaxAmount(parseInt(query.get('maxAmount'), 10));
 
-    const defaultTypes = (query.get('types') === null) ? [] : query.get('types').split(",")
+    const defaultTypes = (query.get('types') === null) ? null : query.get('types').split(",")
     const [types, setTypes] = useTypes(defaultTypes);
 
-    const defaultCategories = (query.get('categories') === null) ? [] : query.get('categories').split(",")
+    const defaultCategories = (query.get('categories') === null) ? null : query.get('categories').split(",")
     const [categories, setCategories] = useCategories(defaultCategories);
 
-    const defaultAccounts = (query.get('accounts') === null) ? [] : query.get('accounts').split(",")
+    const defaultAccounts = (query.get('accounts') === null) ? null : query.get('accounts').split(",")
     const [accounts, setAccounts] = useAccounts(defaultAccounts);
 
     const chartElement = validDates ? (
