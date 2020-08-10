@@ -1,22 +1,29 @@
 import React, {useState} from 'react';
 import _ from 'lodash';
+import { createBrowserHistory } from "history";
 
 import TransactionFilters from './TransactionFilters';
 import TransactionList from './TransactionList';
 import TransactionChart from './TransactionChart';
 
 const TransactionDisplay = () => {
+
+    const history = createBrowserHistory();
+    const query = new URLSearchParams(history.location.search)
+    // query.set('foo', 'bar')
+    // history.replace({...history.location, search: query.toString()})
+
     const defaultDate = new Date();
     const latestDate = defaultDate.getFullYear() + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
     const earliestDate = (defaultDate.getFullYear() - 1) + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
 
-    const [start, setStart] = useState(earliestDate);
-    const [end, setEnd] = useState(latestDate);
-    const [minAmount, setMinAmount] = useState(0);
-    const [maxAmount, setMaxAmount] = useState(1000000);
-    const [types, setTypes] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [accounts, setAccounts] = useState([]);
+    const [start, setStart] = useState(query.get('start') || earliestDate);
+    const [end, setEnd] = useState(query.get('end') || latestDate);
+    const [minAmount, setMinAmount] = useState(query.get('minAmount') || 0);
+    const [maxAmount, setMaxAmount] = useState(query.get('maxAmount') || 1000000);
+    const [types, setTypes] = useState(query.get('types') || []);
+    const [categories, setCategories] = useState(query.get('categories') || []);
+    const [accounts, setAccounts] = useState(query.get('accounts') || []);
 
     const parsedStart = Date.parse(start);
     const parsedEnd = Date.parse(end);
