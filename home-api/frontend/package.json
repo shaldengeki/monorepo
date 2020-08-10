@@ -21,8 +21,8 @@
   },
   "scripts": {
     "tailwind:css": "npx tailwind build src/App.src.css -o src/App.css",
-    "start": "npm run tailwind:css && react-scripts start",
-    "build": "npm run tailwind:css && react-scripts build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

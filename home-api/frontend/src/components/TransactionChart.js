@@ -8,8 +8,24 @@ import Plotly from 'plotly.js-basic-dist';
 const PlotlyComponent = createPlotlyComponent(Plotly);
 
 const GET_MONTHLY_SPEND = gql`
-    query MonthlySpend($earliestDate: Int!, $latestDate: Int!) {
-        amountByMonth(earliestDate: $earliestDate, latestDate: $latestDate) {
+    query MonthlySpend(
+        $earliestDate: Int,
+        $latestDate: Int,
+        $minAmount: Int,
+        $maxAmount: Int,
+        $types: [String],
+        $categories: [String],
+        $accounts: [String]
+    ) {
+        amountByMonth(
+            earliestDate: $earliestDate,
+            latestDate: $latestDate,
+            minAmount: $minAmount,
+            maxAmount: $maxAmount,
+            types: $types,
+            categories: $categories,
+            accounts: $accounts
+        ) {
             formattedMonth
             amount
         }
@@ -17,10 +33,26 @@ const GET_MONTHLY_SPEND = gql`
 `;
 
 const TransactionChart = (props) => {
-    const {earliestDate, latestDate} = props;
+    const {
+        earliestDate,
+        latestDate,
+        minAmount,
+        maxAmount,
+        types,
+        categories,
+        accounts
+    } = props;
 
     const { data, loading, error } = useQuery(GET_MONTHLY_SPEND, {
-        variables: {earliestDate, latestDate}
+        variables: {
+            earliestDate,
+            latestDate,
+            minAmount,
+            maxAmount,
+            types,
+            categories,
+            accounts
+        },
     });
 
     const loadingDisplay = <h1>Loading transactions...</h1>;
