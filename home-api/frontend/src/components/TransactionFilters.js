@@ -57,7 +57,7 @@ const TransactionFilters = (props) => {
 
     const getSelectedOptions = (select) => {
         return _.map(
-            _.filter(e.target.options, (opt) => {return opt.selected;}),
+            _.filter(select.options, (opt) => {return opt.selected;}),
             (opt) => { return opt.value; }
         );
     }
