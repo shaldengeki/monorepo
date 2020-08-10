@@ -47,8 +47,19 @@ const TransactionFilters = (props) => {
     if (loading) return loadingDisplay;
     if (error) return errorDisplay;
 
-    const optionElement = (type) => {
-        return (<option value={type}>{type}</option>);
+    const optionElement = (type, selectedValues) => {
+        if (selectedValues.includes(type)) {
+            return (<option value={type} selected>{type}</option>);
+        } else {
+            return (<option value={type}>{type}</option>);
+        }
+    }
+
+    const getSelectedOptions = (select) => {
+        return _.map(
+            _.filter(e.target.options, (opt) => {return opt.selected;}),
+            (opt) => { return opt.value; }
+        );
     }
 
     console.log("TransactionFilters types", types);
@@ -59,12 +70,13 @@ const TransactionFilters = (props) => {
             name="types"
             value={types}
             onChange={(e) => {
-                console.log('types', e, 'target', e.target, 'value', e.target.value, 'currentTarget', e.currentTarget);
-                onChangeTypes(e.target.value)
+                const selectedOptions = getSelectedOptions(e.target);
+                console.log('typesElement change', e.target, 'selectedOptions', selectedOptions);
+                onChangeTypes(selectedOptions);
             }}>
             {_.map(
                 data.types,
-                optionElement
+                (type) => {return optionElement(type, types);}
             )}
         </select>
     );
@@ -73,7 +85,7 @@ const TransactionFilters = (props) => {
         <select multiple={true} name="categories" value={categories} onChange={(e) => {onChangeCategories(e.target.value)}}>
             {_.map(
                 data.categories,
-                optionElement
+                (category) => {return optionElement(category, categories);}
             )}
         </select>
     );
@@ -82,7 +94,7 @@ const TransactionFilters = (props) => {
         <select multiple={true} name="accounts" value={accounts} onChange={(e) => {onChangeAccounts(e.target.value)}}>
             {_.map(
                 data.accounts,
-                optionElement
+                (account) => {return optionElement(account, accounts);}
             )}
         </select>
     );
