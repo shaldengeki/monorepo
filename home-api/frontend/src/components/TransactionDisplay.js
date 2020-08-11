@@ -36,12 +36,12 @@ function useEnd(initialEnd) {
 }
 
 function useMinAmount(initialMinAmount) {
-    const [minAmount, setMinAmount] = useState(initialMinAmount || 0);
+    const [minAmount, setMinAmount] = useState(initialMinAmount);
     return [minAmount, updateStateInUrl('minAmount', setMinAmount)];
 }
 
 function useMaxAmount(initialMaxAmount) {
-    const [maxAmount, setMaxAmount] = useState(initialMaxAmount || 1000000);
+    const [maxAmount, setMaxAmount] = useState(initialMaxAmount);
     return [maxAmount, updateStateInUrl('maxAmount', setMaxAmount)];
 }
 
