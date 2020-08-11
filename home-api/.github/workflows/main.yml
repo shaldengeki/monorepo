@@ -7,8 +7,6 @@ name: Dockerhub
 on:
   schedule:
     - cron: '0 10 * * *' # everyday at 10am
-  pull_request:
-    branches: master
   push:
     branches: master
     tags:
@@ -105,7 +103,7 @@ jobs:
         docker buildx build --output "type=image,push=false" ${{ steps.prepare_Frontend.outputs.buildx_args }}
     -
       name: Log in to DockerHub
-      if: success() && github.event_name != 'pull_request'
+      if: success()
       env:
         DOCKER_USERNAME: shaldengeki
         DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -113,26 +111,26 @@ jobs:
         echo "${DOCKER_PASSWORD}" | docker login --username "shaldengeki" --password-stdin
     -
       name: Push API image to DockerHub
-      if: success() && github.event_name != 'pull_request'
+      if: success()
       run: |
         docker buildx build --output "type=image,push=true" ${{ steps.prepare_api.outputs.buildx_args }}
     -
       name: Check API manifest
-      if: always() && github.event_name != 'pull_request'
+      if: always()
       run: |
         docker run --rm mplatform/mquery ${{ steps.prepare_api.outputs.docker_image }}:${{ steps.prepare_api.outputs.version }}
     -
       name: Push frontend image to DockerHub
-      if: success() && github.event_name != 'pull_request'
+      if: success()
       run: |
         docker buildx build --output "type=image,push=true" ${{ steps.prepare_frontend.outputs.buildx_args }}
     -
       name: Check frontend manifest
-      if: always() && github.event_name != 'pull_request'
+      if: always()
       run: |
         docker run --rm mplatform/mquery ${{ steps.prepare_frontend.outputs.docker_image }}:${{ steps.prepare_frontend.outputs.version }}
     -
       name: Clear
-      if: always() && github.event_name != 'pull_request'
+      if: always()
       run: |
         rm -f ${HOME}/.docker/config.json
