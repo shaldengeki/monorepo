@@ -23,14 +23,14 @@ function updateStateInUrl(param, stateFn) {
 
 function useStart(initialStart) {
     const defaultDate = new Date();
-    const earliestDate = (defaultDate.getFullYear() - 1) + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
+    const earliestDate = (defaultDate.getFullYear() - 1) + '-' + (defaultDate.getMonth() + 1) + '-' + defaultDate.getDate();
     const [start, setStart] = useState(initialStart || earliestDate);
     return [start, updateStateInUrl('start', setStart)];
 }
 
 function useEnd(initialEnd) {
     const defaultDate = new Date();
-    const latestDate = defaultDate.getFullYear() + '-' + defaultDate.getMonth() + '-' + defaultDate.getDate();
+    const latestDate = defaultDate.getFullYear() + '-' + (defaultDate.getMonth() + 1) + '-' + defaultDate.getDate();
     const [end, setEnd] = useState(initialEnd || latestDate);
     return [end, updateStateInUrl('end', setEnd)];
 }
