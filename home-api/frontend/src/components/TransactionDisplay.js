@@ -77,13 +77,16 @@ const TransactionDisplay = () => {
     const [minAmount, setMinAmount] = useMinAmount(parseInt(query.get('minAmount'), 10));
     const [maxAmount, setMaxAmount] = useMaxAmount(parseInt(query.get('maxAmount'), 10));
 
-    const defaultTypes = (query.get('types') === null) ? null : query.get('types').split(",")
+    const queryTypes = query.get('types');
+    const defaultTypes = (queryTypes === null || queryTypes === '') ? null : queryTypes.split(",")
     const [types, setTypes] = useTypes(defaultTypes);
 
-    const defaultCategories = (query.get('categories') === null) ? null : query.get('categories').split(",")
+    const queryCategories = query.get('categories')
+    const defaultCategories = (queryCategories === null || queryCategories === '') ? null : queryCategories.split(",")
     const [categories, setCategories] = useCategories(defaultCategories);
 
-    const defaultAccounts = (query.get('accounts') === null) ? null : query.get('accounts').split(",")
+    const queryAccounts = query.get('accounts')
+    const defaultAccounts = (queryAccounts === null || queryAccounts === '') ? null : queryAccounts.split(",")
     const [accounts, setAccounts] = useAccounts(defaultAccounts);
 
     const chartElement = validDates ? (
