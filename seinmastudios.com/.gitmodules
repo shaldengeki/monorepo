@@ -1,3 +1,6 @@
 [submodule "themes/heather-hugo"]
 	path = themes/heather-hugo
 	url = https://github.com/hbpasti/heather-hugo
+[submodule "themes/hugo-kiera"]
+	path = themes/hugo-kiera
+	url = https://github.com/funkydan2/hugo-kiera.git
