@@ -9,8 +9,8 @@ on:
     - cron: '0 10 * * *' # everyday at 10am
   push:
     branches: master
-    tags:
-      - v*
+  pull_request:
+    branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -47,7 +47,7 @@ jobs:
     -
       name: Build API image
       run: |
-        docker build ---tag ${DOCKER_IMAGE}:${VERSION} ${TAGS} --file ./api/Dockerfile ./api
+        docker build --tag ${DOCKER_IMAGE}:${VERSION} ${TAGS} --file ./api/Dockerfile ./api
 
     -
       name: Log in to DockerHub
