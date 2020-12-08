@@ -63,21 +63,22 @@ def fetch_server_logs(models, params):
 
 serverLogsFilters = {
     "earliestDate": GraphQLArgument(
-        description="Earliest creation date that a server should have.", type=GraphQLInt
+        GraphQLInt, description="Earliest creation date that a server should have."
     ),
     "latestDate": GraphQLArgument(
-        description="Latest creation date that a server should have.", type=GraphQLInt
+        GraphQLInt, description="Latest creation date that a server should have."
     ),
     "serverId": GraphQLArgument(
+        GraphQLString,
         description="ID of the server.",
-        type=GraphQLString,
     ),
     "state": GraphQLArgument(
-        description="State that a server should have.", type=GraphQLString
+        GraphQLString,
+        description="State that a server should have.",
     ),
     "error": GraphQLArgument(
+        GraphQLBoolean,
         description="Set to true if you want only error states.",
-        type=GraphQLBoolean,
     ),
 }
 

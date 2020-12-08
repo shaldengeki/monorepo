@@ -4,7 +4,7 @@ psycopg2
 pylint
 sqlalchemy
 Flask-SQLAlchemy
-graphql-core==3.1.2
+graphql-core
 graphql-server[flask]
 flask-cors
 black

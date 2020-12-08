@@ -95,28 +95,32 @@ def fetch_servers(models, params):
 
 serversFilters = {
     "earliestDate": GraphQLArgument(
-        description="Earliest creation date that a server should have.", type=GraphQLInt
+        GraphQLInt,
+        description="Earliest creation date that a server should have.",
     ),
     "latestDate": GraphQLArgument(
-        description="Latest creation date that a server should have.", type=GraphQLInt
+        GraphQLInt,
+        description="Latest creation date that a server should have.",
     ),
     "createdBy": GraphQLArgument(
+        GraphQLString,
         description="Username that the server should have been created by.",
-        type=GraphQLString,
     ),
     "name": GraphQLArgument(
-        description="Name that a server should have.", type=GraphQLString
+        GraphQLString,
+        description="Name that a server should have.",
     ),
     "port": GraphQLArgument(
+        GraphQLInt,
         description="Port that a server should be running on.",
-        type=GraphQLInt,
     ),
     "timezone": GraphQLArgument(
-        description="Timezone that a server should have.", type=GraphQLString
+        GraphQLString,
+        description="Timezone that a server should have.",
     ),
     "zipfile": GraphQLArgument(
+        GraphQLString,
         description="Name of modpack zipfile that a server should have.",
-        type=GraphQLString,
     ),
 }
 
