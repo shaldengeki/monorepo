@@ -23,12 +23,12 @@ serverType = GraphQLObjectType(
         "created": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The date that the server was created, in unix epoch time.",
-            resolver=lambda server, info, **args: int(server.created.timestamp()),
+            resolve=lambda server, info, **args: int(server.created.timestamp()),
         ),
         "createdBy": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="The username of the player who created the server.",
-            resolver=lambda server, info, **args: server.created_by,
+            resolve=lambda server, info, **args: server.created_by,
         ),
         "name": GraphQLField(
             GraphQLNonNull(GraphQLString), description="The name of the server."
@@ -56,12 +56,12 @@ serverType = GraphQLObjectType(
         "logs": GraphQLField(
             GraphQLList(serverLogType),
             description="Logs associated with the server.",
-            resolver=lambda server, info, **args: server.logs,
+            resolve=lambda server, info, **args: server.logs,
         ),
         "latestLog": GraphQLField(
             serverLogType,
             description="Latest log associated with the server.",
-            resolver=lambda server, info, **args: server.logs.first,
+            resolve=lambda server, info, **args: server.logs.first,
         ),
     },
 )
@@ -129,7 +129,7 @@ def serversField(models):
     return GraphQLField(
         GraphQLList(serverType),
         args=serversFilters,
-        resolver=lambda root, info, **args: fetch_servers(models, args),
+        resolve=lambda root, info, **args: fetch_servers(models, args),
     )
 
 

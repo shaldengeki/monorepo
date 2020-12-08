@@ -24,7 +24,7 @@ serverLogType = GraphQLObjectType(
         "created": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The date that the log was recorded, in unix epoch time.",
-            resolver=lambda transaction, info, **args: int(
+            resolve=lambda transaction, info, **args: int(
                 transaction.created.timestamp()
             ),
         ),
@@ -87,5 +87,5 @@ def serverLogsField(models):
     return GraphQLField(
         GraphQLList(serverLogType),
         args=serverLogsFilters,
-        resolver=lambda root, info, **args: fetch_server_logs(models, args),
+        resolve=lambda root, info, **args: fetch_server_logs(models, args),
     )
