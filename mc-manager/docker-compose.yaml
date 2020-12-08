@@ -4,7 +4,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    image: home_api
+    image: shaldengeki/mc-manager-api
     ports:
       - "5000:5000"
     volumes:
@@ -22,7 +22,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    image: home_api
+    image: shaldengeki/mc-manager-api
     volumes:
       - ./api:/usr/src/app
     command: ["flask", "db", "upgrade"]
