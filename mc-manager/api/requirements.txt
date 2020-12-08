@@ -1,0 +1,10 @@
+Flask
+Flask-Migrate
+psycopg2
+pylint
+sqlalchemy
+Flask-SQLAlchemy
+graphql-core==2.2
+flask_graphql
+flask-cors
+black
