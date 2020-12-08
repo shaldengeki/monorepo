@@ -61,7 +61,7 @@ serverType = GraphQLObjectType(
         "latestLog": GraphQLField(
             serverLogType,
             description="Latest log associated with the server.",
-            resolve=lambda server, info, **args: server.logs.first,
+            resolve=lambda server, info, **args: server.logs[0],
         ),
     },
 )
