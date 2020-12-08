@@ -1,5 +1,4 @@
 from ..app import db
-from .server_log import ServerLog
 
 
 class Server(db.Model):
