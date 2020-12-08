@@ -51,16 +51,6 @@ serverType = GraphQLObjectType(
             GraphQLNonNull(GraphQLString),
             description="The amount of memory to allocate to the server.",
         ),
-        "logs": GraphQLField(
-            GraphQLList(serverLogType),
-            description="Logs associated with the server.",
-            resolver=lambda server, info, **args: server.logs,
-        ),
-        "latestLog": GraphQLField(
-            serverLogType,
-            description="Latest log associated with the server.",
-            resolver=lambda server, info, **args: server.latest_log,
-        ),
     },
 )
 
