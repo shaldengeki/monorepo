@@ -37,7 +37,8 @@ serverType = GraphQLObjectType(
             description="The port that the server runs on.",
         ),
         "timezone": GraphQLField(
-            GraphQLNonNull(GraphQLString), description="The timezone that the server is set in."
+            GraphQLNonNull(GraphQLString),
+            description="The timezone that the server is set in.",
         ),
         "zipfile": GraphQLField(
             GraphQLNonNull(GraphQLString),
@@ -50,9 +51,10 @@ serverType = GraphQLObjectType(
         "memory": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="The amount of memory to allocate to the server.",
-        )
+        ),
     },
 )
+
 
 def fetch_servers(models, params):
     query_obj = models.Server.query
@@ -67,27 +69,18 @@ def fetch_servers(models, params):
             <= datetime.datetime.utcfromtimestamp(int(params["latestDate"]))
         )
     if params.get("createdBy", False):
-        query_obj = query_obj.filter(
-            models.Server.created_by == params["createdBy"]
-        )
+        query_obj = query_obj.filter(models.Server.created_by == params["createdBy"])
     if params.get("name", False):
-        query_obj = query_obj.filter(
-            models.Server.name == params["name"]
-        )
+        query_obj = query_obj.filter(models.Server.name == params["name"])
     if params.get("port", False):
-        query_obj = query_obj.filter(
-            models.Server.port == int(params["port"])
-        )
+        query_obj = query_obj.filter(models.Server.port == int(params["port"]))
     if params.get("timezone", False):
-        query_obj = query_obj.filter(
-            models.Server.timezone == params["timezone"]
-        )
+        query_obj = query_obj.filter(models.Server.timezone == params["timezone"])
     if params.get("zipfile", False):
-        query_obj = query_obj.filter(
-            models.Server.zipfile == params["zipfile"]
-        )
+        query_obj = query_obj.filter(models.Server.zipfile == params["zipfile"])
 
     return query_obj.order_by(desc(models.Server.created)).all()
+
 
 serversFilters = {
     "earliestDate": GraphQLArgument(
@@ -97,7 +90,8 @@ serversFilters = {
         description="Latest creation date that a server should have.", type=GraphQLInt
     ),
     "createdBy": GraphQLArgument(
-        description="Username that the server should have been created by.", type=GraphQLString
+        description="Username that the server should have been created by.",
+        type=GraphQLString,
     ),
     "name": GraphQLArgument(
         description="Name that a server should have.", type=GraphQLString
@@ -112,7 +106,7 @@ serversFilters = {
     "zipfile": GraphQLArgument(
         description="Name of modpack zipfile that a server should have.",
         type=GraphQLString,
-    )
+    ),
 }
 
 
