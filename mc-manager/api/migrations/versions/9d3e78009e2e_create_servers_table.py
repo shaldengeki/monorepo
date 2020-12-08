@@ -1,7 +1,7 @@
 """create servers table
 
 Revision ID: 9d3e78009e2e
-Revises: 
+Revises:
 Create Date: 2020-12-08 11:48:47.669297
 
 """
