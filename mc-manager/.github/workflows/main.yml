@@ -47,7 +47,7 @@ jobs:
     -
       name: Build API image
       run: |
-        docker build ---tag ${DOCKER_IMAGE}:${VERSION} ${TAGS} --file ./api/Dockerfile ./api
+        docker build --tag ${DOCKER_IMAGE}:${VERSION} ${TAGS} --file ./api/Dockerfile ./api
 
     -
       name: Log in to DockerHub
