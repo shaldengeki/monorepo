@@ -145,7 +145,7 @@ def create_server(models, args):
     )
     db.session.add(server)
 
-    server_log = models.ServerLog(server_id=server.id, state="created")
+    server_log = models.ServerLog(server=server, state="created")
     db.session.add(server_log)
 
     db.session.commit()
