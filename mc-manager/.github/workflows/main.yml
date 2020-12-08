@@ -46,11 +46,12 @@ jobs:
         if [[ $VERSION =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
           TAGS="$TAGS --tag ${DOCKER_IMAGE}:latest"
         fi
+        echo "Building image with tags: ${TAGS}"
 
     -
       name: Build API image
       run: |
-        docker build --tag ${DOCKER_IMAGE}:${VERSION} ${TAGS} --file ./api/Dockerfile ./api
+        docker build ${TAGS} --file ./api/Dockerfile ./api
 
     -
       name: Log in to DockerHub
