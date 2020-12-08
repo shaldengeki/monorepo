@@ -65,7 +65,7 @@ jobs:
       name: Push API image to DockerHub
       if: success()
       run: |
-        docker push ${TAGS}
+        docker push ${DOCKER_IMAGE}:${VERSION}
 
     -
       name: Check API manifest
