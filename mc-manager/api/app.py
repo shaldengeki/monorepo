@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-from flask_graphql import GraphQLView
+from graphql_server.flask import GraphQLView
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
