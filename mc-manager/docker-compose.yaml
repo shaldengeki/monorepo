@@ -25,7 +25,7 @@ services:
     image: shaldengeki/mc-manager-api
     volumes:
       - ./api:/usr/src/app
-    command: ["flask", "db", "upgrade"]
+    command: ["./scripts/wait-for-postgres.sh", "flask", "db", "upgrade"]
     environment:
       - FLASK_ENV=development
       - DB_HOST=pg
