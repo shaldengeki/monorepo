@@ -9,6 +9,8 @@ from graphql import (
     GraphQLString,
 )
 from sqlalchemy import desc
+
+from ...app import db
 from .server_log import serverLogType
 
 serverType = GraphQLObjectType(
@@ -124,4 +126,55 @@ def serversField(models):
         GraphQLList(serverType),
         args=serversFilters,
         resolver=lambda root, info, **args: fetch_servers(models, args),
+    )
+
+
+def create_server(models, args):
+    server = models.Server(
+        created_by=args["createdBy"],
+        name=args["name"],
+        port=int(args["port"]),
+        timezone=args["timezone"],
+        zipfile=args["zipfile"],
+        motd=args.get("motd"),
+        memory=args["memory"],
+    )
+    db.session.add(server)
+    db.session.commit()
+    return server
+
+
+def createServerField(models):
+    return GraphQLField(
+        serverType,
+        args={
+            "createdBy": GraphQLArgument(
+                GraphQLNonNull(GraphQLString),
+                description="Minecraft username creating the server.",
+            ),
+            "name": GraphQLArgument(
+                GraphQLNonNull(GraphQLString), description="Name of the server."
+            ),
+            "port": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="Port that the server should run on.",
+            ),
+            "timezone": GraphQLArgument(
+                GraphQLNonNull(GraphQLString),
+                description="Timezone that the server should run in.",
+            ),
+            "zipfile": GraphQLArgument(
+                GraphQLNonNull(GraphQLString),
+                description="Filename of the CurseForge zipfile that this server runs.",
+            ),
+            "motd": GraphQLArgument(
+                GraphQLString,
+                description="MOTD displayed by this server on a server listing.",
+            ),
+            "memory": GraphQLArgument(
+                GraphQLNonNull(GraphQLString),
+                description="Amount of memory to allocate to the server.",
+            ),
+        },
+        resolve=lambda root, info, **args: create_server(models, args),
     )
