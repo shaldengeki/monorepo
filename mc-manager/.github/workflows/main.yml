@@ -3,14 +3,17 @@
 name: Dockerhub
 
 # Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# events but only for the main branch
 on:
   schedule:
     - cron: '0 10 * * *' # everyday at 10am
   push:
-    branches: master
+    branches: main
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
+  release:
+    types:
+      - created
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
