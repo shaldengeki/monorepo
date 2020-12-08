@@ -54,24 +54,24 @@ jobs:
         docker build ${TAGS} --file ./api/Dockerfile ./api
 
     -
-      name: Log in to DockerHub
+      name: Login to DockerHub
       if: success()
-      env:
-        DOCKER_USERNAME: shaldengeki
-        DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
-      run: |
-        echo "${DOCKER_PASSWORD}" | docker login --username "shaldengeki" --password-stdin
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     -
       name: Push API image to DockerHub
       if: success()
       run: |
-        docker buildx build --output "type=image,push=true" ${{ steps.prepare_api.outputs.buildx_args }}
+        docker push ${TAGS}
+
     -
       name: Check API manifest
       if: always()
       run: |
-        docker run --rm mplatform/mquery ${{ steps.prepare_api.outputs.docker_image }}:${{ steps.prepare_api.outputs.version }}
+        docker run --rm mplatform/mquery ${DOCKER_IMAGE}:${VERSION}
     -
       name: Clear
       if: always()
