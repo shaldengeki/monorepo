@@ -5,6 +5,6 @@ pylint
 sqlalchemy
 Flask-SQLAlchemy
 graphql-core==3.1.2
-flask_graphql
+graphql-server[flask]
 flask-cors
 black
