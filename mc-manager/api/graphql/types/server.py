@@ -144,6 +144,10 @@ def create_server(models, args):
         memory=args["memory"],
     )
     db.session.add(server)
+
+    server_log = models.ServerLog(server_id=server.id, state="created")
+    db.session.add(server_log)
+
     db.session.commit()
     return server
 
