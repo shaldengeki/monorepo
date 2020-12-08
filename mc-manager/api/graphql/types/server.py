@@ -9,25 +9,24 @@ from graphql import (
     GraphQLString,
 )
 from sqlalchemy import desc
+from .server_log import serverLogType
 
 serverType = GraphQLObjectType(
     "Server",
     description="A Minecraft server that players can connect to.",
     fields=lambda: {
         "id": GraphQLField(
-            GraphQLNonNull(GraphQLInt), description="The id of the transaction."
+            GraphQLNonNull(GraphQLInt), description="The id of the server."
         ),
         "created": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The date that the server was created, in unix epoch time.",
-            resolver=lambda transaction, info, **args: int(
-                transaction.created.timestamp()
-            ),
+            resolver=lambda server, info, **args: int(server.created.timestamp()),
         ),
         "createdBy": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="The username of the player who created the server.",
-            resolver=lambda transaction, info, **args: transaction.created_by,
+            resolver=lambda server, info, **args: server.created_by,
         ),
         "name": GraphQLField(
             GraphQLNonNull(GraphQLString), description="The name of the server."
@@ -51,6 +50,16 @@ serverType = GraphQLObjectType(
         "memory": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="The amount of memory to allocate to the server.",
+        ),
+        "logs": GraphQLField(
+            GraphQLList(serverLogType),
+            description="Logs associated with the server.",
+            resolver=lambda server, info, **args: server.logs,
+        ),
+        "latestLog": GraphQLField(
+            serverLogType,
+            description="Latest log associated with the server.",
+            resolver=lambda server, info, **args: server.logs.first,
         ),
     },
 )
