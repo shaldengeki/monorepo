@@ -13,6 +13,6 @@ RUN npm install
 
 COPY . .
 
-RUN npm run tailwind:css
+RUN npm run build
 
-CMD npm start
+CMD npm run start
