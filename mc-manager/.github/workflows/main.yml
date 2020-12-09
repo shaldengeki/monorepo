@@ -30,11 +30,19 @@ jobs:
         uses: docker/setup-qemu-action@v1
 
       -
-        name: Docker meta
-        id: docker_meta
+        name: Docker meta (API)
+        id: docker_meta_api
         uses: crazy-max/ghaction-docker-meta@v1
         with:
           images: shaldengeki/mc-manager-api # list of Docker images to use as base name for tags
+          tag-sha: true # add git short SHA as Docker tag
+
+      -
+        name: Docker meta (frontend)
+        id: docker_meta_frontend
+        uses: crazy-max/ghaction-docker-meta@v1
+        with:
+          images: shaldengeki/mc-manager-frontend # list of Docker images to use as base name for tags
           tag-sha: true # add git short SHA as Docker tag
 
       -
@@ -58,7 +66,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
-        name: Build and push
+        name: Build and push (API)
         id: docker_build
         uses: docker/build-push-action@v2
         with:
@@ -66,7 +74,21 @@ jobs:
           context: ./api
           push: ${{ github.event_name != 'pull_request' }}
           platforms: linux/amd64,linux/arm64,linux/386
-          tags: ${{ steps.docker_meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
+          tags: ${{ steps.docker_meta_api.outputs.tags }}
+          labels: ${{ steps.docker_meta_api.outputs.labels }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      -
+        name: Build and push (frontend)
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          file: ./frontend/Dockerfile
+          context: ./frontend
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: linux/amd64,linux/arm64,linux/386
+          tags: ${{ steps.docker_meta_frontend.outputs.tags }}
+          labels: ${{ steps.docker_meta_frontend.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
