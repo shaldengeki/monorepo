@@ -17,6 +17,6 @@ jobs:
         with:
           node-version: '12'
       - name: Install modules
-        run: npm install
+        run: npm install frontend
       - name: Run ESLint
         run: eslint frontend --ext .js,.jsx,.ts,.tsx

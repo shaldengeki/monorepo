@@ -12,6 +12,7 @@
     "apollo-client": "^2.6.10",
     "apollo-link-http": "^1.5.17",
     "autoprefixer": "^9.8.6",
+    "eslint": "^7.15.0",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
     "moment": "^2.29.1",
