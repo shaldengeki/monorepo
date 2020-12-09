@@ -67,7 +67,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push (API)
-        id: docker_build
+        id: docker_build_api
         uses: docker/build-push-action@v2
         with:
           file: ./api/Dockerfile
@@ -81,7 +81,7 @@ jobs:
 
       -
         name: Build and push (frontend)
-        id: docker_build
+        id: docker_build_frontend
         uses: docker/build-push-action@v2
         with:
           file: ./frontend/Dockerfile
