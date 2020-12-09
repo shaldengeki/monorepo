@@ -16,7 +16,7 @@ const renderColumn = (col: string, filters: _.Dictionary<any>, setFilter: Functi
   )
 }
 
-const useColumnFilters = (cols: string[]): [object, Function] => {
+const useColumnFilters = (cols: string[]): [any, Function] => {
   const defaultFilters = _.fromPairs(_.map(cols, (c) => { return [c, ''] }))
   const [filters, setFilters] = useState(defaultFilters)
   function setFilter (name: string, value: string) {
