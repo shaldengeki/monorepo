@@ -9,12 +9,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # - name: eslint
-      #   uses: hallee/eslint-action@1.0.3
-      #   with:
-      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
-      #     source-root: frontend
       - name: black
         uses: lgeiger/black-action@master
         with:
           args: "api --check"
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - name: Install modules
+        working-directory: frontend
+        run: npm install
+      - name: Run ESLint
+        working-directory: frontend
+        run: npx eslint .
