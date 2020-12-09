@@ -16,8 +16,6 @@ services:
       - DB_USERNAME=admin
       - DB_PASSWORD=development
       - DATABASE_NAME=api_development
-      - FRONTEND_HOST=192.168.1.5
-      - FRONTEND_PORT=5001
   migration:
     build:
       context: ./api
@@ -52,9 +50,8 @@ services:
     image: shaldengeki/mc-manager-frontend
     ports:
       - "5001:5001"
+    stdin_open: true
     volumes:
       - ./frontend/src:/usr/src/app/src
     environment:
       - PORT=5001
-      - REACT_APP_API_HOST=192.168.1.5
-      - REACT_APP_API_PORT=5000
