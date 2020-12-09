@@ -6,7 +6,7 @@ const renderColumn = (col: string, filters: _.Dictionary<any>, setFilter: Functi
         <th key={`${tablePrefix}-col-${col}`} className="px-4 py-2">
             <p>{_.startCase(col)}</p>
             <input
-                className="border"
+                className="border w-full"
                 type="text"
                 name="filter[{}]"
                 value={filters[col]}
@@ -56,7 +56,7 @@ const Table = ({ cols, rows, key }: TableProps) => {
   })
 
   return (
-        <table key={tablePrefix} className="table-auto">
+        <table key={tablePrefix} className="w-full table-fixed text-center">
             <thead>
                 <tr>
                     {cols.map(col => renderColumn(col, filters, setFilter, tablePrefix))}
