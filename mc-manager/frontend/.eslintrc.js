@@ -20,5 +20,12 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': 'warn'
+  },
+  settings: {
+    react: {
+      version: '17.0.1'
+    }
   }
 }
