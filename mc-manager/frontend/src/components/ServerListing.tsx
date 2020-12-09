@@ -38,13 +38,13 @@ const GET_SERVERS = gql`
 `
 
 type ServerListingProps = {
-  earliestDate: bigint,
-  latestDate: bigint,
-  createdBy: string,
-  name: string,
-  port: bigint,
-  timezone: string,
-  zipfile: string
+  earliestDate?: bigint,
+  latestDate?: bigint,
+  createdBy?: string,
+  name?: string,
+  port?: bigint,
+  timezone?: string,
+  zipfile?: string
 };
 
 const ServerListing = ({

@@ -41,12 +41,12 @@ const renderRow = (row, idx, cols, tablePrefix) => {
 type TableProps = {
   cols: Array<string>,
   rows: Array<object>,
-  keyPrefix: string
+  key: string
 };
 
-const Table = ({ cols, rows, keyPrefix }: TableProps) => {
+const Table = ({ cols, rows, key }: TableProps) => {
   const [filters, setFilter] = useColumnFilters(cols)
-  const tablePrefix = `Table-${keyPrefix}`
+  const tablePrefix = `Table-${key}`
 
   let shownRows = rows || []
   _.forEach(cols, (col) => {
