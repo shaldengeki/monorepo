@@ -66,13 +66,15 @@ const ServerListing = (props) => {
     if (error) return errorDisplay;
 
     const formattedServers = _.map(data.servers || [], (txn) => {
+        const createdFormatted = new Date(txn.created * 1000).toLocaleDateString("en-US");
+        const updatedFormatted = new Date(txn.latestLog.created * 1000).toLocaleDateString("en-US");
         return {
-            created: txn.created,
+            created: createdFormatted,
             createdBy: txn.createdBy,
             name: txn.name,
             port: txn.port,
             zipfile: txn.zipfile,
-            latestUpdate: txn.latestLog.created,
+            latestUpdate: updatedFormatted,
             latestState: txn.latestLog.state,
         };
     });
