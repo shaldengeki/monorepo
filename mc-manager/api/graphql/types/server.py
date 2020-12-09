@@ -9,6 +9,8 @@ from graphql import (
     GraphQLString,
 )
 from sqlalchemy import desc
+
+from ...app import db
 from .server_log import serverLogType
 
 serverType = GraphQLObjectType(
@@ -21,12 +23,12 @@ serverType = GraphQLObjectType(
         "created": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The date that the server was created, in unix epoch time.",
-            resolver=lambda server, info, **args: int(server.created.timestamp()),
+            resolve=lambda server, info, **args: int(server.created.timestamp()),
         ),
         "createdBy": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="The username of the player who created the server.",
-            resolver=lambda server, info, **args: server.created_by,
+            resolve=lambda server, info, **args: server.created_by,
         ),
         "name": GraphQLField(
             GraphQLNonNull(GraphQLString), description="The name of the server."
@@ -54,12 +56,12 @@ serverType = GraphQLObjectType(
         "logs": GraphQLField(
             GraphQLList(serverLogType),
             description="Logs associated with the server.",
-            resolver=lambda server, info, **args: server.logs,
+            resolve=lambda server, info, **args: server.logs,
         ),
         "latestLog": GraphQLField(
             serverLogType,
             description="Latest log associated with the server.",
-            resolver=lambda server, info, **args: server.logs.first,
+            resolve=lambda server, info, **args: server.logs[0],
         ),
     },
 )
@@ -93,28 +95,32 @@ def fetch_servers(models, params):
 
 serversFilters = {
     "earliestDate": GraphQLArgument(
-        description="Earliest creation date that a server should have.", type=GraphQLInt
+        GraphQLInt,
+        description="Earliest creation date that a server should have.",
     ),
     "latestDate": GraphQLArgument(
-        description="Latest creation date that a server should have.", type=GraphQLInt
+        GraphQLInt,
+        description="Latest creation date that a server should have.",
     ),
     "createdBy": GraphQLArgument(
+        GraphQLString,
         description="Username that the server should have been created by.",
-        type=GraphQLString,
     ),
     "name": GraphQLArgument(
-        description="Name that a server should have.", type=GraphQLString
+        GraphQLString,
+        description="Name that a server should have.",
     ),
     "port": GraphQLArgument(
+        GraphQLInt,
         description="Port that a server should be running on.",
-        type=GraphQLInt,
     ),
     "timezone": GraphQLArgument(
-        description="Timezone that a server should have.", type=GraphQLString
+        GraphQLString,
+        description="Timezone that a server should have.",
     ),
     "zipfile": GraphQLArgument(
+        GraphQLString,
         description="Name of modpack zipfile that a server should have.",
-        type=GraphQLString,
     ),
 }
 
@@ -123,5 +129,60 @@ def serversField(models):
     return GraphQLField(
         GraphQLList(serverType),
         args=serversFilters,
-        resolver=lambda root, info, **args: fetch_servers(models, args),
+        resolve=lambda root, info, **args: fetch_servers(models, args),
+    )
+
+
+def create_server(models, args):
+    server = models.Server(
+        created_by=args["createdBy"],
+        name=args["name"],
+        port=int(args["port"]),
+        timezone=args["timezone"],
+        zipfile=args["zipfile"],
+        motd=args.get("motd"),
+        memory=args["memory"],
+    )
+    db.session.add(server)
+
+    server_log = models.ServerLog(server=server, state="created")
+    db.session.add(server_log)
+
+    db.session.commit()
+    return server
+
+
+def createServerField(models):
+    return GraphQLField(
+        serverType,
+        args={
+            "createdBy": GraphQLArgument(
+                GraphQLNonNull(GraphQLString),
+                description="Minecraft username creating the server.",
+            ),
+            "name": GraphQLArgument(
+                GraphQLNonNull(GraphQLString), description="Name of the server."
+            ),
+            "port": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="Port that the server should run on.",
+            ),
+            "timezone": GraphQLArgument(
+                GraphQLNonNull(GraphQLString),
+                description="Timezone that the server should run in.",
+            ),
+            "zipfile": GraphQLArgument(
+                GraphQLNonNull(GraphQLString),
+                description="Filename of the CurseForge zipfile that this server runs.",
+            ),
+            "motd": GraphQLArgument(
+                GraphQLString,
+                description="MOTD displayed by this server on a server listing.",
+            ),
+            "memory": GraphQLArgument(
+                GraphQLNonNull(GraphQLString),
+                description="Amount of memory to allocate to the server.",
+            ),
+        },
+        resolve=lambda root, info, **args: create_server(models, args),
     )
