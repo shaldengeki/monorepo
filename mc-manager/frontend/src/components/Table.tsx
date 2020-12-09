@@ -38,8 +38,13 @@ const renderRow = (row, idx, cols, tablePrefix) => {
   )
 }
 
-const Table = (props) => {
-  const { cols, rows, keyPrefix } = props
+type TableProps = {
+  cols: Array<string>,
+  rows: Array<object>,
+  keyPrefix: string
+};
+
+const Table = ({ cols, rows, keyPrefix }: TableProps) => {
   const [filters, setFilter] = useColumnFilters(cols)
   const tablePrefix = `Table-${keyPrefix}`
 

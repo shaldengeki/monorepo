@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import _ from 'lodash'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
@@ -37,16 +37,25 @@ const GET_SERVERS = gql`
     }
 `
 
-const ServerListing = (props) => {
-  const {
-    earliestDate,
-    latestDate,
-    createdBy,
-    name,
-    port,
-    timezone,
-    zipfile
-  } = props
+type ServerListingProps = {
+  earliestDate: bigint,
+  latestDate: bigint,
+  createdBy: string,
+  name: string,
+  port: bigint,
+  timezone: string,
+  zipfile: string
+};
+
+const ServerListing = ({
+  earliestDate,
+  latestDate,
+  createdBy,
+  name,
+  port,
+  timezone,
+  zipfile
+}: ServerListingProps) => {
   const { data, loading, error } = useQuery(GET_SERVERS, {
     variables: {
       earliestDate,
