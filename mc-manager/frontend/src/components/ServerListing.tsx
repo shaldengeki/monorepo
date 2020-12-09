@@ -24,6 +24,7 @@ const GET_SERVERS = gql`
             timezone: $timezone,
             zipfile: $zipfile,
         ) {
+            id
             created
             createdBy
             name
@@ -36,6 +37,17 @@ const GET_SERVERS = gql`
         }
     }
 `
+
+type ServerRow = {
+  id: string,
+  created: string,
+  createdBy: string,
+  name: string,
+  port: bigint,
+  zipfile: string,
+  latestUpdate: string,
+  latestState: string
+};
 
 type ServerListingProps = {
   earliestDate?: bigint,
@@ -74,10 +86,11 @@ const ServerListing = ({
   if (loading) return loadingDisplay
   if (error) return errorDisplay
 
-  const formattedServers = _.map(data.servers || [], (txn) => {
+  const formattedServers : Array<ServerRow> = _.map(data.servers || [], (txn) => {
     const createdFormatted = new Date(txn.created * 1000).toLocaleDateString('en-US')
     const updatedFormatted = new Date(txn.latestLog.created * 1000).toLocaleDateString('en-US')
     return {
+      id: `${txn.id}`,
       created: createdFormatted,
       createdBy: txn.createdBy,
       name: txn.name,

@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 import _ from 'lodash'
 
-const renderColumn = (col, filters, setFilter, tablePrefix) => {
+interface TableRowProps {
+  id?: string
+};
+
+const renderColumn = (col: string, filters: _.Dictionary<any>, setFilter: Function, tablePrefix: string) => {
   return (
         <th key={`${tablePrefix}-col-${col}`} className="px-4 py-2">
             <p>{_.startCase(col)}</p>
@@ -16,10 +20,10 @@ const renderColumn = (col, filters, setFilter, tablePrefix) => {
   )
 }
 
-const useColumnFilters = (cols) => {
+const useColumnFilters = (cols: string[]): [object, Function] => {
   const defaultFilters = _.fromPairs(_.map(cols, (c) => { return [c, ''] }))
   const [filters, setFilters] = useState(defaultFilters)
-  function setFilter (name, value) {
+  function setFilter (name: string, value: string) {
     const newFilters = _.clone(filters)
     newFilters[name] = value
     setFilters(newFilters)
@@ -27,7 +31,7 @@ const useColumnFilters = (cols) => {
   return [filters, setFilter]
 }
 
-const renderRow = (row, idx, cols, tablePrefix) => {
+const renderRow = (row: TableRowProps, idx: number, cols: Array<string>, tablePrefix: string) => {
   const rowPrefix = (row.id === undefined) ? `${tablePrefix}-row-${idx}` : `${tablePrefix}-row-${row.id}`
   return (
         <tr key={rowPrefix}>
@@ -40,7 +44,7 @@ const renderRow = (row, idx, cols, tablePrefix) => {
 
 type TableProps = {
   cols: Array<string>,
-  rows: Array<object>,
+  rows: Array<TableRowProps>,
   key: string
 };
 
