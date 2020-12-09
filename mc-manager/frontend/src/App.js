@@ -13,8 +13,10 @@ function App() {
     <Router>
         <Switch>
           <Route path="/">
-            <div className="text-center">
-              <ServerListing />
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="col-span-3">
+                <ServerListing />
+              </div>
             </div>
           </Route>
         </Switch>
