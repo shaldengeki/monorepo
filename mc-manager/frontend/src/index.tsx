@@ -5,9 +5,11 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 
 import { ApolloProvider } from '@apollo/react-hooks'
-import { ApolloClient } from 'apollo-client'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { HttpLink } from 'apollo-link-http'
+import {
+  ApolloClient,
+  InMemoryCache,
+  HttpLink
+} from '@apollo/client'
 
 const cache = new InMemoryCache()
 
