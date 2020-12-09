@@ -102,13 +102,13 @@ const ServerListing = ({
   })
 
   const cols = [
-    'created',
-    'createdBy',
-    'name',
-    'port',
-    'zipfile',
     'latestUpdate',
-    'latestState'
+    'latestState',
+    'name',
+    'zipfile',
+    'port',
+    'createdBy',
+    'created'
   ]
   return (
         <Table cols={cols} rows={formattedServers} key='servers' />

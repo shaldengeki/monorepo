@@ -6,6 +6,7 @@ import {
   Route
 } from 'react-router-dom'
 
+import Header from './components/Header'
 import ServerListing from './components/ServerListing'
 
 function App () {
@@ -13,9 +14,12 @@ function App () {
     <Router>
         <Switch>
           <Route path="/">
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="col-span-3">
-                <ServerListing />
+            <div className="bg-gray-500 w-full h-screen">
+              <div className="p-4 content-start">
+                <Header />
+                <div className="bg-gray-50 rounded overflow-auto">
+                  <ServerListing />
+                </div>
               </div>
             </div>
           </Route>
