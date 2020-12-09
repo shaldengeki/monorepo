@@ -1,14 +1,14 @@
-import React from 'react';
-import './App.css';
+import React from 'react'
+import './App.css'
 import {
   BrowserRouter as Router,
   Switch,
   Route
-} from "react-router-dom";
+} from 'react-router-dom'
 
-import ServerListing from './components/ServerListing';
+import ServerListing from './components/ServerListing'
 
-function App() {
+function App () {
   return (
     <Router>
         <Switch>
@@ -21,7 +21,7 @@ function App() {
           </Route>
         </Switch>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App
