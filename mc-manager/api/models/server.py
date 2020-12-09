@@ -9,8 +9,8 @@ class Server(db.Model):
         db.TIMESTAMP(timezone=True), default=datetime.datetime.utcnow, nullable=False
     )
     created_by = db.Column(db.Unicode(100), nullable=False)
-    name = db.Column(db.Unicode(100), nullable=False)
-    port = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.Unicode(100), nullable=False, unique=True)
+    port = db.Column(db.Integer, nullable=False, unique=True)
     timezone = db.Column(db.Unicode(100), nullable=False)
     zipfile = db.Column(db.Unicode(100), nullable=False)
     motd = db.Column(db.Unicode(100))
