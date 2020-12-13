@@ -112,7 +112,7 @@ def serverLogsField(models):
 
 def create_server_log(models, args):
     server_log = models.ServerLog(
-        server_id=args["serverId"], state=args["state"], error=args["error"]
+        server_id=args["serverId"], state=args["state"], error=args.get("error")
     )
     db.session.add(server_log)
 
