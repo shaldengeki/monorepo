@@ -9,7 +9,7 @@ RUN apk update && \
 WORKDIR /usr/src/app
 
 ENV FLASK_APP=app.py
-ENV PORT=5000
+ENV API_PORT=5000
 ENV FRONTEND_HOST=home_frontend
 ENV FRONTEND_PORT=5001
 
@@ -19,4 +19,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD flask run --host 0.0.0.0 --port $PORT
+CMD flask run --host 0.0.0.0 --port $API_PORT
