@@ -44,7 +44,7 @@ def run(args):
         # For each server we expect to poll,
         # update the status accordingly.
         for server in servers:
-            update_server(server, containers)
+            update_server(host, port, server, containers)
 
         time.sleep(update_interval)
 
@@ -63,21 +63,31 @@ def fetch_expected_servers(host, port):
     return response.json().get("data", {}).get("servers", [])
 
 
-def update_server(server, containers):
+def update_server(host, port, server, containers):
     print(f"Updating status for server {server['name']}")
     container = [c for c in containers if c.name == server["name"]]
     if not container:
         print(f"Server {server['name']} is no longer running")
         # Record that this server is no longer running.
-        return
+        return record_server_status(host, port, server["id"], "stopped")
     else:
         print(f"Server {server['name']} is running")
         # Record that this server is running.
-        return
+        return record_server_status(host, port, server["id"], "started")
 
 
-def record_server_status(server_id, status):
-    pass
+def record_server_status(host, port, server_id, status):
+    url = f"http://{host}:{port}/graphql"
+    print(f"Recording server status via {url}")
+    response = requests.post(
+        url,
+        data={
+            "query": "mutation createLog($id:Int!, $state:ServerLogState!) {\n  createServerLog(serverId: $id, state: $state) {\n    id\n    server_id\n    created\n    state\n    error\n  }\n}\n",
+            "variables": {"id": server_id, "state": status},
+            "operationName": "createLog",
+        },
+    )
+    return response.json().get("data", {}).get("createServerLog")
 
 
 if __name__ == "__main__":
