@@ -10,7 +10,6 @@
     "@testing-library/user-event": "^12.5.0",
     "@types/jest": "^26.0.18",
     "@types/node": "^14.14.11",
-    "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.6",
     "apollo-cache-inmemory": "^1.6.6",
@@ -27,6 +26,7 @@
     "react-plotlyjs": "^0.4.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "react-time-ago": "^6.2.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.1",
     "typescript": "^4.1.2",
     "web-vitals": "^0.2.4"

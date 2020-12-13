@@ -11,6 +11,10 @@ import {
   HttpLink
 } from '@apollo/client'
 
+import TimeAgo from 'javascript-time-ago'
+
+import en from 'javascript-time-ago/locale/en'
+
 const cache = new InMemoryCache()
 
 const { REACT_APP_API_HOST = 'localhost', REACT_APP_API_PORT = '5000' } = process.env
@@ -23,6 +27,8 @@ const client = new ApolloClient({
   cache,
   link
 })
+
+TimeAgo.addDefaultLocale(en)
 
 ReactDOM.render(
   <React.StrictMode>

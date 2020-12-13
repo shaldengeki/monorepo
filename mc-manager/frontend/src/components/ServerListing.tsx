@@ -2,8 +2,10 @@ import * as React from 'react'
 import _ from 'lodash'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import ReactTimeAgo from 'react-time-ago'
 
 import Table from './Table'
+import { Date } from '@ungap/global-this'
 
 const GET_SERVERS = gql`
     query Servers(
@@ -45,7 +47,7 @@ type ServerRow = {
   name: string,
   port: bigint,
   zipfile: string,
-  latestUpdate: string,
+  latestUpdate: React.Element,
   latestState: string
 };
 
@@ -88,7 +90,10 @@ const ServerListing = ({
 
   const formattedServers : Array<ServerRow> = _.map(data.servers || [], (txn) => {
     const createdFormatted = new Date(txn.created * 1000).toLocaleDateString('en-US')
-    const updatedFormatted = new Date(txn.latestLog.created * 1000).toLocaleDateString('en-US')
+    const updated = (
+        <ReactTimeAgo date={new Date(txn.latestLog.created * 1000)} locale="en-US"/>
+    )
+
     return {
       id: `${txn.id}`,
       created: createdFormatted,
@@ -96,7 +101,7 @@ const ServerListing = ({
       name: txn.name,
       port: txn.port,
       zipfile: txn.zipfile,
-      latestUpdate: updatedFormatted,
+      latestUpdate: updated,
       latestState: txn.latestLog.state
     }
   })
