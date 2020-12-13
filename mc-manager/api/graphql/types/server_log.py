@@ -4,12 +4,31 @@ from graphql import (
     GraphQLObjectType,
     GraphQLField,
     GraphQLBoolean,
+    GraphQLEnumType,
+    GraphQLEnumValue,
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
     GraphQLString,
 )
 from sqlalchemy import desc
+
+from ...app import db
+
+
+serverLogStateEnum = GraphQLEnumType(
+    "ServerLogState",
+    description="State that a server can be in",
+    values={
+        "created": GraphQLEnumValue(
+            "created", description="Server is queued to be started"
+        ),
+        "started": GraphQLEnumValue(
+            "started", description="Server is currently running"
+        ),
+        "stopped": GraphQLEnumValue("stopped", description="Server is not running"),
+    },
+)
 
 serverLogType = GraphQLObjectType(
     "ServerLog",
@@ -29,7 +48,7 @@ serverLogType = GraphQLObjectType(
             ),
         ),
         "state": GraphQLField(
-            GraphQLNonNull(GraphQLString),
+            GraphQLNonNull(serverLogStateEnum),
             description="The recorded state of the server.",
         ),
         "error": GraphQLField(
@@ -88,4 +107,34 @@ def serverLogsField(models):
         GraphQLList(serverLogType),
         args=serverLogsFilters,
         resolve=lambda root, info, **args: fetch_server_logs(models, args),
+    )
+
+
+def create_server_log(models, args):
+    server_log = models.ServerLog(
+        server_id=args["serverId"], state=args["state"], error=args["error"]
+    )
+    db.session.add(server_log)
+
+    db.session.commit()
+    return server_log
+
+
+def createServerLogField(models):
+    return GraphQLField(
+        serverLogType,
+        args={
+            "serverId": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="Server ID that the log is being recorded for.",
+            ),
+            "state": GraphQLArgument(
+                GraphQLNonNull(serverLogStateEnum), description="State of the server."
+            ),
+            "error": GraphQLArgument(
+                GraphQLString,
+                description="Error message (if any) that the server has presented.",
+            ),
+        },
+        resolve=lambda root, info, **args: create_server_log(models, args),
     )

@@ -5,6 +5,7 @@ from .types.server import (
 )
 from .types.server_log import (
     serverLogsField,
+    createServerLogField,
 )
 
 
@@ -18,6 +19,10 @@ def Schema(models):
             },
         ),
         mutation=GraphQLObjectType(
-            name="RootMutationType", fields={"createServer": createServerField(models)}
+            name="RootMutationType",
+            fields={
+                "createServer": createServerField(models),
+                "createServerLog": createServerLogField(models),
+            },
         ),
     )
