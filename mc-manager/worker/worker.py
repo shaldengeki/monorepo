@@ -36,12 +36,10 @@ def run(args):
     while True:
         # First, get the list of minecraft servers we should poll status for.
         servers = fetch_expected_servers(host, port)
-        print(servers)
 
         # Next, get a list of actively-running servers.
         client = docker.from_env()
         containers = client.containers.list()
-        print(containers)
 
         # For each server we expect to poll,
         # update the status accordingly.
