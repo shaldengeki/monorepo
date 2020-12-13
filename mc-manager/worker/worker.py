@@ -25,6 +25,7 @@ def parse_args():
 def run(host, port):
     # First, get the list of minecraft servers we should poll status for.
     servers = fetch_expected_servers(host, port)
+    print(servers)
 
     # Next, get a list of actively-running servers.
     client = docker.from_env()
