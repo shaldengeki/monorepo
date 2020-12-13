@@ -5,7 +5,6 @@ import gql from 'graphql-tag'
 import ReactTimeAgo from 'react-time-ago'
 
 import Table from './Table'
-import { Date } from '@ungap/global-this'
 
 const GET_SERVERS = gql`
     query Servers(
