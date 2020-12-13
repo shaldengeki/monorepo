@@ -2,6 +2,7 @@
 
 import argparse
 import docker
+import json
 import logging
 import os
 import requests
@@ -81,7 +82,7 @@ def record_server_status(host: str, port: int, server_id: int, status: str) -> d
     url = f"http://{host}:{port}/graphql"
     data = {
         "query": "mutation createLog($id:Int!, $state:ServerLogState!) {\n  createServerLog(serverId: $id, state: $state) {\n    id\n    server_id\n    created\n    state\n    error\n  }\n}\n",
-        "variables": {"id": server_id, "state": status},
+        "variables": json.dumps({"id": server_id, "state": status}),
         "operationName": "createLog",
     }
     logging.error(f"Recording server status via {url}, with data {data}")
