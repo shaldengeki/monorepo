@@ -15,4 +15,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ./wait-for $API_HOST:$API_PORT -- python worker.py
+CMD python worker.py

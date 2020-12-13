@@ -18,6 +18,7 @@ def parse_args():
     parser.add_argument(
         "--api-port",
         default=os.environ.get("API_PORT", "5000"),
+        type=int,
         help="API port that can be queried to fetch minecraft server listing.",
     )
     parser.add_argument(
@@ -49,9 +50,9 @@ def run(args):
         time.sleep(update_interval)
 
 
-def fetch_expected_servers(host, port):
+def fetch_expected_servers(host: str, port: int) -> list:
     url = f"http://{host}:{port}/graphql"
-    print(f"Fetching server list from {url}")
+    logging.error(f"Fetching server list from {url}")
     # TODO: only select servers for which the latest log is active
     response = requests.post(
         url,
@@ -63,30 +64,32 @@ def fetch_expected_servers(host, port):
     return response.json().get("data", {}).get("servers", [])
 
 
-def update_server(host, port, server, containers):
-    print(f"Updating status for server {server['name']}")
+def update_server(host: str, port: int, server: dict, containers: list) -> dict:
+    logging.error(f"Updating status for server {server['name']}")
     container = [c for c in containers if c.name == server["name"]]
     if not container:
-        print(f"Server {server['name']} is no longer running")
+        logging.error(f"Server {server['name']} is no longer running")
         # Record that this server is no longer running.
-        return record_server_status(host, port, server["id"], "stopped")
+        return record_server_status(host, port, int(server["id"]), "stopped")
     else:
-        print(f"Server {server['name']} is running")
+        logging.error(f"Server {server['name']} is running")
         # Record that this server is running.
-        return record_server_status(host, port, server["id"], "started")
+        return record_server_status(host, port, int(server["id"]), "started")
 
 
-def record_server_status(host, port, server_id, status):
+def record_server_status(host: str, port: int, server_id: int, status: str) -> dict:
     url = f"http://{host}:{port}/graphql"
-    print(f"Recording server status via {url}")
+    data = {
+        "query": "mutation createLog($id:Int!, $state:ServerLogState!) {\n  createServerLog(serverId: $id, state: $state) {\n    id\n    server_id\n    created\n    state\n    error\n  }\n}\n",
+        "variables": {"id": server_id, "state": status},
+        "operationName": "createLog",
+    }
+    logging.error(f"Recording server status via {url}, with data {data}")
     response = requests.post(
         url,
-        data={
-            "query": "mutation createLog($id:Int!, $state:ServerLogState!) {\n  createServerLog(serverId: $id, state: $state) {\n    id\n    server_id\n    created\n    state\n    error\n  }\n}\n",
-            "variables": {"id": server_id, "state": status},
-            "operationName": "createLog",
-        },
+        data=data,
     )
+    logging.error(f"Response: {response.text}")
     return response.json().get("data", {}).get("createServerLog")
 
 
