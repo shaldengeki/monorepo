@@ -155,6 +155,7 @@ def create_server(models, args):
 def createServerField(models):
     return GraphQLField(
         serverType,
+        description="Create a Minecraft server.",
         args={
             "createdBy": GraphQLArgument(
                 GraphQLNonNull(GraphQLString),

@@ -123,6 +123,7 @@ def create_server_log(models, args):
 def createServerLogField(models):
     return GraphQLField(
         serverLogType,
+        description="Create a server log for a given server.",
         args={
             "serverId": GraphQLArgument(
                 GraphQLNonNull(GraphQLInt),
