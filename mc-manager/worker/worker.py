@@ -46,7 +46,7 @@ def fetch_expected_servers(host, port):
             "variables": None,
         },
     )
-    return response.get("data", {}).get("servers", [])
+    return response.json().get("data", {}).get("servers", [])
 
 
 if __name__ == "__main__":
