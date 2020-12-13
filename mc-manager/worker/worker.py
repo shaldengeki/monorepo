@@ -5,6 +5,7 @@ import docker
 import logging
 import os
 import requests
+import time
 
 
 def parse_args():
@@ -19,23 +20,35 @@ def parse_args():
         default=os.environ.get("API_PORT", "5000"),
         help="API port that can be queried to fetch minecraft server listing.",
     )
+    parser.add_argument(
+        "--update-interval",
+        default=300.0,
+        type=float,
+        help="Interval between server polling updates, in seconds.",
+    )
     return parser.parse_args()
 
 
-def run(host, port):
-    # First, get the list of minecraft servers we should poll status for.
-    servers = fetch_expected_servers(host, port)
-    print(servers)
+def run(args):
+    host, port = args.api_host, args.api_port
+    update_interval = args.update_interval
 
-    # Next, get a list of actively-running servers.
-    client = docker.from_env()
-    containers = client.containers.list()
-    print(containers)
+    while True:
+        # First, get the list of minecraft servers we should poll status for.
+        servers = fetch_expected_servers(host, port)
+        print(servers)
 
-    # For each server we expect to poll,
-    # update the status accordingly.
-    for server in servers:
-        update_server(server, containers)
+        # Next, get a list of actively-running servers.
+        client = docker.from_env()
+        containers = client.containers.list()
+        print(containers)
+
+        # For each server we expect to poll,
+        # update the status accordingly.
+        for server in servers:
+            update_server(server, containers)
+
+        time.sleep(update_interval)
 
 
 def fetch_expected_servers(host, port):
@@ -65,6 +78,10 @@ def update_server(server, containers):
         return
 
 
+def record_server_status(server_id, status):
+    pass
+
+
 if __name__ == "__main__":
     args = parse_args()
-    run(args.api_host, args.api_port)
+    run(args)
