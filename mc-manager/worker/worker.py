@@ -29,17 +29,19 @@ def run(host, port):
 
     # Next, get a list of actively-running servers.
     client = docker.from_env()
-    print(client.containers.list())
+    containers = client.containers.list()
+    print(containers)
 
     # For each server we expect to poll,
     # update the status accordingly.
     for server in servers:
-        pass
+        update_server(server, containers)
 
 
 def fetch_expected_servers(host, port):
     url = f"http://{host}:{port}/graphql"
-    logging.info(f"Fetching server list from {url}")
+    print(f"Fetching server list from {url}")
+    # TODO: only select servers for which the latest log is active
     response = requests.post(
         url,
         data={
@@ -48,6 +50,19 @@ def fetch_expected_servers(host, port):
         },
     )
     return response.json().get("data", {}).get("servers", [])
+
+
+def update_server(server, containers):
+    print(f"Updating status for server {server['name']}")
+    container = [c for c in containers if c.name == server["name"]]
+    if not container:
+        print(f"Server {server['name']} is no longer running")
+        # Record that this server is no longer running.
+        return
+    else:
+        print(f"Server {server['name']} is running")
+        # Record that this server is running.
+        return
 
 
 if __name__ == "__main__":
