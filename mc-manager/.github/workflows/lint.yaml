@@ -12,7 +12,7 @@ jobs:
       - name: black
         uses: lgeiger/black-action@master
         with:
-          args: "api --check"
+          args: "api worker --check"
       - uses: actions/setup-node@v1
         with:
           node-version: '12'

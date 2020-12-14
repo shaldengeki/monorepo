@@ -15,7 +15,9 @@ class Server(db.Model):
     zipfile = db.Column(db.Unicode(100), nullable=False)
     motd = db.Column(db.Unicode(100))
     memory = db.Column(db.Unicode(3), nullable=False)
-    logs = db.relationship("ServerLog", back_populates="server")
+    logs = db.relationship(
+        "ServerLog", back_populates="server", order_by="desc(ServerLog.created)"
+    )
 
     def __repr__(self):
         return "<Server {id}>".format(id=self.id)
