@@ -46,7 +46,7 @@ const timeAgo = (epochTime: number): string => {
   if (diff < 10) {
     return 'just now'
   } else if (diff < 60) {
-    return diff + ' seconds ago'
+    return Math.round(diff) + ' seconds ago'
   } else if (diff < (60 * 60)) {
     return Math.round(diff / 60) + ' minutes ago'
   } else if (diff < (60 * 60 * 24)) {
