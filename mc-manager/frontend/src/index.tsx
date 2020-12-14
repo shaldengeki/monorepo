@@ -13,10 +13,10 @@ import {
 
 const cache = new InMemoryCache()
 
-const { REACT_APP_API_HOST = 'localhost', REACT_APP_API_PORT = '5000' } = process.env
+const { REACT_APP_API_SCHEME = 'http', REACT_APP_API_HOST = 'localhost', REACT_APP_API_PORT = '5000', REACT_APP_API_PATH = 'graphql' } = process.env
 
 const link = new HttpLink({
-  uri: `http://${REACT_APP_API_HOST}:${REACT_APP_API_PORT}/graphql`
+  uri: `${REACT_APP_API_SCHEME}://${REACT_APP_API_HOST}:${REACT_APP_API_PORT}/${REACT_APP_API_PATH}`
 })
 
 const client = new ApolloClient({
