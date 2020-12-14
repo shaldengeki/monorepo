@@ -26,7 +26,6 @@
     "react-plotlyjs": "^0.4.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
-    "react-time-ago": "^6.2.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.1",
     "typescript": "^4.1.2",
     "web-vitals": "^0.2.4"
