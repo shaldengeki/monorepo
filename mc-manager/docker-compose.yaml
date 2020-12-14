@@ -69,6 +69,8 @@ services:
     volumes:
       - ./frontend/src:/usr/src/app/src
     environment:
+      - REACT_APP_API_SCHEME
       - REACT_APP_API_HOST
       - REACT_APP_API_PORT
+      - REACT_APP_API_PATH
       - PORT=5001
