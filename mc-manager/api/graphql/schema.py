@@ -7,6 +7,11 @@ from .types.server_log import (
     serverLogsField,
     createServerLogField,
 )
+from .types.server_backup import (
+    serverBackupsField,
+    createServerBackupField,
+    updateServerBackupField,
+)
 
 
 def Schema(models):
@@ -15,6 +20,7 @@ def Schema(models):
             name="RootQueryType",
             fields={
                 "servers": serversField(models),
+                "serverBackups": serverBackupsField(models),
                 "serverLogs": serverLogsField(models),
             },
         ),
@@ -22,7 +28,9 @@ def Schema(models):
             name="RootMutationType",
             fields={
                 "createServer": createServerField(models),
+                "createServerBackup": createServerBackupField(models),
                 "createServerLog": createServerLogField(models),
+                "updateServerBackup": updateServerBackupField(models),
             },
         ),
     )
