@@ -18,6 +18,9 @@ class Server(db.Model):
     logs = db.relationship(
         "ServerLog", back_populates="server", order_by="desc(ServerLog.created)"
     )
+    backups = db.relationship(
+        "ServerBackup", back_populates="server", order_by="desc(ServerBackup.created)"
+    )
 
     def __repr__(self):
         return "<Server {id}>".format(id=self.id)
