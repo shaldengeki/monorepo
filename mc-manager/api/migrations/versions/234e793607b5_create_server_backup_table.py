@@ -37,9 +37,14 @@ def upgrade():
         "server_backups",
         "servers",
         ["server_id"],
-        ["created"],
+        ["id"],
         "CASCADE",
         "CASCADE",
+    )
+    op.create_index(
+        "server_backups_server_id",
+        "server_backups",
+        ["server_id", "created"],
     )
 
 
