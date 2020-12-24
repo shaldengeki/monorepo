@@ -88,7 +88,7 @@ serverLogsFilters = {
         GraphQLInt, description="Latest creation date that a server should have."
     ),
     "serverId": GraphQLArgument(
-        GraphQLString,
+        GraphQLInt,
         description="ID of the server.",
     ),
     "state": GraphQLArgument(

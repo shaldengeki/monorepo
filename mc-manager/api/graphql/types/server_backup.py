@@ -103,7 +103,7 @@ serverBackupsFilters = {
         GraphQLInt, description="Latest creation date that a server backup should have."
     ),
     "serverId": GraphQLArgument(
-        GraphQLString,
+        GraphQLInt,
         description="ID of the server backup.",
     ),
     "state": GraphQLArgument(

@@ -12,6 +12,7 @@ from sqlalchemy import desc
 
 from ...app import db
 from .server_log import serverLogType
+from .server_backup import serverBackupType
 
 serverType = GraphQLObjectType(
     "Server",
@@ -62,6 +63,16 @@ serverType = GraphQLObjectType(
             serverLogType,
             description="Latest log associated with the server.",
             resolve=lambda server, info, **args: server.logs[0],
+        ),
+        "backups": GraphQLField(
+            GraphQLList(serverBackupType),
+            description="Backups associated with the server.",
+            resolve=lambda server, info, **args: server.backups,
+        ),
+        "latestBackup": GraphQLField(
+            serverBackupType,
+            description="Latest backup associated with the server.",
+            resolve=lambda server, info, **args: server.backups[0],
         ),
     },
 )
