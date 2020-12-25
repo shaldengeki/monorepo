@@ -81,7 +81,7 @@ def update_server(host: str, port: int, server: dict, containers: list) -> dict:
 def record_server_status(host: str, port: int, server_id: int, status: str) -> dict:
     url = f"http://{host}:{port}/graphql"
     data = {
-        "query": "mutation createLog($id:Int!, $state:ServerLogState!) {\n  createServerLog(serverId: $id, state: $state) {\n    id\n    server_id\n    created\n    state\n    error\n  }\n}\n",
+        "query": "mutation createLog($id:Int!, $state:ServerLogState!) {\n  createServerLog(serverId: $id, state: $state) {\n    id\n    created\n    state\n    error\n  }\n}\n",
         "variables": json.dumps({"id": server_id, "state": status}),
         "operationName": "createLog",
     }
