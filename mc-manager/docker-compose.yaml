@@ -46,6 +46,10 @@ services:
     environment:
       - API_HOST
       - API_PORT
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - HOST_PATH
+      - S3_BUCKET
     depends_on:
       - api
     command: ["./wait-for", "$API_HOST:$API_PORT", "--", "python", "worker.py"]
