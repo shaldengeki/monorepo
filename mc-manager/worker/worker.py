@@ -207,7 +207,12 @@ def back_up_server(
             file_path, s3_bucket, f"{server['name']}/{file_name}"
         )
     except S3UploadFailedError as e:
+        logging.error(f"Uploading backup to S3 failed with error {e}")
         error = e.message
+
+    # Either way, delete the temporary backup.
+    logging.error(f"Deleting temporary backup at {file_path}")
+    os.remove(file_path)
 
     if error is None:
         # If successful, record that the backup is complete.
