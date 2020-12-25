@@ -61,7 +61,7 @@ def serverBackupResolver():
             description="The error (if any) encountered by the server backup.",
         ),
         "remotePath": GraphQLField(
-            GraphQLNonNull(GraphQLString),
+            GraphQLString,
             description="The URL of the remote path that the backup is located at.",
             resolve=lambda backup, info, **args: backup.remote_path,
         ),
