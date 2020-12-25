@@ -11,13 +11,25 @@ from graphql import (
 from sqlalchemy import desc
 
 from ...app import db
-from .server_log import serverLogType
-from .server_backup import serverBackupType
 
-serverType = GraphQLObjectType(
-    "Server",
-    description="A Minecraft server that players can connect to.",
-    fields=lambda: {
+
+def latestBackupResolver(server):
+    if not server.backups:
+        return None
+    return server.backups[0]
+
+
+def latestLogResolver(server):
+    if not server.logs:
+        return None
+    return server.logs[0]
+
+
+def serverTypeResolver():
+    from .server_log import serverLogType
+    from .server_backup import serverBackupType
+
+    return {
         "id": GraphQLField(
             GraphQLNonNull(GraphQLInt), description="The id of the server."
         ),
@@ -62,7 +74,7 @@ serverType = GraphQLObjectType(
         "latestLog": GraphQLField(
             serverLogType,
             description="Latest log associated with the server.",
-            resolve=lambda server, info, **args: server.logs[0],
+            resolve=lambda server, info, **args: latestLogResolver(server),
         ),
         "backups": GraphQLField(
             GraphQLList(serverBackupType),
@@ -72,9 +84,15 @@ serverType = GraphQLObjectType(
         "latestBackup": GraphQLField(
             serverBackupType,
             description="Latest backup associated with the server.",
-            resolve=lambda server, info, **args: server.backups[0],
+            resolve=lambda server, info, **args: latestBackupResolver(server),
         ),
-    },
+    }
+
+
+serverType = GraphQLObjectType(
+    "Server",
+    description="A Minecraft server that players can connect to.",
+    fields=serverTypeResolver,
 )
 
 

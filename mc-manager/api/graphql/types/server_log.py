@@ -30,17 +30,17 @@ serverLogStateEnum = GraphQLEnumType(
     },
 )
 
-serverLogType = GraphQLObjectType(
-    "ServerLog",
-    description="The state of a Server, recorded at a point in time.",
-    fields=lambda: {
+
+def serverLogResolver():
+    from .server import serverType
+
+    return {
         "id": GraphQLField(
             GraphQLNonNull(GraphQLInt), description="The id of the log."
         ),
-        "serverId": GraphQLField(
-            GraphQLNonNull(GraphQLInt),
-            description="The id of the server.",
-            resolve=lambda log, info, **args: log.server_id,
+        "server": GraphQLField(
+            GraphQLNonNull(serverType),
+            description="The server this log belongs to.",
         ),
         "created": GraphQLField(
             GraphQLNonNull(GraphQLInt),
@@ -56,7 +56,13 @@ serverLogType = GraphQLObjectType(
         "error": GraphQLField(
             GraphQLString, description="The error (if any) encountered by the server."
         ),
-    },
+    }
+
+
+serverLogType = GraphQLObjectType(
+    "ServerLog",
+    description="The state of a Server, recorded at a point in time.",
+    fields=serverLogResolver,
 )
 
 

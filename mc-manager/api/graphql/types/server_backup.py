@@ -33,17 +33,17 @@ serverBackupStateEnum = GraphQLEnumType(
     },
 )
 
-serverBackupType = GraphQLObjectType(
-    "ServerBackup",
-    description="A backup for a Server, uploaded to a remote destination.",
-    fields=lambda: {
+
+def serverBackupResolver():
+    from .server import serverType
+
+    return {
         "id": GraphQLField(
             GraphQLNonNull(GraphQLInt), description="The id of the log."
         ),
-        "serverId": GraphQLField(
-            GraphQLNonNull(GraphQLInt),
-            description="The id of the server.",
-            resolve=lambda backup, info, **args: backup.server_id,
+        "server": GraphQLField(
+            GraphQLNonNull(serverType),
+            description="The server this backup belongs to.",
         ),
         "created": GraphQLField(
             GraphQLNonNull(GraphQLInt),
@@ -65,7 +65,13 @@ serverBackupType = GraphQLObjectType(
             description="The URL of the remote path that the backup is located at.",
             resolve=lambda backup, info, **args: backup.remote_path,
         ),
-    },
+    }
+
+
+serverBackupType = GraphQLObjectType(
+    "ServerBackup",
+    description="A backup for a Server, uploaded to a remote destination.",
+    fields=serverBackupResolver,
 )
 
 
