@@ -154,7 +154,7 @@ def back_up_server(
     server: dict,
     host_path: str,
     backup_interval: int,
-    s3: boto3.resources.factory.s3.ServiceResource,
+    s3,
     s3_bucket: str,
 ) -> None:
     # Halt early if the server shouldn't be backed up.
