@@ -37,8 +37,10 @@ serverLogType = GraphQLObjectType(
         "id": GraphQLField(
             GraphQLNonNull(GraphQLInt), description="The id of the log."
         ),
-        "server_id": GraphQLField(
-            GraphQLNonNull(GraphQLInt), description="The id of the server."
+        "serverId": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The id of the server.",
+            resolve=lambda log, info, **args: log.server_id,
         ),
         "created": GraphQLField(
             GraphQLNonNull(GraphQLInt),

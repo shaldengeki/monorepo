@@ -40,8 +40,10 @@ serverBackupType = GraphQLObjectType(
         "id": GraphQLField(
             GraphQLNonNull(GraphQLInt), description="The id of the log."
         ),
-        "server_id": GraphQLField(
-            GraphQLNonNull(GraphQLInt), description="The id of the server."
+        "serverId": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The id of the server.",
+            resolve=lambda backup, info, **args: backup.server_id,
         ),
         "created": GraphQLField(
             GraphQLNonNull(GraphQLInt),
@@ -58,9 +60,10 @@ serverBackupType = GraphQLObjectType(
             GraphQLString,
             description="The error (if any) encountered by the server backup.",
         ),
-        "remote_path": GraphQLField(
+        "remotePath": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="The URL of the remote path that the backup is located at.",
+            resolve=lambda backup, info, **args: backup.remote_path,
         ),
     },
 )
