@@ -43,6 +43,7 @@ services:
     volumes:
       - ./worker:/usr/src/app
       - /var/run/docker.sock:/var/run/docker.sock
+      - /var/minecraft:/var/minecraft
     environment:
       - API_HOST
       - API_PORT
