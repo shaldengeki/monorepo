@@ -10,6 +10,7 @@ from .types.server_log import (
 from .types.server_backup import (
     serverBackupsField,
     createServerBackupField,
+    deleteServerBackupField,
     updateServerBackupField,
 )
 
@@ -30,6 +31,7 @@ def Schema(models):
                 "createServer": createServerField(models),
                 "createServerBackup": createServerBackupField(models),
                 "createServerLog": createServerLogField(models),
+                "deleteServerBackup": deleteServerBackupField(models),
                 "updateServerBackup": updateServerBackupField(models),
             },
         ),

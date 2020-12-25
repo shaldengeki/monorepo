@@ -223,3 +223,32 @@ def updateServerBackupField(models):
         },
         resolve=lambda root, info, **args: update_server_backup(models, args),
     )
+
+
+def delete_server_backup(models, params):
+    server_backup = models.ServerBackup.query.filter(
+        models.ServerBackup.id == params["id"]
+    ).first()
+    if server_backup is None:
+        raise ValueError(
+            f"Server backup with id {params['id']} doesn't exist, and can't be deleted."
+        )
+
+    db.session.delete(server_backup)
+    db.session.commit()
+
+    return server_backup
+
+
+def deleteServerBackupField(models):
+    return GraphQLField(
+        serverBackupType,
+        description="Delete a server backup entry for a given server.",
+        args={
+            "id": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="ID of the server backup.",
+            ),
+        },
+        resolve=lambda root, info, **args: delete_server_backup(models, args),
+    )
