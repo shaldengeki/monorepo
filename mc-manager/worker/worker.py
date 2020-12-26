@@ -259,7 +259,7 @@ def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
         {
             "query": """
                 query serverBackups($serverId:Int!) {
-                    serverBackups(serverId: $serverId, state:"completed") {
+                    serverBackups(serverId: $serverId, state:completed) {
                         id
                         created
                         remotePath
