@@ -116,7 +116,7 @@ serverBackupsFilters = {
         description="ID of the server backup.",
     ),
     "state": GraphQLArgument(
-        GraphQLString,
+        serverBackupStateEnum,
         description="State that a server backup should have.",
     ),
     "error": GraphQLArgument(
