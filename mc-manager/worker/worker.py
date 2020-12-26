@@ -75,6 +75,7 @@ def run(args):
             back_up_server(
                 host, port, server, host_path, backup_interval, s3, s3_bucket
             )
+            clean_up_backups(host, port, server, s3)
 
         time.sleep(update_interval)
 
@@ -247,6 +248,50 @@ def back_up_server(
             "operationName": "updateServerBackup",
         },
     )
+
+
+def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
+    # Get this server and the list of backups that exist.
+    logging.error(f"Fetching backups for server {server['name']}")
+    response = query_graphql(
+        host,
+        port,
+        {
+            "query": """
+                query serverBackups($serverId:Int!) {
+                    serverBackups(serverId: $serverId, state:completed) {
+                        id
+                        created
+                        remotePath
+                    }
+                }""",
+            "variables": json.dumps({"serverId": server["id"]}),
+            "operationName": "serverBackups",
+        },
+    )
+    if "errors" in response:
+        logging.error(
+            f"Error encountered while cleaning up backups: {response['errors']}"
+        )
+        return
+
+    # Select just the N oldest backups for this server.
+    backups = response.get("data", {}).get("serverBackups", [])
+    logging.error(f"{len(backups)} backups found")
+    backups = sorted(backups, key=lambda b: b["created"], reverse=True)
+    to_delete = backups[7:]
+
+    # Delete those backups.
+    for backup in to_delete:
+        logging.error(f"Deleting backup at {backup['remotePath']}")
+        remote_path = backup["remotePath"]
+        if remote_path.startswith("s3://"):
+            remote_path = remote_path[6:]
+        path_parts = remote_path.split("/")
+        bucket = path_parts[0]
+        key = "/".join(path_parts[1:])
+        s3.meta.client.delete_object(Bucket=bucket, Key=key)
+    return to_delete
 
 
 if __name__ == "__main__":
