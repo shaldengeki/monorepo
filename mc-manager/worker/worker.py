@@ -112,9 +112,9 @@ def query_graphql(host: str, port: int, data: dict) -> dict:
 
 
 def split_s3_path(path: str) -> tuple:
-    if remote_path.startswith("s3://"):
-        remote_path = remote_path[6:]
-    path_parts = remote_path.split("/")
+    if path.startswith("s3://"):
+        path = path[6:]
+    path_parts = path.split("/")
     bucket = path_parts[0]
     key = "/".join(path_parts[1:])
     return (bucket, key)
