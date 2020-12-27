@@ -368,6 +368,7 @@ def process_server_restoration(
     if matching_container is not None:
         logging.error(f"Stopping existing container with name {server['name']}")
         matching_container.stop()
+        matching_container.remove()
 
     # Pull down the backup, put it in the right location, and start the server.
     restore_server(client, s3, server, host_path)
