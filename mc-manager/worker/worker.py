@@ -143,6 +143,7 @@ def fetch_expected_servers(host: str, port: int) -> list:
                         latestLog {
                             state
                             backup {
+                                id
                                 remotePath
                             }
                         }
