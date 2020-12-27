@@ -160,7 +160,7 @@ def update_server_status(
     host: str, port: int, server: dict, container_names: list
 ) -> dict:
     logging.error(f"Updating status for server {server['name']}")
-    if server["name"] in container_names:
+    if server["name"] not in container_names:
         logging.error(f"Server {server['name']} is no longer running")
         # Record that this server is no longer running.
         return record_server_status(host, port, int(server["id"]), "stopped")
