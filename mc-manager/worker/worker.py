@@ -170,7 +170,7 @@ def update_server_status(
 
 
 def record_server_status(
-    host: str, port: int, server_id: int, status: str, remote_path: str = None
+    host: str, port: int, server_id: int, status: str, backup_id: str = None
 ) -> dict:
     logging.error(f"Recording server status")
     response = query_graphql(
@@ -178,8 +178,8 @@ def record_server_status(
         port,
         {
             "query": """
-                mutation createLog($id:Int!, $state:ServerLogState!, $remoteUrl:String) {
-                    createServerLog(serverId: $id, state: $state, remoteUrl:$remoteUrl) {
+                mutation createLog($id:Int!, $state:ServerLogState!, $backupId:String) {
+                    createServerLog(serverId: $id, state: $state, backupId:$backupId) {
                         id
                         created
                         state
@@ -187,7 +187,7 @@ def record_server_status(
                     }
                 }""",
             "variables": json.dumps(
-                {"id": server_id, "state": status, "remoteUrl": remote_path}
+                {"id": server_id, "state": status, "backupId": backup_id}
             ),
             "operationName": "createLog",
         },
@@ -346,8 +346,8 @@ def process_server_restoration(
     s3,
 ) -> None:
     logging.error(f"Processing server restoration for {server['name']}")
-    backup_path = server.get("latestLog", {}).get("backup", {}).get("remotePath")
-    if backup_path is None:
+    backup_id = server.get("latestLog", {}).get("backup", {}).get("id")
+    if backup_id is None:
         logging.error(
             f"Server {server['name']}'s active backup has no remote URL; aborting."
         )
@@ -357,7 +357,7 @@ def process_server_restoration(
         return
 
     # Set the state of this server, so nobody else picks it up.
-    record_server_status(host, port, server["id"], "restore_started", backup_path)
+    record_server_status(host, port, server["id"], "restore_started", backup_id)
 
     # Stop the current server if it exists.
     matching_container = next(

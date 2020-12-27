@@ -131,9 +131,9 @@ def serverLogsField(models):
 
 def create_server_log(models, args):
     backup = None
-    if args.get("backup_id") is not None:
+    if args.get("backupId") is not None:
         backup = models.ServerBackup.query.filter(
-            models.ServerBackup.id == int(args.get("backup_id"))
+            models.ServerBackup.id == int(args.get("backupId"))
         ).first()
 
     server_log = models.ServerLog(
@@ -164,7 +164,7 @@ def createServerLogField(models):
                 GraphQLString,
                 description="Error message (if any) that the server has presented.",
             ),
-            "backup_id": GraphQLArgument(
+            "backupId": GraphQLArgument(
                 GraphQLInt,
                 description="ID of the backup that should be associated with this server log.",
             ),
