@@ -2,6 +2,7 @@ import datetime
 
 from ..app import db
 from .server import Server
+from .server_backup import ServerBackup
 
 
 class ServerLog(db.Model):
@@ -13,7 +14,9 @@ class ServerLog(db.Model):
     )
     state = db.Column(db.Unicode(100), nullable=False)
     error = db.Column(db.Unicode(500), nullable=True)
+    backup_id = db.Column(db.Integer, db.ForeignKey(ServerBackup.id), nullable=True)
     server = db.relationship("Server", back_populates="logs")
+    backup = db.relationship("ServerBackup", back_populates="server_logs")
 
     def __repr__(self):
         return "<ServerLog {id}>".format(id=self.id)

@@ -11,6 +11,7 @@ from graphql import (
 from sqlalchemy import desc
 
 from ...app import db
+from .server_log import serverLogStateEnum
 
 
 def latestBackupResolver(server):
@@ -118,6 +119,10 @@ def fetch_servers(models, params):
         query_obj = query_obj.filter(models.Server.timezone == params["timezone"])
     if params.get("zipfile", False):
         query_obj = query_obj.filter(models.Server.zipfile == params["zipfile"])
+    if params.get("latestLogState", False):
+        query_obj = query_obj.filter(
+            models.Server.latestLog.state == params["latestLogState"]
+        )
 
     return query_obj.order_by(desc(models.Server.created)).all()
 
@@ -150,6 +155,9 @@ serversFilters = {
     "zipfile": GraphQLArgument(
         GraphQLString,
         description="Name of modpack zipfile that a server should have.",
+    ),
+    "latestLogState": GraphQLArgument(
+        serverLogStateEnum, description="Latest state of the server."
     ),
 }
 
