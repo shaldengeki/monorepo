@@ -121,7 +121,8 @@ def fetch_servers(models, params):
         query_obj = query_obj.filter(models.Server.zipfile == params["zipfile"])
     if params.get("latestLogState", False):
         query_obj = query_obj.filter(
-            models.Server.latestLog.state == params["latestLogState"]
+            len(models.Server.logs) > 0
+            and models.Server.logs[0].state == params["latestLogState"]
         )
 
     return query_obj.order_by(desc(models.Server.created)).all()
