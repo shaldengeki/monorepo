@@ -178,7 +178,7 @@ def record_server_status(
         port,
         {
             "query": """
-                mutation createLog($id:Int!, $state:ServerLogState!, $remoteUrl:Str) {
+                mutation createLog($id:Int!, $state:ServerLogState!, $remoteUrl:String) {
                     createServerLog(serverId: $id, state: $state, remoteUrl:$remoteUrl) {
                         id
                         created
