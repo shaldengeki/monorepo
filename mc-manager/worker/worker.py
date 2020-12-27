@@ -178,7 +178,7 @@ def record_server_status(
         port,
         {
             "query": """
-                mutation createLog($id:Int!, $state:ServerLogState!, $backupId:String) {
+                mutation createLog($id:Int!, $state:ServerLogState!, $backupId:Int) {
                     createServerLog(serverId: $id, state: $state, backupId:$backupId) {
                         id
                         created
