@@ -360,6 +360,9 @@ def process_server_restoration(
     # Set the state of this server, so nobody else picks it up.
     record_server_status(host, port, server["id"], "restore_started", backup_id)
 
+    # Download the backup.
+    backup_location = download_backup(s3, server)
+
     # Stop the current server if it exists.
     matching_container = next(
         (container for container in containers if container.name == server["name"]),
@@ -370,24 +373,19 @@ def process_server_restoration(
         matching_container.stop()
         matching_container.remove()
 
-    # Pull down the backup, put it in the right location, and start the server.
-    restore_server(client, s3, server, host_path)
+    # Restore the server.
+    restore_server(client, backup_location, server, host_path)
 
     # Mark this server as started.
     record_server_status(host, port, server["id"], "started")
 
 
 def restore_server(
-    docker_client: docker.DockerClient, s3_client, server: dict, host_path: str
+    docker_client: docker.DockerClient,
+    backup_location: str,
+    server: dict,
+    host_path: str,
 ) -> None:
-    # Download the backup.
-    backup_path = server.get("latestLog", {}).get("backup", {}).get("remotePath")
-    bucket, key = split_s3_path(backup_path)
-    logging.error(f"Downloading backup from s3://{bucket}/{key} to /tmp")
-
-    filename = os.path.basename(key)
-    s3_client.meta.client.download_file(bucket, key, f"/tmp/{filename}")
-
     # Delete any currently-existing files.
     server_path = f"{host_path}/{server['name']}"
     logging.error(f"Deleting existing files at {server_path}")
@@ -396,12 +394,23 @@ def restore_server(
     # Extract the backup to the canonical location.
     logging.error(f"Extracting backup to canonical location at {host_path}")
     os.chdir(host_path)
-    with tarfile.open(f"/tmp/{filename}", "r:gz") as tar:
+    with tarfile.open(backup_location, "r:gz") as tar:
         tar.extractall()
 
     # Start the server.
     start_container(docker_client, server, host_path)
     return
+
+
+def download_backup(s3_client, server: dict) -> str:
+    backup_path = server.get("latestLog", {}).get("backup", {}).get("remotePath")
+    bucket, key = split_s3_path(backup_path)
+    logging.error(f"Downloading backup from s3://{bucket}/{key} to /tmp")
+
+    filename = os.path.basename(key)
+    destination = f"/tmp/{filename}"
+    s3_client.meta.client.download_file(bucket, key, destination)
+    return destination
 
 
 def start_container(
