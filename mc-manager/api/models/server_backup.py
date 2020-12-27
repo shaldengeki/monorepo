@@ -15,6 +15,7 @@ class ServerBackup(db.Model):
     error = db.Column(db.Unicode(500), nullable=True)
     remote_path = db.Column(db.Unicode(500), nullable=False)
     server = db.relationship("Server", back_populates="backups")
+    logs = db.relationship("ServerLog", back_populates="backup")
 
     def __repr__(self):
         return "<ServerBackup {id}>".format(id=self.id)

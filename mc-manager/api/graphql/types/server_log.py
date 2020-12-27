@@ -26,6 +26,13 @@ serverLogStateEnum = GraphQLEnumType(
         "started": GraphQLEnumValue(
             "started", description="Server is currently running"
         ),
+        "restore_queued": GraphQLEnumValue(
+            "restore_queued", description="Server restoration from backup is queued"
+        ),
+        "restore_started": GraphQLEnumValue(
+            "restore_started",
+            description="Server restoration from backup is in-progress",
+        ),
         "stopped": GraphQLEnumValue("stopped", description="Server is not running"),
     },
 )
@@ -33,6 +40,7 @@ serverLogStateEnum = GraphQLEnumType(
 
 def serverLogResolver():
     from .server import serverType
+    from .server_backup import serverBackupType
 
     return {
         "id": GraphQLField(
@@ -55,6 +63,9 @@ def serverLogResolver():
         ),
         "error": GraphQLField(
             GraphQLString, description="The error (if any) encountered by the server."
+        ),
+        "backup": GraphQLField(
+            serverBackupType, description="The backup associated with this server log."
         ),
     }
 
@@ -119,8 +130,17 @@ def serverLogsField(models):
 
 
 def create_server_log(models, args):
+    backup = None
+    if args.get("backupId") is not None:
+        backup = models.ServerBackup.query.filter(
+            models.ServerBackup.id == int(args.get("backupId"))
+        ).first()
+
     server_log = models.ServerLog(
-        server_id=args["serverId"], state=args["state"], error=args.get("error")
+        server_id=args["serverId"],
+        state=args["state"],
+        error=args.get("error"),
+        backup=backup,
     )
     db.session.add(server_log)
 
@@ -143,6 +163,10 @@ def createServerLogField(models):
             "error": GraphQLArgument(
                 GraphQLString,
                 description="Error message (if any) that the server has presented.",
+            ),
+            "backupId": GraphQLArgument(
+                GraphQLInt,
+                description="ID of the backup that should be associated with this server log.",
             ),
         },
         resolve=lambda root, info, **args: create_server_log(models, args),
