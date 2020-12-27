@@ -9,8 +9,10 @@ import json
 import logging
 import os
 import requests
+import shutil
 import tarfile
 import time
+from typing import Optional
 
 
 def parse_args():
@@ -62,20 +64,28 @@ def run(args):
 
     while True:
         # First, get the list of minecraft servers we should poll status for.
-        servers = fetch_expected_servers(host, port) or []
+        running_servers = fetch_expected_servers(host, port, "started") or []
 
         # Next, get a list of actively-running servers.
         client = docker.from_env()
         containers = client.containers.list()
+        container_names = set(c.name for c in containers)
 
         # For each server we expect to poll,
         # update the status accordingly.
-        for server in servers:
-            update_server_status(host, port, server, containers)
+        for server in running_servers:
+            update_server_status(host, port, server, container_names)
             back_up_server(
                 host, port, server, host_path, backup_interval, s3, s3_bucket
             )
             clean_up_backups(host, port, server, s3)
+
+        # Next, get the list of minecraft servers that we should restore from backup.
+        server_restorations = fetch_expected_servers(host, port, "restore_queued") or []
+        for server in server_restorations:
+            process_server_restoration(
+                client, containers, server, host, port, host_path, s3
+            )
 
         time.sleep(update_interval)
 
@@ -91,8 +101,16 @@ def query_graphql(host: str, port: int, data: dict) -> dict:
     return response
 
 
-def fetch_expected_servers(host: str, port: int) -> list:
-    # TODO: only select servers for which the latest log is active
+def split_s3_path(path: str) -> tuple:
+    if remote_path.startswith("s3://"):
+        remote_path = remote_path[6:]
+    path_parts = remote_path.split("/")
+    bucket = path_parts[0]
+    key = "/".join(path_parts[1:])
+    return (bucket, key)
+
+
+def fetch_expected_servers(host: str, port: int, state: str) -> list:
     logging.error(f"Fetching server list")
     response = query_graphql(
         host,
@@ -100,24 +118,39 @@ def fetch_expected_servers(host: str, port: int) -> list:
         {
             "query": """
                 query {
-                    servers {
+                    servers(latestLogState:{state}) {
                         id,
                         name,
+                        createdBy
+                        port
+                        timezone
+                        zipfile
+                        motd
+                        memory
                         latestBackup {
                             created
                         }
+                        latestLog {
+                            state
+                            backup {
+                                remotePath
+                            }
+                        }
                     }
-                }""",
+                }""".format(
+                state=state
+            ),
             "variables": None,
         },
     )
     return response.get("data", {}).get("servers", [])
 
 
-def update_server_status(host: str, port: int, server: dict, containers: list) -> dict:
+def update_server_status(
+    host: str, port: int, server: dict, container_names: list
+) -> dict:
     logging.error(f"Updating status for server {server['name']}")
-    container = [c for c in containers if c.name == server["name"]]
-    if not container:
+    if server["name"] in container_names:
         logging.error(f"Server {server['name']} is no longer running")
         # Record that this server is no longer running.
         return record_server_status(host, port, int(server["id"]), "stopped")
@@ -127,22 +160,26 @@ def update_server_status(host: str, port: int, server: dict, containers: list) -
         return record_server_status(host, port, int(server["id"]), "started")
 
 
-def record_server_status(host: str, port: int, server_id: int, status: str) -> dict:
+def record_server_status(
+    host: str, port: int, server_id: int, status: str, remote_path: str = None
+) -> dict:
     logging.error(f"Recording server status")
     response = query_graphql(
         host,
         port,
         {
             "query": """
-                mutation createLog($id:Int!, $state:ServerLogState!) {
-                    createServerLog(serverId: $id, state: $state) {
+                mutation createLog($id:Int!, $state:ServerLogState!, $remoteUrl:Str) {
+                    createServerLog(serverId: $id, state: $state, remoteUrl:$remoteUrl) {
                         id
                         created
                         state
                         error
                     }
                 }""",
-            "variables": json.dumps({"id": server_id, "state": status}),
+            "variables": json.dumps(
+                {"id": server_id, "state": status, "remoteUrl": remote_path}
+            ),
             "operationName": "createLog",
         },
     )
@@ -285,13 +322,104 @@ def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
     for backup in to_delete:
         logging.error(f"Deleting backup at {backup['remotePath']}")
         remote_path = backup["remotePath"]
-        if remote_path.startswith("s3://"):
-            remote_path = remote_path[6:]
-        path_parts = remote_path.split("/")
-        bucket = path_parts[0]
-        key = "/".join(path_parts[1:])
+        bucket, key = split_s3_path(remote_path)
         s3.meta.client.delete_object(Bucket=bucket, Key=key)
     return to_delete
+
+
+def process_server_restoration(
+    client: docker.DockerClient,
+    containers: list,
+    server: dict,
+    host: str,
+    port: int,
+    host_path: str,
+    s3,
+) -> None:
+    logging.error(f"Processing server restoration for {server['name']}")
+    backup_path = server.get("latestLog", {}).get("backup", {}).get("remotePath")
+    if backup_path is None:
+        logging.error(
+            f"Server {server['name']}'s active backup has no remote URL; aborting."
+        )
+
+        # Mark this server as failed.
+        record_server_status(host, port, server["id"], "stopped")
+        return
+
+    # Set the state of this server, so nobody else picks it up.
+    record_server_status(host, port, server["id"], "restore_started", backup_path)
+
+    # Stop the current server if it exists.
+    matching_container = next(
+        (container for container in containers if container.name == server["name"]),
+        None,
+    )
+    if matching_container is not None:
+        logging.error(f"Stopping existing container with name {server['name']}")
+        matching_container.stop()
+
+    # Pull down the backup, put it in the right location, and start the server.
+    restore_server(client, s3, server, host_path)
+
+    # Mark this server as started.
+    record_server_status(host, port, server["id"], "started")
+
+
+def restore_server(
+    docker_client: docker.DockerClient, s3_client, server: dict, host_path: str
+) -> None:
+    # Download the backup.
+    backup_path = server.get("latestLog", {}).get("backup", {}).get("remotePath")
+    logging.error(f"Downloading backup from {backup_path} to /tmp")
+
+    bucket, key = split_s3_path(backup_path)
+    filename = os.path.basename(key)
+    s3_client.meta.client.download_file(bucket, key, f"/tmp/{filename}")
+
+    # Delete any currently-existing files.
+    server_path = f"{host_path}/{server['name']}"
+    logging.error(f"Deleting existing files at {server_path}")
+    shutil.rmtree(server_path)
+
+    # Extract the backup to the canonical location.
+    logging.error(f"Extracting backup to canonical location at {host_path}")
+    os.chdir(host_path)
+    with tarfile.open(f"/tmp/{filename}", "r:gz") as tar:
+        tar.extractall()
+
+    # Start the server.
+    start_container(docker_client, server, host_path)
+    return
+
+
+def start_container(
+    docker_client: docker.DockerClient, server: dict, host_path: str
+) -> None:
+    logging.error(
+        f"Starting container for server {server['name']} on port {server['port']}: {server}"
+    )
+    docker_client.containers.run(
+        "itzg/minecraft-server",
+        detach=True,
+        ports={int(server["port"]): 25565},
+        name=server["name"],
+        volumes={f"{host_path}/{server['name']}": {"bind": "/data", "mode": "rw"}},
+        environment={
+            "EULA": "TRUE",
+            "TZ": server.get("timezone", "America/Los Angeles"),
+            "TYPE": "CURSEFORGE",
+            "CF_SERVER_MOD": server["zipfile"],
+            "OVERRIDE_SERVER_PROPERTIES": "true",
+            "SERVER_NAME": server["name"],
+            "DIFFICULTY": "normal",
+            "OPS": server["createdBy"],
+            "ENABLE_COMMAND_BLOCK": "false",
+            "SPAWN_PROTECTION": "0",
+            "MOTD": server["motd"],
+            "MEMORY": server["memory"],
+        },
+    )
 
 
 if __name__ == "__main__":
