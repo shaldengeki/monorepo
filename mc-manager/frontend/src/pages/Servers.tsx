@@ -9,8 +9,8 @@ import {
 import ServerListing from '../components/ServerListing'
 
 function Server () {
-  const { serverId } = useParams()
-  return <h3>Requested server ID: {serverId}</h3>
+  const { serverName } = useParams<{ serverName: string }>()
+  return <h3>Requested server name: {serverName}</h3>
 }
 
 function Servers () {
@@ -19,7 +19,7 @@ function Servers () {
   return (
         <div className="bg-gray-50 rounded overflow-auto">
             <Switch>
-                <Route path={`${match.path}/:serverId`}>
+                <Route path={`${match.path}/:serverName`}>
                     <Server />
                 </Route>
                 <Route path={match.path}>
