@@ -64,7 +64,13 @@ def run(args):
 
     while True:
         # First, get the list of minecraft servers we should poll status for.
-        running_servers = fetch_expected_servers(host, port, "started") or []
+        servers = fetch_expected_servers(host, port) or []
+
+        running_servers = [
+            server
+            for server in servers
+            if server.get("latestLog", {}).get("state") == "started"
+        ]
 
         # Next, get a list of actively-running servers.
         client = docker.from_env()
@@ -81,7 +87,11 @@ def run(args):
             clean_up_backups(host, port, server, s3)
 
         # Next, get the list of minecraft servers that we should restore from backup.
-        server_restorations = fetch_expected_servers(host, port, "restore_queued") or []
+        server_restorations = [
+            server
+            for server in servers
+            if server.get("latestLog", {}).get("state") == "restore_queued"
+        ]
         for server in server_restorations:
             process_server_restoration(
                 client, containers, server, host, port, host_path, s3
@@ -110,15 +120,15 @@ def split_s3_path(path: str) -> tuple:
     return (bucket, key)
 
 
-def fetch_expected_servers(host: str, port: int, state: str) -> list:
+def fetch_expected_servers(host: str, port: int) -> list:
     logging.error(f"Fetching server list")
     response = query_graphql(
         host,
         port,
         {
             "query": """
-                query {
-                    servers(latestLogState:{state}) {
+                query FetchServers {
+                    servers {
                         id,
                         name,
                         createdBy
@@ -137,10 +147,9 @@ def fetch_expected_servers(host: str, port: int, state: str) -> list:
                             }
                         }
                     }
-                }""".format(
-                state=state
-            ),
+                }""",
             "variables": None,
+            "operationName": "FetchServers",
         },
     )
     return response.get("data", {}).get("servers", [])
