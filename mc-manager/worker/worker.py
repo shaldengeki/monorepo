@@ -113,7 +113,7 @@ def query_graphql(host: str, port: int, data: dict) -> dict:
 
 def split_s3_path(path: str) -> tuple:
     if path.startswith("s3://"):
-        path = path[6:]
+        path = path[5:]
     path_parts = path.split("/")
     bucket = path_parts[0]
     key = "/".join(path_parts[1:])
@@ -381,9 +381,9 @@ def restore_server(
 ) -> None:
     # Download the backup.
     backup_path = server.get("latestLog", {}).get("backup", {}).get("remotePath")
-    logging.error(f"Downloading backup from {backup_path} to /tmp")
-
     bucket, key = split_s3_path(backup_path)
+    logging.error(f"Downloading backup from s3://{bucket}/{key} to /tmp")
+
     filename = os.path.basename(key)
     s3_client.meta.client.download_file(bucket, key, f"/tmp/{filename}")
 
