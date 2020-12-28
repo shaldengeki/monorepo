@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 import { timeAgo, serverLogStatusSymbol, serverBackupStatusSymbol } from '../Utils'
+import type { Backup } from '../types/Backup'
 
 const { REACT_APP_API_HOST = 'localhost' } = process.env
 
@@ -37,14 +38,7 @@ const GET_SERVER_INFO = gql`
     }
 `
 
-type BackupProps = {
-  created: number,
-  state: string,
-  error?: string,
-  remotePath?: string
-}
-
-const displayBackup = ({ created, state, error, remotePath }: BackupProps): string => {
+const displayBackup = ({ created, state }: Backup): string => {
   return `${serverBackupStatusSymbol(state)} ${state}, ${timeAgo(created)}`
 }
 
@@ -52,10 +46,10 @@ type LogProps = {
   created: number,
   state: string,
   error?: string,
-  backup: BackupProps
+  backup?: Backup
 }
 
-const displayLog = ({ created, state, error, backup }: LogProps): string => {
+const displayLog = ({ created, state }: LogProps): string => {
   return `${serverLogStatusSymbol(state)} ${state} ${timeAgo(created)}`
 }
 
