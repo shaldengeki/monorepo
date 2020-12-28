@@ -1,3 +1,8 @@
+import type Backup from './types/Backup'
+import type Log from './types/Log'
+
+const { REACT_APP_API_HOST = 'localhost' } = process.env
+
 export const timeAgo = (epochTime: number): string => {
   const happened = new Date(epochTime * 1000)
   const now = new Date()
@@ -38,6 +43,22 @@ export const serverLogStatusSymbol = (status: string): string => {
   }
 }
 
+export const serverLogStatusVerb = (status: string): string => {
+  if (status === 'started') {
+    return 'running'
+  } else if (status === 'created') {
+    return 'initializing'
+  } else if (status === 'restore_queued') {
+    return 'queueing backup'
+  } else if (status === 'restore_started') {
+    return 'restoring backup'
+  } else if (status === 'stopped') {
+    return 'stopped'
+  } else {
+    return 'unknown'
+  }
+}
+
 export const serverBackupStatusSymbol = (status: string): string => {
   if (status === 'completed') {
     return '🟢'
@@ -50,4 +71,16 @@ export const serverBackupStatusSymbol = (status: string): string => {
   } else {
     return '❓'
   }
+}
+
+export const displayBackup = ({ created, state }: Backup): string => {
+  return `${serverBackupStatusSymbol(state)} ${state}, ${timeAgo(created)}`
+}
+
+export const displayLog = ({ created, state }: Log): string => {
+  return `${serverLogStatusSymbol(state)} ${serverLogStatusVerb(state)} ${timeAgo(created)}`
+}
+
+export const displayServerUrl = (port: number): string => {
+  return `${REACT_APP_API_HOST}:${port}`
 }
