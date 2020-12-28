@@ -67,7 +67,7 @@ type ServerRow = {
   id: string,
   created: string,
   createdBy: string,
-  name: Link,
+  name: JSX.Element,
   port: bigint,
   zipfile: string,
   latestUpdate: string,
