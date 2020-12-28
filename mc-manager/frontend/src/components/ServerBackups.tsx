@@ -14,7 +14,6 @@ const GET_SERVER_BACKUPS = gql`
                 created
                 state
                 error
-                remotePath
             }
         }
     }
@@ -24,7 +23,6 @@ type ServerBackup = {
     created: string,
     state: string,
     error?: string,
-    remotePath?: string
   }
 
 type ServerBackupsProps = {
@@ -51,16 +49,14 @@ const ServerBackups = ({ name }: ServerBackupsProps) => {
     return {
       created: createdFormatted,
       state: `${serverBackupStatusSymbol(backup.state)} ${backup.state}`,
-      error: backup.error,
-      remotePath: backup.remotePath
+      error: backup.error
     }
   })
 
   const cols = [
     'created',
     'state',
-    'error',
-    'remotePath'
+    'error'
   ]
   return (
         <Table cols={cols} rows={formattedBackups} key='backups' />
