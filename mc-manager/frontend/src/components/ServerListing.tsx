@@ -93,7 +93,7 @@ const ServerListing = ({
     const createdFormatted = new Date(server.created * 1000).toLocaleDateString('en-US')
     const updated = timeAgo(server.latestLog.created)
     const serverLink = (
-      <Link to={`/servers/${server.name}`}>
+      <Link to={`/servers/${server.name}`} className="text-blue-400">
         {server.name}
       </Link>
     )
