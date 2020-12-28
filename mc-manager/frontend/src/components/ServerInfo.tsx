@@ -7,7 +7,7 @@ import { timeAgo, serverLogStatusSymbol, serverBackupStatusSymbol } from '../Uti
 const { REACT_APP_API_HOST = 'localhost' } = process.env
 
 const GET_SERVER_INFO = gql`
-    query GetServerInfo($name: String) {
+    query ServerInfo($name: String) {
         servers(name: $name) {
             id
             created
