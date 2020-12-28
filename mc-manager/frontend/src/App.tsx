@@ -14,8 +14,8 @@ function App () {
   return (
     <div className="bg-gray-500 w-full h-screen">
       <div className="p-4 content-start">
-        <Header />
           <Router>
+            <Header />
             <Switch>
               <Route path="/servers">
                 <Servers />
