@@ -7,6 +7,9 @@ module.exports = {
     'plugin:react/recommended',
     'standard'
   ],
+  globals: {
+    JSX: 'readonly'
+  },
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {

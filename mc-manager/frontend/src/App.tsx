@@ -7,24 +7,26 @@ import {
 } from 'react-router-dom'
 
 import Header from './components/Header'
-import ServerListing from './components/ServerListing'
+
+import Servers from './pages/Servers'
 
 function App () {
   return (
-    <Router>
-        <Switch>
-          <Route path="/">
-            <div className="bg-gray-500 w-full h-screen">
-              <div className="p-4 content-start">
-                <Header />
-                <div className="bg-gray-50 rounded overflow-auto">
-                  <ServerListing />
-                </div>
-              </div>
-            </div>
-          </Route>
-        </Switch>
-    </Router>
+    <div className="bg-gray-500 w-full h-screen">
+      <div className="p-4 content-start">
+          <Router>
+            <Header />
+            <Switch>
+              <Route path="/servers">
+                <Servers />
+              </Route>
+              <Route path="/">
+                <Servers />
+              </Route>
+            </Switch>
+        </Router>
+      </div>
+    </div>
   )
 }
 
