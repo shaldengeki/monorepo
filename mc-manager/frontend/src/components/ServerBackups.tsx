@@ -75,10 +75,10 @@ const ServerBackups = ({ name }: ServerBackupsProps) => {
       const restoreEnqueued = enqueueData && enqueueData.backup && enqueueData.backup.id
       if (serverLatestStateIsRestoring || restoreEnqueued) return '✅Restoration enqueued!'
       return (
-            <a className="text-blue-400" onClick={e => {
+            <button className="bg-purple-600 hover:bg-purple-700 text-gray-50" onClick={e => {
               e.preventDefault()
               enqueueServerBackup({ variables: { serverId, backupId } })
-            }}>Restore</a>
+            }}>Restore</button>
       )
     }
 
