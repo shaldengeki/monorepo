@@ -22,7 +22,12 @@ const GET_SERVER = gql`
                 created
                 state
                 error
-                backup
+                backup {
+                  created
+                  state
+                  error
+                  remotePath
+                }
             }
             backups {
                 created
