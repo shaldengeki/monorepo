@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
-import { timeAgo } from '../Utils'
+import { timeAgo, serverLogStatusSymbol } from '../Utils'
 
 const GET_SERVER_INFO = gql`
     query GetServerInfo($name: String) {
@@ -54,7 +54,7 @@ type LogProps = {
 }
 
 const displayLog = ({ created, state, error, backup }: LogProps): string => {
-  return `${state} at ${timeAgo(created)}`
+  return `${serverLogStatusSymbol(state)} ${state} at ${timeAgo(created)}`
 }
 
 type ServerInfoProps = {name: string};

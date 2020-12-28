@@ -21,3 +21,19 @@ export const timeAgo = (epochTime: number): string => {
     return Math.round(diff / (60 * 60 * 24 * 365)) + ' years ago'
   }
 }
+
+export const serverLogStatusSymbol = (status: string): string => {
+  if (status === 'started') {
+    return '🟢'
+  } else if (status === 'created') {
+    return '🚧'
+  } else if (status === 'restore_queued') {
+    return '⏳'
+  } else if (status === 'restore_started') {
+    return '🚧'
+  } else if (status === 'stopped') {
+    return '🔴'
+  } else {
+    return '❓'
+  }
+}
