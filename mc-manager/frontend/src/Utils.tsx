@@ -37,3 +37,17 @@ export const serverLogStatusSymbol = (status: string): string => {
     return '❓'
   }
 }
+
+export const serverBackupStatusSymbol = (status: string): string => {
+  if (status === 'completed') {
+    return '🟢'
+  } else if (status === 'created') {
+    return '🚧'
+  } else if (status === 'started') {
+    return '🚧'
+  } else if (status === 'failed') {
+    return '🔴'
+  } else {
+    return '❓'
+  }
+}
