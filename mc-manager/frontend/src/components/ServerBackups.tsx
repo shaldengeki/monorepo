@@ -49,7 +49,7 @@ type ServerBackupsProps = {
   name?: string
 };
 
-const ServerBackups = ({ name }: ServerBackupsProps) => {
+const ServerBackupsListing = ({ name }: ServerBackupsProps) => {
   const { data, loading, error } = useQuery(GET_SERVER_BACKUPS, {
     variables: { name },
     pollInterval: 60_000
@@ -98,6 +98,15 @@ const ServerBackups = ({ name }: ServerBackupsProps) => {
   ]
   return (
         <Table cols={cols} rows={formattedBackups} key='backups' />
+  )
+}
+
+const ServerBackups = ({ name }: ServerBackupsProps) => {
+  return (
+    <div>
+      <p className="text-3xl">Backups</p>
+      <ServerBackupsListing name={name} />
+    </div>
   )
 }
 
