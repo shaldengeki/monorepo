@@ -4,6 +4,8 @@ import gql from 'graphql-tag'
 
 import { timeAgo, serverLogStatusSymbol, serverBackupStatusSymbol } from '../Utils'
 
+const { REACT_APP_API_HOST = 'localhost' } = process.env
+
 const GET_SERVER_INFO = gql`
     query GetServerInfo($name: String) {
         servers(name: $name) {
@@ -43,7 +45,7 @@ type BackupProps = {
 }
 
 const displayBackup = ({ created, state, error, remotePath }: BackupProps): string => {
-  return `${serverBackupStatusSymbol(state)} ${state} at ${timeAgo(created)}`
+  return `${serverBackupStatusSymbol(state)} ${state}, ${timeAgo(created)}`
 }
 
 type LogProps = {
@@ -54,7 +56,11 @@ type LogProps = {
 }
 
 const displayLog = ({ created, state, error, backup }: LogProps): string => {
-  return `${serverLogStatusSymbol(state)} ${state} at ${timeAgo(created)}`
+  return `${serverLogStatusSymbol(state)} ${state} ${timeAgo(created)}`
+}
+
+const displayServerUrl = (port: number): string => {
+  return `${REACT_APP_API_HOST}:${port}`
 }
 
 type ServerInfoProps = {name: string};
@@ -77,8 +83,16 @@ const ServerInfo = ({ name }: ServerInfoProps) => {
     <table className="table-auto border-collapse border">
       <tbody>
         <tr>
-          <td className="font-medium border border-gray-300 px-4 py-2">ID</td>
-          <td className="border border-gray-300 px-4 py-2">{server.id}</td>
+          <td className="font-medium border border-gray-300 px-4 py-2">Mod</td>
+          <td className="border border-gray-300 px-4 py-2">{server.zipfile}</td>
+        </tr>
+        <tr>
+          <td className="font-medium border border-gray-300 px-4 py-2">Latest status</td>
+          <td className="border border-gray-300 px-4 py-2">{displayLog(server.latestLog)}</td>
+        </tr>
+        <tr>
+          <td className="font-medium border border-gray-300 px-4 py-2">URL</td>
+          <td className="border border-gray-300 px-4 py-2">{displayServerUrl(server.port)}</td>
         </tr>
         <tr>
           <td className="font-medium border border-gray-300 px-4 py-2">Created</td>
@@ -89,24 +103,8 @@ const ServerInfo = ({ name }: ServerInfoProps) => {
           <td className="border border-gray-300 px-4 py-2">{server.createdBy}</td>
         </tr>
         <tr>
-          <td className="font-medium border border-gray-300 px-4 py-2">Memory</td>
-          <td className="border border-gray-300 px-4 py-2">{server.memory}</td>
-        </tr>
-        <tr>
           <td className="font-medium border border-gray-300 px-4 py-2">MOTD</td>
           <td className="border border-gray-300 px-4 py-2">{server.motd}</td>
-        </tr>
-        <tr>
-          <td className="font-medium border border-gray-300 px-4 py-2">Port</td>
-          <td className="border border-gray-300 px-4 py-2">{server.port}</td>
-        </tr>
-        <tr>
-          <td className="font-medium border border-gray-300 px-4 py-2">Mod</td>
-          <td className="border border-gray-300 px-4 py-2">{server.zipfile}</td>
-        </tr>
-        <tr>
-          <td className="font-medium border border-gray-300 px-4 py-2">Latest status</td>
-          <td className="border border-gray-300 px-4 py-2">{displayLog(server.latestLog)}</td>
         </tr>
         <tr>
           <td className="font-medium border border-gray-300 px-4 py-2">Latest backup</td>
