@@ -74,43 +74,43 @@ const ServerInfo = ({ name }: ServerInfoProps) => {
   const server = data.servers[0]
 
   return (
-    <table className="table-auto">
+    <table className="table-auto border-collapse border">
       <tbody>
         <tr>
-          <td className="font-medium">ID</td>
-          <td>{server.id}</td>
+          <td className="font-medium border border-gray-300 px-4 py-2">ID</td>
+          <td className="border border-gray-300 px-4 py-2">{server.id}</td>
         </tr>
         <tr>
-          <td className="font-medium">Created</td>
-          <td>{timeAgo(server.created)}</td>
+          <td className="font-medium border border-gray-300 px-4 py-2">Created</td>
+          <td className="border border-gray-300 px-4 py-2">{timeAgo(server.created)}</td>
         </tr>
         <tr>
-          <td className="font-medium">Creator</td>
-          <td>{server.createdBy}</td>
+          <td className="font-medium border border-gray-300 px-4 py-2">Creator</td>
+          <td className="border border-gray-300 px-4 py-2">{server.createdBy}</td>
         </tr>
         <tr>
-          <td className="font-medium">Memory</td>
-          <td>{server.memory}</td>
+          <td className="font-medium border border-gray-300 px-4 py-2">Memory</td>
+          <td className="border border-gray-300 px-4 py-2">{server.memory}</td>
         </tr>
         <tr>
-          <td className="font-medium">MOTD</td>
-          <td>{server.motd}</td>
+          <td className="font-medium border border-gray-300 px-4 py-2">MOTD</td>
+          <td className="border border-gray-300 px-4 py-2">{server.motd}</td>
         </tr>
         <tr>
-          <td className="font-medium">Port</td>
-          <td>{server.port}</td>
+          <td className="font-medium border border-gray-300 px-4 py-2">Port</td>
+          <td className="border border-gray-300 px-4 py-2">{server.port}</td>
         </tr>
         <tr>
-          <td className="font-medium">Mod</td>
-          <td>{server.zipfile}</td>
+          <td className="font-medium border border-gray-300 px-4 py-2">Mod</td>
+          <td className="border border-gray-300 px-4 py-2">{server.zipfile}</td>
         </tr>
         <tr>
-          <td className="font-medium">Latest status</td>
-          <td>{displayLog(server.latestLog)}</td>
+          <td className="font-medium border border-gray-300 px-4 py-2">Latest status</td>
+          <td className="border border-gray-300 px-4 py-2">{displayLog(server.latestLog)}</td>
         </tr>
         <tr>
-          <td className="font-medium">Latest backup</td>
-          <td>{displayBackup(server.latestBackup)}</td>
+          <td className="font-medium border border-gray-300 px-4 py-2">Latest backup</td>
+          <td className="border border-gray-300 px-4 py-2">{displayBackup(server.latestBackup)}</td>
         </tr>
       </tbody>
     </table>
