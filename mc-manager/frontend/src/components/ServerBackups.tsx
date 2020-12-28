@@ -10,6 +10,9 @@ const GET_SERVER_BACKUPS = gql`
     query ServerBackups($name: String) {
         servers(name: $name) {
             id
+            latestLog {
+                state
+            }
             backups {
                 id
                 created
@@ -61,13 +64,16 @@ const ServerBackups = ({ name }: ServerBackupsProps) => {
   if (error) return errorDisplay
 
   const server = data.servers[0]
+  const serverLatestStateIsRestoring = (server.latestLog && (server.latestLog.state === 'restore_queued' || server.latestLog.state === 'restore_started'))
 
   const formattedBackups : Array<ServerBackup> = _.map(server.backups || [], (backup) => {
     const createdFormatted = new Date(backup.created * 1000).toLocaleDateString('en-US')
     const restoreLink = (serverId: number, backupId: number) => {
       if (enqueueLoading) return '🕜Enqueueing restoration...'
       if (enqueueError) return '❌Enqueueing backup failed'
-      if (enqueueData && enqueueData.backup && enqueueData.backup.id) return '✅Restoration enqueued!'
+
+      const restoreEnqueued = enqueueData && enqueueData.backup && enqueueData.backup.id
+      if (serverLatestStateIsRestoring || restoreEnqueued) return '✅Restoration enqueued!'
       return (
             <a onClick={e => {
               e.preventDefault()
