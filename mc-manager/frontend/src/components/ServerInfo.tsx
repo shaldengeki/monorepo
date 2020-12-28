@@ -2,9 +2,7 @@ import * as React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
-import { timeAgo, serverLogStatusSymbol, serverBackupStatusSymbol } from '../Utils'
-import type Backup from '../types/Backup'
-import type Log from '../types/Log'
+import { timeAgo, displayBackup, displayLog } from '../Utils'
 
 const { REACT_APP_API_HOST = 'localhost' } = process.env
 
@@ -38,13 +36,6 @@ const GET_SERVER_INFO = gql`
         }
     }
 `
-
-const displayBackup = ({ created, state }: Backup): string => {
-  return `${serverBackupStatusSymbol(state)} ${state}, ${timeAgo(created)}`
-}
-const displayLog = ({ created, state }: Log): string => {
-  return `${serverLogStatusSymbol(state)} ${state} ${timeAgo(created)}`
-}
 
 const displayServerUrl = (port: number): string => {
   return `${REACT_APP_API_HOST}:${port}`

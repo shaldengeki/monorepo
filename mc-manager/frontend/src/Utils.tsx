@@ -1,3 +1,6 @@
+import type Backup from './types/Backup'
+import type Log from './types/Log'
+
 export const timeAgo = (epochTime: number): string => {
   const happened = new Date(epochTime * 1000)
   const now = new Date()
@@ -50,4 +53,12 @@ export const serverBackupStatusSymbol = (status: string): string => {
   } else {
     return '❓'
   }
+}
+
+export const displayBackup = ({ created, state }: Backup): string => {
+  return `${serverBackupStatusSymbol(state)} ${state}, ${timeAgo(created)}`
+}
+
+export const displayLog = ({ created, state }: Log): string => {
+  return `${serverLogStatusSymbol(state)} ${state} ${timeAgo(created)}`
 }
