@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { Link } from 'react-router-dom'
 
-import { timeAgo, serverLogStatusSymbol } from '../Utils'
+import { timeAgo, displayLog } from '../Utils'
 import Table from './Table'
 
 const GET_SERVERS = gql`
@@ -106,7 +106,7 @@ const ServerListing = ({
       port: server.port,
       zipfile: server.zipfile,
       latestUpdate: updated,
-      latestState: `${serverLogStatusSymbol(server.latestLog.state)} ${server.latestLog.state}`
+      latestState: `${displayLog(server.latestLog)}`
     }
   })
 
