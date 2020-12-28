@@ -1,6 +1,8 @@
 import type Backup from './types/Backup'
 import type Log from './types/Log'
 
+const { REACT_APP_API_HOST = 'localhost' } = process.env
+
 export const timeAgo = (epochTime: number): string => {
   const happened = new Date(epochTime * 1000)
   const now = new Date()
@@ -61,4 +63,8 @@ export const displayBackup = ({ created, state }: Backup): string => {
 
 export const displayLog = ({ created, state }: Log): string => {
   return `${serverLogStatusSymbol(state)} ${state} ${timeAgo(created)}`
+}
+
+export const displayServerUrl = (port: number): string => {
+  return `${REACT_APP_API_HOST}:${port}`
 }

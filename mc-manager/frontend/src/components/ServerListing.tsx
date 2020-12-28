@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { Link } from 'react-router-dom'
 
-import { timeAgo, displayLog } from '../Utils'
+import { displayLog, displayServerUrl } from '../Utils'
 import Table from './Table'
 
 const GET_SERVERS = gql`
@@ -45,9 +45,8 @@ type ServerRow = {
   created: string,
   createdBy: string,
   name: any,
-  port: bigint,
-  zipfile: string,
-  latestUpdate: string,
+  url: string,
+  mod: string,
   latestState: string
 };
 
@@ -91,7 +90,6 @@ const ServerListing = ({
 
   const formattedServers : Array<ServerRow> = _.map(data.servers || [], (server) => {
     const createdFormatted = new Date(server.created * 1000).toLocaleDateString('en-US')
-    const updated = timeAgo(server.latestLog.created)
     const serverLink = (
       <Link to={`/servers/${server.name}`} className="text-blue-400">
         {server.name}
@@ -103,19 +101,17 @@ const ServerListing = ({
       created: createdFormatted,
       createdBy: server.createdBy,
       name: serverLink,
-      port: server.port,
-      zipfile: server.zipfile,
-      latestUpdate: updated,
+      url: displayServerUrl(server.port),
+      mod: server.zipfile,
       latestState: `${displayLog(server.latestLog)}`
     }
   })
 
   const cols = [
-    'latestUpdate',
-    'latestState',
     'name',
-    'zipfile',
-    'port',
+    'latestState',
+    'mod',
+    'url',
     'createdBy',
     'created'
   ]
