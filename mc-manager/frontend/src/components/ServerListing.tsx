@@ -2,6 +2,7 @@ import * as React from 'react'
 import _ from 'lodash'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import { Link } from 'react-router-dom'
 
 import Table from './Table'
 
@@ -66,7 +67,7 @@ type ServerRow = {
   id: string,
   created: string,
   createdBy: string,
-  name: string,
+  name: Link,
   port: bigint,
   zipfile: string,
   latestUpdate: string,
@@ -110,19 +111,22 @@ const ServerListing = ({
   if (loading) return loadingDisplay
   if (error) return errorDisplay
 
-  const formattedServers : Array<ServerRow> = _.map(data.servers || [], (txn) => {
-    const createdFormatted = new Date(txn.created * 1000).toLocaleDateString('en-US')
-    const updated = timeAgo(txn.latestLog.created)
+  const formattedServers : Array<ServerRow> = _.map(data.servers || [], (server) => {
+    const createdFormatted = new Date(server.created * 1000).toLocaleDateString('en-US')
+    const updated = timeAgo(server.latestLog.created)
+    const serverLink = (
+      <Link to={`/servers/${server.name}`} />
+    )
 
     return {
-      id: `${txn.id}`,
+      id: `${server.id}`,
       created: createdFormatted,
-      createdBy: txn.createdBy,
-      name: txn.name,
-      port: txn.port,
-      zipfile: txn.zipfile,
+      createdBy: server.createdBy,
+      name: serverLink,
+      port: server.port,
+      zipfile: server.zipfile,
       latestUpdate: updated,
-      latestState: txn.latestLog.state
+      latestState: server.latestLog.state
     }
   })
 
