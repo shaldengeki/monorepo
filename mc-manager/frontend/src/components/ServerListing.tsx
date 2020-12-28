@@ -47,7 +47,7 @@ type ServerRow = {
   name: any,
   url: string,
   mod: string,
-  latestState: string
+  status: string
 };
 
 type ServerListingProps = {
@@ -103,13 +103,13 @@ const ServerListing = ({
       name: serverLink,
       url: displayServerUrl(server.port),
       mod: server.zipfile,
-      latestState: `${displayLog(server.latestLog)}`
+      status: `${displayLog(server.latestLog)}`
     }
   })
 
   const cols = [
     'name',
-    'latestState',
+    'status',
     'mod',
     'url',
     'createdBy',

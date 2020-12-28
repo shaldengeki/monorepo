@@ -43,6 +43,22 @@ export const serverLogStatusSymbol = (status: string): string => {
   }
 }
 
+export const serverLogStatusVerb = (status: string): string => {
+  if (status === 'started') {
+    return 'running'
+  } else if (status === 'created') {
+    return 'initializing'
+  } else if (status === 'restore_queued') {
+    return 'queueing backup'
+  } else if (status === 'restore_started') {
+    return 'restoring backup'
+  } else if (status === 'stopped') {
+    return 'stopped'
+  } else {
+    return 'unknown'
+  }
+}
+
 export const serverBackupStatusSymbol = (status: string): string => {
   if (status === 'completed') {
     return '🟢'
@@ -62,7 +78,7 @@ export const displayBackup = ({ created, state }: Backup): string => {
 }
 
 export const displayLog = ({ created, state }: Log): string => {
-  return `${serverLogStatusSymbol(state)} ${state} ${timeAgo(created)}`
+  return `${serverLogStatusSymbol(state)} ${serverLogStatusVerb(state)} ${timeAgo(created)}`
 }
 
 export const displayServerUrl = (port: number): string => {
