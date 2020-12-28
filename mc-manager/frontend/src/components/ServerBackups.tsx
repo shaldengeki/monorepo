@@ -39,7 +39,7 @@ type ServerBackup = {
     created: string,
     state: string,
     error?: string,
-    restoreLink: any
+    restore: any
   }
 
 type ServerBackupsProps = {
@@ -80,14 +80,15 @@ const ServerBackups = ({ name }: ServerBackupsProps) => {
       created: createdFormatted,
       state: `${serverBackupStatusSymbol(backup.state)} ${backup.state}`,
       error: backup.error,
-      restoreLink: restoreLink(server.id, backup.id)
+      restore: restoreLink(server.id, backup.id)
     }
   })
 
   const cols = [
     'created',
     'state',
-    'error'
+    'error',
+    'restore'
   ]
   return (
         <Table cols={cols} rows={formattedBackups} key='backups' />
