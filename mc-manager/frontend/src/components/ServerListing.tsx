@@ -80,7 +80,7 @@ const ServerListing = ({
       timezone,
       zipfile
     },
-    pollInterval: 10_000
+    pollInterval: 60_000
   })
 
   const loadingDisplay = <h1>Loading servers...</h1>

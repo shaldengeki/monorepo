@@ -68,7 +68,7 @@ type ServerInfoProps = {name: string};
 const ServerInfo = ({ name }: ServerInfoProps) => {
   const { data, loading, error } = useQuery(GET_SERVER_INFO, {
     variables: { name },
-    pollInterval: 10_000
+    pollInterval: 60_000
   })
 
   const loadingDisplay = <h1>Loading server...</h1>
