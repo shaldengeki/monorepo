@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import _ from 'lodash'
 
-const renderColumn = (col: string, showFilters: Boolean | undefined, filters: _.Dictionary<any>, setFilter: Function, tablePrefix: string) => {
+const renderColumn = (col: string, showFilters: Boolean, filters: _.Dictionary<any>, setFilter: Function, tablePrefix: string) => {
   const filterInput = (
     <input
       className="border w-full"
@@ -49,7 +49,7 @@ type TableProps = {
   showFilters?: Boolean
 };
 
-const Table = ({ cols, rows, key, showFilters }: TableProps) => {
+const Table = ({ cols, rows, key, showFilters = true }: TableProps) => {
   const [filters, setFilter] = useColumnFilters(cols)
   const tablePrefix = `Table-${key}`
 
@@ -74,10 +74,6 @@ const Table = ({ cols, rows, key, showFilters }: TableProps) => {
             </tbody>
         </table>
   )
-}
-
-Table.defaultProps = {
-  showFilters: true
 }
 
 export default Table
