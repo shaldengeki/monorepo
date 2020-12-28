@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { Link } from 'react-router-dom'
 
+import { timeAgo } from '../Utils'
 import Table from './Table'
 
 const GET_SERVERS = gql`
@@ -38,30 +39,6 @@ const GET_SERVERS = gql`
         }
     }
 `
-
-const timeAgo = (epochTime: number): string => {
-  const happened = new Date(epochTime * 1000)
-  const now = new Date()
-  const diff = (now.getTime() - happened.getTime()) / 1000
-
-  if (diff < 10) {
-    return 'just now'
-  } else if (diff < 60) {
-    return Math.round(diff) + ' seconds ago'
-  } else if (diff < (60 * 60)) {
-    return Math.round(diff / 60) + ' minutes ago'
-  } else if (diff < (60 * 60 * 24)) {
-    return Math.round(diff / (60 * 60)) + ' hours ago'
-  } else if (diff < (60 * 60 * 24 * 7)) {
-    return Math.round(diff / (60 * 60 * 24)) + ' days ago'
-  } else if (diff < (60 * 60 * 24 * 30)) {
-    return Math.round(diff / (60 * 60 * 24 * 7)) + ' weeks ago'
-  } else if (diff < (60 * 60 * 24 * 365)) {
-    return Math.round(diff / (60 * 60 * 24 * 30)) + ' months ago'
-  } else {
-    return Math.round(diff / (60 * 60 * 24 * 365)) + ' years ago'
-  }
-}
 
 type ServerRow = {
   id: string,

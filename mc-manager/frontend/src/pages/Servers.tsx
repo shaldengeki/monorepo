@@ -6,11 +6,18 @@ import {
   useParams
 } from 'react-router-dom'
 
+import ServerHeader from '../components/ServerHeader'
+import ServerInfo from '../components/ServerInfo'
 import ServerListing from '../components/ServerListing'
 
 function Server () {
   const { serverName } = useParams<{ serverName: string }>()
-  return <h3>Requested server name: {serverName}</h3>
+  return (
+    <div>
+      <ServerHeader name={serverName} />
+      <ServerInfo name={serverName} />
+    </div>
+  )
 }
 
 function Servers () {
