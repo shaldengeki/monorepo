@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import _ from 'lodash'
 
-const renderColumn = (col: string, showFilters: Boolean, filters: _.Dictionary<any>, setFilter: Function, tablePrefix: string) => {
+const renderColumn = (col: string, showFilters: Boolean | undefined, filters: _.Dictionary<any>, setFilter: Function, tablePrefix: string) => {
   const filterInput = (
     <input
       className="border w-full"
