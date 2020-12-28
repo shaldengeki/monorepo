@@ -24,7 +24,7 @@ function Servers () {
   const match = useRouteMatch()
 
   return (
-        <div className="bg-gray-50 rounded overflow-auto">
+        <div className="bg-gray-50 rounded overflow-auto p-4">
             <Switch>
                 <Route path={`${match.path}/:serverName`}>
                     <Server />
