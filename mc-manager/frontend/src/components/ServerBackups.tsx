@@ -104,7 +104,7 @@ const ServerBackupsListing = ({ name }: ServerBackupsProps) => {
 const ServerBackups = ({ name }: ServerBackupsProps) => {
   return (
     <div>
-      <p className="text-3xl">Backups</p>
+      <p className="text-3xl py-4">Backups</p>
       <ServerBackupsListing name={name} />
     </div>
   )

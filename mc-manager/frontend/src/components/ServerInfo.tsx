@@ -81,7 +81,7 @@ const ServerInfo = ({ name }: ServerInfoProps) => {
 
   return (
     <div>
-      <p className="text-3xl">Info</p>
+      <p className="text-3xl py-4">Info</p>
       <table className="table-auto border-collapse border">
         <tbody>
           <tr>
