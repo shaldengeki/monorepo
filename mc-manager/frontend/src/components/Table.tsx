@@ -1,17 +1,21 @@
 import React, { useState } from 'react'
 import _ from 'lodash'
 
-const renderColumn = (col: string, filters: _.Dictionary<any>, setFilter: Function, tablePrefix: string) => {
+const renderColumn = (col: string, showFilters: Boolean, filters: _.Dictionary<any>, setFilter: Function, tablePrefix: string) => {
+  const filterInput = (
+    <input
+      className="border w-full"
+      type="text"
+      name="filter[{}]"
+      value={filters[col]}
+      onChange={e => setFilter(col, e.target.value)}
+    />
+  )
+
   return (
         <th key={`${tablePrefix}-col-${col}`} className="px-4 py-2">
             <p>{_.startCase(col)}</p>
-            <input
-                className="border w-full"
-                type="text"
-                name="filter[{}]"
-                value={filters[col]}
-                onChange={e => setFilter(col, e.target.value)}
-            />
+            {showFilters ? filterInput : ''}
         </th>
   )
 }
@@ -41,25 +45,28 @@ const renderRow = (row: any, idx: number, cols: Array<string>, tablePrefix: stri
 type TableProps = {
   cols: Array<string>,
   rows: Array<any>,
-  key: string
+  key: string,
+  showFilters?: Boolean
 };
 
-const Table = ({ cols, rows, key }: TableProps) => {
+const Table = ({ cols, rows, key, showFilters }: TableProps) => {
   const [filters, setFilter] = useColumnFilters(cols)
   const tablePrefix = `Table-${key}`
 
   let shownRows = rows || []
-  _.forEach(cols, (col) => {
-    if (filters[col]) {
-      shownRows = _.filter(shownRows, (txn) => { return _.upperCase(txn[col]).includes(_.upperCase(filters[col])) })
-    }
-  })
+  if (showFilters) {
+    _.forEach(cols, (col) => {
+      if (filters[col]) {
+        shownRows = _.filter(shownRows, (txn) => { return _.upperCase(txn[col]).includes(_.upperCase(filters[col])) })
+      }
+    })
+  }
 
   return (
         <table key={tablePrefix} className="w-full table-fixed text-center">
             <thead>
                 <tr>
-                    {cols.map(col => renderColumn(col, filters, setFilter, tablePrefix))}
+                    {cols.map(col => renderColumn(col, showFilters, filters, setFilter, tablePrefix))}
                 </tr>
             </thead>
             <tbody>
@@ -67,6 +74,10 @@ const Table = ({ cols, rows, key }: TableProps) => {
             </tbody>
         </table>
   )
+}
+
+Table.defaultProps = {
+  showFilters: true
 }
 
 export default Table

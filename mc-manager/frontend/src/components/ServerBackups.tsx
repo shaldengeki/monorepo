@@ -97,7 +97,7 @@ const ServerBackupsListing = ({ name }: ServerBackupsProps) => {
     'restore'
   ]
   return (
-        <Table cols={cols} rows={formattedBackups} key='backups' />
+        <Table showFilters={false} cols={cols} rows={formattedBackups} key='backups' />
   )
 }
 
