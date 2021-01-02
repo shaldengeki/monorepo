@@ -271,7 +271,7 @@ def back_up_server(
         state = "failed"
         remote_path = None
 
-    query_graphql(
+    response = query_graphql(
         host,
         port,
         {
@@ -295,6 +295,8 @@ def back_up_server(
             "operationName": "updateServerBackup",
         },
     )
+    if "errors" in response:
+        logging.error(f"Updating server backup failed: {response['errors']}")
 
 
 def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
@@ -330,6 +332,28 @@ def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
 
     # Delete those backups.
     for backup in to_delete:
+        logging.error(f"Marking backup at {backup['remotePath']} as deleted")
+        response = query_graphql(
+            host,
+            port,
+            {
+                "query": """
+                    mutation markServerBackupDeleted($serverId:Int!) {
+                        updateServerBackup(serverId: $serverId, state:deleted) {
+                            id
+                            state
+                        }
+                    }""",
+                "variables": json.dumps({"serverId": backup["id"]}),
+                "operationName": "markServerBackupDeleted",
+            },
+        )
+        if "errors" in response:
+            logging.error(
+                f"Error ecountered while marking backup as deleted: {response['errors']}"
+            )
+            continue
+
         logging.error(f"Deleting backup at {backup['remotePath']}")
         remote_path = backup["remotePath"]
         bucket, key = split_s3_path(remote_path)

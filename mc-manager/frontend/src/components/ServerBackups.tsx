@@ -5,15 +5,16 @@ import gql from 'graphql-tag'
 
 import { serverBackupStatusSymbol } from '../Utils'
 import Table from './Table'
+import type Backup from '../types/Backup'
 
 const GET_SERVER_BACKUPS = gql`
-    query ServerBackups($name: String) {
+    query ServerBackups($name: String, $limit: Int) {
         servers(name: $name) {
             id
             latestLog {
                 state
             }
-            backups {
+            backups(limit: $limit) {
                 id
                 created
                 state
@@ -51,7 +52,7 @@ type ServerBackupsProps = {
 
 const ServerBackupsListing = ({ name }: ServerBackupsProps) => {
   const { data, loading, error } = useQuery(GET_SERVER_BACKUPS, {
-    variables: { name },
+    variables: { name, limit: 7 },
     pollInterval: 60_000
   })
 
@@ -68,25 +69,31 @@ const ServerBackupsListing = ({ name }: ServerBackupsProps) => {
 
   const formattedBackups : Array<ServerBackup> = _.map(server.backups || [], (backup) => {
     const createdFormatted = new Date(backup.created * 1000).toLocaleDateString('en-US')
-    const restoreLink = (serverId: number, backupId: number) => {
+    const restoreLink = (serverId: number, backup: Backup) => {
       if (enqueueLoading) return '🕜Enqueueing restoration...'
       if (enqueueError) return '❌Enqueueing backup failed'
 
       const restoreEnqueued = enqueueData && enqueueData.backup && enqueueData.backup.id
       if (serverLatestStateIsRestoring || restoreEnqueued) return '✅Restoration enqueued!'
-      return (
-            <button className="bg-purple-600 hover:bg-purple-700 text-gray-50 px-4 py-3 rounded-full" onClick={e => {
-              e.preventDefault()
-              enqueueServerBackup({ variables: { serverId, backupId } })
-            }}>Restore</button>
-      )
+      if (backup.state === 'completed') {
+        return (
+          <button className="bg-purple-600 hover:bg-purple-700 text-gray-50 px-4 py-3 rounded-full" onClick={e => {
+            e.preventDefault()
+            enqueueServerBackup({ variables: { serverId, backupId: backup.id } })
+          }}>Restore</button>
+        )
+      } else {
+        return (
+          <span />
+        )
+      }
     }
 
     return {
       created: createdFormatted,
       state: `${serverBackupStatusSymbol(backup.state)} ${backup.state}`,
       error: backup.error,
-      restore: restoreLink(server.id, backup.id)
+      restore: restoreLink(server.id, backup)
     }
   })
 
