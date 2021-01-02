@@ -106,10 +106,11 @@ def fetch_server_backups(models, params):
     if params.get("after", False):
         query_obj = query_obj.filter(models.ServerBackup.id > int(params["after"]))
 
+    query_obj = query_obj.order_by(desc(models.ServerBackup.created))
     limit = min((100, int(params["limit"])))
     query_obj = query_obj.limit(limit)
 
-    return query_obj.order_by(desc(models.ServerBackup.created)).all()
+    return query_obj.all()
 
 
 serverBackupsFilters = {

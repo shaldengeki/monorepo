@@ -27,18 +27,20 @@ def latestLogResolver(server):
 
 
 def backupsResolver(server, info, args):
-    query_obj = info["models"].ServerBackup.query.filter(
-        info["models"].ServerBackup.server_id == server.id
+    query_obj = info.context["models"].ServerBackup.query.filter(
+        info.context["models"].ServerBackup.server_id == server.id
     )
     if args.get("after", False):
         query_obj = query_obj.filter(
-            info["models"].ServerBackup.id > int(args["after"])
+            info.context["models"].ServerBackup.id > int(args["after"])
         )
+
+    query_obj = query_obj.order_by(desc(info.context["models"].ServerBackup.created))
 
     limit = min((100, int(args["limit"])))
     query_obj = query_obj.limit(limit)
 
-    return query_obj.order_by(desc(info["models"].ServerBackup.created)).all()
+    return query_obj.all()
 
 
 def serverTypeResolver():
