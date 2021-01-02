@@ -7,8 +7,8 @@ import { serverBackupStatusSymbol } from '../Utils'
 import Table from './Table'
 
 const GET_SERVER_BACKUPS = gql`
-    query ServerBackups($name: String) {
-        servers(name: $name) {
+    query ServerBackups($name: String, $limit: Int) {
+        servers(name: $name, limit: $limit) {
             id
             latestLog {
                 state
@@ -51,7 +51,7 @@ type ServerBackupsProps = {
 
 const ServerBackupsListing = ({ name }: ServerBackupsProps) => {
   const { data, loading, error } = useQuery(GET_SERVER_BACKUPS, {
-    variables: { name },
+    variables: { name, limit: 7 },
     pollInterval: 60_000
   })
 

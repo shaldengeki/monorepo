@@ -103,16 +103,38 @@ def fetch_server_backups(models, params):
             models.ServerBackup.remote_path == params["remotePath"]
         )
 
+    if params.get("after", False):
+        query_obj = query_obj.filter(models.ServerBackup.id > int(params["after"]))
+
+    limit = min((100, int(params["limit"])))
+    query_obj = query_obj.limit(limit)
+
     return query_obj.order_by(desc(models.ServerBackup.created)).all()
 
 
 serverBackupsFilters = {
+    "after": GraphQLArgument(
+        GraphQLInt, description="The ID after which results should be displayed."
+    ),
     "earliestDate": GraphQLArgument(
         GraphQLInt,
         description="Earliest creation date that a server backup should have.",
     ),
+    "error": GraphQLArgument(
+        GraphQLBoolean,
+        description="Set to true if you want only error states.",
+    ),
     "latestDate": GraphQLArgument(
         GraphQLInt, description="Latest creation date that a server backup should have."
+    ),
+    "limit": GraphQLArgument(
+        GraphQLInt,
+        description="The total number of results to return. Defaults to 10, with the maximum being 100.",
+        default_value=100,
+    ),
+    "remotePath": GraphQLArgument(
+        GraphQLString,
+        description="URL of the remote path that the backup is located at.",
     ),
     "serverId": GraphQLArgument(
         GraphQLInt,
@@ -121,14 +143,6 @@ serverBackupsFilters = {
     "state": GraphQLArgument(
         serverBackupStateEnum,
         description="State that a server backup should have.",
-    ),
-    "error": GraphQLArgument(
-        GraphQLBoolean,
-        description="Set to true if you want only error states.",
-    ),
-    "remotePath": GraphQLArgument(
-        GraphQLString,
-        description="URL of the remote path that the backup is located at.",
     ),
 }
 
