@@ -8,12 +8,12 @@ import Table from './Table'
 
 const GET_SERVER_BACKUPS = gql`
     query ServerBackups($name: String, $limit: Int) {
-        servers(name: $name, limit: $limit) {
+        servers(name: $name) {
             id
             latestLog {
                 state
             }
-            backups {
+            backups(limit: $limit) {
                 id
                 created
                 state

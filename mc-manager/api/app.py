@@ -46,6 +46,11 @@ def index():
 app.add_url_rule(
     "/graphql",
     view_func=GraphQLView.as_view(
-        "graphql", schema=graphql.Schema(models), graphiql=True
+        "graphql",
+        schema=graphql.Schema(models),
+        context={
+            "models": models,
+        },
+        graphiql=True,
     ),
 )

@@ -26,6 +26,21 @@ def latestLogResolver(server):
     return server.logs[0]
 
 
+def backupsResolver(server, info, args):
+    query_obj = info["models"].ServerBackup.query.filter(
+        info["models"].ServerBackup.server_id == server.id
+    )
+    if args.get("after", False):
+        query_obj = query_obj.filter(
+            info["models"].ServerBackup.id > int(args["after"])
+        )
+
+    limit = min((100, int(args["limit"])))
+    query_obj = query_obj.limit(limit)
+
+    return query_obj.order_by(desc(info["models"].ServerBackup.created)).all()
+
+
 def serverTypeResolver():
     from .server_log import serverLogType
     from .server_backup import serverBackupType
@@ -80,7 +95,18 @@ def serverTypeResolver():
         "backups": GraphQLField(
             GraphQLList(serverBackupType),
             description="Backups associated with the server.",
-            resolve=lambda server, info, **args: server.backups,
+            args={
+                "after": GraphQLArgument(
+                    GraphQLInt,
+                    description="The ID after which results should be displayed.",
+                ),
+                "limit": GraphQLArgument(
+                    GraphQLInt,
+                    description="The total number of results to return. Defaults to 10, with the maximum being 100.",
+                    default_value=100,
+                ),
+            },
+            resolve=lambda server, info, **args: backupsResolver(server, info, args),
         ),
         "latestBackup": GraphQLField(
             serverBackupType,
