@@ -1,4 +1,5 @@
 type Backup = {
+    id?: number,
     created: number,
     state: string,
     error?: string,
