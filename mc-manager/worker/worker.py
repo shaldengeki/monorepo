@@ -338,13 +338,13 @@ def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
             port,
             {
                 "query": """
-                    mutation markServerBackupDeleted($serverId:Int!) {
-                        updateServerBackup(serverId: $serverId, state:deleted) {
+                    mutation markServerBackupDeleted($id:Int!) {
+                        updateServerBackup(id: $id, state:deleted) {
                             id
                             state
                         }
                     }""",
-                "variables": json.dumps({"serverId": backup["id"]}),
+                "variables": json.dumps({"id": backup["id"]}),
                 "operationName": "markServerBackupDeleted",
             },
         )
