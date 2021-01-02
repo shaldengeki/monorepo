@@ -68,6 +68,8 @@ export const serverBackupStatusSymbol = (status: string): string => {
     return '🚧'
   } else if (status === 'failed') {
     return '🔴'
+  } else if (status === 'deleted') {
+    return '🗑'
   } else {
     return '❓'
   }

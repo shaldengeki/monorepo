@@ -30,6 +30,9 @@ serverBackupStateEnum = GraphQLEnumType(
             "completed", description="Server backup is completed"
         ),
         "failed": GraphQLEnumValue("failed", description="Server backup failed"),
+        "deleted": GraphQLEnumValue(
+            "deleted", description="Server backup has been deleted"
+        ),
     },
 )
 
