@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Bazel
+bazel-*
+
+postgres-data
+
+settings.json
+.aws-credentials
+env.*.real
