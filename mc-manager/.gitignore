@@ -132,3 +132,7 @@ dmypy.json
 bazel-*
 
 postgres-data
+
+settings.json
+.aws-credentials
+env.*.real
