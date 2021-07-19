@@ -130,3 +130,5 @@ dmypy.json
 
 # Bazel
 bazel-*
+
+postgres-data
