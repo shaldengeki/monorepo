@@ -15,8 +15,9 @@ py_binary(
 
 py3_image(
     name = "image",
-    srcs = ["worker.py"],
+    srcs = glob(["**/*.py"]),
     main = "worker.py",
+    base = "@py3_image//image",
     deps = [
         requirement("boto3"),
         requirement("docker"),

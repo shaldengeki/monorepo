@@ -2,7 +2,7 @@ load("@rules_python//python:defs.bzl", "py_runtime_pair")
 
 py_runtime(
     name = "container_py2_runtime",
-    interpreter_path = "/usr/bin/python",
+    interpreter_path = "/usr/local/bin/python",
     python_version = "PY2",
 )
 
