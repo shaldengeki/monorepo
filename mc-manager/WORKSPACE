@@ -43,10 +43,19 @@ container_deps()
 load("@io_bazel_rules_docker//container:pull.bzl", "container_pull")
 
 container_pull(
-    name = "py3_alpine",
+    name = "py3_image",
     registry = "index.docker.io",
     repository = "library/python",
-    tag = "3.9-alpine",
+    tag = "3.9",
+)
+
+register_toolchains(
+    "//toolchain:container_py_toolchain",
+)
+
+register_execution_platforms(
+    "@local_config_platform//:host",
+    "@io_bazel_rules_docker//platforms:local_container_platform",
 )
 
 load(
