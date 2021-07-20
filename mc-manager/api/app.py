@@ -33,9 +33,11 @@ db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
 
+
 @app.route("/")
 def index():
     return "API"
+
 
 if __name__ == "__main__":
     from gql import Schema
