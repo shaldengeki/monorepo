@@ -61,7 +61,7 @@ react_scripts(
 react_scripts(
     name = "start",
     args = [
-        "--node_options=--require=$(rootpath chdir.js)",
+        "--node_options=--require=./$(rootpath chdir.js)",
         "start",
     ],
     data = _RUNTIME_DEPS,
