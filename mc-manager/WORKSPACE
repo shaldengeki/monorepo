@@ -69,8 +69,8 @@ _py_image_repos()
 
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "cb6d92c93a1769205d6573c21363bdbdcf5831af114a7fbc3f800b8598207dee",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/2.0.0-rc.2/rules_nodejs-2.0.0-rc.2.tar.gz"],
+    sha256 = "8f5f192ba02319254aaf2cdcca00ec12eaafeb979a80a1e946773c520ae0a2c9",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.7.0/rules_nodejs-3.7.0.tar.gz"],
 )
 
 http_archive(
@@ -87,6 +87,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 yarn_install(
     # Name this npm so that Bazel Label references look like @npm//package
     name = "npm",
+    exports_directories_only = True,
     package_json = "//frontend:package.json",
     yarn_lock = "//frontend:yarn.lock",
 )

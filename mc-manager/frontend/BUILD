@@ -23,29 +23,52 @@ write_file(
     content = ["process.chdir(__dirname)"],
 )
 
+
+_RUNTIME_DEPS = [
+    "chdir.js",
+    "copy_static_files",
+    "@npm//@apollo/react-hooks",
+    "@npm//@tsconfig/recommended",
+    "@npm//apollo-cache-inmemory",
+    "@npm//apollo-client",
+    "@npm//apollo-link-http",
+    "@npm//graphql",
+    "@npm//graphql-tag",
+    "@npm//moment",
+    "@npm//react",
+    "@npm//react-dom",
+    "@npm//react-router-dom",
+    "@npm//web-vitals",
+]
+
 react_scripts(
-    # Note: this must be named "build" since react-scripts hard-codes that as the output dir
+    # Note: If you want to change the name make sure you update BUILD_PATH below accordingly
+    # https://create-react-app.dev/docs/advanced-configuration/
     name = "build",
     args = [
         "--node_options=--require=./$(execpath chdir.js)",
         "build",
     ],
-    data = [
-        "chdir.js",
-        "copy_static_files",
-        "@npm//@apollo/react-hooks",
-        "@npm//@tsconfig/recommended",
+    data = _RUNTIME_DEPS + [
         "@npm//@types",
-        "@npm//apollo-cache-inmemory",
-        "@npm//apollo-client",
-        "@npm//apollo-link-http",
-        "@npm//graphql",
-        "@npm//graphql-tag",
-        "@npm//moment",
-        "@npm//react",
-        "@npm//react-dom",
-        "@npm//react-router-dom",
-        "@npm//web-vitals",
     ],
+    env = {
+        "BUILD_PATH": "./build",
+    },
     output_dir = True,
+)
+
+react_scripts(
+    name = "start",
+    args = [
+        "--node_options=--require=$(rootpath chdir.js)",
+        "start",
+    ],
+    data = _RUNTIME_DEPS,
+    tags = [
+        # This tag instructs ibazel to pipe into stdin a event describing actions.
+        # ibazel send EOF to stdin by default and `react-scripts start` will stop when getting EOF in stdin.
+        # So use this to prevent EOF.
+        "ibazel_notify_changes",
+    ],
 )

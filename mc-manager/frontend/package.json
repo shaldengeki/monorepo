@@ -31,7 +31,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "ibazel run //frontend:start",
     "build": "bazel build //frontend:build",
     "test": "craco test",
     "eject": "react-scripts eject"
@@ -56,6 +56,7 @@
   },
   "devDependencies": {
     "@bazel/bazelisk": "^1.5.0",
+    "@bazel/ibazel": "^0.15.10",
     "@tsconfig/recommended": "^1.0.1",
     "@types/lodash": "^4.14.165",
     "@types/react": "^17.0.0",
