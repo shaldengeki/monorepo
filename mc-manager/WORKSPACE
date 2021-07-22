@@ -82,21 +82,23 @@ http_archive(
     ],
 )
 
-load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
+container_pull(
+    name = "nginx_image",
+    registry = "index.docker.io",
+    repository = "library/nginx",
+    tag = "1-alpine",
+    digest = "sha256:c35699d53f03ff9024ce2c8f6730567f183a15cc27b24453c5d90f0e7542daea",
+)
 
+load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 yarn_install(
     # Name this npm so that Bazel Label references look like @npm//package
     name = "npm",
     exports_directories_only = True,
     package_json = "//frontend:package.json",
     yarn_lock = "//frontend:yarn.lock",
-)
-
-container_pull(
-    name = "nginx_image",
-    registry = "index.docker.io",
-    repository = "library/nginx",
-    tag = "1-alpine",
+    # Needed for `rules_postcss` to be able to resolve its NPM dependencies.
+    strict_visibility = False,
 )
 
 load("@npm//@bazel/postcss:package.bzl", "rules_postcss_dependencies")
