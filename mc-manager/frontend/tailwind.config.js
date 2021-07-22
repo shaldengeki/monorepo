@@ -3,14 +3,14 @@ module.exports = {
   purge: {
     // enabled: process.env.NODE_ENV === 'production',
     enabled: false,
-    purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+    purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html']
   },
   darkMode: 'class', // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {}
   },
   variants: {
-    extend: {},
+    extend: {}
   },
-  plugins: [],
+  plugins: []
 }
