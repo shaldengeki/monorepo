@@ -1,7 +1,6 @@
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
 load("@io_bazel_rules_docker//container:image.bzl", "container_image")
-load("@npm//react-scripts:index.bzl")
 load("@npm//@craco/craco:index.bzl", "craco")
 
 # We don't want to teach react-scripts to include from multiple directories
