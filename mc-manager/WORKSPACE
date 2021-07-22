@@ -92,12 +92,12 @@ yarn_install(
     yarn_lock = "//frontend:yarn.lock",
 )
 
-# load(
-#     "@io_bazel_rules_docker//nodejs:image.bzl",
-#     _nodejs_image_repos = "repositories",
-# )
+container_pull(
+    name = "nginx_image",
+    registry = "index.docker.io",
+    repository = "library/nginx",
+    tag = "1-alpine",
+)
 
-# _nodejs_image_repos()
-
-# load("@npm//@bazel/postcss:package.bzl", "rules_postcss_dependencies")
-# rules_postcss_dependencies()
+load("@npm//@bazel/postcss:package.bzl", "rules_postcss_dependencies")
+rules_postcss_dependencies()
