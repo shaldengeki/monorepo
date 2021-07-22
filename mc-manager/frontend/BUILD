@@ -1,7 +1,7 @@
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("@npm//react-scripts:index.bzl", "react_scripts")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "npm_package_bin")
 load("@io_bazel_rules_docker//container:image.bzl", "container_image")
+load("@npm//react-scripts:index.bzl", "react_scripts")
 
 # We don't want to teach react-scripts to include from multiple directories
 # So we copy everything it wants to read to the output "bin" directory
@@ -63,13 +63,22 @@ react_scripts(
     output_dir = True,
 )
 
+npm_package_bin(
+    name = "style_processed",
+    tool = "@npm//tailwindcss/bin:tailwindcss",
+    data = ["src/index.css", "@npm//@bazel/postcss"],
+    args = ["--input=$(rootpath src/index.css)", "--output=$@"],
+    outs = ["index_processed.css"],
+)
+
 container_image(
     name = "image",
     base = "@nginx_image//image",
-    files = [":build"],
+    files = [":build", ":index_processed.css"],
     directory = "/usr/share/nginx/html_content",
     symlinks = {
         "/usr/share/nginx/html": "/usr/share/nginx/html_content/build",
+        "/usr/share/nginx/html_content/build/index.css": "/usr/share/nginx/html_content/index_processed.css",
     },
 )
 
