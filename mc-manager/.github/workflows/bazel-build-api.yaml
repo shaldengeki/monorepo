@@ -1,4 +1,4 @@
-name: Bazel
+name: Bazel build API
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
     branches: [ main ]
 
 jobs:
-  bazel-build-all:
+  bazel-build-api:
     runs-on: ubuntu-latest      
     steps:
     - uses: actions/checkout@v2
@@ -31,19 +31,8 @@ jobs:
         path: "~/.cache/bazel"
         key: bazel
     - 
-      name: Build everything
-      run: bazel build //...
-    - 
-      name: Build API and worker images
-      run: bazel build //api:image.tar //worker:image.tar    
-    -
-      name: Load and push worker image
-      if: github.event_name != 'pull_request'
-      run: |
-        docker load --input bazel-out/k8-fastbuild/bin/worker/image.tar
-        docker image tag bazel/worker:image shaldengeki/mc-manager-worker:$GITHUB_SHA
-        docker image ls -a
-        docker push shaldengeki/mc-manager-worker:$GITHUB_SHA
+      name: Build API image
+      run: bazel build //api:image.tar
     -
       name: Load and push API image
       if: github.event_name != 'pull_request'
