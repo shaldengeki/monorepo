@@ -9,7 +9,7 @@ on:
     branches: [ main ]
 
 jobs:
-  bazel-build-all:
+  bazel-build-api:
     runs-on: ubuntu-latest      
     steps:
     - uses: actions/checkout@v2
