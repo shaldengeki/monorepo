@@ -97,6 +97,7 @@ container_pull(
     registry = "index.docker.io",
     repository = "library/nginx",
     tag = "1-alpine",
+    digest = "sha256:c35699d53f03ff9024ce2c8f6730567f183a15cc27b24453c5d90f0e7542daea",
 )
 
 load("@npm//@bazel/postcss:package.bzl", "rules_postcss_dependencies")
