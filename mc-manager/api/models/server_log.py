@@ -1,6 +1,6 @@
 import datetime
 
-from app import db
+from ..config import db
 from .server import Server
 from .server_backup import ServerBackup
 
