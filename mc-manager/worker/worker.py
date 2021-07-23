@@ -95,10 +95,16 @@ def run(args):
             ]
             if server_restorations:
                 process_server_restoration(
-                    client, containers, server_restorations[0], host, port, host_path, s3
+                    client,
+                    containers,
+                    server_restorations[0],
+                    host,
+                    port,
+                    host_path,
+                    s3,
                 )
                 break
-                
+
             # Process the first stop on the queue, if any exist.
             server_stops = [
                 server
@@ -106,9 +112,7 @@ def run(args):
                 if server.get("latestLog", {}).get("state") == "stop_queued"
             ]
             if server_stops:
-                process_server_stop(
-                    containers, server[0], host, port
-                )
+                process_server_stop(containers, server[0], host, port)
                 break
 
             # If we get to this point, no actions are on the queue.
@@ -506,6 +510,7 @@ def process_server_stop(
 
     # Mark this server as stopped.
     record_server_status(host, port, server["id"], "stopped")
+
 
 if __name__ == "__main__":
     args = parse_args()
