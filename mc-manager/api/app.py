@@ -31,11 +31,7 @@ CORS(
 
 db = SQLAlchemy(app)
 
-from . import models
-
 migrate = Migrate(app, db)
-
-from . import graphql
 
 
 @app.route("/")
@@ -43,14 +39,20 @@ def index():
     return "API"
 
 
-app.add_url_rule(
-    "/graphql",
-    view_func=GraphQLView.as_view(
-        "graphql",
-        schema=graphql.Schema(models),
-        context={
-            "models": models,
-        },
-        graphiql=True,
-    ),
-)
+if __name__ == "__main__":
+    from gql import Schema
+    import models
+
+    app.add_url_rule(
+        "/graphql",
+        view_func=GraphQLView.as_view(
+            "graphql",
+            schema=Schema(models),
+            context={
+                "models": models,
+            },
+            graphiql=True,
+        ),
+    )
+
+    app.run()

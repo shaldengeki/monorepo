@@ -1,7 +1,15 @@
-// tailwind.config.js
 module.exports = {
-  purge: ['./src/**/*.js', './public/index.html'],
-  darkMode: 'media', // or 'media' or 'class'
+  prefix: '',
+  purge: {
+    // enabled: process.env.NODE_ENV === 'production',
+    enabled: true,
+    content: [
+      './src/**/*.js',
+      './src/**/*.tsx',
+      './public/index.html'
+    ]
+  },
+  darkMode: 'class', // or 'media' or 'class'
   theme: {
     extend: {}
   },

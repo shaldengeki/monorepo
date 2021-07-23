@@ -12,7 +12,7 @@ import requests
 import shutil
 import tarfile
 import time
-from typing import Optional
+from typing import Dict, Optional
 
 
 def parse_args():
@@ -100,7 +100,7 @@ def run(args):
         time.sleep(update_interval)
 
 
-def query_graphql(host: str, port: int, data: dict) -> dict:
+def query_graphql(host: str, port: int, data: Dict) -> Dict:
     url = f"http://{host}:{port}/graphql"
     logging.error(f"Querying GraphQL API at {url} with data {data}")
     response = requests.post(
