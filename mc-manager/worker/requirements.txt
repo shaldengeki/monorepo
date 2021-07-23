@@ -1,5 +1,6 @@
 black
 boto3
 docker
+pre-commit
 pylint
 requests
