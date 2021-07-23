@@ -7,4 +7,5 @@ Flask-SQLAlchemy
 graphql-core
 graphql-server[flask]
 flask-cors
+pre-commit
 black
