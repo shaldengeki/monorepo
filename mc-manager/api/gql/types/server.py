@@ -10,7 +10,7 @@ from graphql import (
 )
 from sqlalchemy import desc
 
-from app import db
+from ...config import db
 from .server_log import serverLogStateEnum
 
 
