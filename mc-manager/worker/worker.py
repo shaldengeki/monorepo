@@ -63,39 +63,60 @@ def run(args):
     s3_bucket = args.s3_bucket
 
     while True:
-        # First, get the list of minecraft servers we should poll status for.
-        servers = fetch_expected_servers(host, port) or []
+        while True:
+            # First, get the list of minecraft servers we should poll status for.
+            servers = fetch_expected_servers(host, port) or []
 
-        running_servers = [
-            server
-            for server in servers
-            if server.get("latestLog", {}).get("state") == "started"
-        ]
+            running_servers = [
+                server
+                for server in servers
+                if server.get("latestLog", {}).get("state") == "started"
+            ]
 
-        # Next, get a list of actively-running servers.
-        client = docker.from_env()
-        containers = client.containers.list()
-        container_names = set(c.name for c in containers)
+            # Next, get a list of actively-running servers.
+            client = docker.from_env()
+            containers = client.containers.list()
+            container_names = set(c.name for c in containers)
 
-        # For each server we expect to poll,
-        # update the status accordingly.
-        for server in running_servers:
-            update_server_status(host, port, server, container_names)
-            back_up_server(
-                host, port, server, host_path, backup_interval, s3, s3_bucket
-            )
-            clean_up_backups(host, port, server, s3)
+            # For each server we expect to poll,
+            # update the status accordingly.
+            for server in running_servers:
+                update_server_status(host, port, server, container_names)
+                back_up_server(
+                    host, port, server, host_path, backup_interval, s3, s3_bucket
+                )
+                clean_up_backups(host, port, server, s3)
 
-        # Next, get the list of minecraft servers that we should restore from backup.
-        server_restorations = [
-            server
-            for server in servers
-            if server.get("latestLog", {}).get("state") == "restore_queued"
-        ]
-        for server in server_restorations:
-            process_server_restoration(
-                client, containers, server, host, port, host_path, s3
-            )
+            # Process the first restoration on the queue, if any exist.
+            server_restorations = [
+                server
+                for server in servers
+                if server.get("latestLog", {}).get("state") == "restore_queued"
+            ]
+            if server_restorations:
+                process_server_restoration(
+                    client,
+                    containers,
+                    server_restorations[0],
+                    host,
+                    port,
+                    host_path,
+                    s3,
+                )
+                break
+
+            # Process the first stop on the queue, if any exist.
+            server_stops = [
+                server
+                for server in servers
+                if server.get("latestLog", {}).get("state") == "stop_queued"
+            ]
+            if server_stops:
+                process_server_stop(containers, server[0], host, port)
+                break
+
+            # If we get to this point, no actions are on the queue.
+            break
 
         time.sleep(update_interval)
 
@@ -338,13 +359,13 @@ def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
             port,
             {
                 "query": """
-                    mutation markServerBackupDeleted($serverId:Int!) {
-                        updateServerBackup(serverId: $serverId, state:deleted) {
+                    mutation markServerBackupDeleted($id:Int!) {
+                        updateServerBackup(id: $id, state:deleted) {
                             id
                             state
                         }
                     }""",
-                "variables": json.dumps({"serverId": backup["id"]}),
+                "variables": json.dumps({"id": backup["id"]}),
                 "operationName": "markServerBackupDeleted",
             },
         )
@@ -464,6 +485,31 @@ def start_container(
             "MEMORY": server["memory"],
         },
     )
+
+
+def process_server_stop(
+    containers: list,
+    server: dict,
+    host: str,
+    port: int,
+) -> None:
+    logging.error(f"Processing server stop for {server['name']}")
+
+    # Set the state of this server, so nobody else picks it up.
+    record_server_status(host, port, server["id"], "stop_started")
+
+    # Stop the current server if it exists.
+    matching_container = next(
+        (container for container in containers if container.name == server["name"]),
+        None,
+    )
+    if matching_container is not None:
+        logging.error(f"Stopping existing container with name {server['name']}")
+        matching_container.stop()
+        matching_container.remove()
+
+    # Mark this server as stopped.
+    record_server_status(host, port, server["id"], "stopped")
 
 
 if __name__ == "__main__":

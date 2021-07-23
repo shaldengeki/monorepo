@@ -33,6 +33,12 @@ serverLogStateEnum = GraphQLEnumType(
             "restore_started",
             description="Server restoration from backup is in-progress",
         ),
+        "stop_queued": GraphQLEnumValue(
+            "stop_queued", description="Server is queued to be stopped"
+        ),
+        "stop_started": GraphQLEnumValue(
+            "stop_started", description="Server is being stopped"
+        ),
         "stopped": GraphQLEnumValue("stopped", description="Server is not running"),
     },
 )
