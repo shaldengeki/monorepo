@@ -20,11 +20,12 @@ type ServerControlsProps = {
 };
 
 const ServerControls = ({ server }: ServerControlsProps) => {
+  const [enqueueServerStop, { data: enqueueData, loading: enqueueLoading, error: enqueueError }] = useMutation(ENQUEUE_SERVER_STOP)
+
   const errorDisplay = <h1>Error loading server info!</h1>
 
   if (!server) return errorDisplay
 
-  const [enqueueServerStop, { data: enqueueData, loading: enqueueLoading, error: enqueueError }] = useMutation(ENQUEUE_SERVER_STOP)
   if (enqueueLoading) return (<p>🕜Enqueueing stop...</p>)
   if (enqueueError) return (<p>❌Enqueueing stop failed</p>)
 
