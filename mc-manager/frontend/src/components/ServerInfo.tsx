@@ -1,55 +1,15 @@
 import * as React from 'react'
-import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+
+import type Server from '../types/Server'
 
 import { timeAgo, displayBackup, displayLog, displayServerUrl } from '../Utils'
 
-const GET_SERVER_INFO = gql`
-    query ServerInfo($name: String) {
-        servers(name: $name) {
-            id
-            created
-            createdBy
-            memory
-            motd
-            port
-            zipfile
-            latestLog {
-                created
-                state
-                error
-                backup {
-                  created
-                  state
-                  error
-                  remotePath
-                }
-            }
-            latestBackup {
-                created
-                state
-                error
-                remotePath
-            }
-        }
-    }
-`
+type ServerInfoProps = {server?: Server};
 
-type ServerInfoProps = {name: string};
+const ServerInfo = ({ server }: ServerInfoProps) => {
+  const errorDisplay = <h1>Error loading server info!</h1>
 
-const ServerInfo = ({ name }: ServerInfoProps) => {
-  const { data, loading, error } = useQuery(GET_SERVER_INFO, {
-    variables: { name },
-    pollInterval: 60_000
-  })
-
-  const loadingDisplay = <h1>Loading server...</h1>
-  const errorDisplay = <h1>Error loading server!</h1>
-
-  if (loading) return loadingDisplay
-  if (error) return errorDisplay
-
-  const server = data.servers[0]
+  if (!server) return errorDisplay
 
   return (
     <div>
