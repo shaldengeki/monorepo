@@ -1,14 +1,14 @@
 from graphql_server.flask import GraphQLView
 
 from .config import app
-from . import gql
+from .gql import Schema
 from . import models
 
 app.add_url_rule(
     "/graphql",
     view_func=GraphQLView.as_view(
         "graphql",
-        schema=gql.Schema(models),
+        schema=Schema(models),
         context={
             "models": models,
         },
