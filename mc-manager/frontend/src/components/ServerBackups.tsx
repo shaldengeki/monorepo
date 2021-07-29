@@ -40,11 +40,11 @@ const ENQUEUE_SERVER_BACKUP = gql`
 `
 
 type ServerBackup = {
-    created: string,
-    state: string,
-    error?: string,
-    restore: any
-  }
+  created: string,
+  state: string,
+  error?: string,
+  restore: any
+};
 
 type ServerBackupsProps = {
   name?: string

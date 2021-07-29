@@ -112,7 +112,7 @@ def run(args):
                 if server.get("latestLog", {}).get("state") == "stop_queued"
             ]
             if server_stops:
-                process_server_stop(containers, server[0], host, port)
+                process_server_stop(containers, server_stops[0], host, port)
                 break
 
             # If we get to this point, no actions are on the queue.
