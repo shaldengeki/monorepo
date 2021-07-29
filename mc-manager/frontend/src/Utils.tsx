@@ -56,6 +56,10 @@ export const serverLogStatusVerb = (status: string): string => {
     return 'queueing restoration from backup'
   } else if (status === 'restore_started') {
     return 'restoring backup'
+  } else if (status === 'stop_queued') {
+    return 'queueing stop'
+  } else if (status === 'stop_started') {
+    return 'stop in progress'
   } else if (status === 'stopped') {
     return 'stopped'
   } else {
