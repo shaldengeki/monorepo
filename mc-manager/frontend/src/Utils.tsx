@@ -36,6 +36,10 @@ export const serverLogStatusSymbol = (status: string): string => {
     return '⏳'
   } else if (status === 'restore_started') {
     return '🚧'
+  } else if (status === 'stop_queued') {
+    return '🧨'
+  } else if (status === 'stop_started') {
+    return '🚨'
   } else if (status === 'stopped') {
     return '🔴'
   } else {
