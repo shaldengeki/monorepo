@@ -41,8 +41,8 @@ const ServerControls = ({ server }: ServerControlsProps) => {
 
   const stopEnqueued = enqueueData && enqueueData.backup && enqueueData.backup.id
   if (serverLatestStateIsStopping || stopEnqueued) return (<p>✅Stop enqueued!</p>)
-  if (server.latestLog && server.latestLog.state === 'stopped') return (null)
-  return stopButton
+  if (server.latestLog && server.latestLog.state === 'started') return stopButton
+  return (null)
 }
 
 export default ServerControls
