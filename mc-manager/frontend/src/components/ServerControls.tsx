@@ -19,7 +19,7 @@ const ENQUEUE_SERVER_START = gql`
     mutation EnqueueServerStart($serverId:Int!) {
         createServerLog(
             serverId:$serverId,
-            state:start_started,
+            state:created,
         ) {
             state
         }

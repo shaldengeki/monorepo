@@ -8,13 +8,16 @@ ENV REACT_APP_API_PATH=graphql
 
 WORKDIR /usr/src/app
 
-COPY package-lock.json ./
+RUN apk update && \
+    apk add yarn
+
+COPY yarn.lock ./
 COPY package.json ./
 
-RUN npm install
+RUN yarn install
 
 COPY . .
 
-RUN npm run build
+RUN yarn run craco build
 
-CMD npm run start
+CMD yarn run craco start

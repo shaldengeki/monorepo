@@ -138,12 +138,12 @@ def run(args):
 
 def query_graphql(host: str, port: int, data: Dict) -> Dict:
     url = f"http://{host}:{port}/graphql"
-    logger.info(f"Querying GraphQL API at {url} with data {data}")
+    logger.error(f"Querying GraphQL API at {url} with data {data}")
     response = requests.post(
         url,
         data=data,
     ).json()
-    logger.info(f"Response: {response}")
+    logger.error(f"Response: {response}")
     return response
 
 
@@ -157,7 +157,7 @@ def split_s3_path(path: str) -> tuple:
 
 
 def fetch_expected_servers(host: str, port: int) -> list:
-    logger.info(f"Fetching server list")
+    logger.error(f"Fetching server list")
     response = query_graphql(
         host,
         port,
@@ -195,13 +195,13 @@ def fetch_expected_servers(host: str, port: int) -> list:
 def update_server_status(
     host: str, port: int, server: dict, container_names: list
 ) -> dict:
-    logger.info(f"Updating status for server {server['name']}")
+    logger.error(f"Updating status for server {server['name']}")
     if server["name"] not in container_names:
         logger.warning(f"Server {server['name']} is no longer running")
         # Record that this server is no longer running.
         return record_server_status(host, port, int(server["id"]), "stopped")
     else:
-        logger.info(f"Server {server['name']} is running")
+        logger.error(f"Server {server['name']} is running")
         # Record that this server is running.
         return record_server_status(host, port, int(server["id"]), "started")
 
@@ -209,7 +209,7 @@ def update_server_status(
 def record_server_status(
     host: str, port: int, server_id: int, status: str, backup_id: str = None
 ) -> dict:
-    logger.info(f"Recording server status")
+    logger.error(f"Recording server status")
     response = query_graphql(
         host,
         port,
@@ -249,13 +249,13 @@ def back_up_server(
             datetime.datetime.utcnow().timestamp() - latest_backup_time
         )
         if seconds_since_backup < backup_interval:
-            logger.info(
+            logger.error(
                 f"Last backup for server {server['name']} was performed {seconds_since_backup}s ago, skipping this round"
             )
             return
 
     # Create a new server backup entry.
-    logger.info(f"Recording server backup entry")
+    logger.error(f"Recording server backup entry")
     response = query_graphql(
         host,
         port,
@@ -274,7 +274,7 @@ def back_up_server(
 
     # Start backing the server up.
     # First, zip up the state of the server.
-    logger.info(f"Zipping up server for backup")
+    logger.error(f"Zipping up server for backup")
     file_name = f"{server['name']}-{datetime.datetime.utcnow().strftime('%Y-%m-%d-%H-%M-%S')}.tar.gz"
     file_path = os.path.join("/tmp", file_name)
     os.chdir(host_path)
@@ -284,7 +284,7 @@ def back_up_server(
     remote_path = f"s3://{s3_bucket}/{server['name']}/{file_name}"
 
     # Next, upload the zipfile to S3.
-    logger.info(f"Uploading zipped backup at {file_path} to s3 at {remote_path}")
+    logger.error(f"Uploading zipped backup at {file_path} to s3 at {remote_path}")
     error = None
     try:
         s3.meta.client.upload_file(
@@ -295,12 +295,12 @@ def back_up_server(
         error = e.message
 
     # Either way, delete the temporary backup.
-    logger.info(f"Deleting temporary backup at {file_path}")
+    logger.error(f"Deleting temporary backup at {file_path}")
     os.remove(file_path)
 
     if error is None:
         # If successful, record that the backup is complete.
-        logger.info(f"Recording server backup completed")
+        logger.error(f"Recording server backup completed")
         state = "completed"
     else:
         logger.error(f"Recording server backup failed")
@@ -337,7 +337,7 @@ def back_up_server(
 
 def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
     # Get this server and the list of backups that exist.
-    logger.info(f"Fetching backups for server {server['name']}")
+    logger.error(f"Fetching backups for server {server['name']}")
     response = query_graphql(
         host,
         port,
@@ -362,13 +362,13 @@ def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
 
     # Select just the N oldest backups for this server.
     backups = response.get("data", {}).get("serverBackups", [])
-    logger.info(f"{len(backups)} backups found")
+    logger.error(f"{len(backups)} backups found")
     backups = sorted(backups, key=lambda b: b["created"], reverse=True)
     to_delete = backups[7:]
 
     # Delete those backups.
     for backup in to_delete:
-        logger.info(f"Marking backup at {backup['remotePath']} as deleted")
+        logger.error(f"Marking backup at {backup['remotePath']} as deleted")
         response = query_graphql(
             host,
             port,
@@ -390,7 +390,7 @@ def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
             )
             continue
 
-        logger.info(f"Deleting backup at {backup['remotePath']}")
+        logger.error(f"Deleting backup at {backup['remotePath']}")
         remote_path = backup["remotePath"]
         bucket, key = split_s3_path(remote_path)
         s3.meta.client.delete_object(Bucket=bucket, Key=key)
@@ -406,7 +406,7 @@ def process_server_restoration(
     host_path: str,
     s3,
 ) -> None:
-    logger.info(f"Processing server restoration for {server['name']}")
+    logger.error(f"Processing server restoration for {server['name']}")
     backup_id = server.get("latestLog", {}).get("backup", {}).get("id")
     if backup_id is None:
         logger.error(
@@ -429,7 +429,7 @@ def process_server_restoration(
         None,
     )
     if matching_container is not None:
-        logger.info(f"Stopping existing container with name {server['name']}")
+        logger.error(f"Stopping existing container with name {server['name']}")
         matching_container.stop()
         matching_container.remove()
 
@@ -448,11 +448,11 @@ def restore_server(
 ) -> None:
     # Delete any currently-existing files.
     server_path = f"{host_path}/{server['name']}"
-    logger.info(f"Deleting existing files at {server_path}")
+    logger.error(f"Deleting existing files at {server_path}")
     shutil.rmtree(server_path)
 
     # Extract the backup to the canonical location.
-    logger.info(f"Extracting backup to canonical location at {host_path}")
+    logger.error(f"Extracting backup to canonical location at {host_path}")
     os.chdir(host_path)
     with tarfile.open(backup_location, "r:gz") as tar:
         tar.extractall()
@@ -465,7 +465,7 @@ def restore_server(
 def download_backup(s3_client, server: dict) -> str:
     backup_path = server.get("latestLog", {}).get("backup", {}).get("remotePath")
     bucket, key = split_s3_path(backup_path)
-    logger.info(f"Downloading backup from s3://{bucket}/{key} to /tmp")
+    logger.error(f"Downloading backup from s3://{bucket}/{key} to /tmp")
 
     filename = os.path.basename(key)
     destination = f"/tmp/{filename}"
@@ -480,7 +480,7 @@ def process_server_start(
     port: int,
     host_path: str,
 ) -> None:
-    logger.info(f"Processing server start for {server['name']}")
+    logger.error(f"Processing server start for {server['name']}")
 
     # Set the state of this server, so nobody else picks it up.
     record_server_status(host, port, server["id"], "start_started")
@@ -495,7 +495,7 @@ def process_server_start(
 def start_container(
     docker_client: docker.DockerClient, server: dict, host_path: str
 ) -> None:
-    logger.info(
+    logger.error(
         f"Starting container for server {server['name']} on port {server['port']}: {server}"
     )
     docker_client.containers.run(
@@ -527,7 +527,7 @@ def process_server_stop(
     host: str,
     port: int,
 ) -> None:
-    logger.info(f"Processing server stop for {server['name']}")
+    logger.error(f"Processing server stop for {server['name']}")
 
     # Set the state of this server, so nobody else picks it up.
     record_server_status(host, port, server["id"], "stop_started")
@@ -538,7 +538,7 @@ def process_server_stop(
         None,
     )
     if matching_container is not None:
-        logger.info(f"Stopping existing container with name {server['name']}")
+        logger.error(f"Stopping existing container with name {server['name']}")
         matching_container.stop()
         matching_container.remove()
 
