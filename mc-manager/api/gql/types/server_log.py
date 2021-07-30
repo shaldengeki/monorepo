@@ -23,6 +23,9 @@ serverLogStateEnum = GraphQLEnumType(
         "created": GraphQLEnumValue(
             "created", description="Server is queued to be started"
         ),
+        "start_started": GraphQLEnumValue(
+            "start_started", description="Server is starting"
+        ),
         "started": GraphQLEnumValue(
             "started", description="Server is currently running"
         ),

@@ -30,6 +30,8 @@ export const timeAgo = (epochTime: number): string => {
 export const serverLogStatusSymbol = (status: string): string => {
   if (status === 'started') {
     return '🟢'
+  } else if (status === 'start_started') {
+    return '⏳'
   } else if (status === 'created') {
     return '🚧'
   } else if (status === 'restore_queued') {
@@ -50,6 +52,8 @@ export const serverLogStatusSymbol = (status: string): string => {
 export const serverLogStatusVerb = (status: string): string => {
   if (status === 'started') {
     return 'running'
+  } else if (status === 'start_started') {
+    return 'queueing server start'
   } else if (status === 'created') {
     return 'initializing'
   } else if (status === 'restore_queued') {
