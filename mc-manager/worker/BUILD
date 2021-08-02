@@ -8,6 +8,12 @@ _RUNTIME_DEPS = [
     requirement("requests")
 ]
 
+py_library(
+    name = "library",
+    srcs = ["worker.py"],
+    visibility = ["//visibility:public"],
+)
+
 py_binary(
     name = "binary",
     srcs = ["worker.py"],
