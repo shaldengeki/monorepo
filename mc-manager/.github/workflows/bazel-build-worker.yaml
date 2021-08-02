@@ -10,7 +10,7 @@ on:
 
 jobs:
   bazel-build-worker:
-    runs-on: ubuntu-latest      
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - uses: bazelbuild/setup-bazelisk@v1
@@ -24,15 +24,18 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - 
+    -
       name: Mount bazel cache
       uses: actions/cache@v2
       with:
         path: "~/.cache/bazel"
         key: bazel
-    - 
+    -
       name: Build worker image
       run: bazel build //worker:image.tar
+    -
+      name: Run worker tests
+      run: bazel test //worker/...
     -
       name: Load and push worker image
       if: github.event_name != 'pull_request'
