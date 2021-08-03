@@ -41,5 +41,15 @@ def test_fetch_expected_servers_empty(monkeypatch):
     assert actual == expected
 
 
+def test_fetch_expected_servers_error(monkeypatch):
+    def mock_post(*args, **kwargs):
+        return MockResponse({"error": "test failure"})
+
+    monkeypatch.setattr(requests, "post", mock_post)
+
+    with pytest.raises(ValueError):
+        fetch_expected_servers("fake-host", 0)
+
+
 if __name__ == "__main__":
     raise SystemExit(pytest.main())

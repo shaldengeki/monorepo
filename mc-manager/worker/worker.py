@@ -189,6 +189,10 @@ def fetch_expected_servers(host: str, port: int) -> list:
             "operationName": "FetchServers",
         },
     )
+
+    if "error" in response:
+        raise ValueError(f"Failed to fetch servers with error: {response['error']}")
+
     return response.get("data", {}).get("servers", [])
 
 
