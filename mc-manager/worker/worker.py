@@ -12,7 +12,7 @@ import requests
 import shutil
 import tarfile
 import time
-from typing import Any, NoReturn
+from typing import Any, Dict, List, NoReturn
 
 logging.basicConfig(
     format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.WARNING
@@ -136,7 +136,7 @@ def run(args) -> NoReturn:
         time.sleep(update_interval)
 
 
-def query_graphql(host: str, port: int, data: dict[str, Any]) -> dict[str, Any]:
+def query_graphql(host: str, port: int, data: Dict[str, Any]) -> Dict[str, Any]:
     url = f"http://{host}:{port}/graphql"
     logger.error(f"Querying GraphQL API at {url} with data {data}")
     response = requests.post(
@@ -156,7 +156,7 @@ def split_s3_path(path: str) -> tuple:
     return (bucket, key)
 
 
-def fetch_expected_servers(host: str, port: int) -> list[dict[str, Any]]:
+def fetch_expected_servers(host: str, port: int) -> List[Dict[str, Any]]:
     logger.error(f"Fetching server list")
     response = query_graphql(
         host,
@@ -197,8 +197,8 @@ def fetch_expected_servers(host: str, port: int) -> list[dict[str, Any]]:
 
 
 def update_server_status(
-    host: str, port: int, server: dict[str, Any], container_names: list
-) -> dict[str, Any]:
+    host: str, port: int, server: Dict[str, Any], container_names: list
+) -> Dict[str, Any]:
     logger.error(f"Updating status for server {server['name']}")
     if server["name"] not in container_names:
         logger.warning(f"Server {server['name']} is no longer running")
@@ -212,7 +212,7 @@ def update_server_status(
 
 def record_server_status(
     host: str, port: int, server_id: int, status: str, backup_id: str = None
-) -> dict[str, Any]:
+) -> Dict[str, Any]:
     logger.error(f"Recording server status")
     response = query_graphql(
         host,
@@ -245,7 +245,7 @@ def record_server_status(
 def back_up_server(
     host: str,
     port: int,
-    server: dict[str, Any],
+    server: Dict[str, Any],
     host_path: str,
     backup_interval: int,
     s3,
@@ -346,8 +346,8 @@ def back_up_server(
 
 
 def clean_up_backups(
-    host: str, port: int, server: dict[str, Any], s3
-) -> list[dict[str, Any]]:
+    host: str, port: int, server: Dict[str, Any], s3
+) -> List[Dict[str, Any]]:
     # Get this server and the list of backups that exist.
     logger.error(f"Fetching backups for server {server['name']}")
     response = query_graphql(
@@ -411,8 +411,8 @@ def clean_up_backups(
 
 def process_server_restoration(
     client: docker.DockerClient,
-    containers: list[docker.Container],
-    server: dict[str, Any],
+    containers: List[docker.models.containers.Container],
+    server: Dict[str, Any],
     host: str,
     port: int,
     host_path: str,
@@ -455,7 +455,7 @@ def process_server_restoration(
 def restore_server(
     docker_client: docker.DockerClient,
     backup_location: str,
-    server: dict[str, Any],
+    server: Dict[str, Any],
     host_path: str,
 ) -> None:
     # Delete any currently-existing files.
@@ -474,7 +474,7 @@ def restore_server(
     return
 
 
-def download_backup(s3_client, server: dict[str, Any]) -> str:
+def download_backup(s3_client, server: Dict[str, Any]) -> str:
     backup_path = server.get("latestLog", {}).get("backup", {}).get("remotePath")
     bucket, key = split_s3_path(backup_path)
     logger.error(f"Downloading backup from s3://{bucket}/{key} to /tmp")
@@ -487,7 +487,7 @@ def download_backup(s3_client, server: dict[str, Any]) -> str:
 
 def process_server_start(
     client: docker.DockerClient,
-    server: dict[str, Any],
+    server: Dict[str, Any],
     host: str,
     port: int,
     host_path: str,
@@ -505,7 +505,7 @@ def process_server_start(
 
 
 def start_container(
-    docker_client: docker.DockerClient, server: dict[str, Any], host_path: str
+    docker_client: docker.DockerClient, server: Dict[str, Any], host_path: str
 ) -> None:
     logger.error(
         f"Starting container for server {server['name']} on port {server['port']}: {server}"
@@ -534,8 +534,8 @@ def start_container(
 
 
 def process_server_stop(
-    containers: list[docker.Container],
-    server: dict[str, Any],
+    containers: List[docker.models.containers.Container],
+    server: Dict[str, Any],
     host: str,
     port: int,
 ) -> None:
