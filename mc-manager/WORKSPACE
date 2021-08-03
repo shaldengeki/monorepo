@@ -48,7 +48,7 @@ container_pull(
     name = "py3_image",
     registry = "index.docker.io",
     repository = "library/python",
-    tag = "3.9",
+    tag = "3.9-alpine",
 )
 
 register_toolchains(
