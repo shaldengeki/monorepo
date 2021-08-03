@@ -12,7 +12,7 @@ import requests
 import shutil
 import tarfile
 import time
-from typing import Dict
+from typing import Any, Dict, List, NoReturn
 
 logging.basicConfig(
     format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.WARNING
@@ -20,7 +20,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Update minecraft server status.")
     parser.add_argument(
         "--api-host",
@@ -58,7 +58,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def run(args):
+def run(args) -> NoReturn:
     host, port = args.api_host, args.api_port
     update_interval = args.update_interval
 
@@ -136,7 +136,7 @@ def run(args):
         time.sleep(update_interval)
 
 
-def query_graphql(host: str, port: int, data: Dict) -> Dict:
+def query_graphql(host: str, port: int, data: Dict[str, Any]) -> Dict[str, Any]:
     url = f"http://{host}:{port}/graphql"
     logger.error(f"Querying GraphQL API at {url} with data {data}")
     response = requests.post(
@@ -156,7 +156,7 @@ def split_s3_path(path: str) -> tuple:
     return (bucket, key)
 
 
-def fetch_expected_servers(host: str, port: int) -> list:
+def fetch_expected_servers(host: str, port: int) -> List[Dict[str, Any]]:
     logger.error(f"Fetching server list")
     response = query_graphql(
         host,
@@ -197,8 +197,8 @@ def fetch_expected_servers(host: str, port: int) -> list:
 
 
 def update_server_status(
-    host: str, port: int, server: dict, container_names: list
-) -> dict:
+    host: str, port: int, server: Dict[str, Any], container_names: list
+) -> Dict[str, Any]:
     logger.error(f"Updating status for server {server['name']}")
     if server["name"] not in container_names:
         logger.warning(f"Server {server['name']} is no longer running")
@@ -212,7 +212,7 @@ def update_server_status(
 
 def record_server_status(
     host: str, port: int, server_id: int, status: str, backup_id: str = None
-) -> dict:
+) -> Dict[str, Any]:
     logger.error(f"Recording server status")
     response = query_graphql(
         host,
@@ -245,7 +245,7 @@ def record_server_status(
 def back_up_server(
     host: str,
     port: int,
-    server: dict,
+    server: Dict[str, Any],
     host_path: str,
     backup_interval: int,
     s3,
@@ -345,7 +345,9 @@ def back_up_server(
         logger.error(f"Updating server backup failed: {response['errors']}")
 
 
-def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
+def clean_up_backups(
+    host: str, port: int, server: Dict[str, Any], s3
+) -> List[Dict[str, Any]]:
     # Get this server and the list of backups that exist.
     logger.error(f"Fetching backups for server {server['name']}")
     response = query_graphql(
@@ -409,8 +411,8 @@ def clean_up_backups(host: str, port: int, server: dict, s3) -> list:
 
 def process_server_restoration(
     client: docker.DockerClient,
-    containers: list,
-    server: dict,
+    containers: List[docker.models.containers.Container],
+    server: Dict[str, Any],
     host: str,
     port: int,
     host_path: str,
@@ -453,7 +455,7 @@ def process_server_restoration(
 def restore_server(
     docker_client: docker.DockerClient,
     backup_location: str,
-    server: dict,
+    server: Dict[str, Any],
     host_path: str,
 ) -> None:
     # Delete any currently-existing files.
@@ -472,7 +474,7 @@ def restore_server(
     return
 
 
-def download_backup(s3_client, server: dict) -> str:
+def download_backup(s3_client, server: Dict[str, Any]) -> str:
     backup_path = server.get("latestLog", {}).get("backup", {}).get("remotePath")
     bucket, key = split_s3_path(backup_path)
     logger.error(f"Downloading backup from s3://{bucket}/{key} to /tmp")
@@ -485,7 +487,7 @@ def download_backup(s3_client, server: dict) -> str:
 
 def process_server_start(
     client: docker.DockerClient,
-    server: dict,
+    server: Dict[str, Any],
     host: str,
     port: int,
     host_path: str,
@@ -503,7 +505,7 @@ def process_server_start(
 
 
 def start_container(
-    docker_client: docker.DockerClient, server: dict, host_path: str
+    docker_client: docker.DockerClient, server: Dict[str, Any], host_path: str
 ) -> None:
     logger.error(
         f"Starting container for server {server['name']} on port {server['port']}: {server}"
@@ -532,8 +534,8 @@ def start_container(
 
 
 def process_server_stop(
-    containers: list,
-    server: dict,
+    containers: List[docker.models.containers.Container],
+    server: Dict[str, Any],
     host: str,
     port: int,
 ) -> None:
