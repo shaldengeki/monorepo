@@ -19,6 +19,7 @@ services:
       - DB_USERNAME
       - DB_PASSWORD
       - DATABASE_NAME
+    restart: always
   migration:
     build:
       context: ./api
@@ -54,6 +55,7 @@ services:
     depends_on:
       - api
     command: ["./wait-for", "$API_HOST:$API_PORT", "--", "python", "worker.py"]
+    restart: always
   pg:
     image: postgres:alpine
     restart: always
@@ -79,3 +81,4 @@ services:
       - REACT_APP_API_PORT
       - REACT_APP_API_PATH
       - PORT=5001
+    restart: always
