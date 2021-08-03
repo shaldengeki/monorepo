@@ -233,6 +233,12 @@ def record_server_status(
             "operationName": "createLog",
         },
     )
+
+    if "error" in response:
+        raise ValueError(
+            f"Failed to record server status with error: {response['error']}"
+        )
+
     return response.get("data", {}).get("createServerLog")
 
 

@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from worker.worker import fetch_expected_servers, split_s3_path
+from worker.worker import fetch_expected_servers, record_server_status, split_s3_path
 
 
 class MockResponse:
@@ -49,6 +49,40 @@ def test_fetch_expected_servers_error(monkeypatch):
 
     with pytest.raises(ValueError):
         fetch_expected_servers("fake-host", 0)
+
+
+def test_record_server_status(monkeypatch):
+    def mock_post(*args, **kwargs):
+        return MockResponse(
+            {"data": {"createServerLog": {"id": 1, "created": 1, "state": "created"}}}
+        )
+
+    monkeypatch.setattr(requests, "post", mock_post)
+
+    expected = {"id": 1, "created": 1, "state": "created"}
+    actual = record_server_status("fake-host", 0, 1, "created")
+    assert actual == expected
+
+
+def test_record_server_status_empty(monkeypatch):
+    def mock_post(*args, **kwargs):
+        return MockResponse({})
+
+    monkeypatch.setattr(requests, "post", mock_post)
+
+    expected = None
+    actual = record_server_status("fake-host", 0, 1, "created")
+    assert actual == expected
+
+
+def test_record_server_status_error(monkeypatch):
+    def mock_post(*args, **kwargs):
+        return MockResponse({"error": "test failure"})
+
+    monkeypatch.setattr(requests, "post", mock_post)
+
+    with pytest.raises(ValueError):
+        record_server_status("fake-host", 0, 1, "created")
 
 
 if __name__ == "__main__":
