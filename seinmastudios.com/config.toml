@@ -1,6 +1,6 @@
 baseurl = "https://seinmastudios.com"
 title = "and some change"
-copyright = "Copyright &copy; 2020 - Charles Guo"
+copyright = "Copyright &copy; 2021 - Charles OuGuo"
 languageCode = "en-us"
 canonifyurls = true
 theme = "hugo-kiera"
@@ -15,7 +15,7 @@ pygmentsCodeFences = true
 
 # Note: to disable a social network icon delete or comment out the corresponding line
 [author]
-    name = "Charles Guo"
+    name = "Charles OuGuo"
     github = "shaldengeki"
     #gitlab = "username"
     #linkedin = "username"
@@ -28,7 +28,7 @@ pygmentsCodeFences = true
 
 [params]
     tagline = ""
-    description = "Charles Guo's personal blog"
+    description = "Charles OuGuo's personal blog"
     #images = [""] #This is used for opengraph/twitter cards.
     customCSS = []  #Optional Customised CSS
     #favicon = ""
