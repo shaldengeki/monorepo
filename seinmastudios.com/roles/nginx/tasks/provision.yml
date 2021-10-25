@@ -8,29 +8,29 @@
   get_url:
     url: http://nginx.org/download/nginx-{{nginx_version}}.tar.gz
     dest: /tmp/nginx-{{nginx_version}}.tar.gz
-  when: nginx_present | failed
+  when: nginx_present is failed
 
 - name: Extract nginx
   unarchive:
     src: /tmp/nginx-{{nginx_version}}.tar.gz
     dest: /tmp
     remote_src: yes
-  when: nginx_present | failed
+  when: nginx_present is failed
 
 - name: Configure nginx
   command: "./configure --prefix={{nginx_prefix}} --sbin-path={{nginx_sbin_path}} --conf-path={{nginx_conf_path}}/nginx.conf --error-log-path={{nginx_error_path}} --http-log-path={{nginx_log_path}} --pid-path={{nginx_pid_path}} --lock-path={{nginx_lock_path}} --user={{nginx_user}} --group={{nginx_group}} --with-file-aio --with-ipv6 --with-http_ssl_module --with-http_flv_module --with-http_mp4_module --with-http_gunzip_module --with-http_gzip_static_module --with-pcre --with-http_v2_module"
   args:
     chdir: /tmp/nginx-{{nginx_version}}
-  when: nginx_present | failed
+  when: nginx_present is failed
 
 - name: Compile nginx
   make:
     chdir: /tmp/nginx-{{nginx_version}}
-  when: nginx_present | failed
+  when: nginx_present is failed
 
 - name: Install nginx
   become: true
   make:
     chdir: /tmp/nginx-{{nginx_version}}
     target: install
-  when: nginx_present | failed
+  when: nginx_present is failed
