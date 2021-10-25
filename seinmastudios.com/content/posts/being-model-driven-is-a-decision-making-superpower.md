@@ -6,6 +6,8 @@ draft: true
 
 Something I find myself doing regularly at work is needing to make decisions about what to work on, or how much time to spend working on something. When this happens, I've recently found it useful to create a model of the problem or decision, to guide my decisions.
 
+<!-- go, 2021-10-24: Who is this for? -->
+
 # What does "being model-driven" mean?
 
 I think an example is useful here. My team at work is responsible for maintaining a bunch of tools that engineers at the company use on a daily basis. We were planning on making some structural changes to a codebase, and some of those changes were probably going to break a tool that we knew some folks used. So we were faced with a few questions:
@@ -25,6 +27,10 @@ Once we had this model, we plugged in optimistic and pessimistic guesstimates fo
 
 To get a precise estimate, we spent roughly a week gathering data to measure each of these parameters. It became clear pretty quickly that we weren't going to be able to justify anywhere near the amount of engineering time we'd need to fix it going forward, so we announced that we were going to deprecate it. This let us avoid nearly a month of wasted work.
 
+<!-- go, 2021-10-24: maybe another example here? -->
+
+<!-- go, 2021-10-24: maybe a general how-to? steps to achieving this? -->
+
 # Why is this useful?
 
 Obviously that's great, but there are many other reasons why being model-driven is a useful approach. First, it forces you to clarify your thinking. To put a model like this together, you have to make totally precise what you're including and excluding. If you're including things that other people don't think are important, or leaving out things that other people think are important, then a model lets you explicitly assess everything and clearly trade off between them.
@@ -40,6 +46,8 @@ Finally, developing a model for decision-making often helps you quantify the (ex
 - Difficult-to-measure parameters
 
 # Appendix: doesn't everyone do this?
+
+<!-- go, 2021-10-24: add additional sourcing here; want to show this isn't a thing that's necessarily common -->
 
 You'd be surprised! I've personally found that the overwhelming majority of the time, decisions at work are made on the basis of individuals' hazy, ill-specified intuitions.
 
