@@ -1,0 +1,67 @@
+version: '3'
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: shaldengeki/proto-registry
+    ports:
+      - "17283:17283"
+    volumes:
+      - ./api:/usr/src/app
+    command: ["./scripts/wait-for-postgres.sh", "flask", "run", "--host", "0.0.0.0", "--port", "$API_PORT"]
+    environment:
+      - FRONTEND_HOST
+      - FRONTEND_PORT
+      - API_PORT
+      - FLASK_ENV
+      - DB_HOST
+      - DB_USERNAME
+      - DB_PASSWORD
+      - DATABASE_NAME
+    restart: always
+  migration:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: shaldengeki/proto-registry
+    volumes:
+      - ./api:/usr/src/app
+    command: ["./scripts/wait-for-postgres.sh", "flask", "db", "upgrade"]
+    environment:
+      - FLASK_ENV
+      - DB_HOST
+      - DB_USERNAME
+      - DB_PASSWORD
+      - DATABASE_NAME
+    depends_on:
+      - pg
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    image: shaldengeki/proto-registry-worker
+    volumes:
+      - ./worker:/usr/src/app
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/proto-registry:/var/proto-registry
+    environment:
+      - API_HOST
+      - API_PORT
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - HOST_PATH
+      - S3_BUCKET
+    depends_on:
+      - api
+    command: ["./wait-for", "$API_HOST:$API_PORT", "--", "python", "worker.py"]
+    restart: always
+  pg:
+    image: postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_DB
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data

@@ -1,0 +1,12 @@
+Flask
+Flask-Migrate
+importlib-metadata
+importlib-resources
+typing-extensions
+psycopg2
+pylint
+sqlalchemy
+Flask-SQLAlchemy
+flask-cors
+pre-commit
+black
