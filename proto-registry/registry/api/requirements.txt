@@ -1,12 +1,12 @@
+black
 Flask
+flask-cors
 Flask-Migrate
+Flask-SQLAlchemy
 importlib-metadata
 importlib-resources
-typing-extensions
+pre-commit
 psycopg2
 pylint
 sqlalchemy
-Flask-SQLAlchemy
-flask-cors
-pre-commit
-black
+typing-extensions

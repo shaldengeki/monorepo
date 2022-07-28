@@ -10,20 +10,22 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '009086ba9d09'
-down_revision = '86ac1c2d94b4'
+revision = "009086ba9d09"
+down_revision = "86ac1c2d94b4"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
     op.create_table(
-        'subject_version_references',
-        sa.Column('referrer_id', sa.Integer),
-        sa.Column('referred_id', sa.Integer),
+        "subject_version_references",
+        sa.Column("referrer_id", sa.Integer),
+        sa.Column("referred_id", sa.Integer),
     )
     op.create_unique_constraint(
-        "subject_version_references_referrer_referred", "subject_version_references", ["referrer_id", "referred_id"]
+        "subject_version_references_referrer_referred",
+        "subject_version_references",
+        ["referrer_id", "referred_id"],
     )
     op.create_foreign_key(
         "subject_version_references_subject_versions_referrer_id",

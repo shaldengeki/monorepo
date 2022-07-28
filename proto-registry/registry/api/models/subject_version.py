@@ -5,16 +5,29 @@ import datetime
 import enum
 import json
 
+
 class SchemaType(enum.Enum):
     AVRO = 1
     PROTOBUF = 2
     JSONSCHEMA = 3
 
+
 subject_version_reference_table = db.Table(
     "subject_version_references",
-    db.Column("referrer_id", db.Integer, db.ForeignKey("subject_versions.id"), primary_key=True),
-    db.Column("referred_id", db.Integer, db.ForeignKey("subject_versions.id"), primary_key=True),
+    db.Column(
+        "referrer_id",
+        db.Integer,
+        db.ForeignKey("subject_versions.id"),
+        primary_key=True,
+    ),
+    db.Column(
+        "referred_id",
+        db.Integer,
+        db.ForeignKey("subject_versions.id"),
+        primary_key=True,
+    ),
 )
+
 
 class SubjectVersion(db.Model):
     __tablename__ = "subject_versions"
@@ -29,8 +42,8 @@ class SubjectVersion(db.Model):
     references = db.relationship(
         "SubjectVersion",
         secondary=subject_version_reference_table,
-        primaryjoin=id==subject_version_reference_table.c.referrer_id,
-        secondaryjoin=id==subject_version_reference_table.c.referred_id,
+        primaryjoin=id == subject_version_reference_table.c.referrer_id,
+        secondaryjoin=id == subject_version_reference_table.c.referred_id,
         lazy="subquery",
         backref=db.backref("referrers", lazy=True),
     )

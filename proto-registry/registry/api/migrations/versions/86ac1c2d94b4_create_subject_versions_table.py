@@ -12,10 +12,11 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '86ac1c2d94b4'
-down_revision = '9da1de15cd6a'
+revision = "86ac1c2d94b4"
+down_revision = "9da1de15cd6a"
 branch_labels = None
 depends_on = None
+
 
 class SchemaType(enum.Enum):
     AVRO = 1
@@ -25,13 +26,17 @@ class SchemaType(enum.Enum):
 
 def upgrade():
     op.create_table(
-        'subject_versions',
-        sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('created', sa.DateTime, nullable=False, default=datetime.datetime.utcnow),
-        sa.Column('version_id', sa.Integer, nullable=False),
-        sa.Column('subject_id', sa.Integer, nullable=False),
-        sa.Column('schema_type', sa.Enum(SchemaType), nullable=False, default=SchemaType.AVRO),
-        sa.Column('schema', sa.Unicode(20000), nullable=False),
+        "subject_versions",
+        sa.Column("id", sa.Integer, primary_key=True),
+        sa.Column(
+            "created", sa.DateTime, nullable=False, default=datetime.datetime.utcnow
+        ),
+        sa.Column("version_id", sa.Integer, nullable=False),
+        sa.Column("subject_id", sa.Integer, nullable=False),
+        sa.Column(
+            "schema_type", sa.Enum(SchemaType), nullable=False, default=SchemaType.AVRO
+        ),
+        sa.Column("schema", sa.Unicode(20000), nullable=False),
     )
     op.create_unique_constraint(
         "subject_versions_version_id", "subject_versions", ["subject_id", "version_id"]

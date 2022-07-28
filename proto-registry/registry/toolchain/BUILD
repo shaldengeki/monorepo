@@ -27,4 +27,3 @@ toolchain(
     toolchain = ":container_py_runtime_pair",
     toolchain_type = "@bazel_tools//tools/python:toolchain_type",
 )
-

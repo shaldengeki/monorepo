@@ -11,7 +11,9 @@ class Subject(db.Model):
     )
     name = db.Column(db.Unicode(2000), nullable=False, unique=True)
     versions = db.relationship(
-        "SubjectVersion", back_populates="subject", order_by="desc(SubjectVersion.version_id)"
+        "SubjectVersion",
+        back_populates="subject",
+        order_by="desc(SubjectVersion.version_id)",
     )
 
     def __repr__(self):
