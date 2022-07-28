@@ -1,6 +1,0 @@
-postgres-data
-env.production.real
-bazel-bin
-bazel-out
-bazel-registry
-bazel-testlogs
