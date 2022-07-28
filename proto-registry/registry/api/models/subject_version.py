@@ -48,3 +48,6 @@ class SubjectVersion(db.Model):
 
     def to_json(self):
         return json.dumps(dict(self))
+
+    def unique_name(self):
+        return f"{self.subject.name}/{self.version_id}"

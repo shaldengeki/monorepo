@@ -140,12 +140,15 @@ def subject_version(subject_name: str, version_id: int) -> str:
     if version is None:
         abort(404)
 
+    reference_names = [reference.unique_name() for reference in version.references]
+
     return json.dumps({
         "subject": version.subject.name,
         "id": version.id,
         "version": version.version_id,
         "schemaType": version.schema_type.name,
         "schema": version.schema,
+        "references": reference_names,
     })
 
 @app.route("/subjects/<subject_name>/versions/<int:version_id>/referencedby")
