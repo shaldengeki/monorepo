@@ -1,8 +1,8 @@
 import json
-from flask import abort
+from flask import abort, request
 from sqlalchemy import asc
 
-from .config import app
+from .config import app, db
 from . import models
 
 @app.route("/")
@@ -13,8 +13,21 @@ def hello_world():
 def subjects():
     return json.dumps([dict(x) for x in models.Subject.query.order_by(asc(models.Subject.id)).all()])
 
+@app.route("/subjects/<subject_name>", methods=['DELETE'])
+def delete_subject(subject_name: str) -> str:
+    subject = models.Subject.query.filter(models.Subject.name == subject_name).first()
+    if subject is None:
+        abort(404)
+
+    versions = json.dumps([version.version_id for version in subject.versions])
+
+    db.session.delete(subject)
+    db.session.commit()
+
+    return versions
+
 @app.route("/subjects/<subject_name>/versions")
-def subject_versions(subject_name):
+def subject_versions(subject_name: str) -> str:
     subject = models.Subject.query.filter(models.Subject.name == subject_name).first()
     if subject is None:
         abort(404)
@@ -24,16 +37,74 @@ def subject_versions(subject_name):
         for version in subject.versions
     ])
 
-@app.route("/subjects/<subject_name>/versions/<int:version_id>")
-def subject_version(subject_name, version_id):
+@app.route("/subjects/<subject_name>/versions", methods=["POST"])
+def create_subject_version(subject_name: str) -> str:
     subject = models.Subject.query.filter(models.Subject.name == subject_name).first()
     if subject is None:
         abort(404)
 
-    versions = [v for v in subject.versions if v.version_id == version_id]
-    if not versions:
+    data = request.get_json()
+
+    if 'schema' not in data or not data['schema']:
+        abort(400)
+    schema: str = data['schema']
+
+    schema_type_name: str = data.get('schemaType', 'AVRO')
+    if schema_type_name not in models.SchemaType:
+        abort(400)
+
+    schema_type = models.SchemaType[schema_type_name]
+
+    references: list[dict] = data.get('references', [])
+
+    next_version = max(version.version_id for version in subject.versions) + 1
+
+    new_version = models.SubjectVersion(
+        version_id = next_version,
+        schema_type = schema_type,
+        schema = schema,
+        subject_id = subject.id
+    )
+    db.session.add(new_version)
+    db.session.commit()
+
+
+@app.route("/subjects/<subject_name>/versions/<int:version_id>")
+def subject_version(subject_name: str, version_id: int) -> str:
+    version = models.SubjectVersion.query\
+        .join(models.Subject, models.SubjectVersion.subject_id == models.Subject.id)\
+        .filter(
+            models.Subject.name == subject_name and \
+            models.SubjectVersion.version_id == version_id
+        )\
+        .first()
+
+    if version is None:
         abort(404)
-    return next(versions).schema
+
+    return json.dumps({
+        "subject": version.subject.name,
+        "id": version.id,
+        "version": version.version_id,
+        "schemaType": version.schema_type.name,
+        "schema": version.schema,
+    })
+
+@app.route("/subjects/<subject_name>/versions/<int:version_id>/schema")
+def subject_version_schema(subject_name: str, version_id: int) -> str:
+    version = models.SubjectVersion.query\
+        .join(models.Subject, models.SubjectVersion.subject_id == models.Subject.id)\
+        .filter(
+            models.Subject.name == subject_name and \
+            models.SubjectVersion.version_id == version_id
+        )\
+        .first()
+
+    if version is None:
+        abort(404)
+
+    return version.schema
+
 
 if __name__ == "__main__":
     app.run()
