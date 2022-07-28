@@ -41,13 +41,7 @@ class SubjectVersion(db.Model):
     )
 
     def __repr__(self):
-        return "<Server {id}>".format(id=self.id)
-
-    def __dict__(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
-    def to_json(self):
-        return json.dumps(dict(self))
+        return f"<SubjectVersion id={self.id}>"
 
     def unique_name(self):
         return f"{self.subject.name}/{self.version_id}"

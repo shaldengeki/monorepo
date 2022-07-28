@@ -10,8 +10,11 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 @app.route("/subjects")
-def subjects():
-    return json.dumps([dict(x) for x in models.Subject.query.order_by(asc(models.Subject.id)).all()])
+def get_subjects():
+    subjects = models.Subject.query.order_by(asc(models.Subject.id)).all()
+    return json.dumps([
+        subject.name for subject in subjects
+    ])
 
 @app.route("/subjects/<subject_name>", methods=['DELETE'])
 def delete_subject(subject_name: str) -> str:
@@ -71,7 +74,7 @@ def check_subject_schema(subject_name: str) -> str:
     })
 
 @app.route("/subjects/<subject_name>/versions")
-def subject_versions(subject_name: str) -> str:
+def get_subject_versions(subject_name: str) -> str:
     subject = models.Subject.query.filter(models.Subject.name == subject_name).first()
     if subject is None:
         abort(404)
@@ -85,50 +88,59 @@ def subject_versions(subject_name: str) -> str:
 def create_subject_version(subject_name: str) -> str:
     subject = models.Subject.query.filter(models.Subject.name == subject_name).first()
     if subject is None:
-        abort(404)
+        subject = models.Subject(name=subject_name)
+        db.session.add(subject)
 
-    data = request.get_json()
+    json_data = request.get_json()
 
-    if "schema" not in data or not data["schema"]:
+    if "schema" not in json_data or not json_data["schema"]:
         abort(400)
-    schema: str = data["schema"]
+    schema: str = json_data["schema"]
 
-    schema_type_name: str = data.get("schemaType", "AVRO")
-    if schema_type_name not in models.SchemaType:
+    schema_type_name: str = json_data.get("schemaType", "AVRO")
+    if models.SchemaType[schema_type_name] is None:
         abort(400)
 
     schema_type = models.SchemaType[schema_type_name]
 
-    references: list[dict] = data.get("references", [])
+    references: list[dict] = json_data.get("references", [])
+
+    reference_subjects = models.Subject.query.filter(models.Subject.name in [reference['subject'] for reference in references]).all()
+
     reference_names = [f"{reference['subject']}/{reference['version']}" for reference in references]    
     reference_versions = models.SubjectVersion.query\
         .join(models.Subject, models.SubjectVersion.subject_id == models.Subject.id)\
         .filter(
-            f"{models.Subject.name}/{models.SubjectVersion.version_id}" in reference_names
+            models.SubjectVersion.subject_id in [subject.id for subject in reference_subjects]
         )\
         .all()
+    reference_versions = [version for version in reference_versions if f"{version.subject.name}/{version.version_id}" in reference_names]
     if len(reference_versions) != len(references):
         abort(400)
 
-    next_version = max(version.version_id for version in subject.versions) + 1
+    subject_versions = subject.versions
+    if not subject_versions:
+        next_version = 1
+    else:
+        next_version = max(version.version_id for version in subject.versions) + 1
 
     new_version = models.SubjectVersion(
         version_id=next_version,
         schema_type=schema_type,
         schema=schema,
-        subject_id=subject.id,
+        subject=subject,
         references=reference_versions,
     )
     db.session.add(new_version)
     db.session.commit()
 
     return json.dumps({
-        "id": new_version.id,
+        "id": subject.id,
     })
 
 
 @app.route("/subjects/<subject_name>/versions/<int:version_id>")
-def subject_version(subject_name: str, version_id: int) -> str:
+def get_subject_version(subject_name: str, version_id: int) -> str:
     version = models.SubjectVersion.query\
         .join(models.Subject, models.SubjectVersion.subject_id == models.Subject.id)\
         .filter(
@@ -152,7 +164,7 @@ def subject_version(subject_name: str, version_id: int) -> str:
     })
 
 @app.route("/subjects/<subject_name>/versions/<int:version_id>/referencedby")
-def subject_version_referencedby(subject_name: str, version_id: int) -> str:
+def get_subject_version_referencedby(subject_name: str, version_id: int) -> str:
     version = models.SubjectVersion.query\
         .join(models.Subject, models.SubjectVersion.subject_id == models.Subject.id)\
         .filter(
@@ -170,7 +182,7 @@ def subject_version_referencedby(subject_name: str, version_id: int) -> str:
 
 
 @app.route("/subjects/<subject_name>/versions/<int:version_id>/schema")
-def subject_version_schema(subject_name: str, version_id: int) -> str:
+def get_subject_version_schema(subject_name: str, version_id: int) -> str:
     version = models.SubjectVersion.query\
         .join(models.Subject, models.SubjectVersion.subject_id == models.Subject.id)\
         .filter(
