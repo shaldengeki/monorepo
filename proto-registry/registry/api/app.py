@@ -45,28 +45,40 @@ def create_subject_version(subject_name: str) -> str:
 
     data = request.get_json()
 
-    if 'schema' not in data or not data['schema']:
+    if "schema" not in data or not data["schema"]:
         abort(400)
-    schema: str = data['schema']
+    schema: str = data["schema"]
 
-    schema_type_name: str = data.get('schemaType', 'AVRO')
+    schema_type_name: str = data.get("schemaType", "AVRO")
     if schema_type_name not in models.SchemaType:
         abort(400)
 
     schema_type = models.SchemaType[schema_type_name]
 
-    references: list[dict] = data.get('references', [])
+    references: list[dict] = data.get("references", [])
+    reference_names = [f"{reference['subject']}/{reference['version']}" for reference in references]    
+    reference_versions = models.SubjectVersion.query\
+        .join(models.Subject, models.SubjectVersion.subject_id == models.Subject.id)\
+        .filter(
+            f"{models.Subject.name}/{models.SubjectVersion.version_id}" in reference_names
+        )\
+        .all()
 
     next_version = max(version.version_id for version in subject.versions) + 1
 
     new_version = models.SubjectVersion(
-        version_id = next_version,
-        schema_type = schema_type,
-        schema = schema,
-        subject_id = subject.id
+        version_id=next_version,
+        schema_type=schema_type,
+        schema=schema,
+        subject_id=subject.id,
+        references=reference_versions,
     )
     db.session.add(new_version)
     db.session.commit()
+
+    return json.dumps({
+        "id": new_version.id,
+    })
 
 
 @app.route("/subjects/<subject_name>/versions/<int:version_id>")
