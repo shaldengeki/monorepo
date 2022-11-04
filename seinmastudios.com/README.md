@@ -14,12 +14,4 @@ Requires:
 Publishing
 ----------
 
-Requires:
-
-- [Ansible](https://www.ansible.com).
-- SSH key at `~/.ssh/seinmastudios.production.pem`
-- Secrets vault password
-
-To publish:
-
-1. `./bin/publish-post my-new-post`
+Master commits deploy to [the site](http://seinmastudios.com) via a Github Actions workflow that compiles the site and pushes it to Github Pages. You should be able to simply merge into master and see changes reflected on the site within a minute or two.
