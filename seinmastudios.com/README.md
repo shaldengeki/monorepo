@@ -14,4 +14,6 @@ Requires:
 Publishing
 ----------
 
+tl;dr: Mark post as non-draft, commit and push to `main`.
+
 Main commits deploy to [the site](https://seinmastudios.com) via a Github Actions workflow that compiles the site and pushes it to Github Pages. You should be able to simply merge into main and see changes reflected on the site within a minute or two.
