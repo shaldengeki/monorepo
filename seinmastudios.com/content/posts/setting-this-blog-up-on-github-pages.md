@@ -7,13 +7,13 @@ categories = []
 draft = false
 +++
 
-As a birthday present to myself this year, I finally decided to bite the bullet and quit my Twitter addiction. I signed up for [Mastodon](mastodon.online), which seems nice so far (you can find me [here](mastodon.online/@ouguoc)). I'm also hoping to do a little bit more writing with all the spare time I now have on my hands. Some of that will be on Mastodon, but hopefully the longer-form bits will start to appear here.
+As a birthday present to myself this year, I finally decided to bite the bullet and quit my Twitter addiction. I signed up for [Mastodon](https://mastodon.online), which seems nice so far (you can find me [here](https://mastodon.online/@ouguoc)). I'm also hoping to do a little bit more writing with all the spare time I now have on my hands. Some of that will be on Mastodon, but hopefully the longer-form bits will start to appear here.
 
 My blog's been limping along for some time - the whole infrastructure of writing a post, publishing it, and actually serving the site was basically hand-rolled a long time ago by yours truly. As might be expected, this setup, held together by paperclips and duct tape, fell over all the time. To make the process of writing easier on myself, I decided to migrate to Github Pages. The whole process was surprisingly straightforward, so I thought I'd write it up in case others would find this useful.
 
 # What's Github Pages?
 
-Github is a website that people use to track and share the source code for software they write. One of the satellite services that Github also runs is called [Pages](pages.github.com/). People on Github can host a small personal website, or small project-based websites on Github Pages. I use Github to store the source code of this blog (all the post text and images, theme, etc), so Pages seemed like a natural fit to actually _host_ the site as well.
+Github is a website that people use to track and share the source code for software they write. One of the satellite services that Github also runs is called [Pages](https://pages.github.com/). People on Github can host a small personal website, or small project-based websites on Github Pages. I use Github to store the source code of this blog (all the post text and images, theme, etc), so Pages seemed like a natural fit to actually _host_ the site as well.
 
 # How do things work now?
 
@@ -46,7 +46,7 @@ And that's it! Pretty simple if I do say so myself.
 
 For the most part, I just followed Github's excellent instructions, [which you can find here.](https://docs.github.com/en/pages/quickstart). You should probably just read their docs, but here's what I did specifically:
 
-As the zeroth step, I had previously set my website up using [Hugo](gohugo.io), a blogging software.
+As the zeroth step, I had previously set my website up using [Hugo](https://gohugo.io), a blogging software.
 
 First, I went to my repository settings page on Github, navigated to the "Pages" tab, and selected "Github Actions" under "Source":
 
@@ -54,7 +54,7 @@ First, I went to my repository settings page on Github, navigated to the "Pages"
 
 This tells Github that you want your site's content to be built and deployed via a Github Action (more on that in a bit) and not a custom deployment on a dedicated branch.
 
-The next step is to point your domain to Github. I went to my domain registrar's DNS configuration page. I had registered the domain under [gandi.net](gandi.net), so I signed into their web console, navigated to my domain's DNS records, and created the following table:
+The next step is to point your domain to Github. I went to my domain registrar's DNS configuration page. I had registered the domain under [gandi.net](https://gandi.net), so I signed into their web console, navigated to my domain's DNS records, and created the following table:
 
 ![DNS record in Gandi](/images/2022-11-03-gandi-dns.png)
 
@@ -75,7 +75,7 @@ Anyways, once that's done, it's time to set up a Github Action to deploy the sit
 
 This action comes with a configuration file. I didn't have to modify it at all - just clicked "Start commit" and committed it directly to my `main` branch.
 
-At that point, the Action kicked off on my latest master commit, built my website, and pushed my changes - I went to [my website](seinmastudios.com) and it was working!
+At that point, the Action kicked off on my latest master commit, built my website, and pushed my changes - I went to [my website](https://seinmastudios.com) and it was working!
 
 # Random musings
 
