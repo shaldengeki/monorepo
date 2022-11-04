@@ -1,6 +1,0 @@
----
-app_branch: master
-app_dir: /home/{{ansible_ssh_user}}/seinmastudios.com
-app_host: "seinmastudios.com"
-hugo_tmp: "/tmp"
-hugo_version: "v0.32.1/hugo_0.32.1_Linux-64bit.deb"

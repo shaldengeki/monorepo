@@ -1,5 +1,0 @@
----
-- name: Install aptitude
-  become: true
-  apt:
-    name: aptitude
