@@ -1,0 +1,197 @@
+<!doctype html>
+
+<html lang="en-us">
+
+<head>
+  <title>Setting this blog up on Github Pages - and some change</title>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Charles OuGuo&#39;s personal blog" />
+<meta name="author" content="Charles OuGuo" /><meta property="og:title" content="Setting this blog up on Github Pages" />
+<meta property="og:description" content="As a birthday present to myself this year, I finally decided to bite the bullet and quit my Twitter addiction. I signed up for Mastodon, which seems nice so far (you can find me here)." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://seinmastudios.com/posts/setting-this-blog-up-on-github-pages/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-11-03T22:30:37-04:00" />
+<meta property="article:modified_time" content="2022-11-03T22:30:37-04:00" />
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Setting this blog up on Github Pages"/>
+<meta name="twitter:description" content="As a birthday present to myself this year, I finally decided to bite the bullet and quit my Twitter addiction. I signed up for Mastodon, which seems nice so far (you can find me here)."/>
+
+<meta name="generator" content="Hugo 0.105.0">
+    
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://seinmastudios.com/fontawesome/css/all.min.css" />
+  
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
+  
+  
+  <link rel="stylesheet" type="text/css" href="https://seinmastudios.com/css/styles.css" /></head>
+
+<body>
+  <div id="container">
+    <header>
+      
+      <h1>
+        <a href="https://seinmastudios.com/">and some change</a>
+      </h1>
+
+      <ul id="social-media">
+             <li>
+               <a href="https://github.com/shaldengeki" title="GitHub">
+               <i class="fab fa-github fa-lg"></i>
+               </a>
+             </li>
+             <li>
+               <a href="https://twitter.com/guocharles" title="Twitter">
+               <i class="fab fa-twitter fa-lg"></i>
+               </a>
+             </li>
+      </ul>
+      
+    </header>
+
+    
+<nav>
+    <ul>
+        
+        <li>
+            <a class="" href="https://seinmastudios.com/about/">
+                <i class="fa-li fa  fa-lg"></i><span>About Me</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>Setting this blog up on Github Pages</h1>
+
+    
+      <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2022-11-03T22:30:37-04:00">Nov 3, 2022</time>
+        </li>
+        
+        
+
+        
+
+        <li>6 minute read</li>
+    </ul>
+</aside>
+
+    
+
+    
+      
+<div class="featured_image">
+    <a href="https://seinmastudios.com/posts/setting-this-blog-up-on-github-pages/" title="Setting this blog up on Github Pages">
+        <img src="">
+    </a>
+</div>
+
+
+    
+
+    <p>As a birthday present to myself this year, I finally decided to bite the bullet and quit my Twitter addiction. I signed up for <a href="mastodon.online">Mastodon</a>, which seems nice so far (you can find me <a href="mastodon.online/@ouguoc">here</a>). I&rsquo;m also hoping to do a little bit more writing with all the spare time I now have on my hands. Some of that will be on Mastodon, but hopefully the longer-form bits will start to appear here.</p>
+<p>My blog&rsquo;s been limping along for some time - the whole infrastructure of writing a post, publishing it, and actually serving the site was basically hand-rolled a long time ago by yours truly. As might be expected, this setup, held together by paperclips and duct tape, fell over all the time. To make the process of writing easier on myself, I decided to migrate to Github Pages. The whole process was surprisingly straightforward, so I thought I&rsquo;d write it up in case others would find this useful.</p>
+<h1 id="whats-github-pages">What&rsquo;s Github Pages?</h1>
+<p>Github is a website that people use to track and share the source code for software they write. One of the satellite services that Github also runs is called <a href="pages.github.com/">Pages</a>. People on Github can host a small personal website, or small project-based websites on Github Pages. I use Github to store the source code of this blog (all the post text and images, theme, etc), so Pages seemed like a natural fit to actually <em>host</em> the site as well.</p>
+<h1 id="how-do-things-work-now">How do things work now?</h1>
+<p>Before I dig into the guts of <em>how</em> I set this up, it&rsquo;s worth talking through what the end result looks like, from writing to publishing.</p>
+<p>First, to write a new post, I create a new Markdown file <a href="https://github.com/shaldengeki/seinmastudios.com/tree/main/content/posts">in the repository for this blog</a>. Each post is a separate file.</p>
+<p>Once it&rsquo;s ready, I create a commit on the blog repository&rsquo;s <code>main</code> branch and push it to Github:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Add the new post to Git</span>
+</span></span><span style="display:flex;"><span>git add content/posts/my-new-awesome-post.md
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Create a new commit</span>
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;Add new post: setting-this-blog-up-on-github-pages&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Push it to Github</span>
+</span></span><span style="display:flex;"><span>git push
+</span></span></code></pre></div><p>If I&rsquo;m feeling lazy, sometimes I&rsquo;ll do these steps in VSCode instead, which has a nice GUI for git, but feels slower. I&rsquo;m not sure if it&rsquo;s actually slower than typing everything out, though!</p>
+<p>Pushing that commit to Github fires off some stuff on Github which regenerates the site in about a minute:</p>
+<p><img src="https://seinmastudios.com/images/2022-11-03-blog-publish-actions.png" alt="Github publish workflow"></p>
+<p>And that&rsquo;s it! Pretty simple if I do say so myself.</p>
+<h1 id="hows-this-set-up">How&rsquo;s this set up?</h1>
+<p>For the most part, I just followed Github&rsquo;s excellent instructions, <a href="https://docs.github.com/en/pages/quickstart">which you can find here.</a>. You should probably just read their docs, but here&rsquo;s what I did specifically:</p>
+<p>As the zeroth step, I had previously set my website up using <a href="gohugo.io">Hugo</a>, a blogging software.</p>
+<p>First, I went to my repository settings page on Github, navigated to the &ldquo;Pages&rdquo; tab, and selected &ldquo;Github Actions&rdquo; under &ldquo;Source&rdquo;:</p>
+<p><img src="https://seinmastudios.com/images/2022-11-03-github-pages-build-actions.png" alt="Dropdown on Github with the Github Actions option selected"></p>
+<p>This tells Github that you want your site&rsquo;s content to be built and deployed via a Github Action (more on that in a bit) and not a custom deployment on a dedicated branch.</p>
+<p>The next step is to point your domain to Github. I went to my domain registrar&rsquo;s DNS configuration page. I had registered the domain under <a href="gandi.net">gandi.net</a>, so I signed into their web console, navigated to my domain&rsquo;s DNS records, and created the following table:</p>
+<p><img src="https://seinmastudios.com/images/2022-11-03-gandi-dns.png" alt="DNS record in Gandi"></p>
+<p>A couple things are worth explaining here:</p>
+<ul>
+<li>The first entry is autogenerated by my domain registrar; I wish I could delete it, but they won&rsquo;t let me.</li>
+<li>Lines 2-5 are necessary; they point the top-level domain (seinmastudios.com) to Github&rsquo;s servers.</li>
+<li>Line 6 sets up an alias to point <a href="https://www.seinmastudios.com">www.seinmastudios.com</a> to seinmastudios.com instead. This is useful, because Github will read this configuration later and set up some nice redirection magic.</li>
+</ul>
+<p>I saved these records, and then went back to Github to test my DNS configuration. On the same page as before, under &ldquo;Custom domain&rdquo;, I typed in my domain and hit save, which triggered Github to start running a test:</p>
+<p><img src="https://seinmastudios.com/images/2022-11-03-github-pages-custom-domain.png" alt="Github DNS test running against my custom domain"></p>
+<p>This was <em>by far</em> the trickiest part of the whole setup, because I had to futz with my DNS records a couple times to find the right settings, and DNS records end up being cached unexpectedly. Basically what I ended up doing was walking away for five minutes (the TTL I set in the DNS records above) between changes.</p>
+<p>Anyways, once that&rsquo;s done, it&rsquo;s time to set up a Github Action to deploy the site to your Github Pages website. To do this, I clicked the &ldquo;Actions&rdquo; tab of my repository, clicked &ldquo;New workflow&rdquo;, and picked the Hugo workflow (which is the blog website software I use):</p>
+<p><img src="https://seinmastudios.com/images/2022-11-03-github-actions-hugo.PNG" alt="Hugo workflow in Github Actions search"></p>
+<p>This action comes with a configuration file. I didn&rsquo;t have to modify it at all - just clicked &ldquo;Start commit&rdquo; and committed it directly to my <code>main</code> branch.</p>
+<p>At that point, the Action kicked off on my latest master commit, built my website, and pushed my changes - I went to <a href="seinmastudios.com">my website</a> and it was working!</p>
+<h1 id="random-musings">Random musings</h1>
+<p>I&rsquo;m continually impressed at how easy and straightforward it is to set up a Github Action nowadays that does something that would&rsquo;ve taken days or weeks of effort on my part. Someone at Github definitely deserves a raise for good work done here. The little bit of configuration in this post <a href="https://github.com/shaldengeki/seinmastudios.com/commit/305d78d2d73042657e6745a73cdb12a143949444">allowed me to delete 255 lines of gnarly Ansible code</a>. I&rsquo;ll miss futzing with it a little, but I think overall I&rsquo;m much happier - I&rsquo;ve learned the hard way that less code is almost always better!</p>
+<p>The one thing I&rsquo;ve encountered before with Github Actions is that you have to be careful about depending on third-party actions not maintained by either Github or a company directly invested in maintaining it. For instance, a lot of my side projects used to rely on a Github Action to build Docker container images, which was authored by a (well-meaning) individual not associated with Github, Docker, or any other long-lived entity. This was great for a few months, but predictably the thing fell out of date with Github and Docker APIs, which meant it stopped working all of a sudden one day. I had to find a replacement and rewrite a bunch of YAML configuration for the new action, which was a pain in the neck.</p>
+<p>I&rsquo;m not too worried about the setup I&rsquo;ve done here, though - this is all using native Github-maintained stuff, so I look forward to a long shelf life for the current arrangement.</p>
+
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        <li>
+        
+            <a href="https://seinmastudios.com/posts/being-model-driven-is-a-decision-making-superpower/"><i class="fa fa-chevron-circle-left"></i> When in doubt, make a model</a>
+        
+        </li>
+        <li>
+        
+        </li>
+    </ul>
+</section>
+  
+    
+    
+  
+
+
+
+
+
+</main>
+    <footer>
+        <ul>
+            <li>
+                <h6>Copyright © 2022 - Charles OuGuo | 
+                    Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+                    <a href="https://seinmastudios.comindex.xml">Subscribe </a></h6>
+            </li>
+            
+            
+        </ul>
+    </footer>
+</div>
+<script src="https://seinmastudios.com/js/scripts.js"></script>
+
+
+</body>
+
+</html>
+
