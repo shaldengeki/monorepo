@@ -4,7 +4,7 @@ date = 2022-11-03T22:30:37-04:00
 images = []
 tags = []
 categories = []
-draft = true
+draft = false
 +++
 
 As a birthday present to myself this year, I finally decided to bite the bullet and quit my Twitter addiction. I signed up for [Mastodon](mastodon.online), which seems nice so far (you can find me [here](mastodon.online/@ouguoc)). I'm also hoping to do a little bit more writing with all the spare time I now have on my hands. Some of that will be on Mastodon, but hopefully the longer-form bits will start to appear here.

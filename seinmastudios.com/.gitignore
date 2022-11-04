@@ -1,4 +1,5 @@
 *.retry
+/public/
 /resources/_gen/
 /assets/jsconfig.jon
 hugo_stats.json
