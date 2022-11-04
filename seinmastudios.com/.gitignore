@@ -1,1 +1,10 @@
 *.retry
+/resources/_gen/
+/assets/jsconfig.jon
+hugo_stats.json
+
+hugo.exe
+hugo.darwin
+hugo.linux
+
+/.hugo_build.lock
