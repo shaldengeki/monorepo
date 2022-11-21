@@ -1,0 +1,9 @@
+# Bazel
+bazel-bin
+bazel-out
+bazel-py_proto
+bazel-rules
+bazel-testlogs
+
+# Github
+.github
