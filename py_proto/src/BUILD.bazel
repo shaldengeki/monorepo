@@ -7,3 +7,17 @@ py_library(
     deps = [],
     visibility = ["//visibility:public"],
 )
+
+py_library(
+    name = "proto_file",
+    srcs = ["proto_file.py"],
+    deps = [],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "parser",
+    srcs = ["parser.py"],
+    deps = [":proto_file"],
+    visibility = ["//visibility:public"],
+)

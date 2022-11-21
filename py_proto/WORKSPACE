@@ -4,20 +4,30 @@ workspace(
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-rules_python_version = "740825b7f74930c62f44af95c9a4c1bd428d2c53" # Latest @ 2021-06-23
-
 http_archive(
     name = "rules_python",
-    sha256 = "09a3c4791c61b62c2cbc5b2cbea4ccc32487b38c7a2cc8f87a794d7a659cc742",
-    strip_prefix = "rules_python-{}".format(rules_python_version),
-    url = "https://github.com/bazelbuild/rules_python/archive/{}.zip".format(rules_python_version),
+    sha256 = "a868059c8c6dd6ad45a205cca04084c652cfe1852e6df2d5aca036f6e5438380",
+    strip_prefix = "rules_python-0.14.0",
+    url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.14.0.tar.gz",
 )
 
-load("@rules_python//python:pip.bzl", "pip_install")
+load("@rules_python//python:repositories.bzl", "python_register_toolchains")
 
-pip_install(
+python_register_toolchains(
+    name = "python3_10",
+    # Available versions are listed in @rules_python//python:versions.bzl.
+    # We recommend using the same version your team is already standardized on.
+    python_version = "3.10.6",
+)
+
+load("@python3_10//:defs.bzl", "interpreter")
+
+load("@rules_python//python:pip.bzl", "pip_parse")
+
+pip_parse(
     name = "py_proto_deps",
-    requirements="//src:requirements.txt"
+    python_interpreter_target = interpreter,
+    requirements_lock = "//src:requirements.txt"
 )
 
 http_archive(

@@ -8,4 +8,4 @@ We support building & running via Bazel.
 
 ### Bazel
 
-Do `bazel test //test/...`.
+Do `bazel test //...`.

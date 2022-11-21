@@ -4,7 +4,7 @@
 - [x] Set up testing
 - [ ] Mount in Google protobufs
 - [ ] [Proto file support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#proto_file)
-  - [ ] Syntax
+  - [x] Syntax
   - [ ] Imports
   - [ ] Package
   - [ ] Options
