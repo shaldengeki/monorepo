@@ -1,3 +1,9 @@
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_library")
 load("@py_proto_deps//:requirements.bzl", "requirement")
 
+py_library(
+    name = "main",
+    srcs = ["main.py"],
+    deps = [],
+    visibility = ["//visibility:public"],
+)
