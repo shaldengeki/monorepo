@@ -110,6 +110,15 @@ py_library(
 )
 
 py_library(
+    name = "proto_enum",
+    srcs = ["proto_enum.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":proto_identifier",
+    ],
+)
+
+py_library(
     name = "proto_file",
     srcs = ["proto_file.py"],
     visibility = ["//visibility:public"],
@@ -126,6 +135,7 @@ py_library(
     srcs = ["parser.py"],
     visibility = ["//visibility:public"],
     deps = [
+        ":proto_enum",
         ":proto_file",
         ":proto_import",
         ":proto_node",

@@ -9,6 +9,9 @@ class ProtoBool(ProtoNode):
         self.value = value
 
     def __eq__(self, other: "ProtoBool") -> bool:
+        if not isinstance(other, ProtoBool):
+            return False
+
         return self.value == other.value
 
     def __str__(self) -> str:

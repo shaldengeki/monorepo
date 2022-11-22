@@ -22,6 +22,9 @@ class ProtoFloat(ProtoNode):
         self.sign = sign
 
     def __eq__(self, other: "ProtoFloat") -> bool:
+        if not isinstance(other, ProtoFloat):
+            return False
+
         # Handle nan.
         if self.value != self.value:
             return other.value != other.value

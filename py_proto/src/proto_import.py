@@ -12,7 +12,10 @@ class ProtoImport(ProtoNode):
         self.weak = weak
         self.public = public
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: "ProtoImport") -> bool:
+        if not isinstance(other, ProtoImport):
+            return False
+
         return (
             self.path == other.path
             and self.weak == other.weak

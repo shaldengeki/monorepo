@@ -12,7 +12,10 @@ class ProtoIdentifier(ProtoNode):
     def __init__(self, identifier: str):
         self.identifier = identifier
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: "ProtoIdentifier") -> bool:
+        if not isinstance(other, ProtoIdentifier):
+            return False
+
         return self.identifier == other.identifier
 
     def __str__(self) -> str:

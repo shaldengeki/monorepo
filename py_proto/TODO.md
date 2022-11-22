@@ -19,8 +19,8 @@
   - [ ] Nested messages
   - [ ] Nested enums
 - [ ] [Enum support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#enum_definition)
-  - [ ] Empty enum
-  - [ ] Empty statements
+  - [x] Empty enum
+  - [x] Empty statements
   - [ ] Fields
   - [ ] Options
   - [ ] Reserveds

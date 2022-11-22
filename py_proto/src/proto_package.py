@@ -7,7 +7,10 @@ class ProtoPackage(ProtoNode):
     def __init__(self, package: str):
         self.package = package
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: "ProtoPackage") -> bool:
+        if not isinstance(other, ProtoPackage):
+            return False
+
         return self.package == other.package
 
     def __str__(self) -> str:

@@ -1,3 +1,4 @@
+from src.proto_enum import ProtoEnum
 from src.proto_file import ProtoFile
 from src.proto_import import ProtoImport
 from src.proto_node import ParsedProtoNode
@@ -17,6 +18,7 @@ class Parser:
             ProtoImport,
             ProtoPackage,
             ProtoOption,
+            ProtoEnum,
         ):
             try:
                 match_result = node_type.match(partial_proto_content)

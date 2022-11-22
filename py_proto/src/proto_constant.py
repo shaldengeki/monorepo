@@ -15,6 +15,9 @@ class ProtoConstant(ProtoNode):
         self.value = value
 
     def __eq__(self, other: "ProtoConstant") -> bool:
+        if not isinstance(other, ProtoConstant):
+            return False
+
         return self.value == other.value
 
     def __str__(self) -> str:

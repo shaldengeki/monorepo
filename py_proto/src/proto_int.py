@@ -20,6 +20,9 @@ class ProtoInt(ProtoNode):
         self.sign = sign
 
     def __eq__(self, other: "ProtoInt") -> bool:
+        if not isinstance(other, ProtoInt):
+            return False
+
         return self.value == other.value and self.sign == other.sign
 
     def __str__(self) -> str:

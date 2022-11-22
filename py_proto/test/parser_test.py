@@ -3,6 +3,7 @@ from textwrap import dedent
 
 from src.parser import ParseError, Parser
 from src.proto_constant import ProtoConstant
+from src.proto_enum import ProtoEnum
 from src.proto_float import ProtoFloat, ProtoFloatSign
 from src.proto_identifier import ProtoIdentifier
 from src.proto_import import ProtoImport
@@ -26,11 +27,15 @@ class IntTest(unittest.TestCase):
 
                 option java_package = "my.test.package";
                 option (fully.qualified).option = .314159265e1;
+
+                enum MyAwesomeEnum {
+
+                }
                 """
             )
         )
 
-        self.assertEqual(proto_file.syntax.syntax, ProtoSyntaxType.PROTO3)
+        self.assertEqual(proto_file.syntax.syntax.value, ProtoSyntaxType.PROTO3.value)
         self.assertEqual(
             proto_file.imports,
             [
@@ -52,6 +57,7 @@ class IntTest(unittest.TestCase):
                 ),
             ],
         )
+        self.assertIn(ProtoEnum(ProtoIdentifier("MyAwesomeEnum")), proto_file.nodes)
 
     def test_parser_no_syntax(self):
         with self.assertRaises(ParseError):

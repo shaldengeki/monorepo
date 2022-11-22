@@ -15,7 +15,7 @@ class ParsedProtoNode:
         self.node = parsed_node
         self.remaining_source = remaining_source
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: "ParsedProtoNode") -> bool:
         return (self.node == other.node) and (
             self.remaining_source == other.remaining_source
         )
