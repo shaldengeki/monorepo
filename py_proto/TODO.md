@@ -11,26 +11,34 @@
 - [ ] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)
   - [ ] Empty message
   - [ ] Empty statements
-  - [ ] Fields
   - [ ] Options
+  - [ ] Fields
+    - [ ] Basic fields
+    - [ ] Field options
   - [ ] OneOfs
+    - [ ] Basic oneofs
+    - [ ] OneOf options
+    - [ ] Field options
   - [ ] Maps
+    - [ ] Basic maps
+    - [ ] Map options
   - [ ] Reserveds
   - [ ] Nested messages
   - [ ] Nested enums
 - [ ] [Enum support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#enum_definition)
   - [x] Empty enum
-  - [x] Empty statements
+  - [x] Enum options
   - [ ] Fields
-  - [ ] Options
+    - [x] Empty statements
+    - [ ] Values
+    - [ ] Value options
   - [ ] Reserveds
 - [ ] [Service support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#service_definition)
   - [ ] Empty service
   - [ ] Empty statements
-  - [ ] Options
+  - [ ] Service options
   - [ ] rpcs
     - [ ] Basic RPC
     - [ ] stream request
     - [ ] stream response
-    - [ ] Options
-    - [ ] Empty statements
+    - [ ] RPC options & empty statements
