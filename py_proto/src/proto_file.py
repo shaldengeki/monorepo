@@ -39,3 +39,10 @@ class ProtoFile:
     @property
     def options(self) -> list[ProtoOption]:
         return [node for node in self.nodes if isinstance(node, ProtoOption)]
+
+    def serialize(self) -> str:
+        return "\n\n".join(
+            [self.syntax.serialize(), self.package.serialize()]
+            + ["\n".join(x.serialize() for x in self.imports)]
+            + ["\n".join(x.serialize() for x in self.options)]
+        )

@@ -34,13 +34,13 @@ class Parser:
 
         # First, parse syntax out of the first line.
         try:
-            match_result = ProtoSyntax.match(proto_content)
+            match_result = ProtoSyntax.match(proto_content.strip())
         except (ValueError, IndexError, TypeError):
             raise ParseError(f"Proto doesn't have parseable syntax:\n{proto_content}")
         if match_result is None:
             raise ParseError(f"Proto doesn't have parseable syntax:\n{proto_content}")
         parsed_tree.append(match_result.node)
-        proto_content = match_result.remaining_source
+        proto_content = match_result.remaining_source.strip()
 
         # Next, parse the rest.
         while proto_content:

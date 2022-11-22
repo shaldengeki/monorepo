@@ -71,4 +71,4 @@ class ProtoOption(ProtoNode):
         )
 
     def serialize(self) -> str:
-        return f"option {self.name} = {self.value.serialize()};"
+        return f"option {self.name.serialize()} = {self.value.serialize()};"

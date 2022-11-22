@@ -15,17 +15,18 @@ class IntTest(unittest.TestCase):
     def test_parser(self):
         proto_file = Parser.loads(
             dedent(
-                """syntax = "proto3";
+                """
+                syntax = "proto3";
 
-        package foo.bar.baz;
+                package foo.bar.baz;
 
-        import public "foo.proto";
-        import weak "bar/baz.proto";
-        import "bat.proto";
+                import public "foo.proto";
+                import weak "bar/baz.proto";
+                import "bat.proto";
 
-        option java_package = "my.test.package";
-        option (fully.qualified).option = .314159265e1;
-        """
+                option java_package = "my.test.package";
+                option (fully.qualified).option = .314159265e1;
+                """
             )
         )
 
@@ -56,15 +57,16 @@ class IntTest(unittest.TestCase):
         with self.assertRaises(ParseError):
             Parser.loads(
                 dedent(
-                    """package foo.bar.baz;
+                    """
+                    package foo.bar.baz;
 
-        import public "foo.proto";
-        import weak "bar/baz.proto";
-        import "bat.proto";
+                    import public "foo.proto";
+                    import weak "bar/baz.proto";
+                    import "bat.proto";
 
-        option java_package = "my.test.package";
-        option (fully.qualified).option = .314159265e1;
-        """
+                    option java_package = "my.test.package";
+                    option (fully.qualified).option = .314159265e1;
+                    """
                 )
             )
 
@@ -72,24 +74,61 @@ class IntTest(unittest.TestCase):
         with self.assertRaises(ParseError):
             Parser.loads(
                 dedent(
-                    """syntax = "proto3";
+                    """
+                    syntax = "proto3";
 
-            package foo.bar.baz
-            """
+                    package foo.bar.baz
+                    """
                 )
             )
         with self.assertRaises(ParseError):
             Parser.loads(
                 dedent(
-                    """syntax = "proto3";
+                    """
+                    syntax = "proto3";
 
-            package foo.bar.baz;
+                    package foo.bar.baz;
 
-            import public "foo.proto";
-            import weak "ba
-            """
+                    import public "foo.proto";
+                    import weak "ba
+                    """
                 )
             )
+
+    def test_serialize(self):
+        proto_file = Parser.loads(
+            dedent(
+                """
+                syntax = "proto3";
+
+                package foo.bar.baz;
+
+                import public "foo.proto";
+                import weak 'bar/baz.proto';
+                import "bat.proto";
+
+                option java_package = "my.test.package";
+                option (fully.qualified).option = .314159265e1;
+                """
+            )
+        )
+        self.assertEqual(
+            proto_file.serialize(),
+            dedent(
+                """
+                    syntax = "proto3";
+
+                    package foo.bar.baz;
+
+                    import public "foo.proto";
+                    import weak 'bar/baz.proto';
+                    import "bat.proto";
+
+                    option java_package = "my.test.package";
+                    option (fully.qualified).option = 3.14159265;
+                    """
+            ).strip(),
+        )
 
 
 if __name__ == "__main__":
