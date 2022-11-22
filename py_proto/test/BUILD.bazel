@@ -89,3 +89,12 @@ py_test(
         "//src:proto_package",
     ],
 )
+
+py_test(
+    name = "parser_test",
+    srcs = ["parser_test.py"],
+    deps = [
+        "//src:parser",
+        "//src:proto_syntax",
+    ],
+)

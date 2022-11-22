@@ -50,6 +50,6 @@ class Parser:
                 continue
             match_result = Parser.parse_partial_content(proto_content)
             parsed_tree.append(match_result.node)
-            proto_content = match_result.remaining_source
+            proto_content = match_result.remaining_source.strip()
 
         return ProtoFile(parsed_tree[0], parsed_tree[1:])
