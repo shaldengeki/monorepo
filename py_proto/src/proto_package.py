@@ -42,3 +42,6 @@ class ProtoPackage(ProtoNode):
             raise ValueError(f"Proto has invalid package: {package}")
 
         return ParsedProtoNode(ProtoPackage(package), proto_source.strip())
+
+    def serialize(self) -> str:
+        return f"package {self.package};"

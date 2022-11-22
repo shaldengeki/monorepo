@@ -10,12 +10,14 @@ class ImportTest(unittest.TestCase):
         self.assertEqual(double_quote_import.node.path, "foo.proto")
         self.assertEqual(double_quote_import.node.weak, False)
         self.assertEqual(double_quote_import.node.public, False)
+        self.assertEqual(double_quote_import.node.serialize(), 'import "foo.proto";')
         self.assertEqual(double_quote_import.remaining_source, "")
 
         single_quote_import = ProtoImport.match("import 'foo.proto';")
         self.assertEqual(single_quote_import.node.path, "foo.proto")
         self.assertEqual(single_quote_import.node.weak, False)
         self.assertEqual(single_quote_import.node.public, False)
+        self.assertEqual(single_quote_import.node.serialize(), 'import "foo.proto";')
         self.assertEqual(single_quote_import.remaining_source, "")
 
     def test_import_missing_semicolon(self):
@@ -37,8 +39,16 @@ class ImportTest(unittest.TestCase):
             ProtoImport.match("import 'foo.proto;")
 
     def test_weak_import(self):
-        self.assertEqual(ProtoImport.match('import weak "foo.proto";').node.weak, True)
-        self.assertEqual(ProtoImport.match("import weak 'foo.proto';").node.weak, True)
+        double_quote_import = ProtoImport.match('import weak "foo.proto";')
+        self.assertEqual(double_quote_import.node.weak, True)
+        self.assertEqual(
+            double_quote_import.node.serialize(), 'import weak "foo.proto";'
+        )
+        double_quote_import = ProtoImport.match("import weak 'foo.proto';")
+        self.assertEqual(double_quote_import.node.weak, True)
+        self.assertEqual(
+            double_quote_import.node.serialize(), 'import weak "foo.proto";'
+        )
 
     def test_weak_typoed_import(self):
         with self.assertRaises(ValueError):
@@ -54,21 +64,31 @@ class ImportTest(unittest.TestCase):
         )
         self.assertEqual(first_parsed_import.node.path, "foo.proto")
         self.assertEqual(first_parsed_import.node.weak, False)
+        self.assertEqual(first_parsed_import.node.serialize(), 'import "foo.proto";')
 
         second_parsed_import = ProtoImport.match(first_parsed_import.remaining_source)
         self.assertEqual(second_parsed_import.node.path, "bar/baz.proto")
         self.assertEqual(second_parsed_import.node.weak, True)
+        self.assertEqual(
+            second_parsed_import.node.serialize(), 'import weak "bar/baz.proto";'
+        )
 
         third_parsed_import = ProtoImport.match(second_parsed_import.remaining_source)
         self.assertEqual(third_parsed_import.node.path, "bat.proto")
         self.assertEqual(third_parsed_import.node.weak, False)
+        self.assertEqual(third_parsed_import.node.serialize(), 'import "bat.proto";')
 
     def test_public_import(self):
+        double_quote_import = ProtoImport.match('import public "foo.proto";')
+        self.assertEqual(double_quote_import.node.public, True)
         self.assertEqual(
-            ProtoImport.match('import public "foo.proto";').node.public, True
+            double_quote_import.node.serialize(), 'import public "foo.proto";'
         )
+
+        single_quote_import = ProtoImport.match("import public 'foo.proto';")
+        self.assertEqual(single_quote_import.node.public, True)
         self.assertEqual(
-            ProtoImport.match("import public 'foo.proto';").node.public, True
+            single_quote_import.node.serialize(), 'import public "foo.proto";'
         )
 
     def test_public_typoed_import(self):
@@ -92,14 +112,21 @@ class ImportTest(unittest.TestCase):
         )
         self.assertEqual(first_parsed_import.node.path, "foo.proto")
         self.assertEqual(first_parsed_import.node.public, False)
+        self.assertEqual(first_parsed_import.node.serialize(), 'import "foo.proto";')
 
         second_parsed_import = ProtoImport.match(first_parsed_import.remaining_source)
         self.assertEqual(second_parsed_import.node.path, "bar/baz.proto")
         self.assertEqual(second_parsed_import.node.public, True)
+        self.assertEqual(
+            second_parsed_import.node.serialize(), 'import public "bar/baz.proto";'
+        )
 
         third_parsed_import = ProtoImport.match(second_parsed_import.remaining_source)
         self.assertEqual(third_parsed_import.node.path, "bat.proto")
         self.assertEqual(third_parsed_import.node.public, True)
+        self.assertEqual(
+            third_parsed_import.node.serialize(), 'import public "bat.proto";'
+        )
 
 
 if __name__ == "__main__":

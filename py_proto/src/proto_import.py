@@ -54,3 +54,12 @@ class ProtoImport(ProtoNode):
             ProtoImport(match.node.val, weak=weak, public=public),
             match.remaining_source[1:].strip(),
         )
+
+    def serialize(self) -> str:
+        parts = ["import"]
+        if self.weak:
+            parts.append("weak")
+        elif self.public:
+            parts.append("public")
+        parts.append(f'"{self.path}";')
+        return " ".join(parts)

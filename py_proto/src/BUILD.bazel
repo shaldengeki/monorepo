@@ -1,5 +1,4 @@
 load("@rules_python//python:defs.bzl", "py_library")
-load("@py_proto_deps//:requirements.bzl", "requirement")
 
 py_library(
     name = "proto_node",
@@ -53,7 +52,6 @@ py_library(
         ":proto_import",
         ":proto_node",
         ":proto_package",
-        ":proto_string_literal",
         ":proto_syntax",
     ],
 )

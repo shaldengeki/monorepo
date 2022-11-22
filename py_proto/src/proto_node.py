@@ -6,6 +6,9 @@ class ProtoNode:
     def match(proto_source: str) -> Optional["ParsedProtoNode"]:
         raise NotImplementedError
 
+    def serialize(self) -> str:
+        raise NotImplementedError
+
 
 class ParsedProtoNode:
     def __init__(self, parsed_node: "ProtoNode", remaining_source: str):
