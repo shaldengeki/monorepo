@@ -2,13 +2,6 @@ load("@rules_python//python:defs.bzl", "py_library")
 load("@py_proto_deps//:requirements.bzl", "requirement")
 
 py_library(
-    name = "main",
-    srcs = ["main.py"],
-    visibility = ["//visibility:public"],
-    deps = [],
-)
-
-py_library(
     name = "proto_file",
     srcs = ["proto_file.py"],
     visibility = ["//visibility:public"],
