@@ -86,7 +86,7 @@ class ProtoImport(ProtoNode):
             public = True
             import_line = import_line[7:]
 
-        if import_line[0] not in ('"', "'"):
+        if import_line[0] not in ('"', "'") or import_line[-1] not in ('"', "'"):
             raise ValueError(f"Proto has invalid import syntax: {import_line}")
         import_path = import_line[1:-1]
 

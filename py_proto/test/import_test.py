@@ -40,6 +40,42 @@ class ImportTest(unittest.TestCase):
                 )
             )
 
+    def test_import_missing_starting_quote(self):
+        with self.assertRaises(ParseError):
+            Parser.loads(
+                dedent(
+                    """syntax = 'proto3';
+                import foo.proto";
+            """
+                )
+            )
+        with self.assertRaises(ParseError):
+            Parser.loads(
+                dedent(
+                    """syntax = 'proto3';
+                import foo.proto';
+            """
+                )
+            )
+
+    def test_import_missing_ending_quote(self):
+        with self.assertRaises(ParseError):
+            Parser.loads(
+                dedent(
+                    """syntax = 'proto3';
+                import "foo.proto;
+            """
+                )
+            )
+        with self.assertRaises(ParseError):
+            Parser.loads(
+                dedent(
+                    """syntax = 'proto3';
+                import 'foo.proto;
+            """
+                )
+            )
+
     def test_weak_default(self):
         self.assertEqual(
             Parser.loads(
