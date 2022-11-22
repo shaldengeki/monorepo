@@ -115,6 +115,7 @@ py_library(
     visibility = ["//visibility:public"],
     deps = [
         ":proto_identifier",
+        ":proto_option",
     ],
 )
 

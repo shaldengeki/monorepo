@@ -94,8 +94,12 @@ py_test(
     name = "proto_enum_test",
     srcs = ["proto_enum_test.py"],
     deps = [
+        "//src:proto_bool",
+        "//src:proto_constant",
         "//src:proto_enum",
         "//src:proto_identifier",
+        "//src:proto_option",
+        "//src:proto_string_literal",
     ],
 )
 

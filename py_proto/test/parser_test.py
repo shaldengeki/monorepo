@@ -57,7 +57,7 @@ class IntTest(unittest.TestCase):
                 ),
             ],
         )
-        self.assertIn(ProtoEnum(ProtoIdentifier("MyAwesomeEnum")), proto_file.nodes)
+        self.assertIn(ProtoEnum(ProtoIdentifier("MyAwesomeEnum"), []), proto_file.nodes)
 
     def test_parser_no_syntax(self):
         with self.assertRaises(ParseError):
