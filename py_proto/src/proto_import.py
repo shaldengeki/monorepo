@@ -20,7 +20,7 @@ class ProtoImport(ProtoNode):
         )
 
     def __str__(self) -> str:
-        return f"<ProtoImport path='{self.path}' weak={self.weak} public={self.public}>"
+        return f"<ProtoImport path={self.path.serialize()} weak={self.weak} public={self.public}>"
 
     def __repr__(self) -> str:
         return str(self)

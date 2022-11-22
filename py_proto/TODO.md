@@ -3,11 +3,11 @@
 - [x] Set up Bazel scaffolding
 - [x] Set up testing
 - [ ] Mount in Google protobufs
-- [ ] [Proto file support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#proto_file)
+- [x] [Proto file support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#proto_file)
   - [x] Syntax
   - [x] Imports
   - [x] Package
-  - [ ] Options
+  - [x] Options
 - [ ] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)
   - [ ] Empty message
   - [ ] Empty statements

@@ -1,6 +1,7 @@
 from src.proto_file import ProtoFile
 from src.proto_import import ProtoImport
 from src.proto_node import ParsedProtoNode
+from src.proto_option import ProtoOption
 from src.proto_package import ProtoPackage
 from src.proto_syntax import ProtoSyntax
 
@@ -15,6 +16,7 @@ class Parser:
         for node_type in (
             ProtoImport,
             ProtoPackage,
+            ProtoOption,
         ):
             try:
                 match_result = node_type.match(partial_proto_content)
@@ -42,6 +44,10 @@ class Parser:
 
         # Next, parse the rest.
         while proto_content:
+            # Remove empty statements.
+            if proto_content.startswith(";"):
+                proto_content = proto_content[1:].strip()
+                continue
             match_result = Parser.parse_partial_content(proto_content)
             parsed_tree.append(match_result.node)
             proto_content = match_result.remaining_source
