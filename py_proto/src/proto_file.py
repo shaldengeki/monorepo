@@ -1,7 +1,7 @@
-from src.proto_node import ProtoNode
-from src.proto_syntax import ProtoSyntax
 from src.proto_import import ProtoImport
+from src.proto_node import ProtoNode
 from src.proto_package import ProtoPackage
+from src.proto_syntax import ProtoSyntax
 
 
 class ProtoOption(ProtoNode):

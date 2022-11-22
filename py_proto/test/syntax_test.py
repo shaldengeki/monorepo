@@ -1,4 +1,5 @@
 import unittest
+
 from src.proto_syntax import ProtoSyntax, ProtoSyntaxTypes
 
 

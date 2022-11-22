@@ -1,10 +1,8 @@
-from src.proto_file import (
-    ProtoFile,
-)
-from src.proto_node import ParsedProtoNode
-from src.proto_syntax import ProtoSyntax
+from src.proto_file import ProtoFile
 from src.proto_import import ProtoImport
+from src.proto_node import ParsedProtoNode
 from src.proto_package import ProtoPackage
+from src.proto_syntax import ProtoSyntax
 
 
 class ParseError(ValueError):

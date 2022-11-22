@@ -1,4 +1,5 @@
 import unittest
+
 from src.proto_string_literal import ProtoStringLiteral
 
 

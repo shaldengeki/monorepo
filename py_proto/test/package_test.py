@@ -1,5 +1,6 @@
-from textwrap import dedent
 import unittest
+from textwrap import dedent
+
 from src.proto_package import ProtoPackage
 
 
