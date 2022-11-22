@@ -1,6 +1,5 @@
 import unittest
-from src.parser import Parser
-from src.proto_file import ProtoStringLiteral
+from src.proto_string_literal import ProtoStringLiteral
 
 
 class StringLiteralTest(unittest.TestCase):

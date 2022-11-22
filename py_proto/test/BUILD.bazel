@@ -4,8 +4,7 @@ py_test(
     name = "string_literal_test",
     srcs = ["string_literal_test.py"],
     deps = [
-        "//src:parser",
-        "//src:proto_file",
+        "//src:proto_string_literal",
     ],
 )
 
@@ -14,7 +13,7 @@ py_test(
     srcs = ["syntax_test.py"],
     deps = [
         "//src:parser",
-        "//src:proto_file",
+        "//src:proto_syntax",
     ],
 )
 
@@ -23,7 +22,7 @@ py_test(
     srcs = ["import_test.py"],
     deps = [
         "//src:parser",
-        "//src:proto_file",
+        "//src:proto_import",
     ],
 )
 
@@ -32,6 +31,6 @@ py_test(
     srcs = ["package_test.py"],
     deps = [
         "//src:parser",
-        "//src:proto_file",
+        "//src:proto_package",
     ],
 )

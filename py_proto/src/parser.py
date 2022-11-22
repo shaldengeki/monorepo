@@ -1,14 +1,10 @@
 from src.proto_file import (
     ProtoFile,
-    ParsedProtoNode,
-    ProtoSyntax,
-    ProtoImport,
-    ProtoPackage,
-    ProtoOption,
-    ProtoEnum,
-    ProtoMessage,
-    ProtoService,
 )
+from src.proto_node import ParsedProtoNode
+from src.proto_syntax import ProtoSyntax
+from src.proto_import import ProtoImport
+from src.proto_package import ProtoPackage
 
 
 class ParseError(ValueError):
@@ -21,10 +17,6 @@ class Parser:
         for node_type in (
             ProtoImport,
             ProtoPackage,
-            # ProtoOption,
-            # ProtoEnum,
-            # ProtoMessage,
-            # ProtoService,
         ):
             try:
                 match_result = node_type.match(partial_proto_content)

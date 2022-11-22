@@ -2,15 +2,71 @@ load("@rules_python//python:defs.bzl", "py_library")
 load("@py_proto_deps//:requirements.bzl", "requirement")
 
 py_library(
+    name = "proto_node",
+    srcs = ["proto_node.py"],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "proto_string_literal",
+    srcs = ["proto_string_literal.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":proto_node",
+    ],
+)
+
+py_library(
+    name = "proto_syntax",
+    srcs = ["proto_syntax.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":proto_node",
+        ":proto_string_literal",
+    ],
+)
+
+py_library(
+    name = "proto_import",
+    srcs = ["proto_import.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":proto_node",
+        ":proto_string_literal",
+    ],
+)
+
+py_library(
+    name = "proto_package",
+    srcs = ["proto_package.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":proto_node",
+    ],
+)
+
+py_library(
     name = "proto_file",
     srcs = ["proto_file.py"],
     visibility = ["//visibility:public"],
-    deps = [],
+    deps = [
+        ":proto_import",
+        ":proto_node",
+        ":proto_package",
+        ":proto_string_literal",
+        ":proto_syntax",
+    ],
 )
 
 py_library(
     name = "parser",
     srcs = ["parser.py"],
     visibility = ["//visibility:public"],
-    deps = [":proto_file"],
+    deps = [
+        ":proto_file",
+        ":proto_import",
+        ":proto_node",
+        ":proto_package",
+        ":proto_syntax",
+    ],
 )

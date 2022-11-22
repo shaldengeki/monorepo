@@ -1,7 +1,7 @@
 from textwrap import dedent
 import unittest
 from src.parser import Parser, ParseError
-from src.proto_file import ProtoPackage
+from src.proto_package import ProtoPackage
 
 
 class PackageTest(unittest.TestCase):
