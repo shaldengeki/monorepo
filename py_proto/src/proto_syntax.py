@@ -21,7 +21,14 @@ class ProtoSyntax(ProtoNode):
         match = ProtoStringLiteral.match(syntax_line)
         if match is None:
             raise ValueError(f"Proto has invalid syntax syntax: {';'.join(parts)}")
+        try:
+            syntax_type = ProtoSyntaxTypes[match.node.val.upper()]
+        except KeyError:
+            raise ValueError(
+                f"Proto has unknown syntax type: {match.node.val}, must be one of: {[proto_type.name for proto_type in ProtoSyntaxTypes]}"
+            )
+
         return ParsedProtoNode(
-            ProtoSyntaxTypes[match.node.val.upper()],
+            syntax_type,
             proto_source.strip(),
         )
