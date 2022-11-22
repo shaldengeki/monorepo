@@ -4,20 +4,20 @@ load("@py_proto_deps//:requirements.bzl", "requirement")
 py_library(
     name = "main",
     srcs = ["main.py"],
-    deps = [],
     visibility = ["//visibility:public"],
+    deps = [],
 )
 
 py_library(
     name = "proto_file",
     srcs = ["proto_file.py"],
-    deps = [],
     visibility = ["//visibility:public"],
+    deps = [],
 )
 
 py_library(
     name = "parser",
     srcs = ["parser.py"],
-    deps = [":proto_file"],
     visibility = ["//visibility:public"],
+    deps = [":proto_file"],
 )

@@ -21,13 +21,12 @@ python_register_toolchains(
 )
 
 load("@python3_10//:defs.bzl", "interpreter")
-
 load("@rules_python//python:pip.bzl", "pip_parse")
 
 pip_parse(
     name = "py_proto_deps",
     python_interpreter_target = interpreter,
-    requirements_lock = "//src:requirements.txt"
+    requirements_lock = "//src:requirements.txt",
 )
 
 http_archive(

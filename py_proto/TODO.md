@@ -5,7 +5,7 @@
 - [ ] Mount in Google protobufs
 - [ ] [Proto file support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#proto_file)
   - [x] Syntax
-  - [ ] Imports
+  - [x] Imports
   - [ ] Package
   - [ ] Options
 - [ ] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)

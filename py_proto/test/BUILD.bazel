@@ -9,5 +9,17 @@ py_test(
 py_test(
     name = "syntax_test",
     srcs = ["syntax_test.py"],
-    deps = ["//src:parser", "//src:proto_file"],
+    deps = [
+        "//src:parser",
+        "//src:proto_file",
+    ],
+)
+
+py_test(
+    name = "import_test",
+    srcs = ["import_test.py"],
+    deps = [
+        "//src:parser",
+        "//src:proto_file",
+    ],
 )
