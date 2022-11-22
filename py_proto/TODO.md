@@ -8,23 +8,6 @@
   - [x] Imports
   - [x] Package
   - [x] Options
-- [ ] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)
-  - [ ] Empty message
-  - [ ] Empty statements
-  - [ ] Options
-  - [ ] Fields
-    - [ ] Basic fields
-    - [ ] Field options
-  - [ ] OneOfs
-    - [ ] Basic oneofs
-    - [ ] OneOf options
-    - [ ] Field options
-  - [ ] Maps
-    - [ ] Basic maps
-    - [ ] Map options
-  - [ ] Reserveds
-  - [ ] Nested messages
-  - [ ] Nested enums
 - [ ] [Enum support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#enum_definition)
   - [x] Empty enum
   - [x] Enum options
@@ -33,6 +16,23 @@
     - [ ] Values
     - [ ] Value options
   - [ ] Reserveds
+- [ ] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)
+  - [ ] Empty message
+  - [ ] Empty statements
+  - [ ] Options
+  - [ ] Fields
+    - [ ] Basic fields
+    - [ ] Field options
+    - [ ] OneOfs
+      - [ ] Basic oneofs
+      - [ ] OneOf options
+      - [ ] Field options
+    - [ ] Maps
+      - [ ] Basic maps
+      - [ ] Map options
+    - [ ] Reserveds
+  - [ ] Nested messages
+  - [ ] Nested enums
 - [ ] [Service support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#service_definition)
   - [ ] Empty service
   - [ ] Empty statements
@@ -42,3 +42,32 @@
     - [ ] stream request
     - [ ] stream response
     - [ ] RPC options & empty statements
+- [ ] Diffs
+  - [ ] Normalizing
+  - [ ] Complete diffs
+    - [ ] Proto file-level diffs
+      - [ ] Syntax changes
+      - [ ] Import changes
+      - [ ] Package changes
+      - [ ] Option changes
+    - [ ] Enum-level diffs
+      - [ ] Additions/removals
+      - [ ] Option changes
+      - [ ] Field changes
+        - [ ] Value changes
+        - [ ] Option changes
+      - [ ] Reserveds changes
+    - [ ] Message-level diffs
+      - [ ] Additions/removals
+      - [ ] Option changes
+      - [ ] Field changes
+      - [ ] Reserved changes
+      - [ ] Nested enum changes
+      - [ ] Nested message changes
+    - [ ] Service-level diffs
+      - [ ] Additions/removals
+      - [ ] Option changes
+      - [ ] RPC changes
+        - [ ] Additions/removals
+        - [ ] Option changes
+  - [ ] Backwards-compatibility check
