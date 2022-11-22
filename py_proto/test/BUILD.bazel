@@ -1,6 +1,15 @@
 load("@rules_python//python:defs.bzl", "py_test")
 
 py_test(
+    name = "string_literal_test",
+    srcs = ["string_literal_test.py"],
+    deps = [
+        "//src:parser",
+        "//src:proto_file",
+    ],
+)
+
+py_test(
     name = "syntax_test",
     srcs = ["syntax_test.py"],
     deps = [

@@ -224,16 +224,16 @@ class ImportTest(unittest.TestCase):
             Parser.loads(
                 dedent(
                     """syntax = 'proto3';
-            import "foo.proto";
-            import 'bar/baz.proto';
-            import "foo2.proto";
+            import "multiple_imports_1.proto";
+            import 'multiple_imports/2.proto';
+            import "multiple_imports_3.proto";
         """
                 )
             ).imports,
             [
-                ProtoImport("foo.proto"),
-                ProtoImport("bar/baz.proto"),
-                ProtoImport("foo2.proto"),
+                ProtoImport("multiple_imports_1.proto"),
+                ProtoImport("multiple_imports/2.proto"),
+                ProtoImport("multiple_imports_3.proto"),
             ],
         )
 

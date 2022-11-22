@@ -25,6 +25,40 @@ class ProtoNode:
         raise NotImplementedError
 
 
+class ProtoStringLiteral(ProtoNode):
+    QUOTES = {'"', "'"}
+
+    def __init__(self, val: str):
+        self.val = val
+
+    def __eq__(self, other) -> bool:
+        return self.val == other.val
+
+    def __str__(self) -> str:
+        return f"<ProtoStringLiteral val='{self.val}'>"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+    @staticmethod
+    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+        if not any(proto_source.startswith(c) for c in ProtoStringLiteral.QUOTES):
+            return None
+        escaped = False
+        starting_quote = proto_source[0]
+        for i, c in enumerate(proto_source[1:]):
+            if c == "\\":
+                escaped = True
+                continue
+            if c == starting_quote and not escaped:
+                return ParsedProtoNode(
+                    ProtoStringLiteral(proto_source[1 : i + 1]),
+                    proto_source[i + 2 :].strip(),
+                )
+            escaped = False
+        return None
+
+
 class ProtoSyntaxTypes(Enum):
     PROTO2 = "proto2"
     PROTO3 = "proto3"
@@ -36,10 +70,13 @@ class ProtoSyntax(ProtoNode):
         if not proto_source.startswith("syntax = "):
             return None
         parts = proto_source.split(";")
-        syntax_line = parts[0]
         proto_source = ";".join(parts[1:])
+        syntax_line = parts[0][9:]
+        match = ProtoStringLiteral.match(syntax_line)
+        if match is None:
+            raise ValueError(f"Proto has invalid syntax syntax: {';'.join(parts)}")
         return ParsedProtoNode(
-            ProtoSyntaxTypes[syntax_line.split("syntax = ")[1][1:-1].upper()],
+            ProtoSyntaxTypes[match.node.val.upper()],
             proto_source.strip(),
         )
 
@@ -68,30 +105,31 @@ class ProtoImport(ProtoNode):
         if not proto_source.startswith("import "):
             return None
         proto_source = proto_source[7:]
-        parts = proto_source.split(";")
-        import_line = parts[0]
-        if len(parts) == 1:
-            raise ValueError(f"Proto has invalid import syntax: {';'.join(parts)}")
-        proto_source = ";".join(parts[1:])
 
         weak = False
-        if import_line.startswith("weak "):
+        if proto_source.startswith("weak "):
             weak = True
-            import_line = import_line[5:]
+            proto_source = proto_source[5:]
 
         public = False
-        if import_line.startswith("public "):
+        if proto_source.startswith("public "):
             if weak:
-                raise ValueError(f"Proto has invalid import syntax: {';'.join(parts)}")
+                raise ValueError(f"Proto has invalid import syntax: {proto_source}")
             public = True
-            import_line = import_line[7:]
+            proto_source = proto_source[7:]
 
-        if import_line[0] not in ('"', "'") or import_line[-1] not in ('"', "'"):
-            raise ValueError(f"Proto has invalid import syntax: {import_line}")
-        import_path = import_line[1:-1]
+        match = ProtoStringLiteral.match(proto_source)
+        if match is None:
+            raise ValueError(f"Proto has invalid import syntax: {proto_source}")
+
+        if not match.remaining_source.startswith(";"):
+            raise ValueError(
+                f"Proto has invalid import syntax: {match.remaining_source}"
+            )
 
         return ParsedProtoNode(
-            ProtoImport(import_path, weak=weak, public=public), proto_source.strip()
+            ProtoImport(match.node.val, weak=weak, public=public),
+            match.remaining_source[1:].strip(),
         )
 
 
@@ -154,7 +192,6 @@ class ProtoFile:
 
         if len([node for node in nodes if isinstance(node, ProtoPackage)]) > 1:
             raise ValueError(f"Proto can't have more than one package statement")
-        # imports: Optional[list[ProtoImport]] = None, options: Optional[list[ProtoOption]] = None, top_level_definitions: Optional[list[ProtoEnum | ProtoMessage | ProtoService]] = None
 
     @property
     def imports(self) -> list[ProtoImport]:
