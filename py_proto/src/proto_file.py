@@ -1,9 +1,32 @@
 from enum import Enum
 from typing import Optional
 
-class ProtoSyntax(Enum):
+class ParsedProtoNode:
+    def __init__(self, parsed_node: 'ProtoNode', remaining_source: str):
+        self.node = parsed_node
+        self.remaining_source = remaining_source
+
+class ProtoNode:
+    @staticmethod
+    def match(proto_source: str) -> Optional['ParsedProtoNode']:
+        raise NotImplementedError
+
+class ProtoSyntaxTypes(Enum):
     PROTO2 = 'proto2'
     PROTO3 = 'proto3'
+
+class ProtoSyntax(ProtoNode):
+    @staticmethod
+    def match(proto_source: str) -> Optional['ParsedProtoNode']:
+        if not proto_source.startswith('syntax = '):
+            return None
+        parts = proto_source.split(';')
+        syntax_line = parts[0]
+        proto_source = ';'.join(parts[1:])
+        return ParsedProtoNode(
+            ProtoSyntaxTypes[syntax_line.split("syntax = ")[1][1:-1].upper()],
+            proto_source
+        )
 
 class ProtoImport:
     def __init__(self):
@@ -24,6 +47,15 @@ class ProtoMessage:
 class ProtoService:
     def __init__(self):
         pass
+
+SUPPORTED_NODES = [
+    ProtoSyntax,
+    ProtoImport,
+    ProtoOption,
+    ProtoEnum,
+    ProtoMessage,
+    ProtoService
+]
 
 class ProtoFile:
     def __init__(self, syntax: ProtoSyntax, imports: Optional[list[ProtoImport]] = None, options: Optional[list[ProtoOption]] = None, top_level_definitions: Optional[list[ProtoEnum | ProtoMessage | ProtoService]] = None):

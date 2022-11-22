@@ -1,13 +1,13 @@
 import unittest
 from src.parser import Parser
-from src.proto_file import ProtoSyntax
+from src.proto_file import ProtoSyntaxTypes
 
 class SyntaxTest(unittest.TestCase):
     def test_correct_syntax(self):
-        self.assertEqual(Parser.loads("syntax = 'proto3'").syntax, ProtoSyntax.PROTO3)
-        self.assertEqual(Parser.loads("syntax = \"proto3\"").syntax, ProtoSyntax.PROTO3)
-        self.assertEqual(Parser.loads("syntax = 'proto2'").syntax, ProtoSyntax.PROTO2)
-        self.assertEqual(Parser.loads("syntax = \"proto2\"").syntax, ProtoSyntax.PROTO2)
+        self.assertEqual(Parser.loads("syntax = 'proto3'").syntax, ProtoSyntaxTypes.PROTO3)
+        self.assertEqual(Parser.loads("syntax = \"proto3\"").syntax, ProtoSyntaxTypes.PROTO3)
+        self.assertEqual(Parser.loads("syntax = 'proto2'").syntax, ProtoSyntaxTypes.PROTO2)
+        self.assertEqual(Parser.loads("syntax = \"proto2\"").syntax, ProtoSyntaxTypes.PROTO2)
 
     def test_syntax_not_present(self):
         with self.assertRaises(Exception):
