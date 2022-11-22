@@ -6,7 +6,7 @@
 - [ ] [Proto file support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#proto_file)
   - [x] Syntax
   - [x] Imports
-  - [ ] Package
+  - [x] Package
   - [ ] Options
 - [ ] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)
   - [ ] Empty message

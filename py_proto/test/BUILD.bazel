@@ -17,3 +17,12 @@ py_test(
         "//src:proto_file",
     ],
 )
+
+py_test(
+    name = "package_test",
+    srcs = ["package_test.py"],
+    deps = [
+        "//src:parser",
+        "//src:proto_file",
+    ],
+)

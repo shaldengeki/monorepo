@@ -3,6 +3,7 @@ from src.proto_file import (
     ParsedProtoNode,
     ProtoSyntax,
     ProtoImport,
+    ProtoPackage,
     ProtoOption,
     ProtoEnum,
     ProtoMessage,
@@ -19,10 +20,11 @@ class Parser:
     def parse_partial_content(partial_proto_content: str) -> ParsedProtoNode:
         for node_type in (
             ProtoImport,
-            ProtoOption,
-            ProtoEnum,
-            ProtoMessage,
-            ProtoService,
+            ProtoPackage,
+            # ProtoOption,
+            # ProtoEnum,
+            # ProtoMessage,
+            # ProtoService,
         ):
             try:
                 match_result = node_type.match(partial_proto_content)

@@ -58,7 +58,7 @@ class ProtoImport(ProtoNode):
         )
 
     def __str__(self) -> str:
-        return f"<ProtoImport path='{self.path} weak={self.weak} public={self.public}'>"
+        return f"<ProtoImport path='{self.path}' weak={self.weak} public={self.public}>"
 
     def __repr__(self) -> str:
         return str(self)
@@ -95,6 +95,38 @@ class ProtoImport(ProtoNode):
         )
 
 
+class ProtoPackage(ProtoNode):
+    def __init__(self, package: str):
+        self.package = package
+
+    def __eq__(self, other) -> bool:
+        return self.package == other.package
+
+    def __str__(self) -> str:
+        return f"<ProtoPackage package={self.package}>"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+    @staticmethod
+    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+        if not proto_source.startswith("package "):
+            return None
+        proto_source = proto_source[8:]
+        parts = proto_source.split(";")
+        package = parts[0]
+        if len(parts) == 1:
+            raise ValueError(
+                f"Proto has invalid package declaration syntax: {';'.join(parts)}"
+            )
+        proto_source = ";".join(parts[1:])
+
+        if package.startswith(".") or package.endswith("."):
+            raise ValueError(f"Proto has invalid package: {package}")
+
+        return ParsedProtoNode(ProtoPackage(package), proto_source.strip())
+
+
 class ProtoOption(ProtoNode):
     def __init__(self):
         pass
@@ -119,8 +151,15 @@ class ProtoFile:
     def __init__(self, syntax: ProtoSyntax, nodes: list[ProtoNode]):
         self.syntax = syntax
         self.nodes = nodes
+
+        if len([node for node in nodes if isinstance(node, ProtoPackage)]) > 1:
+            raise ValueError(f"Proto can't have more than one package statement")
         # imports: Optional[list[ProtoImport]] = None, options: Optional[list[ProtoOption]] = None, top_level_definitions: Optional[list[ProtoEnum | ProtoMessage | ProtoService]] = None
 
     @property
     def imports(self) -> list[ProtoImport]:
         return [node for node in self.nodes if isinstance(node, ProtoImport)]
+
+    @property
+    def package(self) -> ProtoPackage:
+        return next(node for node in self.nodes if isinstance(node, ProtoPackage))
