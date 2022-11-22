@@ -1,48 +1,48 @@
 load("@rules_python//python:defs.bzl", "py_test")
 
 py_test(
-    name = "string_literal_test",
-    srcs = ["string_literal_test.py"],
+    name = "proto_string_literal_test",
+    srcs = ["proto_string_literal_test.py"],
     deps = [
         "//src:proto_string_literal",
     ],
 )
 
 py_test(
-    name = "identifier_test",
-    srcs = ["identifier_test.py"],
+    name = "proto_identifier_test",
+    srcs = ["proto_identifier_test.py"],
     deps = [
         "//src:proto_identifier",
     ],
 )
 
 py_test(
-    name = "bool_test",
-    srcs = ["bool_test.py"],
+    name = "proto_bool_test",
+    srcs = ["proto_bool_test.py"],
     deps = [
         "//src:proto_bool",
     ],
 )
 
 py_test(
-    name = "int_test",
-    srcs = ["int_test.py"],
+    name = "proto_int_test",
+    srcs = ["proto_int_test.py"],
     deps = [
         "//src:proto_int",
     ],
 )
 
 py_test(
-    name = "float_test",
-    srcs = ["float_test.py"],
+    name = "proto_float_test",
+    srcs = ["proto_float_test.py"],
     deps = [
         "//src:proto_float",
     ],
 )
 
 py_test(
-    name = "constant_test",
-    srcs = ["constant_test.py"],
+    name = "proto_constant_test",
+    srcs = ["proto_constant_test.py"],
     deps = [
         "//src:proto_bool",
         "//src:proto_constant",
@@ -53,8 +53,8 @@ py_test(
 )
 
 py_test(
-    name = "option_test",
-    srcs = ["option_test.py"],
+    name = "proto_option_test",
+    srcs = ["proto_option_test.py"],
     deps = [
         "//src:proto_bool",
         "//src:proto_constant",
@@ -66,8 +66,8 @@ py_test(
 )
 
 py_test(
-    name = "syntax_test",
-    srcs = ["syntax_test.py"],
+    name = "proto_syntax_test",
+    srcs = ["proto_syntax_test.py"],
     deps = [
         "//src:proto_string_literal",
         "//src:proto_syntax",
@@ -75,16 +75,16 @@ py_test(
 )
 
 py_test(
-    name = "import_test",
-    srcs = ["import_test.py"],
+    name = "proto_import_test",
+    srcs = ["proto_import_test.py"],
     deps = [
         "//src:proto_import",
     ],
 )
 
 py_test(
-    name = "package_test",
-    srcs = ["package_test.py"],
+    name = "proto_package_test",
+    srcs = ["proto_package_test.py"],
     deps = [
         "//src:proto_package",
     ],
