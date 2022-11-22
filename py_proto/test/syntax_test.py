@@ -1,31 +1,28 @@
 import unittest
 
+from src.proto_string_literal import ProtoStringLiteral
 from src.proto_syntax import ProtoSyntax, ProtoSyntaxType
 
 
 class SyntaxTest(unittest.TestCase):
     def test_correct_syntax(self):
         self.assertEqual(
-            ProtoSyntax.match("syntax = 'proto3';").node,
-            ProtoSyntax(ProtoSyntaxType.PROTO3),
+            ProtoSyntax.match("syntax = 'proto3';").node.syntax.val, "proto3"
         )
         self.assertEqual(
-            ProtoSyntax.match('syntax = "proto3";').node,
-            ProtoSyntax(ProtoSyntaxType.PROTO3),
+            ProtoSyntax.match('syntax = "proto3";').node.syntax.val, "proto3"
         )
         self.assertEqual(
-            ProtoSyntax.match("syntax = 'proto2';").node,
-            ProtoSyntax(ProtoSyntaxType.PROTO2),
+            ProtoSyntax.match("syntax = 'proto2';").node.syntax.val, "proto2"
         )
         self.assertEqual(
-            ProtoSyntax.match('syntax = "proto2";').node,
-            ProtoSyntax(ProtoSyntaxType.PROTO2),
+            ProtoSyntax.match('syntax = "proto2";').node.syntax.val, "proto2"
         )
 
     def test_serialize(self):
         self.assertEqual(
             ProtoSyntax.match("syntax = 'proto3';").node.serialize(),
-            'syntax = "proto3";',
+            "syntax = 'proto3';",
         )
         self.assertEqual(
             ProtoSyntax.match('syntax = "proto3";').node.serialize(),
@@ -33,7 +30,7 @@ class SyntaxTest(unittest.TestCase):
         )
         self.assertEqual(
             ProtoSyntax.match("syntax = 'proto2';").node.serialize(),
-            'syntax = "proto2";',
+            "syntax = 'proto2';",
         )
         self.assertEqual(
             ProtoSyntax.match('syntax = "proto2";').node.serialize(),

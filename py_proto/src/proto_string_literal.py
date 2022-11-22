@@ -4,10 +4,11 @@ from src.proto_node import ParsedProtoNode, ProtoNode
 
 
 class ProtoStringLiteral(ProtoNode):
-    QUOTES = {'"', "'"}
+    QUOTES = ['"', "'"]
 
-    def __init__(self, val: str):
+    def __init__(self, val: str, quote=QUOTES[0]):
         self.val = val
+        self.quote = quote
 
     def __eq__(self, other) -> bool:
         return self.val == other.val
@@ -30,8 +31,11 @@ class ProtoStringLiteral(ProtoNode):
                 continue
             if c == starting_quote and not escaped:
                 return ParsedProtoNode(
-                    ProtoStringLiteral(proto_source[1 : i + 1]),
+                    ProtoStringLiteral(proto_source[1 : i + 1], quote=starting_quote),
                     proto_source[i + 2 :].strip(),
                 )
             escaped = False
         return None
+
+    def serialize(self) -> str:
+        return "".join([self.quote, self.val, self.quote])

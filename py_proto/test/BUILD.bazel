@@ -12,6 +12,7 @@ py_test(
     name = "syntax_test",
     srcs = ["syntax_test.py"],
     deps = [
+        "//src:proto_string_literal",
         "//src:proto_syntax",
     ],
 )

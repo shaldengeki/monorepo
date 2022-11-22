@@ -11,7 +11,7 @@ class ProtoSyntaxType(Enum):
 
 
 class ProtoSyntax(ProtoNode):
-    def __init__(self, syntax: ProtoSyntaxType):
+    def __init__(self, syntax: ProtoStringLiteral):
         self.syntax = syntax
 
     def __eq__(self, other) -> bool:
@@ -41,9 +41,9 @@ class ProtoSyntax(ProtoNode):
             )
 
         return ParsedProtoNode(
-            ProtoSyntax(syntax_type),
+            ProtoSyntax(match.node),
             match.remaining_source.strip(),
         )
 
     def serialize(self) -> str:
-        return f'syntax = "{self.syntax.value}";'
+        return f"syntax = {self.syntax.serialize()};"

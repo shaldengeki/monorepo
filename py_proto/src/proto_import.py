@@ -5,7 +5,9 @@ from src.proto_string_literal import ProtoStringLiteral
 
 
 class ProtoImport(ProtoNode):
-    def __init__(self, path: str, weak: bool = False, public: bool = False):
+    def __init__(
+        self, path: ProtoStringLiteral, weak: bool = False, public: bool = False
+    ):
         self.path = path
         self.weak = weak
         self.public = public
@@ -51,7 +53,7 @@ class ProtoImport(ProtoNode):
             )
 
         return ParsedProtoNode(
-            ProtoImport(match.node.val, weak=weak, public=public),
+            ProtoImport(match.node, weak=weak, public=public),
             match.remaining_source[1:].strip(),
         )
 
@@ -61,5 +63,5 @@ class ProtoImport(ProtoNode):
             parts.append("weak")
         elif self.public:
             parts.append("public")
-        parts.append(f'"{self.path}";')
+        parts.append(f"{self.path.serialize()};")
         return " ".join(parts)
