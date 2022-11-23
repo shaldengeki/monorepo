@@ -13,7 +13,7 @@
   - [x] Enum options
   - [ ] Fields
     - [x] Empty statements
-    - [ ] Values
+    - [x] Values
     - [ ] Value options
   - [ ] Reserveds
 - [ ] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)

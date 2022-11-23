@@ -2,11 +2,13 @@ import unittest
 from textwrap import dedent
 
 from src.parser import ParseError, Parser
+from src.proto_bool import ProtoBool
 from src.proto_constant import ProtoConstant
-from src.proto_enum import ProtoEnum
+from src.proto_enum import ProtoEnum, ProtoEnumValue
 from src.proto_float import ProtoFloat, ProtoFloatSign
 from src.proto_identifier import ProtoIdentifier
 from src.proto_import import ProtoImport
+from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_option import ProtoOption
 from src.proto_string_literal import ProtoStringLiteral
 from src.proto_syntax import ProtoSyntaxType
@@ -29,7 +31,10 @@ class IntTest(unittest.TestCase):
                 option (fully.qualified).option = .314159265e1;
 
                 enum MyAwesomeEnum {
-
+                    option allow_alias = true;
+                    MAE_UNSPECIFIED = 0;
+                    MAE_STARTED = 1;
+                    MAE_RUNNING = 2;
                 }
                 """
             )
@@ -57,7 +62,32 @@ class IntTest(unittest.TestCase):
                 ),
             ],
         )
-        self.assertIn(ProtoEnum(ProtoIdentifier("MyAwesomeEnum"), []), proto_file.nodes)
+        self.assertIn(
+            ProtoEnum(
+                ProtoIdentifier("MyAwesomeEnum"),
+                [
+                    ProtoOption(
+                        ProtoIdentifier("allow_alias"), ProtoConstant(ProtoBool(True))
+                    ),
+                    ProtoEnumValue(
+                        ProtoIdentifier("MAE_UNSPECIFIED"),
+                        ProtoInt(0, ProtoIntSign.POSITIVE),
+                        [],
+                    ),
+                    ProtoEnumValue(
+                        ProtoIdentifier("MAE_STARTED"),
+                        ProtoInt(1, ProtoIntSign.POSITIVE),
+                        [],
+                    ),
+                    ProtoEnumValue(
+                        ProtoIdentifier("MAE_RUNNING"),
+                        ProtoInt(2, ProtoIntSign.POSITIVE),
+                        [],
+                    ),
+                ],
+            ),
+            proto_file.nodes,
+        )
 
     def test_parser_no_syntax(self):
         with self.assertRaises(ParseError):
@@ -115,6 +145,13 @@ class IntTest(unittest.TestCase):
 
                 option java_package = "my.test.package";
                 option (fully.qualified).option = .314159265e1;
+
+                enum MyAwesomeEnum {
+                    MAE_UNSPECIFIED = 0;
+                    option allow_alias = true;
+                    MAE_STARTED = 1;
+                    MAE_RUNNING = 2;
+                }
                 """
             )
         )
@@ -132,6 +169,13 @@ class IntTest(unittest.TestCase):
 
                     option java_package = "my.test.package";
                     option (fully.qualified).option = 3.14159265;
+
+                    enum MyAwesomeEnum {
+                    MAE_UNSPECIFIED = 0;
+                    option allow_alias = true;
+                    MAE_STARTED = 1;
+                    MAE_RUNNING = 2;
+                    }
                     """
             ).strip(),
         )

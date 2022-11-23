@@ -5,11 +5,6 @@ from src.proto_package import ProtoPackage
 from src.proto_syntax import ProtoSyntax
 
 
-class ProtoEnum(ProtoNode):
-    def __init__(self):
-        pass
-
-
 class ProtoMessage(ProtoNode):
     def __init__(self):
         pass
@@ -41,8 +36,13 @@ class ProtoFile:
         return [node for node in self.nodes if isinstance(node, ProtoOption)]
 
     def serialize(self) -> str:
-        return "\n\n".join(
-            [self.syntax.serialize(), self.package.serialize()]
-            + ["\n".join(x.serialize() for x in self.imports)]
-            + ["\n".join(x.serialize() for x in self.options)]
-        )
+        serialized_parts = [self.syntax.serialize()]
+        previous_type = self.syntax.__class__
+        for node in self.nodes:
+            # Attempt to group up lines of the same type.
+            if node.__class__ != previous_type:
+                previous_type = node.__class__
+                serialized_parts.append("")
+            serialized_parts.append(node.serialize())
+
+        return "\n".join(serialized_parts)

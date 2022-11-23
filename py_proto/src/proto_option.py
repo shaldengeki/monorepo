@@ -17,7 +17,7 @@ class ProtoOption(ProtoNode):
         return self.name == other.name and self.value == other.value
 
     def __str__(self) -> str:
-        return f"<ProtoOption name={self.name} value={self.value.serialize()}>"
+        return f"<ProtoOption name={self.name} value={self.value}>"
 
     def __repr__(self) -> str:
         return str(self)

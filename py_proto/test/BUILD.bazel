@@ -108,6 +108,14 @@ py_test(
     srcs = ["parser_test.py"],
     deps = [
         "//src:parser",
+        "//src:proto_constant",
+        "//src:proto_enum",
+        "//src:proto_float",
+        "//src:proto_identifier",
+        "//src:proto_import",
+        "//src:proto_int",
+        "//src:proto_option",
+        "//src:proto_string_literal",
         "//src:proto_syntax",
     ],
 )
