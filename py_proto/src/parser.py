@@ -1,3 +1,5 @@
+import sys
+
 from src.proto_enum import ProtoEnum
 from src.proto_file import ProtoFile
 from src.proto_import import ProtoImport
@@ -55,3 +57,9 @@ class Parser:
             proto_content = match_result.remaining_source.strip()
 
         return ProtoFile(parsed_tree[0], parsed_tree[1:])
+
+
+if __name__ == "__main__":
+    with open(sys.argv[1], "r") as proto_file:
+        proto_file = Parser.loads(proto_file.read())
+    print(proto_file.serialize())

@@ -1,4 +1,4 @@
-load("@rules_python//python:defs.bzl", "py_library")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 
 py_library(
     name = "proto_node",
@@ -147,4 +147,11 @@ py_library(
         ":proto_package",
         ":proto_syntax",
     ],
+)
+
+py_binary(
+    name = "parser_binary",
+    srcs = ["parser.py"],
+    main = "parser.py",
+    deps = [":parser"],
 )
