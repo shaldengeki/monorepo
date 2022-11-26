@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 
-from src.proto_identifier import ProtoIdentifier
+from src.proto_identifier import ProtoFullIdentifier
 from src.proto_node import ParsedProtoNode, ProtoNode
 
 
@@ -31,12 +31,18 @@ class ProtoInt(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
+    def __int__(self):
+        value = self.value
+        if self.sign == ProtoIntSign.NEGATIVE:
+            value *= -1
+        return value
+
     @staticmethod
     def match(proto_source: str) -> Optional["ParsedProtoNode"]:
         if proto_source[0] not in ProtoInt.DECIMAL:
             return None
 
-        if proto_source.startswith("0"):
+        if proto_source != "0" and proto_source.startswith("0"):
             # Octal or hex.
             proto_source = proto_source[1:]
             if proto_source.startswith("x") or proto_source.startswith("X"):
@@ -44,7 +50,7 @@ class ProtoInt(ProtoNode):
                 proto_source = proto_source[1:]
                 for i, c in enumerate(proto_source):
                     if c not in ProtoInt.HEX:
-                        if c in ProtoIdentifier.ALL:
+                        if c in ProtoFullIdentifier.ALL:
                             raise ValueError(f"Proto has invalid hex: {proto_source}")
                         i -= 1
                         break
@@ -60,7 +66,7 @@ class ProtoInt(ProtoNode):
                 # Octal.
                 for i, c in enumerate(proto_source):
                     if c not in ProtoInt.OCTAL:
-                        if c in ProtoIdentifier.ALL:
+                        if c in ProtoFullIdentifier.ALL:
                             raise ValueError(f"Proto has invalid octal: {proto_source}")
                         i -= 1
                         break
@@ -76,7 +82,7 @@ class ProtoInt(ProtoNode):
             # Decimal.
             for i, c in enumerate(proto_source):
                 if c not in ProtoInt.DECIMAL | set("."):
-                    if c in ProtoIdentifier.ALL:
+                    if c in ProtoFullIdentifier.ALL:
                         return None
                     i -= 1
                     break
@@ -87,7 +93,7 @@ class ProtoInt(ProtoNode):
 
             return ParsedProtoNode(
                 ProtoInt(value, ProtoIntSign.POSITIVE),
-                proto_source[i + 1 :],
+                proto_source[i + 1 :].strip(),
             )
 
     def serialize(self) -> str:

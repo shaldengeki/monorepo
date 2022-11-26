@@ -3,7 +3,7 @@ from textwrap import dedent
 
 from src.proto_constant import ProtoConstant
 from src.proto_float import ProtoFloat, ProtoFloatSign
-from src.proto_identifier import ProtoIdentifier
+from src.proto_identifier import ProtoFullIdentifier, ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_option import ProtoOption
 from src.proto_string_literal import ProtoStringLiteral
@@ -27,7 +27,7 @@ class OptionTest(unittest.TestCase):
 
     def test_packaged_name(self):
         packaged_option = ProtoOption.match("option foo.bar.baz = 'test value';")
-        self.assertEqual(packaged_option.node.name, ProtoIdentifier("foo.bar.baz"))
+        self.assertEqual(packaged_option.node.name, ProtoFullIdentifier("foo.bar.baz"))
         self.assertEqual(
             packaged_option.node.value.value, ProtoStringLiteral("test value")
         )
@@ -43,7 +43,7 @@ class OptionTest(unittest.TestCase):
             "option (foo).bar.baz = 'test value';"
         )
         self.assertEqual(
-            fully_qualified_name_option.node.name, ProtoIdentifier("(foo).bar.baz")
+            fully_qualified_name_option.node.name, ProtoFullIdentifier("(foo).bar.baz")
         )
         self.assertEqual(
             fully_qualified_name_option.node.value.value,
@@ -91,13 +91,8 @@ class OptionTest(unittest.TestCase):
         identifier_option = ProtoOption.match("option bar = foo.bar.baz;")
         self.assertEqual(identifier_option.node.name, ProtoIdentifier("bar"))
         self.assertEqual(
-            identifier_option.node.value, ProtoConstant(ProtoIdentifier("foo.bar.baz"))
-        )
-        self.assertEqual(identifier_option.remaining_source, "")
-
-        identifier_option = ProtoOption.match("option foo = .foo.bar;")
-        self.assertEqual(
-            identifier_option.node.value, ProtoConstant(ProtoIdentifier(".foo.bar"))
+            identifier_option.node.value,
+            ProtoConstant(ProtoFullIdentifier("foo.bar.baz")),
         )
         self.assertEqual(identifier_option.remaining_source, "")
 

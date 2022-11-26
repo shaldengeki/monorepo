@@ -8,14 +8,14 @@
   - [x] Imports
   - [x] Package
   - [x] Options
-- [ ] [Enum support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#enum_definition)
+- [x] [Enum support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#enum_definition)
   - [x] Empty enum
   - [x] Enum options
   - [x] Fields
     - [x] Empty statements
     - [x] Values
     - [x] Value options
-  - [ ] Reserveds
+  - [x] Reserveds
 - [ ] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)
   - [ ] Empty message
   - [ ] Empty statements

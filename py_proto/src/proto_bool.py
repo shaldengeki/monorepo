@@ -1,6 +1,6 @@
 from typing import Optional
 
-from src.proto_identifier import ProtoIdentifier
+from src.proto_identifier import ProtoFullIdentifier
 from src.proto_node import ParsedProtoNode, ProtoNode
 
 
@@ -23,11 +23,11 @@ class ProtoBool(ProtoNode):
     @staticmethod
     def match(proto_source: str) -> Optional["ParsedProtoNode"]:
         if proto_source.startswith("true") and (
-            len(proto_source) == 4 or proto_source[4] not in ProtoIdentifier.ALL
+            len(proto_source) == 4 or proto_source[4] not in ProtoFullIdentifier.ALL
         ):
             return ParsedProtoNode(ProtoBool(True), proto_source[4:].strip())
         elif proto_source.startswith("false") and (
-            len(proto_source) == 5 or proto_source[5] not in ProtoIdentifier.ALL
+            len(proto_source) == 5 or proto_source[5] not in ProtoFullIdentifier.ALL
         ):
             return ParsedProtoNode(ProtoBool(False), proto_source[5:].strip())
         return None

@@ -2,7 +2,7 @@ from typing import Optional
 
 from src.proto_bool import ProtoBool
 from src.proto_float import ProtoFloat, ProtoFloatSign
-from src.proto_identifier import ProtoIdentifier
+from src.proto_identifier import ProtoFullIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_node import ParsedProtoNode, ProtoNode
 from src.proto_string_literal import ProtoStringLiteral
@@ -10,7 +10,7 @@ from src.proto_string_literal import ProtoStringLiteral
 
 class ProtoConstant(ProtoNode):
     def __init__(
-        self, value: ProtoIdentifier | ProtoStringLiteral | int | float | ProtoBool
+        self, value: ProtoFullIdentifier | ProtoStringLiteral | int | float | ProtoBool
     ):
         self.value = value
 
@@ -61,7 +61,7 @@ class ProtoConstant(ProtoNode):
                 match.remaining_source.strip(),
             )
 
-        match = ProtoIdentifier.match(proto_source)
+        match = ProtoFullIdentifier.match(proto_source)
         if match is not None:
             return ParsedProtoNode(
                 ProtoConstant(match.node),

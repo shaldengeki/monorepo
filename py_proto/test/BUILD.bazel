@@ -66,6 +66,14 @@ py_test(
 )
 
 py_test(
+    name = "proto_reserved_test",
+    srcs = ["proto_reserved_test.py"],
+    deps = [
+        "//src:proto_reserved",
+    ],
+)
+
+py_test(
     name = "proto_syntax_test",
     srcs = ["proto_syntax_test.py"],
     deps = [
@@ -99,6 +107,7 @@ py_test(
         "//src:proto_enum",
         "//src:proto_identifier",
         "//src:proto_option",
+        "//src:proto_reserved",
         "//src:proto_string_literal",
     ],
 )

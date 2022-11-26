@@ -7,19 +7,24 @@ from src.proto_enum import ProtoEnum, ProtoEnumValue, ProtoEnumValueOption
 from src.proto_identifier import ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_option import ProtoOption
+from src.proto_reserved import ProtoReserved, ProtoReservedRange, ProtoReservedRangeEnum
 from src.proto_string_literal import ProtoStringLiteral
 
 
 class EnumTest(unittest.TestCase):
+    maxDiff = None
+
     def test_enum_all_features(self):
         parsed_enum_multiple_values = ProtoEnum.match(
             dedent(
                 """
             enum FooEnum {
+                reserved 1, 2, 5 to max;
                 FE_NEGATIVE = -1 [ foo = false ];
                 FE_UNDEFINED = 0;
                 option java_package = "foobar";
                 FE_VALONE = 1 [ .bar.baz = "bat", baz.bat = -100 ];
+                reserved "FE_RESERVED", 'FE_OLD';
                 FE_VALTWO = 2;
             }
         """.strip()
@@ -28,6 +33,16 @@ class EnumTest(unittest.TestCase):
         self.assertEqual(
             parsed_enum_multiple_values.node.nodes,
             [
+                ProtoReserved(
+                    [
+                        ProtoReservedRange(ProtoInt(1, ProtoIntSign.POSITIVE)),
+                        ProtoReservedRange(ProtoInt(2, ProtoIntSign.POSITIVE)),
+                        ProtoReservedRange(
+                            ProtoInt(5, ProtoIntSign.POSITIVE),
+                            ProtoReservedRangeEnum.MAX,
+                        ),
+                    ]
+                ),
                 ProtoEnumValue(
                     ProtoIdentifier("FE_NEGATIVE"),
                     ProtoInt(1, ProtoIntSign.NEGATIVE),
@@ -58,6 +73,9 @@ class EnumTest(unittest.TestCase):
                         ),
                     ],
                 ),
+                ProtoReserved(
+                    [], [ProtoIdentifier('"FE_RESERVED"'), ProtoIdentifier("'FE_OLD'")]
+                ),
                 ProtoEnumValue(
                     ProtoIdentifier("FE_VALTWO"), ProtoInt(2, ProtoIntSign.POSITIVE)
                 ),
@@ -68,10 +86,12 @@ class EnumTest(unittest.TestCase):
             dedent(
                 """
             enum FooEnum {
+            reserved 1, 2, 5 to max;
             FE_NEGATIVE = -1 [ foo = false ];
             FE_UNDEFINED = 0;
             option java_package = "foobar";
             FE_VALONE = 1 [ .bar.baz = "bat", baz.bat = -100 ];
+            reserved "FE_RESERVED", 'FE_OLD';
             FE_VALTWO = 2;
             }
             """

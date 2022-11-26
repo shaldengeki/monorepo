@@ -110,6 +110,17 @@ py_library(
 )
 
 py_library(
+    name = "proto_reserved",
+    srcs = ["proto_reserved.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":proto_identifier",
+        ":proto_int",
+        ":proto_node",
+    ],
+)
+
+py_library(
     name = "proto_enum",
     srcs = ["proto_enum.py"],
     visibility = ["//visibility:public"],
@@ -118,6 +129,7 @@ py_library(
         ":proto_int",
         ":proto_node",
         ":proto_option",
+        ":proto_reserved",
     ],
 )
 

@@ -1,7 +1,11 @@
 from typing import Optional
 
 from src.proto_constant import ProtoConstant
-from src.proto_identifier import ProtoIdentifier
+from src.proto_identifier import (
+    ProtoEnumOrMessageIdentifier,
+    ProtoFullIdentifier,
+    ProtoIdentifier,
+)
 from src.proto_node import ParsedProtoNode, ProtoNode
 
 
@@ -31,19 +35,26 @@ class ProtoOption(ProtoNode):
         name_parts = []
         if proto_source.startswith("("):
             proto_source = proto_source[1:]
-            match = ProtoIdentifier.match(proto_source)
+            match = ProtoFullIdentifier.match(proto_source)
             if not match or not match.remaining_source.startswith(")"):
-                raise ValueError(
-                    f"Proto has invalid option when expecting ): {proto_source}"
-                )
+                # This might be a regular identifier.
+                match = ProtoIdentifier.match(proto_source)
+                if not match or not match.remaining_source.startswith(")"):
+                    raise ValueError(
+                        f"Proto has invalid option when expecting ): {proto_source}"
+                    )
+                name_parts.append(ProtoIdentifier(f"({match.node.identifier})"))
+            else:
+                name_parts.append(ProtoFullIdentifier(f"({match.node.identifier})"))
 
-            name_parts.append(ProtoIdentifier(f"({match.node.identifier})"))
             proto_source = match.remaining_source[1:]
 
         while True:
-            match = ProtoIdentifier.match(proto_source)
+            match = ProtoEnumOrMessageIdentifier.match(proto_source)
             if match is None:
-                break
+                match = ProtoIdentifier.match(proto_source)
+                if match is None:
+                    break
             name_parts.append(match.node)
             proto_source = match.remaining_source
 
@@ -65,9 +76,14 @@ class ProtoOption(ProtoNode):
                 f"Proto has invalid option when expecting ;: {proto_source}"
             )
 
+        if len(name_parts) > 1:
+            identifier = ProtoFullIdentifier("".join(x.identifier for x in name_parts))
+        else:
+            identifier = ProtoIdentifier(name_parts[0].identifier)
+
         return ParsedProtoNode(
             ProtoOption(
-                name=ProtoIdentifier("".join(x.identifier for x in name_parts)),
+                name=identifier,
                 value=match.node,
             ),
             proto_source[1:],

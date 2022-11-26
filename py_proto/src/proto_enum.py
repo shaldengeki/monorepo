@@ -4,6 +4,7 @@ from src.proto_identifier import ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_node import ParsedProtoNode, ProtoNode
 from src.proto_option import ProtoOption
+from src.proto_reserved import ProtoReserved
 
 
 class ProtoEnumValueOption(ProtoOption):
@@ -146,6 +147,7 @@ class ProtoEnum(ProtoNode):
     def parse_partial_content(partial_enum_content: str) -> ParsedProtoNode:
         for node_type in (
             ProtoOption,
+            ProtoReserved,
             ProtoEnumValue,
         ):
             try:
