@@ -3,7 +3,7 @@ from textwrap import dedent
 
 from src.proto_bool import ProtoBool
 from src.proto_constant import ProtoConstant
-from src.proto_enum import ProtoEnum, ProtoEnumValue
+from src.proto_enum import ProtoEnum, ProtoEnumValue, ProtoEnumValueOption
 from src.proto_identifier import ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_option import ProtoOption
@@ -16,10 +16,10 @@ class EnumTest(unittest.TestCase):
             dedent(
                 """
             enum FooEnum {
-                FE_NEGATIVE = -1;
+                FE_NEGATIVE = -1 [ foo = false ];
                 FE_UNDEFINED = 0;
                 option java_package = "foobar";
-                FE_VALONE = 1;
+                FE_VALONE = 1 [ .bar.baz = "bat", baz.bat = -100 ];
                 FE_VALTWO = 2;
             }
         """.strip()
@@ -29,7 +29,13 @@ class EnumTest(unittest.TestCase):
             parsed_enum_multiple_values.node.nodes,
             [
                 ProtoEnumValue(
-                    ProtoIdentifier("FE_NEGATIVE"), ProtoInt(1, ProtoIntSign.NEGATIVE)
+                    ProtoIdentifier("FE_NEGATIVE"),
+                    ProtoInt(1, ProtoIntSign.NEGATIVE),
+                    [
+                        ProtoEnumValueOption(
+                            ProtoIdentifier("foo"), ProtoConstant(ProtoBool(False))
+                        )
+                    ],
                 ),
                 ProtoEnumValue(
                     ProtoIdentifier("FE_UNDEFINED"), ProtoInt(0, ProtoIntSign.POSITIVE)
@@ -39,7 +45,18 @@ class EnumTest(unittest.TestCase):
                     ProtoConstant(ProtoStringLiteral("foobar")),
                 ),
                 ProtoEnumValue(
-                    ProtoIdentifier("FE_VALONE"), ProtoInt(1, ProtoIntSign.POSITIVE)
+                    ProtoIdentifier("FE_VALONE"),
+                    ProtoInt(1, ProtoIntSign.POSITIVE),
+                    [
+                        ProtoEnumValueOption(
+                            ProtoIdentifier(".bar.baz"),
+                            ProtoConstant(ProtoStringLiteral("bat")),
+                        ),
+                        ProtoEnumValueOption(
+                            ProtoIdentifier("baz.bat"),
+                            ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE)),
+                        ),
+                    ],
                 ),
                 ProtoEnumValue(
                     ProtoIdentifier("FE_VALTWO"), ProtoInt(2, ProtoIntSign.POSITIVE)
@@ -51,10 +68,10 @@ class EnumTest(unittest.TestCase):
             dedent(
                 """
             enum FooEnum {
-            FE_NEGATIVE = -1;
+            FE_NEGATIVE = -1 [ foo = false ];
             FE_UNDEFINED = 0;
             option java_package = "foobar";
-            FE_VALONE = 1;
+            FE_VALONE = 1 [ .bar.baz = "bat", baz.bat = -100 ];
             FE_VALTWO = 2;
             }
             """

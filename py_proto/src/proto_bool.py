@@ -15,7 +15,7 @@ class ProtoBool(ProtoNode):
         return self.value == other.value
 
     def __str__(self) -> str:
-        return f"<ProtoBool value={self.serialize()}>"
+        return f"<ProtoBool value={self.value}>"
 
     def __repr__(self) -> str:
         return str(self)

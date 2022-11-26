@@ -6,12 +6,37 @@ from src.proto_node import ParsedProtoNode, ProtoNode
 from src.proto_option import ProtoOption
 
 
+class ProtoEnumValueOption(ProtoOption):
+    def __eq__(self, other: "ProtoEnumValueOption") -> bool:
+        if not isinstance(other, ProtoEnumValueOption):
+            return False
+
+        return super().__eq__(other)
+
+    def __str__(self) -> str:
+        return f"<ProtoEnumValueOption name={self.name}, value={self.value}>"
+
+    @staticmethod
+    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+        test_source = "option " + proto_source.strip() + ";"
+        match = ProtoOption.match(test_source)
+        if match is None:
+            return None
+        return ParsedProtoNode(
+            ProtoEnumValueOption(match.node.name, match.node.value),
+            match.remaining_source.strip(),
+        )
+
+    def serialize(self) -> str:
+        return f"{self.name.serialize()} = {self.value.serialize()}"
+
+
 class ProtoEnumValue(ProtoNode):
     def __init__(
         self,
         identifier: ProtoIdentifier,
         value: ProtoInt,
-        options: Optional[list[ProtoOption]] = None,
+        options: Optional[list[ProtoEnumValueOption]] = None,
     ):
         self.identifier = identifier
         self.value = value
@@ -66,19 +91,36 @@ class ProtoEnumValue(ProtoNode):
 
         match.node.sign = sign
         enum_value = match.node
-        proto_source = match.remaining_source
+        proto_source = match.remaining_source.strip()
 
-        # TODO: parse options.
+        options = []
+        if proto_source.startswith("["):
+            proto_source = proto_source[1:].strip()
+            end_bracket = proto_source.find("]")
+            if end_bracket == -1:
+                raise ValueError(
+                    f"Proto has invalid enum value option syntax, cannot find ]: {proto_source}"
+                )
+            for option_part in proto_source[:end_bracket].strip().split(","):
+                match = ProtoEnumValueOption.match(option_part.strip())
+                if match is None:
+                    raise ValueError(
+                        f"Proto has invalid enum value option syntax: {proto_source}"
+                    )
+                options.append(match.node)
+            proto_source = proto_source[end_bracket + 1 :].strip()
 
         return ParsedProtoNode(
-            ProtoEnumValue(enum_value_name, enum_value, []), proto_source.strip()
+            ProtoEnumValue(enum_value_name, enum_value, options), proto_source.strip()
         )
 
     def serialize(self) -> str:
         serialized_parts = [self.identifier.serialize(), "=", self.value.serialize()]
         if self.options:
             serialized_parts.append("[")
-            # TODO: serialize options.
+            serialized_parts.append(
+                ", ".join(option.serialize() for option in self.options)
+            )
             serialized_parts.append("]")
         return " ".join(serialized_parts) + ";"
 

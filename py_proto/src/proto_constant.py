@@ -21,7 +21,7 @@ class ProtoConstant(ProtoNode):
         return self.value == other.value
 
     def __str__(self) -> str:
-        return f"<ProtoConstant value={self.serialize()}>"
+        return f"<ProtoConstant value={self.value}>"
 
     def __repr__(self) -> str:
         return str(self)
@@ -82,4 +82,6 @@ class ProtoConstant(ProtoNode):
             return self.value.serialize()
         elif isinstance(self.value, int) or isinstance(self.value, float):
             return str(self.value)
-        raise ValueError(f"Proto has invalid constant: {self.value}")
+        raise ValueError(
+            f"Proto has invalid constant: {self.value} with class: {self.value.__class__.__name__}"
+        )

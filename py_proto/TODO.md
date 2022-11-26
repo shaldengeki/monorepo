@@ -11,10 +11,10 @@
 - [ ] [Enum support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#enum_definition)
   - [x] Empty enum
   - [x] Enum options
-  - [ ] Fields
+  - [x] Fields
     - [x] Empty statements
     - [x] Values
-    - [ ] Value options
+    - [x] Value options
   - [ ] Reserveds
 - [ ] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)
   - [ ] Empty message
