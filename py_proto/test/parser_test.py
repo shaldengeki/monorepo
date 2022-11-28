@@ -6,10 +6,15 @@ from src.proto_bool import ProtoBool
 from src.proto_constant import ProtoConstant
 from src.proto_enum import ProtoEnum, ProtoEnumValue
 from src.proto_float import ProtoFloat, ProtoFloatSign
-from src.proto_identifier import ProtoIdentifier
+from src.proto_identifier import ProtoFullIdentifier, ProtoIdentifier
 from src.proto_import import ProtoImport
 from src.proto_int import ProtoInt, ProtoIntSign
-from src.proto_message import ProtoMessage
+from src.proto_message import (
+    ProtoMessage,
+    ProtoMessageField,
+    ProtoMessageFieldOption,
+    ProtoMessageFieldTypesEnum,
+)
 from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved, ProtoReservedRange
 from src.proto_string_literal import ProtoStringLiteral
@@ -50,6 +55,8 @@ class IntTest(unittest.TestCase):
                     }
                     reserved 1 to 3;
                     reserved "yay";
+                    repeated string field_one = 1;
+                    MyNestedMessage field_two = 2 [ bar.baz = true ];
                 }
                 """
             )
@@ -138,6 +145,25 @@ class IntTest(unittest.TestCase):
                         ]
                     ),
                     ProtoReserved(fields=[ProtoIdentifier("yay")]),
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.STRING,
+                        ProtoIdentifier("field_one"),
+                        ProtoInt(1, ProtoIntSign.POSITIVE),
+                        True,
+                    ),
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
+                        ProtoIdentifier("field_two"),
+                        ProtoInt(2, ProtoIntSign.POSITIVE),
+                        False,
+                        ProtoIdentifier("MyNestedMessage"),
+                        [
+                            ProtoMessageFieldOption(
+                                ProtoFullIdentifier("bar.baz"),
+                                ProtoConstant(ProtoBool(True)),
+                            )
+                        ],
+                    ),
                 ],
             ),
             proto_file.nodes,
@@ -217,6 +243,8 @@ class IntTest(unittest.TestCase):
                     message MyNestedMessage {}
                     reserved 1 to 3;
                     reserved "yay";
+                    repeated string field_one = 1;
+                    MyNestedMessage field_two = 2 [ .bar.baz = true ];
                 }
                 """
             )
@@ -254,6 +282,8 @@ class IntTest(unittest.TestCase):
                     }
                     reserved 1 to 3;
                     reserved "yay";
+                    repeated string field_one = 1;
+                    MyNestedMessage field_two = 2 [ .bar.baz = true ];
                     }
                     """
             ).strip(),

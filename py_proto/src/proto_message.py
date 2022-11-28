@@ -9,6 +9,31 @@ from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved
 
 
+class ProtoMessageFieldOption(ProtoOption):
+    def __eq__(self, other: "ProtoMessageFieldOption") -> bool:
+        if not isinstance(other, ProtoMessageFieldOption):
+            return False
+
+        return super().__eq__(other)
+
+    def __str__(self) -> str:
+        return f"<ProtoMessageFieldOption name={self.name}, value={self.value}>"
+
+    @staticmethod
+    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+        test_source = "option " + proto_source.strip() + ";"
+        match = ProtoOption.match(test_source)
+        if match is None:
+            return None
+        return ParsedProtoNode(
+            ProtoMessageFieldOption(match.node.name, match.node.value),
+            match.remaining_source.strip(),
+        )
+
+    def serialize(self) -> str:
+        return f"{self.name.serialize()} = {self.value.serialize()}"
+
+
 class ProtoMessageFieldTypesEnum(Enum):
     DOUBLE = "double"
     FLOAT = "float"
@@ -36,12 +61,17 @@ class ProtoMessageField(ProtoNode):
         number: ProtoInt,
         repeated: bool = False,
         enum_or_message_type_name: Optional[ProtoFullIdentifier] = None,
+        options: list[ProtoMessageFieldOption] = None,
     ):
         self.type = type
         self.name = name
         self.number = number
         self.repeated = repeated
         self.enum_or_message_type_name = enum_or_message_type_name
+
+        if options is None:
+            options = []
+        self.options = options
 
     def __eq__(self, other: "ProtoMessageField") -> bool:
         if not isinstance(other, ProtoMessageField):
@@ -53,10 +83,11 @@ class ProtoMessageField(ProtoNode):
             and self.number == other.number
             and self.repeated == other.repeated
             and self.enum_or_message_type_name == other.enum_or_message_type_name
+            and self.options == other.options
         )
 
     def __str__(self) -> str:
-        return f"<ProtoMessageField type={self.type} name={self.name} number={self.number} repeated={self.repeated} enum_or_message_type_name={self.enum_or_message_type_name}>"
+        return f"<ProtoMessageField type={self.type} name={self.name} number={self.number} repeated={self.repeated} enum_or_message_type_name={self.enum_or_message_type_name} options={self.options}>"
 
     def __repr__(self) -> str:
         return str(self)
@@ -79,6 +110,7 @@ class ProtoMessageField(ProtoNode):
                 matched_type = field_type
                 proto_source = proto_source[len(field_type.value) + 1 :]
 
+        # If this is an enum or message type, try to match a name.
         enum_or_message_type_name = None
         if matched_type is None:
             # See if this is an enum or message type.
@@ -89,6 +121,7 @@ class ProtoMessageField(ProtoNode):
             enum_or_message_type_name = match.node
             proto_source = match.remaining_source.strip()
 
+        # Match the field name.
         match = ProtoIdentifier.match(proto_source)
         if match is None:
             return None
@@ -99,15 +132,38 @@ class ProtoMessageField(ProtoNode):
             return None
         proto_source = proto_source[2:].strip()
 
+        # Match the field number.
         match = ProtoInt.match(proto_source)
         if match is None:
             return None
         number = match.node
         proto_source = match.remaining_source.strip()
 
+        options = []
+        if proto_source.startswith("["):
+            proto_source = proto_source[1:].strip()
+            end_bracket = proto_source.find("]")
+            if end_bracket == -1:
+                raise ValueError(
+                    f"Proto has invalid message field option syntax, cannot find ]: {proto_source}"
+                )
+            for option_part in proto_source[:end_bracket].strip().split(","):
+                match = ProtoMessageFieldOption.match(option_part.strip())
+                if match is None:
+                    raise ValueError(
+                        f"Proto has invalid message field option syntax: {proto_source}"
+                    )
+                options.append(match.node)
+            proto_source = proto_source[end_bracket + 1 :].strip()
+
+        if not proto_source.startswith(";"):
+            raise ValueError(
+                f"Proto has invalid message field syntax, missing ending ;:{proto_source}"
+            )
+
         return ParsedProtoNode(
             ProtoMessageField(
-                matched_type, name, number, repeated, enum_or_message_type_name
+                matched_type, name, number, repeated, enum_or_message_type_name, options
             ),
             proto_source,
         )
@@ -118,16 +174,24 @@ class ProtoMessageField(ProtoNode):
             serialized_parts.append("repeated")
 
         if self.type == ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE:
-            serialized_parts.append(self.enum_or_message_type_name)
+            serialized_parts.append(self.enum_or_message_type_name.serialize())
         else:
             serialized_parts.append(self.type.value)
 
-        return (
-            " ".join(
-                serialized_parts + [self.name.serialize(), "=", self.number.serialize()]
+        serialized_parts = serialized_parts + [
+            self.name.serialize(),
+            "=",
+            self.number.serialize(),
+        ]
+
+        if self.options:
+            serialized_parts.append("[")
+            serialized_parts.append(
+                ", ".join(option.serialize() for option in self.options)
             )
-            + ";"
-        )
+            serialized_parts.append("]")
+
+        return " ".join(serialized_parts) + ";"
 
 
 class ProtoMessage(ProtoNode):

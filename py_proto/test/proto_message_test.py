@@ -9,6 +9,7 @@ from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_message import (
     ProtoMessage,
     ProtoMessageField,
+    ProtoMessageFieldOption,
     ProtoMessageFieldTypesEnum,
 )
 from src.proto_option import ProtoOption
@@ -33,7 +34,7 @@ class MessageTest(unittest.TestCase):
                 message NestedMessage {}
                 reserved "a";
                 reserved 1 to 3;
-                repeated string some_field = 4;
+                repeated string some_field = 4 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                 bool some_bool_field = 5;
             }
         """.strip()
@@ -79,6 +80,16 @@ class MessageTest(unittest.TestCase):
                     ProtoInt(4, ProtoIntSign.POSITIVE),
                     True,
                     None,
+                    [
+                        ProtoMessageFieldOption(
+                            ProtoIdentifier("(bar.baz).bat"),
+                            ProtoConstant(ProtoStringLiteral("bat")),
+                        ),
+                        ProtoMessageFieldOption(
+                            ProtoIdentifier("baz.bat"),
+                            ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE)),
+                        ),
+                    ],
                 ),
                 ProtoMessageField(
                     ProtoMessageFieldTypesEnum.BOOL,
@@ -104,7 +115,7 @@ class MessageTest(unittest.TestCase):
             }
             reserved "a";
             reserved 1 to 3;
-            repeated string some_field = 4;
+            repeated string some_field = 4 [ (bar.baz).bat = "bat", baz.bat = -100 ];
             bool some_bool_field = 5;
             }
             """

@@ -22,7 +22,7 @@
   - [x] Options
   - [ ] Fields
     - [x] Basic fields
-    - [ ] Field options
+    - [x] Field options
     - [ ] OneOfs
       - [ ] Basic oneofs
       - [ ] OneOf options
