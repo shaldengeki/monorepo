@@ -125,8 +125,10 @@ py_library(
     srcs = ["proto_message.py"],
     visibility = ["//visibility:public"],
     deps = [
+        ":proto_enum",
         ":proto_identifier",
         ":proto_node",
+        ":proto_option",
     ],
 )
 
