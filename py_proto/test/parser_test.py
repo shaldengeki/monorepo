@@ -9,6 +9,7 @@ from src.proto_float import ProtoFloat, ProtoFloatSign
 from src.proto_identifier import ProtoIdentifier
 from src.proto_import import ProtoImport
 from src.proto_int import ProtoInt, ProtoIntSign
+from src.proto_message import ProtoMessage
 from src.proto_option import ProtoOption
 from src.proto_string_literal import ProtoStringLiteral
 from src.proto_syntax import ProtoSyntaxType
@@ -35,6 +36,9 @@ class IntTest(unittest.TestCase):
                     MAE_UNSPECIFIED = 0;
                     MAE_STARTED = 1;
                     MAE_RUNNING = 2;
+                }
+
+                message MyAwesomeMessage {
                 }
                 """
             )
@@ -85,6 +89,13 @@ class IntTest(unittest.TestCase):
                         [],
                     ),
                 ],
+            ),
+            proto_file.nodes,
+        )
+        self.assertIn(
+            ProtoMessage(
+                ProtoIdentifier("MyAwesomeMessage"),
+                [],
             ),
             proto_file.nodes,
         )
@@ -152,6 +163,9 @@ class IntTest(unittest.TestCase):
                     MAE_STARTED = 1;
                     MAE_RUNNING = 2;
                 }
+
+                message MyAwesomeMessage {
+                }
                 """
             )
         )
@@ -175,6 +189,9 @@ class IntTest(unittest.TestCase):
                     option allow_alias = true;
                     MAE_STARTED = 1;
                     MAE_RUNNING = 2;
+                    }
+
+                    message MyAwesomeMessage {
                     }
                     """
             ).strip(),

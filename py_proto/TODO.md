@@ -17,8 +17,8 @@
     - [x] Value options
   - [x] Reserveds
 - [ ] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)
-  - [ ] Empty message
-  - [ ] Empty statements
+  - [x] Empty message
+  - [x] Empty statements
   - [ ] Options
   - [ ] Fields
     - [ ] Basic fields

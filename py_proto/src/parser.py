@@ -3,6 +3,7 @@ import sys
 from src.proto_enum import ProtoEnum
 from src.proto_file import ProtoFile
 from src.proto_import import ProtoImport
+from src.proto_message import ProtoMessage
 from src.proto_node import ParsedProtoNode
 from src.proto_option import ProtoOption
 from src.proto_package import ProtoPackage
@@ -18,6 +19,7 @@ class Parser:
     def parse_partial_content(partial_proto_content: str) -> ParsedProtoNode:
         for node_type in (
             ProtoImport,
+            ProtoMessage,
             ProtoPackage,
             ProtoOption,
             ProtoEnum,

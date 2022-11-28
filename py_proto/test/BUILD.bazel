@@ -99,6 +99,15 @@ py_test(
 )
 
 py_test(
+    name = "proto_message_test",
+    srcs = ["proto_message_test.py"],
+    deps = [
+        "//src:proto_identifier",
+        "//src:proto_message",
+    ],
+)
+
+py_test(
     name = "proto_enum_test",
     srcs = ["proto_enum_test.py"],
     deps = [
@@ -123,6 +132,7 @@ py_test(
         "//src:proto_identifier",
         "//src:proto_import",
         "//src:proto_int",
+        "//src:proto_message",
         "//src:proto_option",
         "//src:proto_string_literal",
         "//src:proto_syntax",
