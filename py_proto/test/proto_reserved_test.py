@@ -77,8 +77,8 @@ class ReservedTest(unittest.TestCase):
             "reserved 'foo', 'bar';",
         )
         self.assertEqual(
-            ProtoReserved.match('reserved "foo", "bar", \'baz\';').node.serialize(),
-            'reserved "foo", "bar", \'baz\';',
+            ProtoReserved.match('reserved "foo", "bar", "baz";').node.serialize(),
+            'reserved "foo", "bar", "baz";',
         )
 
     def test_reserved_cannot_have_ints_and_strings(self):

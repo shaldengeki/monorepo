@@ -11,6 +11,7 @@ from src.proto_import import ProtoImport
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_message import ProtoMessage
 from src.proto_option import ProtoOption
+from src.proto_reserved import ProtoReserved, ProtoReservedRange
 from src.proto_string_literal import ProtoStringLiteral
 from src.proto_syntax import ProtoSyntaxType
 
@@ -47,6 +48,8 @@ class IntTest(unittest.TestCase):
                     }
                     message MyNestedMessage {
                     }
+                    reserved 1 to 3;
+                    reserved "yay";
                 }
                 """
             )
@@ -126,6 +129,15 @@ class IntTest(unittest.TestCase):
                         ],
                     ),
                     ProtoMessage(ProtoIdentifier("MyNestedMessage"), []),
+                    ProtoReserved(
+                        ranges=[
+                            ProtoReservedRange(
+                                ProtoInt(1, ProtoIntSign.POSITIVE),
+                                ProtoInt(3, ProtoIntSign.POSITIVE),
+                            )
+                        ]
+                    ),
+                    ProtoReserved(fields=[ProtoIdentifier("yay")]),
                 ],
             ),
             proto_file.nodes,
@@ -203,6 +215,8 @@ class IntTest(unittest.TestCase):
                         MNE_POSITIVE = 2;
                     }
                     message MyNestedMessage {}
+                    reserved 1 to 3;
+                    reserved "yay";
                 }
                 """
             )
@@ -238,6 +252,8 @@ class IntTest(unittest.TestCase):
                     }
                     message MyNestedMessage {
                     }
+                    reserved 1 to 3;
+                    reserved "yay";
                     }
                     """
             ).strip(),

@@ -8,6 +8,7 @@ from src.proto_identifier import ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_message import ProtoMessage
 from src.proto_option import ProtoOption
+from src.proto_reserved import ProtoReserved, ProtoReservedRange, ProtoReservedRangeEnum
 from src.proto_string_literal import ProtoStringLiteral
 
 
@@ -26,6 +27,8 @@ class MessageTest(unittest.TestCase):
                     ME_VALTWO = 2;
                 }
                 message NestedMessage {}
+                reserved "a";
+                reserved 1 to 3;
             }
         """.strip()
             )
@@ -55,6 +58,15 @@ class MessageTest(unittest.TestCase):
                     ],
                 ),
                 ProtoMessage(ProtoIdentifier("NestedMessage"), []),
+                ProtoReserved(fields=[ProtoIdentifier("a")]),
+                ProtoReserved(
+                    ranges=[
+                        ProtoReservedRange(
+                            ProtoInt(1, ProtoIntSign.POSITIVE),
+                            ProtoInt(3, ProtoIntSign.POSITIVE),
+                        )
+                    ]
+                ),
             ],
         )
         self.assertEqual(
@@ -70,6 +82,8 @@ class MessageTest(unittest.TestCase):
             }
             message NestedMessage {
             }
+            reserved "a";
+            reserved 1 to 3;
             }
             """
             ).strip(),
@@ -192,6 +206,45 @@ class MessageTest(unittest.TestCase):
                 ProtoIdentifier("FooMessage"),
                 [
                     ProtoMessage(ProtoIdentifier("NestedMessage"), []),
+                ],
+            ),
+        )
+
+    def test_message_reserved_single_field(self):
+        parsed_message_with_reserved_single_field = ProtoMessage.match(
+            dedent(
+                """
+            message FooMessage {
+                reserved 38, 48 to 100, 72 to max;
+                reserved "foo", "barBaz";
+            }
+        """.strip()
+            )
+        )
+        self.assertEqual(
+            parsed_message_with_reserved_single_field.node,
+            ProtoMessage(
+                ProtoIdentifier("FooMessage"),
+                [
+                    ProtoReserved(
+                        ranges=[
+                            ProtoReservedRange(ProtoInt(38, ProtoIntSign.POSITIVE)),
+                            ProtoReservedRange(
+                                ProtoInt(48, ProtoIntSign.POSITIVE),
+                                ProtoInt(100, ProtoIntSign.POSITIVE),
+                            ),
+                            ProtoReservedRange(
+                                ProtoInt(72, ProtoIntSign.POSITIVE),
+                                ProtoReservedRangeEnum.MAX,
+                            ),
+                        ]
+                    ),
+                    ProtoReserved(
+                        fields=[
+                            ProtoIdentifier("foo"),
+                            ProtoIdentifier("barBaz"),
+                        ]
+                    ),
                 ],
             ),
         )

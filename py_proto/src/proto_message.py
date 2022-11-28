@@ -4,6 +4,7 @@ from src.proto_enum import ProtoEnum
 from src.proto_identifier import ProtoIdentifier
 from src.proto_node import ParsedProtoNode, ProtoNode
 from src.proto_option import ProtoOption
+from src.proto_reserved import ProtoReserved
 
 
 class ProtoMessage(ProtoNode):
@@ -29,6 +30,7 @@ class ProtoMessage(ProtoNode):
             ProtoEnum,
             ProtoOption,
             ProtoMessage,
+            ProtoReserved,
         ):
             try:
                 match_result = node_type.match(partial_message_content)

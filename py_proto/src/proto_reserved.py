@@ -10,6 +10,11 @@ class ProtoReservedRangeEnum(Enum):
     MAX = "max"
 
 
+class ProtoReservedFieldQuoteEnum(Enum):
+    SINGLE = "'"
+    DOUBLE = '"'
+
+
 class ProtoReservedRange:
     def __init__(
         self, min: ProtoInt, max: Optional[ProtoInt | ProtoReservedRangeEnum] = None
@@ -96,6 +101,9 @@ class ProtoReserved(ProtoNode):
         self,
         ranges: Optional[list[ProtoReservedRange]] = None,
         fields: Optional[list[ProtoIdentifier]] = None,
+        quote_type: Optional[
+            ProtoReservedFieldQuoteEnum
+        ] = ProtoReservedFieldQuoteEnum.DOUBLE,
     ):
         if (not ranges and not fields) or (ranges and fields):
             raise ValueError(
@@ -104,12 +112,15 @@ class ProtoReserved(ProtoNode):
 
         if ranges is None:
             ranges = []
+            if quote_type is None:
+                raise ValueError("Quote type must be specified when reserving fields")
 
         if fields is None:
             fields = []
 
         self.ranges = ranges
         self.fields = fields
+        self.quote_type = quote_type
 
     def __eq__(self, other: "ProtoReserved") -> bool:
         if not isinstance(other, ProtoReserved):
@@ -132,6 +143,7 @@ class ProtoReserved(ProtoNode):
 
         ranges = []
         fields = []
+        quote_type = None
         while True:
             if proto_source[0] == ";":
                 proto_source = proto_source[1:].strip()
@@ -148,13 +160,16 @@ class ProtoReserved(ProtoNode):
                 proto_source = match.remaining_source
             else:
                 # Maybe this is a field identifier.
-                if not proto_source.startswith("'") and not proto_source.startswith(
-                    '"'
-                ):
+                quote_type = [
+                    q
+                    for q in ProtoReservedFieldQuoteEnum
+                    if proto_source.startswith(q.value)
+                ]
+                if not quote_type:
                     raise ValueError(
                         f"Proto source has invalid reserved syntax, expecting quote for field identifier: {proto_source}"
                     )
-                quote_type = proto_source[0]
+                quote_type = quote_type[0]
                 proto_source = proto_source[1:]
                 match = ProtoIdentifier.match(proto_source)
                 if match is None:
@@ -162,24 +177,25 @@ class ProtoReserved(ProtoNode):
                         f"Proto source has invalid reserved syntax, expecting field identifier: {proto_source}"
                     )
 
-                match.node.identifier = (
-                    f"{quote_type}{match.node.identifier}{quote_type}"
-                )
-
                 fields.append(match.node)
                 proto_source = match.remaining_source
-                if not proto_source.startswith(quote_type):
+                if not proto_source.startswith(quote_type.value):
                     raise ValueError(
-                        f"Proto source has invalid reserved syntax, expecting closing quote {quote_type}: {proto_source}"
+                        f"Proto source has invalid reserved syntax, expecting closing quote {quote_type.value}: {proto_source}"
                     )
                 proto_source = proto_source[1:].strip()
 
-        return ParsedProtoNode(ProtoReserved(ranges, fields), proto_source.strip())
+        return ParsedProtoNode(
+            ProtoReserved(ranges, fields, quote_type), proto_source.strip()
+        )
 
     def serialize(self) -> str:
         serialize_parts = [
             "reserved",
             ", ".join(r.serialize() for r in self.ranges)
-            + ", ".join(f.serialize() for f in self.fields),
+            + ", ".join(
+                f"{self.quote_type.value}{f.serialize()}{self.quote_type.value}"
+                for f in self.fields
+            ),
         ]
         return " ".join(serialize_parts) + ";"

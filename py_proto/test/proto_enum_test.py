@@ -24,7 +24,7 @@ class EnumTest(unittest.TestCase):
                 FE_UNDEFINED = 0;
                 option java_package = "foobar";
                 FE_VALONE = 1 [ .bar.baz = "bat", baz.bat = -100 ];
-                reserved "FE_RESERVED", 'FE_OLD';
+                reserved "FE_RESERVED", "FE_OLD";
                 FE_VALTWO = 2;
             }
         """.strip()
@@ -74,7 +74,7 @@ class EnumTest(unittest.TestCase):
                     ],
                 ),
                 ProtoReserved(
-                    [], [ProtoIdentifier('"FE_RESERVED"'), ProtoIdentifier("'FE_OLD'")]
+                    [], [ProtoIdentifier("FE_RESERVED"), ProtoIdentifier("FE_OLD")]
                 ),
                 ProtoEnumValue(
                     ProtoIdentifier("FE_VALTWO"), ProtoInt(2, ProtoIntSign.POSITIVE)
@@ -91,7 +91,7 @@ class EnumTest(unittest.TestCase):
             FE_UNDEFINED = 0;
             option java_package = "foobar";
             FE_VALONE = 1 [ .bar.baz = "bat", baz.bat = -100 ];
-            reserved "FE_RESERVED", 'FE_OLD';
+            reserved "FE_RESERVED", "FE_OLD";
             FE_VALTWO = 2;
             }
             """

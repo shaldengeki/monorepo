@@ -109,6 +109,7 @@ py_test(
         "//src:proto_int",
         "//src:proto_message",
         "//src:proto_option",
+        "//src:proto_reserved",
         "//src:proto_string_literal",
     ],
 )

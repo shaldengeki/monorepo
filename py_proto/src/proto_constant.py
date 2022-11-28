@@ -10,7 +10,12 @@ from src.proto_string_literal import ProtoStringLiteral
 
 class ProtoConstant(ProtoNode):
     def __init__(
-        self, value: ProtoFullIdentifier | ProtoStringLiteral | int | float | ProtoBool
+        self,
+        value: ProtoFullIdentifier
+        | ProtoStringLiteral
+        | ProtoInt
+        | ProtoFloat
+        | ProtoBool,
     ):
         self.value = value
 
@@ -78,10 +83,9 @@ class ProtoConstant(ProtoNode):
         return None
 
     def serialize(self) -> str:
-        if isinstance(self.value, ProtoNode):
-            return self.value.serialize()
-        elif isinstance(self.value, int) or isinstance(self.value, float):
-            return str(self.value)
-        raise ValueError(
-            f"Proto has invalid constant: {self.value} with class: {self.value.__class__.__name__}"
-        )
+        if not isinstance(self.value, ProtoNode):
+            raise ValueError(
+                f"Proto has invalid constant: {self.value} with class: {self.value.__class__.__name__}"
+            )
+
+        return self.value.serialize()
