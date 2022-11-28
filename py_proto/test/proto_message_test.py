@@ -4,9 +4,13 @@ from textwrap import dedent
 from src.proto_bool import ProtoBool
 from src.proto_constant import ProtoConstant
 from src.proto_enum import ProtoEnum, ProtoEnumValue
-from src.proto_identifier import ProtoIdentifier
+from src.proto_identifier import ProtoFullIdentifier, ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
-from src.proto_message import ProtoMessage
+from src.proto_message import (
+    ProtoMessage,
+    ProtoMessageField,
+    ProtoMessageFieldTypesEnum,
+)
 from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved, ProtoReservedRange, ProtoReservedRangeEnum
 from src.proto_string_literal import ProtoStringLiteral
@@ -29,6 +33,8 @@ class MessageTest(unittest.TestCase):
                 message NestedMessage {}
                 reserved "a";
                 reserved 1 to 3;
+                repeated string some_field = 4;
+                bool some_bool_field = 5;
             }
         """.strip()
             )
@@ -67,6 +73,20 @@ class MessageTest(unittest.TestCase):
                         )
                     ]
                 ),
+                ProtoMessageField(
+                    ProtoMessageFieldTypesEnum.STRING,
+                    ProtoIdentifier("some_field"),
+                    ProtoInt(4, ProtoIntSign.POSITIVE),
+                    True,
+                    None,
+                ),
+                ProtoMessageField(
+                    ProtoMessageFieldTypesEnum.BOOL,
+                    ProtoIdentifier("some_bool_field"),
+                    ProtoInt(5, ProtoIntSign.POSITIVE),
+                    False,
+                    None,
+                ),
             ],
         )
         self.assertEqual(
@@ -84,6 +104,8 @@ class MessageTest(unittest.TestCase):
             }
             reserved "a";
             reserved 1 to 3;
+            repeated string some_field = 4;
+            bool some_bool_field = 5;
             }
             """
             ).strip(),
@@ -245,6 +267,84 @@ class MessageTest(unittest.TestCase):
                             ProtoIdentifier("barBaz"),
                         ]
                     ),
+                ],
+            ),
+        )
+
+    def test_message_simple_field(self):
+        parsed_message_with_single_field_simple = ProtoMessage.match(
+            dedent(
+                """
+            message FooMessage {
+                string single_field = 1;
+            }
+        """.strip()
+            )
+        )
+        self.assertEqual(
+            parsed_message_with_single_field_simple.node,
+            ProtoMessage(
+                ProtoIdentifier("FooMessage"),
+                [
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.STRING,
+                        ProtoIdentifier("single_field"),
+                        ProtoInt(1, ProtoIntSign.POSITIVE),
+                        False,
+                        None,
+                    )
+                ],
+            ),
+        )
+
+    def test_message_repeated_field(self):
+        parsed_message_with_repeated_field_simple = ProtoMessage.match(
+            dedent(
+                """
+            message FooMessage {
+                repeated bool repeated_field = 3;
+            }
+        """.strip()
+            )
+        )
+        self.assertEqual(
+            parsed_message_with_repeated_field_simple.node,
+            ProtoMessage(
+                ProtoIdentifier("FooMessage"),
+                [
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.BOOL,
+                        ProtoIdentifier("repeated_field"),
+                        ProtoInt(3, ProtoIntSign.POSITIVE),
+                        True,
+                        None,
+                    )
+                ],
+            ),
+        )
+
+    def test_message_field_enum_or_message(self):
+        parsed_message_with_repeated_field_simple = ProtoMessage.match(
+            dedent(
+                """
+            message FooMessage {
+                foo.SomeEnumOrMessage enum_or_message_field = 1;
+            }
+        """.strip()
+            )
+        )
+        self.assertEqual(
+            parsed_message_with_repeated_field_simple.node,
+            ProtoMessage(
+                ProtoIdentifier("FooMessage"),
+                [
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
+                        ProtoIdentifier("enum_or_message_field"),
+                        ProtoInt(1, ProtoIntSign.POSITIVE),
+                        False,
+                        ProtoFullIdentifier("foo.SomeEnumOrMessage"),
+                    )
                 ],
             ),
         )

@@ -21,7 +21,7 @@
   - [x] Empty statements
   - [x] Options
   - [ ] Fields
-    - [ ] Basic fields
+    - [x] Basic fields
     - [ ] Field options
     - [ ] OneOfs
       - [ ] Basic oneofs

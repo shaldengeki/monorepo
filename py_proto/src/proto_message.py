@@ -1,10 +1,133 @@
+from enum import Enum
 from typing import Optional
 
 from src.proto_enum import ProtoEnum
-from src.proto_identifier import ProtoIdentifier
+from src.proto_identifier import ProtoFullIdentifier, ProtoIdentifier
+from src.proto_int import ProtoInt
 from src.proto_node import ParsedProtoNode, ProtoNode
 from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved
+
+
+class ProtoMessageFieldTypesEnum(Enum):
+    DOUBLE = "double"
+    FLOAT = "float"
+    INT32 = "int32"
+    INT64 = "int64"
+    UINT32 = "uint32"
+    UINT64 = "uint64"
+    SINT32 = "sint32"
+    SINT64 = "sint64"
+    FIXED32 = "fixed32"
+    FIXED64 = "fixed64"
+    SFIXED32 = "sfixed32"
+    SFIXED64 = "sfixed64"
+    BOOL = "bool"
+    STRING = "string"
+    BYTES = "bytes"
+    ENUM_OR_MESSAGE = "enum_or_message"
+
+
+class ProtoMessageField(ProtoNode):
+    def __init__(
+        self,
+        type: ProtoMessageFieldTypesEnum,
+        name: ProtoIdentifier,
+        number: ProtoInt,
+        repeated: bool = False,
+        enum_or_message_type_name: Optional[ProtoFullIdentifier] = None,
+    ):
+        self.type = type
+        self.name = name
+        self.number = number
+        self.repeated = repeated
+        self.enum_or_message_type_name = enum_or_message_type_name
+
+    def __eq__(self, other: "ProtoMessageField") -> bool:
+        if not isinstance(other, ProtoMessageField):
+            return False
+
+        return (
+            self.type == other.type
+            and self.name == other.name
+            and self.number == other.number
+            and self.repeated == other.repeated
+            and self.enum_or_message_type_name == other.enum_or_message_type_name
+        )
+
+    def __str__(self) -> str:
+        return f"<ProtoMessageField type={self.type} name={self.name} number={self.number} repeated={self.repeated} enum_or_message_type_name={self.enum_or_message_type_name}>"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+    @staticmethod
+    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+        # First, try to match the optional repeated.
+        repeated = False
+        if proto_source.startswith("repeated "):
+            repeated = True
+            proto_source = proto_source[9:].strip()
+
+        # Next, try to match the field type.
+        matched_type: Optional[ProtoMessageFieldTypesEnum] = None
+        for field_type in ProtoMessageFieldTypesEnum:
+            if field_type == ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE:
+                # This is special-cased below.
+                break
+            if proto_source.startswith(f"{field_type.value} "):
+                matched_type = field_type
+                proto_source = proto_source[len(field_type.value) + 1 :]
+
+        enum_or_message_type_name = None
+        if matched_type is None:
+            # See if this is an enum or message type.
+            match = ProtoFullIdentifier.match(proto_source)
+            if match is None:
+                return None
+            matched_type = ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE
+            enum_or_message_type_name = match.node
+            proto_source = match.remaining_source.strip()
+
+        match = ProtoIdentifier.match(proto_source)
+        if match is None:
+            return None
+        name = match.node
+        proto_source = match.remaining_source.strip()
+
+        if not proto_source.startswith("= "):
+            return None
+        proto_source = proto_source[2:].strip()
+
+        match = ProtoInt.match(proto_source)
+        if match is None:
+            return None
+        number = match.node
+        proto_source = match.remaining_source.strip()
+
+        return ParsedProtoNode(
+            ProtoMessageField(
+                matched_type, name, number, repeated, enum_or_message_type_name
+            ),
+            proto_source,
+        )
+
+    def serialize(self) -> str:
+        serialized_parts = []
+        if self.repeated:
+            serialized_parts.append("repeated")
+
+        if self.type == ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE:
+            serialized_parts.append(self.enum_or_message_type_name)
+        else:
+            serialized_parts.append(self.type.value)
+
+        return (
+            " ".join(
+                serialized_parts + [self.name.serialize(), "=", self.number.serialize()]
+            )
+            + ";"
+        )
 
 
 class ProtoMessage(ProtoNode):
@@ -31,6 +154,7 @@ class ProtoMessage(ProtoNode):
             ProtoOption,
             ProtoMessage,
             ProtoReserved,
+            ProtoMessageField,
         ):
             try:
                 match_result = node_type.match(partial_message_content)
