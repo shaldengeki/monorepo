@@ -19,8 +19,8 @@ class ProtoPackage(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("package"):
             return None
 

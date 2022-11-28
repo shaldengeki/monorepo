@@ -44,8 +44,8 @@ class ProtoReservedRange:
     def __repr__(self) -> str:
         return str(self)
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         sign = ProtoIntSign.POSITIVE
         if proto_source.startswith("-") and proto_source != "-":
             sign = next(x for x in ProtoIntSign if x.value == proto_source[0])
@@ -134,8 +134,8 @@ class ProtoReserved(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("reserved "):
             return None
 

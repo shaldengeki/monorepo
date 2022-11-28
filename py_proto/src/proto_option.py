@@ -15,9 +15,6 @@ class ProtoOption(ProtoNode):
         self.value = value
 
     def __eq__(self, other: "ProtoOption") -> bool:
-        if not isinstance(other, ProtoOption):
-            return False
-
         return self.name == other.name and self.value == other.value
 
     def __str__(self) -> str:
@@ -26,8 +23,8 @@ class ProtoOption(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("option "):
             return None
         proto_source = proto_source[7:]

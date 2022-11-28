@@ -8,23 +8,20 @@ from src.proto_reserved import ProtoReserved
 
 
 class ProtoEnumValueOption(ProtoOption):
-    def __eq__(self, other: "ProtoEnumValueOption") -> bool:
-        if not isinstance(other, ProtoEnumValueOption):
-            return False
-
+    def __eq__(self, other) -> bool:
         return super().__eq__(other)
 
     def __str__(self) -> str:
-        return f"<ProtoEnumValueOption name={self.name}, value={self.value}>"
+        return f"<{self.__class__.__name__} name={self.name}, value={self.value}>"
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         test_source = "option " + proto_source.strip() + ";"
         match = ProtoOption.match(test_source)
         if match is None:
             return None
         return ParsedProtoNode(
-            ProtoEnumValueOption(match.node.name, match.node.value),
+            cls(match.node.name, match.node.value),
             match.remaining_source.strip(),
         )
 
@@ -63,8 +60,8 @@ class ProtoEnumValue(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         match = ProtoIdentifier.match(proto_source)
         if match is None:
             raise ValueError(f"Proto has invalid enum value name: {proto_source}")
@@ -162,8 +159,8 @@ class ProtoEnum(ProtoNode):
             f"Could not parse partial enum content:\n{partial_enum_content}"
         )
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("enum "):
             return None
 

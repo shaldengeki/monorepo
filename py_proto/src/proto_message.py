@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 
-from src.proto_enum import ProtoEnum
+from src.proto_enum import ProtoEnum, ProtoEnumValueOption
 from src.proto_identifier import ProtoFullIdentifier, ProtoIdentifier
 from src.proto_int import ProtoInt
 from src.proto_node import ParsedProtoNode, ProtoNode
@@ -9,29 +9,8 @@ from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved
 
 
-class ProtoMessageFieldOption(ProtoOption):
-    def __eq__(self, other: "ProtoMessageFieldOption") -> bool:
-        if not isinstance(other, ProtoMessageFieldOption):
-            return False
-
-        return super().__eq__(other)
-
-    def __str__(self) -> str:
-        return f"<ProtoMessageFieldOption name={self.name}, value={self.value}>"
-
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
-        test_source = "option " + proto_source.strip() + ";"
-        match = ProtoOption.match(test_source)
-        if match is None:
-            return None
-        return ParsedProtoNode(
-            ProtoMessageFieldOption(match.node.name, match.node.value),
-            match.remaining_source.strip(),
-        )
-
-    def serialize(self) -> str:
-        return f"{self.name.serialize()} = {self.value.serialize()}"
+class ProtoMessageFieldOption(ProtoEnumValueOption):
+    pass
 
 
 class ProtoMessageFieldTypesEnum(Enum):
@@ -92,8 +71,8 @@ class ProtoMessageField(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         # First, try to match the optional repeated.
         repeated = False
         if proto_source.startswith("repeated "):
@@ -232,8 +211,8 @@ class ProtoMessage(ProtoNode):
             f"Could not parse partial message content:\n{partial_message_content}"
         )
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("message "):
             return None
 

@@ -31,8 +31,8 @@ class ProtoConstant(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         match = ProtoBool.match(proto_source)
         if match is not None:
             return ParsedProtoNode(

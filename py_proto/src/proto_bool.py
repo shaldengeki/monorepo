@@ -20,8 +20,8 @@ class ProtoBool(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if proto_source.startswith("true") and (
             len(proto_source) == 4 or proto_source[4] not in ProtoFullIdentifier.ALL
         ):

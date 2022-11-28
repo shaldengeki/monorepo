@@ -2,8 +2,8 @@ from typing import Optional
 
 
 class ProtoNode:
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         raise NotImplementedError
 
     def serialize(self) -> str:

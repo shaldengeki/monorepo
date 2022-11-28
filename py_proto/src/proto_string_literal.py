@@ -22,8 +22,8 @@ class ProtoStringLiteral(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if not any(proto_source.startswith(c) for c in ProtoStringLiteral.QUOTES):
             return None
         escaped = False

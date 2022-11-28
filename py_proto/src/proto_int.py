@@ -37,8 +37,8 @@ class ProtoInt(ProtoNode):
             value *= -1
         return value
 
-    @staticmethod
-    def match(proto_source: str) -> Optional["ParsedProtoNode"]:
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if proto_source[0] not in ProtoInt.DECIMAL:
             return None
 
