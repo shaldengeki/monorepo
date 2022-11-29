@@ -23,8 +23,8 @@
   - [ ] Fields
     - [x] Basic fields
     - [x] Field options
-    - [ ] OneOfs
-      - [ ] Basic oneofs
+    - [x] OneOfs
+      - [x] Basic oneofs
       - [ ] OneOf options
       - [ ] Field options
     - [ ] Maps

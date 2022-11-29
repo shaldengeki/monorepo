@@ -52,10 +52,7 @@ class ProtoMessageField(ProtoNode):
             options = []
         self.options = options
 
-    def __eq__(self, other: "ProtoMessageField") -> bool:
-        if not isinstance(other, ProtoMessageField):
-            return False
-
+    def __eq__(self, other) -> bool:
         return (
             self.type == other.type
             and self.name == other.name
@@ -173,15 +170,89 @@ class ProtoMessageField(ProtoNode):
         return " ".join(serialized_parts) + ";"
 
 
+ProtoOneOfNodeTypes = ProtoOption | ProtoMessageField
+
+class ProtoOneOf(ProtoNode):
+    def __init__(self, name: ProtoIdentifier, nodes: list[ProtoOneOfNodeTypes]):
+        self.name = name
+        self.nodes = nodes
+
+    def __eq__(self, other) -> bool:
+        return self.name == other.name and self.nodes == other.nodes
+
+    def __str__(self) -> str:
+        return f"<{self.__class__.__name__} name={self.name}, nodes={self.nodes}>"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+    @staticmethod
+    def parse_partial_content(partial_oneof_content: str) -> ParsedProtoNode:
+        for node_type in (ProtoMessageField,):
+            try:
+                match_result = node_type.match(partial_oneof_content)
+            except (ValueError, IndexError, TypeError):
+                raise ValueError(
+                    f"Could not parse partial oneof content:\n{partial_oneof_content}"
+                )
+            if match_result is not None:
+                return match_result
+        raise ValueError(
+            f"Could not parse partial oneof content:\n{partial_oneof_content}"
+        )
+
+    @classmethod
+    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+        if not proto_source.startswith("oneof "):
+            return None
+
+        proto_source = proto_source[6:].strip()
+
+        match = ProtoIdentifier.match(proto_source)
+        if match is None:
+            raise ValueError(f"Proto has invalid syntax, expecting identifier for oneof: {proto_source}")
+
+        oneof_name = match.node
+        proto_source = match.remaining_source.strip()
+
+        if not proto_source.startswith("{"):
+            raise ValueError(
+                f"Proto has invalid syntax, expecting opening curly brace: {proto_source}"
+            )
+
+        proto_source = proto_source[1:].strip()
+        parsed_tree = []
+        while proto_source:
+            # Remove empty statements.
+            if proto_source.startswith(";"):
+                proto_source = proto_source[1:].strip()
+                continue
+
+            if proto_source.startswith("}"):
+                proto_source = proto_source[1:].strip()
+                break
+
+            match_result = ProtoOneOf.parse_partial_content(proto_source)
+            parsed_tree.append(match_result.node)
+            proto_source = match_result.remaining_source.strip()
+
+        return ParsedProtoNode(ProtoOneOf(oneof_name, nodes=parsed_tree), proto_source)
+
+    @property
+    def options(self) -> list[ProtoOption]:
+        return [node for node in self.nodes if isinstance(node, ProtoOption)]
+
+    def serialize(self) -> str:
+        serialize_parts = [f"oneof {self.name.serialize()} {{"] + [n.serialize() for n in self.nodes] + ["}"]
+        return "\n".join(serialize_parts)
+
+
 class ProtoMessage(ProtoNode):
     def __init__(self, name: ProtoIdentifier, nodes: list[ProtoNode]):
         self.name = name
         self.nodes = nodes
 
-    def __eq__(self, other: "ProtoMessage") -> bool:
-        if not isinstance(other, ProtoMessage):
-            return False
-
+    def __eq__(self, other) -> bool:
         return self.name == other.name and self.nodes == other.nodes
 
     def __str__(self) -> str:
@@ -198,6 +269,7 @@ class ProtoMessage(ProtoNode):
             ProtoMessage,
             ProtoReserved,
             ProtoMessageField,
+            ProtoOneOf,
         ):
             try:
                 match_result = node_type.match(partial_message_content)

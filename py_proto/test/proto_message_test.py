@@ -11,6 +11,7 @@ from src.proto_message import (
     ProtoMessageField,
     ProtoMessageFieldOption,
     ProtoMessageFieldTypesEnum,
+    ProtoOneOf,
 )
 from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved, ProtoReservedRange, ProtoReservedRangeEnum
@@ -36,6 +37,10 @@ class MessageTest(unittest.TestCase):
                 reserved 1 to 3;
                 repeated string some_field = 4 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                 bool some_bool_field = 5;
+                oneof one_of_field {
+                    string name = 4;
+                    SubMessage sub_message = 9;
+                }
             }
         """.strip()
             )
@@ -98,6 +103,13 @@ class MessageTest(unittest.TestCase):
                     False,
                     None,
                 ),
+                ProtoOneOf(
+                    ProtoIdentifier("one_of_field"),
+                    [
+                        ProtoMessageField(ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("name"), ProtoInt(4, ProtoIntSign.POSITIVE), False, None, []),
+                        ProtoMessageField(ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE, ProtoIdentifier("sub_message"), ProtoInt(9, ProtoIntSign.POSITIVE), False, ProtoFullIdentifier("SubMessage"), []),
+                    ],
+                ),
             ],
         )
         self.assertEqual(
@@ -117,6 +129,10 @@ class MessageTest(unittest.TestCase):
             reserved 1 to 3;
             repeated string some_field = 4 [ (bar.baz).bat = "bat", baz.bat = -100 ];
             bool some_bool_field = 5;
+            oneof one_of_field {
+            string name = 4;
+            SubMessage sub_message = 9;
+            }
             }
             """
             ).strip(),
@@ -356,6 +372,51 @@ class MessageTest(unittest.TestCase):
                         False,
                         ProtoFullIdentifier("foo.SomeEnumOrMessage"),
                     )
+                ],
+            ),
+        )
+
+    def test_oneof_empty(self):
+        parsed_oneof_empty = ProtoOneOf.match(
+            dedent("oneof one_of_field {}".strip())
+        )
+        self.assertEqual(
+            parsed_oneof_empty.node,
+            ProtoOneOf(
+                ProtoIdentifier("one_of_field"),
+                [],
+            ),
+        )
+
+    def test_oneof_empty_statements(self):
+        parsed_oneof_empty = ProtoOneOf.match(
+            dedent("""oneof one_of_field {
+                ;
+                ;
+            }""".strip())
+        )
+        self.assertEqual(
+            parsed_oneof_empty.node,
+            ProtoOneOf(
+                ProtoIdentifier("one_of_field"),
+                [],
+            ),
+        )
+
+    def test_oneof_basic_fields(self):
+        parsed_oneof_basic_fields = ProtoOneOf.match(
+            dedent("""oneof one_of_field {
+                string name = 4;
+                SubMessage sub_message = 9;
+            }""".strip())
+        )
+        self.assertEqual(
+            parsed_oneof_basic_fields.node,
+            ProtoOneOf(
+                ProtoIdentifier("one_of_field"),
+                [
+                    ProtoMessageField(ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("name"), ProtoInt(4, ProtoIntSign.POSITIVE), False, None, []),
+                    ProtoMessageField(ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE, ProtoIdentifier("sub_message"), ProtoInt(9, ProtoIntSign.POSITIVE), False, ProtoFullIdentifier("SubMessage"), []),
                 ],
             ),
         )

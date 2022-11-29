@@ -14,6 +14,7 @@ from src.proto_message import (
     ProtoMessageField,
     ProtoMessageFieldOption,
     ProtoMessageFieldTypesEnum,
+    ProtoOneOf,
 )
 from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved, ProtoReservedRange
@@ -57,6 +58,10 @@ class IntTest(unittest.TestCase):
                     reserved "yay";
                     repeated string field_one = 1;
                     MyNestedMessage field_two = 2 [ bar.baz = true ];
+                    oneof foo {
+                        string name = 4;
+                        SubMessage sub_message = 9;
+                    }
                 }
                 """
             )
@@ -164,6 +169,13 @@ class IntTest(unittest.TestCase):
                             )
                         ],
                     ),
+                    ProtoOneOf(
+                        ProtoIdentifier("foo"),
+                        [
+                            ProtoMessageField(ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("name"), ProtoInt(4, ProtoIntSign.POSITIVE), False, None, []),
+                            ProtoMessageField(ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE, ProtoIdentifier("sub_message"), ProtoInt(9, ProtoIntSign.POSITIVE), False, ProtoFullIdentifier("SubMessage"), []),
+                        ],
+                    ),
                 ],
             ),
             proto_file.nodes,
@@ -245,6 +257,10 @@ class IntTest(unittest.TestCase):
                     reserved "yay";
                     repeated string field_one = 1;
                     MyNestedMessage field_two = 2 [ .bar.baz = true ];
+                    oneof foo {
+                        string name = 4;
+                        SubMessage sub_message = 9;
+                    }
                 }
                 """
             )
@@ -284,6 +300,10 @@ class IntTest(unittest.TestCase):
                     reserved "yay";
                     repeated string field_one = 1;
                     MyNestedMessage field_two = 2 [ .bar.baz = true ];
+                    oneof foo {
+                    string name = 4;
+                    SubMessage sub_message = 9;
+                    }
                     }
                     """
             ).strip(),
