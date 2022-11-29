@@ -188,7 +188,10 @@ class ProtoOneOf(ProtoNode):
 
     @staticmethod
     def parse_partial_content(partial_oneof_content: str) -> ParsedProtoNode:
-        for node_type in (ProtoMessageField,):
+        for node_type in (
+            ProtoMessageField,
+            ProtoOption,
+        ):
             try:
                 match_result = node_type.match(partial_oneof_content)
             except (ValueError, IndexError, TypeError):

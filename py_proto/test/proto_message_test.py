@@ -39,6 +39,7 @@ class MessageTest(unittest.TestCase):
                 bool some_bool_field = 5;
                 oneof one_of_field {
                     string name = 4;
+                    option java_package = "com.example.foo";
                     SubMessage sub_message = 9;
                 }
             }
@@ -107,6 +108,7 @@ class MessageTest(unittest.TestCase):
                     ProtoIdentifier("one_of_field"),
                     [
                         ProtoMessageField(ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("name"), ProtoInt(4, ProtoIntSign.POSITIVE), False, None, []),
+                        ProtoOption(ProtoIdentifier("java_package"), ProtoConstant(ProtoStringLiteral("com.example.foo"))),
                         ProtoMessageField(ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE, ProtoIdentifier("sub_message"), ProtoInt(9, ProtoIntSign.POSITIVE), False, ProtoFullIdentifier("SubMessage"), []),
                     ],
                 ),
@@ -131,6 +133,7 @@ class MessageTest(unittest.TestCase):
             bool some_bool_field = 5;
             oneof one_of_field {
             string name = 4;
+            option java_package = "com.example.foo";
             SubMessage sub_message = 9;
             }
             }
@@ -417,6 +420,22 @@ class MessageTest(unittest.TestCase):
                 [
                     ProtoMessageField(ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("name"), ProtoInt(4, ProtoIntSign.POSITIVE), False, None, []),
                     ProtoMessageField(ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE, ProtoIdentifier("sub_message"), ProtoInt(9, ProtoIntSign.POSITIVE), False, ProtoFullIdentifier("SubMessage"), []),
+                ],
+            ),
+        )
+
+    def test_oneof_options(self):
+        parsed_oneof_options = ProtoOneOf.match(
+            dedent("""oneof one_of_field {
+                option java_package = "com.example.foo";
+            }""".strip())
+        )
+        self.assertEqual(
+            parsed_oneof_options.node,
+            ProtoOneOf(
+                ProtoIdentifier("one_of_field"),
+                [
+                    ProtoOption(ProtoIdentifier("java_package"), ProtoConstant(ProtoStringLiteral("com.example.foo"))),
                 ],
             ),
         )

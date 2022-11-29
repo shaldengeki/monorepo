@@ -60,6 +60,7 @@ class IntTest(unittest.TestCase):
                     MyNestedMessage field_two = 2 [ bar.baz = true ];
                     oneof foo {
                         string name = 4;
+                        option java_package = "com.example.foo";
                         SubMessage sub_message = 9;
                     }
                 }
@@ -173,6 +174,7 @@ class IntTest(unittest.TestCase):
                         ProtoIdentifier("foo"),
                         [
                             ProtoMessageField(ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("name"), ProtoInt(4, ProtoIntSign.POSITIVE), False, None, []),
+                            ProtoOption(ProtoIdentifier("java_package"), ProtoConstant(ProtoStringLiteral("com.example.foo"))),
                             ProtoMessageField(ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE, ProtoIdentifier("sub_message"), ProtoInt(9, ProtoIntSign.POSITIVE), False, ProtoFullIdentifier("SubMessage"), []),
                         ],
                     ),
@@ -259,6 +261,7 @@ class IntTest(unittest.TestCase):
                     MyNestedMessage field_two = 2 [ .bar.baz = true ];
                     oneof foo {
                         string name = 4;
+                        option java_package = "com.example.foo";
                         SubMessage sub_message = 9;
                     }
                 }
@@ -302,6 +305,7 @@ class IntTest(unittest.TestCase):
                     MyNestedMessage field_two = 2 [ .bar.baz = true ];
                     oneof foo {
                     string name = 4;
+                    option java_package = "com.example.foo";
                     SubMessage sub_message = 9;
                     }
                     }
