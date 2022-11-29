@@ -8,11 +8,11 @@ class ProtoBool(ProtoNode):
     def __init__(self, value: bool):
         self.value = value
 
-    def __eq__(self, other: "ProtoBool") -> bool:
-        if not isinstance(other, ProtoBool):
-            return False
+    def __bool__(self) -> bool:
+        return self.value
 
-        return self.value == other.value
+    def __eq__(self, other) -> bool:
+        return bool(self) == bool(other)
 
     def __str__(self) -> str:
         return f"<ProtoBool value={self.value}>"

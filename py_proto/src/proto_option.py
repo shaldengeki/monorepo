@@ -14,7 +14,7 @@ class ProtoOption(ProtoNode):
         self.name = name
         self.value = value
 
-    def __eq__(self, other: "ProtoOption") -> bool:
+    def __eq__(self, other) -> bool:
         return self.name == other.name and self.value == other.value
 
     def __str__(self) -> str:

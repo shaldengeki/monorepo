@@ -11,7 +11,7 @@ class ProtoIdentifier(ProtoNode):
     def __init__(self, identifier: str):
         self.identifier = identifier
 
-    def __eq__(self, other: "ProtoIdentifier") -> bool:
+    def __eq__(self, other) -> bool:
         return self.identifier == other.identifier
 
     def __str__(self) -> str:

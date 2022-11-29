@@ -7,22 +7,16 @@ from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_node import ParsedProtoNode, ProtoNode
 from src.proto_string_literal import ProtoStringLiteral
 
+ProtoConstantTypes = ProtoFullIdentifier | ProtoStringLiteral | ProtoInt | ProtoFloat | ProtoBool
 
 class ProtoConstant(ProtoNode):
     def __init__(
         self,
-        value: ProtoFullIdentifier
-        | ProtoStringLiteral
-        | ProtoInt
-        | ProtoFloat
-        | ProtoBool,
+        value: ProtoConstantTypes,
     ):
         self.value = value
 
-    def __eq__(self, other: "ProtoConstant") -> bool:
-        if not isinstance(other, ProtoConstant):
-            return False
-
+    def __eq__(self, other) -> bool:
         return self.value == other.value
 
     def __str__(self) -> str:

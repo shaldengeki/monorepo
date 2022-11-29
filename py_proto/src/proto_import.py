@@ -12,14 +12,11 @@ class ProtoImport(ProtoNode):
         self.weak = weak
         self.public = public
 
-    def __eq__(self, other: "ProtoImport") -> bool:
-        if not isinstance(other, ProtoImport):
-            return False
-
+    def __eq__(self, other) -> bool:
         return (
-            self.path == other.path
-            and self.weak == other.weak
-            and self.public == other.public
+            (hasattr(other, 'path') and self.path == other.path)
+            and (hasattr(other, 'weak') and self.weak == other.weak)
+            and (hasattr(other, 'public') and self.public == other.public)
         )
 
     def __str__(self) -> str:

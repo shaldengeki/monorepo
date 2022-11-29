@@ -14,10 +14,7 @@ class ProtoSyntax(ProtoNode):
     def __init__(self, syntax: ProtoStringLiteral):
         self.syntax = syntax
 
-    def __eq__(self, other: "ProtoSyntax") -> bool:
-        if not isinstance(other, ProtoSyntax):
-            return False
-
+    def __eq__(self, other) -> bool:
         return self.syntax == other.syntax
 
     def __str__(self) -> str:

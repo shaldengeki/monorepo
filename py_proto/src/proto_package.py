@@ -7,11 +7,8 @@ class ProtoPackage(ProtoNode):
     def __init__(self, package: str):
         self.package = package
 
-    def __eq__(self, other: "ProtoPackage") -> bool:
-        if not isinstance(other, ProtoPackage):
-            return False
-
-        return self.package == other.package
+    def __eq__(self, other) -> bool:
+        return hasattr(other, 'package') and self.package == other.package
 
     def __str__(self) -> str:
         return f"<ProtoPackage package={self.package}>"

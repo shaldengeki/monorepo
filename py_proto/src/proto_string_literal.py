@@ -10,10 +10,7 @@ class ProtoStringLiteral(ProtoNode):
         self.value = val
         self.quote = quote
 
-    def __eq__(self, other: "ProtoStringLiteral") -> bool:
-        if not isinstance(other, ProtoStringLiteral):
-            return False
-
+    def __eq__(self, other) -> bool:
         return self.value == other.value
 
     def __str__(self) -> str:

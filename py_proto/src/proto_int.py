@@ -19,23 +19,20 @@ class ProtoInt(ProtoNode):
         self.value = value
         self.sign = sign
 
-    def __eq__(self, other: "ProtoInt") -> bool:
-        if not isinstance(other, ProtoInt):
-            return False
+    def __int__(self) -> int:
+        if self.sign == ProtoIntSign.NEGATIVE:
+            return self.value * -1
+        else:
+            return self.value
 
-        return self.value == other.value and self.sign == other.sign
+    def __eq__(self, other) -> bool:
+        return int(self) == int(other)
 
     def __str__(self) -> str:
         return f"<ProtoInt value={self.value} sign={self.sign}>"
 
     def __repr__(self) -> str:
         return str(self)
-
-    def __int__(self):
-        value = self.value
-        if self.sign == ProtoIntSign.NEGATIVE:
-            value *= -1
-        return value
 
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:

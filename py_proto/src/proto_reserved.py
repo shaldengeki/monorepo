@@ -23,7 +23,7 @@ class ProtoReservedRange:
 
         if (
             max is not None
-            and max != ProtoReservedRangeEnum.MAX
+            and not isinstance(max, ProtoReservedRangeEnum)
             and int(min) > int(max)
         ):
             raise ValueError(
@@ -32,10 +32,7 @@ class ProtoReservedRange:
 
         self.max = max
 
-    def __eq__(self, other: "ProtoReservedRange") -> bool:
-        if not isinstance(other, ProtoReservedRange):
-            return False
-
+    def __eq__(self, other) -> bool:
         return self.min == other.min and self.max == other.max
 
     def __str__(self) -> str:
@@ -86,7 +83,7 @@ class ProtoReservedRange:
 
     def serialize(self) -> str:
         if self.max is not None:
-            if self.max == ProtoReservedRangeEnum.MAX:
+            if isinstance(self.max, ProtoReservedRangeEnum):
                 max = self.max.value
             else:
                 max = self.max.serialize()
@@ -122,10 +119,7 @@ class ProtoReserved(ProtoNode):
         self.fields = fields
         self.quote_type = quote_type
 
-    def __eq__(self, other: "ProtoReserved") -> bool:
-        if not isinstance(other, ProtoReserved):
-            return False
-
+    def __eq__(self, other) -> bool:
         return self.ranges == other.ranges and self.fields == other.fields
 
     def __str__(self) -> str:
@@ -160,16 +154,16 @@ class ProtoReserved(ProtoNode):
                 proto_source = match.remaining_source
             else:
                 # Maybe this is a field identifier.
-                quote_type = [
+                quote_types = [
                     q
                     for q in ProtoReservedFieldQuoteEnum
                     if proto_source.startswith(q.value)
                 ]
-                if not quote_type:
+                if not quote_types:
                     raise ValueError(
                         f"Proto source has invalid reserved syntax, expecting quote for field identifier: {proto_source}"
                     )
-                quote_type = quote_type[0]
+                quote_type = quote_types[0]
                 proto_source = proto_source[1:]
                 match = ProtoIdentifier.match(proto_source)
                 if match is None:

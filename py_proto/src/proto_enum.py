@@ -44,10 +44,7 @@ class ProtoEnumValue(ProtoNode):
         else:
             self.options = options
 
-    def __eq__(self, other: "ProtoEnum") -> bool:
-        if not isinstance(other, ProtoEnumValue):
-            return False
-
+    def __eq__(self, other) -> bool:
         return (
             self.identifier == other.identifier
             and self.value == other.value
@@ -128,10 +125,7 @@ class ProtoEnum(ProtoNode):
         self.name = name
         self.nodes = nodes
 
-    def __eq__(self, other: "ProtoEnum") -> bool:
-        if not isinstance(other, ProtoEnum):
-            return False
-
+    def __eq__(self, other) -> bool:
         return self.name == other.name and self.nodes == other.nodes
 
     def __str__(self) -> str:

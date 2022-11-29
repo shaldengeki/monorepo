@@ -40,7 +40,7 @@ class ProtoMessageField(ProtoNode):
         number: ProtoInt,
         repeated: bool = False,
         enum_or_message_type_name: Optional[ProtoFullIdentifier] = None,
-        options: list[ProtoMessageFieldOption] = None,
+        options: Optional[list[ProtoMessageFieldOption]] = None,
     ):
         self.type = type
         self.name = name

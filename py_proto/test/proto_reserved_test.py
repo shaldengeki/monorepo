@@ -57,12 +57,6 @@ class ReservedTest(unittest.TestCase):
             "reserved 1, 5, 2, 42;",
         )
 
-    def test_reserved_multiple_ints(self):
-        self.assertEqual(
-            ProtoReserved.match("reserved 1, 5, 2, 42;").node.serialize(),
-            "reserved 1, 5, 2, 42;",
-        )
-
     def test_reserved_single_string_field(self):
         self.assertEqual(
             ProtoReserved.match("reserved 'foo';").node.serialize(), "reserved 'foo';"
