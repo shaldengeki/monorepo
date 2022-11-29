@@ -26,7 +26,7 @@
     - [x] OneOfs
       - [x] Basic oneofs
       - [x] OneOf options
-      - [ ] Field options
+      - [x] Field options
     - [ ] Maps
       - [ ] Basic maps
       - [ ] Map options

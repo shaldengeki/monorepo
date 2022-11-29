@@ -40,7 +40,7 @@ class MessageTest(unittest.TestCase):
                 oneof one_of_field {
                     string name = 4;
                     option java_package = "com.example.foo";
-                    SubMessage sub_message = 9;
+                    SubMessage sub_message = 9 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                 }
             }
         """.strip()
@@ -109,7 +109,17 @@ class MessageTest(unittest.TestCase):
                     [
                         ProtoMessageField(ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("name"), ProtoInt(4, ProtoIntSign.POSITIVE), False, None, []),
                         ProtoOption(ProtoIdentifier("java_package"), ProtoConstant(ProtoStringLiteral("com.example.foo"))),
-                        ProtoMessageField(ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE, ProtoIdentifier("sub_message"), ProtoInt(9, ProtoIntSign.POSITIVE), False, ProtoFullIdentifier("SubMessage"), []),
+                        ProtoMessageField(
+                            ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
+                            ProtoIdentifier("sub_message"),
+                            ProtoInt(9, ProtoIntSign.POSITIVE),
+                            False,
+                            ProtoFullIdentifier("SubMessage"),
+                            [
+                                ProtoMessageFieldOption(ProtoIdentifier("(bar.baz).bat"), ProtoConstant(ProtoStringLiteral("bat"))),
+                                ProtoMessageFieldOption(ProtoIdentifier("baz.bat"), ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE))),
+                            ]
+                        ),
                     ],
                 ),
             ],
@@ -134,7 +144,7 @@ class MessageTest(unittest.TestCase):
             oneof one_of_field {
             string name = 4;
             option java_package = "com.example.foo";
-            SubMessage sub_message = 9;
+            SubMessage sub_message = 9 [ (bar.baz).bat = "bat", baz.bat = -100 ];
             }
             }
             """
@@ -436,6 +446,32 @@ class MessageTest(unittest.TestCase):
                 ProtoIdentifier("one_of_field"),
                 [
                     ProtoOption(ProtoIdentifier("java_package"), ProtoConstant(ProtoStringLiteral("com.example.foo"))),
+                ],
+            ),
+        )
+
+    def test_oneof_field_option(self):
+        parsed_oneof_field_option = ProtoOneOf.match(
+            dedent("""oneof one_of_field {
+                string name = 4 [ (bar.baz).bat = "bat", baz.bat = -100 ];
+            }""".strip())
+        )
+        self.assertEqual(
+            parsed_oneof_field_option.node,
+            ProtoOneOf(
+                ProtoIdentifier("one_of_field"),
+                [
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.STRING,
+                        ProtoIdentifier("name"),
+                        ProtoInt(4, ProtoIntSign.POSITIVE),
+                        False,
+                        None,
+                        [
+                            ProtoMessageFieldOption(ProtoIdentifier("(bar.baz).bat"), ProtoConstant(ProtoStringLiteral("bat"))),
+                            ProtoMessageFieldOption(ProtoIdentifier("baz.bat"), ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE))),
+                        ]
+                    )
                 ],
             ),
         )
