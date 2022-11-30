@@ -4,9 +4,16 @@ from textwrap import dedent
 from src.proto_bool import ProtoBool
 from src.proto_constant import ProtoConstant
 from src.proto_enum import ProtoEnum, ProtoEnumValue
-from src.proto_identifier import ProtoFullIdentifier, ProtoIdentifier
+from src.proto_identifier import (
+    ProtoEnumOrMessageIdentifier,
+    ProtoFullIdentifier,
+    ProtoIdentifier,
+)
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_message import (
+    ProtoMap,
+    ProtoMapKeyTypesEnum,
+    ProtoMapValueTypesEnum,
     ProtoMessage,
     ProtoMessageField,
     ProtoMessageFieldOption,
@@ -42,6 +49,8 @@ class MessageTest(unittest.TestCase):
                     option java_package = "com.example.foo";
                     SubMessage sub_message = 9 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                 }
+                map <sfixed64, NestedMessage> my_map = 10;
+                map <string, string> string_map = 11 [ java_package = "com.example.foo", baz.bat = 48 ];
             }
         """.strip()
             )
@@ -107,8 +116,18 @@ class MessageTest(unittest.TestCase):
                 ProtoOneOf(
                     ProtoIdentifier("one_of_field"),
                     [
-                        ProtoMessageField(ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("name"), ProtoInt(4, ProtoIntSign.POSITIVE), False, None, []),
-                        ProtoOption(ProtoIdentifier("java_package"), ProtoConstant(ProtoStringLiteral("com.example.foo"))),
+                        ProtoMessageField(
+                            ProtoMessageFieldTypesEnum.STRING,
+                            ProtoIdentifier("name"),
+                            ProtoInt(4, ProtoIntSign.POSITIVE),
+                            False,
+                            None,
+                            [],
+                        ),
+                        ProtoOption(
+                            ProtoIdentifier("java_package"),
+                            ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                        ),
                         ProtoMessageField(
                             ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
                             ProtoIdentifier("sub_message"),
@@ -116,9 +135,41 @@ class MessageTest(unittest.TestCase):
                             False,
                             ProtoFullIdentifier("SubMessage"),
                             [
-                                ProtoMessageFieldOption(ProtoIdentifier("(bar.baz).bat"), ProtoConstant(ProtoStringLiteral("bat"))),
-                                ProtoMessageFieldOption(ProtoIdentifier("baz.bat"), ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE))),
-                            ]
+                                ProtoMessageFieldOption(
+                                    ProtoIdentifier("(bar.baz).bat"),
+                                    ProtoConstant(ProtoStringLiteral("bat")),
+                                ),
+                                ProtoMessageFieldOption(
+                                    ProtoIdentifier("baz.bat"),
+                                    ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE)),
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+                ProtoMap(
+                    ProtoMapKeyTypesEnum.SFIXED64,
+                    ProtoMapValueTypesEnum.ENUM_OR_MESSAGE,
+                    ProtoIdentifier("my_map"),
+                    ProtoInt(10, ProtoIntSign.POSITIVE),
+                    ProtoEnumOrMessageIdentifier("NestedMessage"),
+                    [],
+                ),
+                ProtoMap(
+                    # map <string, string> string_map = 11 [ java_package = "com.example.foo", baz.bat = 48 ];
+                    ProtoMapKeyTypesEnum.STRING,
+                    ProtoMapValueTypesEnum.STRING,
+                    ProtoIdentifier("string_map"),
+                    ProtoInt(11, ProtoIntSign.POSITIVE),
+                    None,
+                    [
+                        ProtoMessageFieldOption(
+                            ProtoIdentifier("java_package"),
+                            ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                        ),
+                        ProtoMessageFieldOption(
+                            ProtoFullIdentifier("baz.bat"),
+                            ProtoConstant(ProtoInt(48, ProtoIntSign.POSITIVE)),
                         ),
                     ],
                 ),
@@ -146,6 +197,8 @@ class MessageTest(unittest.TestCase):
             option java_package = "com.example.foo";
             SubMessage sub_message = 9 [ (bar.baz).bat = "bat", baz.bat = -100 ];
             }
+            map <sfixed64, NestedMessage> my_map = 10;
+            map <string, string> string_map = 11 [ java_package = "com.example.foo", baz.bat = 48 ];
             }
             """
             ).strip(),
@@ -390,9 +443,7 @@ class MessageTest(unittest.TestCase):
         )
 
     def test_oneof_empty(self):
-        parsed_oneof_empty = ProtoOneOf.match(
-            dedent("oneof one_of_field {}".strip())
-        )
+        parsed_oneof_empty = ProtoOneOf.match(dedent("oneof one_of_field {}".strip()))
         self.assertEqual(
             parsed_oneof_empty.node,
             ProtoOneOf(
@@ -403,10 +454,12 @@ class MessageTest(unittest.TestCase):
 
     def test_oneof_empty_statements(self):
         parsed_oneof_empty = ProtoOneOf.match(
-            dedent("""oneof one_of_field {
+            dedent(
+                """oneof one_of_field {
                 ;
                 ;
-            }""".strip())
+            }""".strip()
+            )
         )
         self.assertEqual(
             parsed_oneof_empty.node,
@@ -418,43 +471,66 @@ class MessageTest(unittest.TestCase):
 
     def test_oneof_basic_fields(self):
         parsed_oneof_basic_fields = ProtoOneOf.match(
-            dedent("""oneof one_of_field {
+            dedent(
+                """oneof one_of_field {
                 string name = 4;
                 SubMessage sub_message = 9;
-            }""".strip())
+            }""".strip()
+            )
         )
         self.assertEqual(
             parsed_oneof_basic_fields.node,
             ProtoOneOf(
                 ProtoIdentifier("one_of_field"),
                 [
-                    ProtoMessageField(ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("name"), ProtoInt(4, ProtoIntSign.POSITIVE), False, None, []),
-                    ProtoMessageField(ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE, ProtoIdentifier("sub_message"), ProtoInt(9, ProtoIntSign.POSITIVE), False, ProtoFullIdentifier("SubMessage"), []),
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.STRING,
+                        ProtoIdentifier("name"),
+                        ProtoInt(4, ProtoIntSign.POSITIVE),
+                        False,
+                        None,
+                        [],
+                    ),
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
+                        ProtoIdentifier("sub_message"),
+                        ProtoInt(9, ProtoIntSign.POSITIVE),
+                        False,
+                        ProtoFullIdentifier("SubMessage"),
+                        [],
+                    ),
                 ],
             ),
         )
 
     def test_oneof_options(self):
         parsed_oneof_options = ProtoOneOf.match(
-            dedent("""oneof one_of_field {
+            dedent(
+                """oneof one_of_field {
                 option java_package = "com.example.foo";
-            }""".strip())
+            }""".strip()
+            )
         )
         self.assertEqual(
             parsed_oneof_options.node,
             ProtoOneOf(
                 ProtoIdentifier("one_of_field"),
                 [
-                    ProtoOption(ProtoIdentifier("java_package"), ProtoConstant(ProtoStringLiteral("com.example.foo"))),
+                    ProtoOption(
+                        ProtoIdentifier("java_package"),
+                        ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                    ),
                 ],
             ),
         )
 
     def test_oneof_field_option(self):
         parsed_oneof_field_option = ProtoOneOf.match(
-            dedent("""oneof one_of_field {
+            dedent(
+                """oneof one_of_field {
                 string name = 4 [ (bar.baz).bat = "bat", baz.bat = -100 ];
-            }""".strip())
+            }""".strip()
+            )
         )
         self.assertEqual(
             parsed_oneof_field_option.node,
@@ -468,11 +544,75 @@ class MessageTest(unittest.TestCase):
                         False,
                         None,
                         [
-                            ProtoMessageFieldOption(ProtoIdentifier("(bar.baz).bat"), ProtoConstant(ProtoStringLiteral("bat"))),
-                            ProtoMessageFieldOption(ProtoIdentifier("baz.bat"), ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE))),
-                        ]
+                            ProtoMessageFieldOption(
+                                ProtoIdentifier("(bar.baz).bat"),
+                                ProtoConstant(ProtoStringLiteral("bat")),
+                            ),
+                            ProtoMessageFieldOption(
+                                ProtoIdentifier("baz.bat"),
+                                ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE)),
+                            ),
+                        ],
                     )
                 ],
+            ),
+        )
+
+    def test_simple_map(self):
+        parsed_map_simple = ProtoMap.match("map <sfixed64, NestedMessage> my_map = 10;")
+        self.assertEqual(
+            parsed_map_simple.node,
+            ProtoMap(
+                ProtoMapKeyTypesEnum.SFIXED64,
+                ProtoMapValueTypesEnum.ENUM_OR_MESSAGE,
+                ProtoIdentifier("my_map"),
+                ProtoInt(10, ProtoIntSign.POSITIVE),
+                ProtoEnumOrMessageIdentifier("NestedMessage"),
+                [],
+            ),
+        )
+
+    def test_map_with_options(self):
+        parsed_map_simple = ProtoMap.match(
+            "map <sfixed64, NestedMessage> my_map = 10  [ java_package = 'com.example.foo', baz.bat = 48 ];"
+        )
+        self.assertEqual(parsed_map_simple.node.key_type, ProtoMapKeyTypesEnum.SFIXED64)
+        self.assertEqual(
+            parsed_map_simple.node.value_type, ProtoMapValueTypesEnum.ENUM_OR_MESSAGE
+        )
+        self.assertEqual(parsed_map_simple.node.name, ProtoIdentifier("my_map"))
+        self.assertEqual(
+            parsed_map_simple.node.number, ProtoInt(10, ProtoIntSign.POSITIVE)
+        )
+        self.assertEqual(
+            parsed_map_simple.node.enum_or_message_type_name,
+            ProtoEnumOrMessageIdentifier("NestedMessage"),
+        )
+        self.assertEqual(
+            parsed_map_simple.node.options,
+            [
+                ProtoMessageFieldOption(
+                    ProtoIdentifier("java_package"),
+                    ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                ),
+                ProtoMessageFieldOption(
+                    ProtoFullIdentifier("baz.bat"),
+                    ProtoConstant(ProtoInt(48, ProtoIntSign.POSITIVE)),
+                ),
+            ],
+        )
+
+    def test_map_message_value(self):
+        parsed_map_simple = ProtoMap.match("map <string, string> string_map = 11;")
+        self.assertEqual(
+            parsed_map_simple.node,
+            ProtoMap(
+                ProtoMapKeyTypesEnum.STRING,
+                ProtoMapValueTypesEnum.STRING,
+                ProtoIdentifier("string_map"),
+                ProtoInt(11, ProtoIntSign.POSITIVE),
+                None,
+                [],
             ),
         )
 

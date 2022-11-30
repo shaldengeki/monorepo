@@ -6,10 +6,17 @@ from src.proto_bool import ProtoBool
 from src.proto_constant import ProtoConstant
 from src.proto_enum import ProtoEnum, ProtoEnumValue
 from src.proto_float import ProtoFloat, ProtoFloatSign
-from src.proto_identifier import ProtoFullIdentifier, ProtoIdentifier
+from src.proto_identifier import (
+    ProtoEnumOrMessageIdentifier,
+    ProtoFullIdentifier,
+    ProtoIdentifier,
+)
 from src.proto_import import ProtoImport
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_message import (
+    ProtoMap,
+    ProtoMapKeyTypesEnum,
+    ProtoMapValueTypesEnum,
     ProtoMessage,
     ProtoMessageField,
     ProtoMessageFieldOption,
@@ -63,6 +70,7 @@ class IntTest(unittest.TestCase):
                         option java_package = "com.example.foo";
                         SubMessage sub_message = 9 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                     }
+                    map <sfixed64, NestedMessage> my_map = 10;
                 }
                 """
             )
@@ -173,8 +181,18 @@ class IntTest(unittest.TestCase):
                     ProtoOneOf(
                         ProtoIdentifier("foo"),
                         [
-                            ProtoMessageField(ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("name"), ProtoInt(4, ProtoIntSign.POSITIVE), False, None, []),
-                            ProtoOption(ProtoIdentifier("java_package"), ProtoConstant(ProtoStringLiteral("com.example.foo"))),
+                            ProtoMessageField(
+                                ProtoMessageFieldTypesEnum.STRING,
+                                ProtoIdentifier("name"),
+                                ProtoInt(4, ProtoIntSign.POSITIVE),
+                                False,
+                                None,
+                                [],
+                            ),
+                            ProtoOption(
+                                ProtoIdentifier("java_package"),
+                                ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                            ),
                             ProtoMessageField(
                                 ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
                                 ProtoIdentifier("sub_message"),
@@ -182,11 +200,27 @@ class IntTest(unittest.TestCase):
                                 False,
                                 ProtoFullIdentifier("SubMessage"),
                                 [
-                                    ProtoMessageFieldOption(ProtoIdentifier("(bar.baz).bat"), ProtoConstant(ProtoStringLiteral("bat"))),
-                                    ProtoMessageFieldOption(ProtoIdentifier("baz.bat"), ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE))),
-                                ]
+                                    ProtoMessageFieldOption(
+                                        ProtoIdentifier("(bar.baz).bat"),
+                                        ProtoConstant(ProtoStringLiteral("bat")),
+                                    ),
+                                    ProtoMessageFieldOption(
+                                        ProtoIdentifier("baz.bat"),
+                                        ProtoConstant(
+                                            ProtoInt(100, ProtoIntSign.NEGATIVE)
+                                        ),
+                                    ),
+                                ],
                             ),
                         ],
+                    ),
+                    ProtoMap(
+                        ProtoMapKeyTypesEnum.SFIXED64,
+                        ProtoMapValueTypesEnum.ENUM_OR_MESSAGE,
+                        ProtoIdentifier("my_map"),
+                        ProtoInt(10, ProtoIntSign.POSITIVE),
+                        ProtoEnumOrMessageIdentifier("NestedMessage"),
+                        [],
                     ),
                 ],
             ),
@@ -274,6 +308,7 @@ class IntTest(unittest.TestCase):
                         option java_package = "com.example.foo";
                         SubMessage sub_message = 9 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                     }
+                    map <sfixed64, NestedMessage> my_map = 10;
                 }
                 """
             )
@@ -318,6 +353,7 @@ class IntTest(unittest.TestCase):
                     option java_package = "com.example.foo";
                     SubMessage sub_message = 9 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                     }
+                    map <sfixed64, NestedMessage> my_map = 10;
                     }
                     """
             ).strip(),

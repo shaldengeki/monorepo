@@ -23,7 +23,7 @@ repos:
         rev: "12f5442f51377b10b26651ad745206bbe1500ad6"
         hooks:
             -   id: bazel-buildifier
-    -   repo: https://github.com/pre-commit/mirrors-mypy
-        rev: v0.991
-        hooks:
-            -   id: mypy
+    # -   repo: https://github.com/pre-commit/mirrors-mypy
+    #     rev: v0.991
+    #     hooks:
+    #         -   id: mypy

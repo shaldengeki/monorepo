@@ -16,20 +16,20 @@
     - [x] Values
     - [x] Value options
   - [x] Reserveds
-- [ ] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)
+- [x] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)
   - [x] Empty message
   - [x] Empty statements
   - [x] Options
-  - [ ] Fields
+  - [x] Fields
     - [x] Basic fields
     - [x] Field options
     - [x] OneOfs
       - [x] Basic oneofs
       - [x] OneOf options
       - [x] Field options
-    - [ ] Maps
-      - [ ] Basic maps
-      - [ ] Map options
+    - [x] Maps
+      - [x] Basic maps
+      - [x] Map options
     - [x] Reserveds
   - [x] Nested messages
   - [x] Nested enums
