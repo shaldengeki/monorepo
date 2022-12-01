@@ -25,11 +25,15 @@ from src.proto_message import (
 )
 from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved, ProtoReservedRange
+from src.proto_service import ProtoService
 from src.proto_string_literal import ProtoStringLiteral
 from src.proto_syntax import ProtoSyntaxType
 
 
 class IntTest(unittest.TestCase):
+
+    maxDiff = None
+
     def test_parser(self):
         proto_file = Parser.loads(
             dedent(
@@ -71,6 +75,9 @@ class IntTest(unittest.TestCase):
                         SubMessage sub_message = 9 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                     }
                     map <sfixed64, NestedMessage> my_map = 10;
+                }
+                service MyGreatService {
+                    option java_package = "com.example.foo";
                 }
                 """
             )
@@ -227,6 +234,19 @@ class IntTest(unittest.TestCase):
             proto_file.nodes,
         )
 
+        self.assertIn(
+            ProtoService(
+                ProtoIdentifier("MyGreatService"),
+                [
+                    ProtoOption(
+                        ProtoIdentifier("java_package"),
+                        ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                    )
+                ],
+            ),
+            proto_file.nodes,
+        )
+
     def test_parser_no_syntax(self):
         with self.assertRaises(ParseError):
             Parser.loads(
@@ -310,6 +330,9 @@ class IntTest(unittest.TestCase):
                     }
                     map <sfixed64, NestedMessage> my_map = 10;
                 }
+                service MyGreatService {
+                    option java_package = "com.example.foo";
+                }
                 """
             )
         )
@@ -354,6 +377,10 @@ class IntTest(unittest.TestCase):
                     SubMessage sub_message = 9 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                     }
                     map <sfixed64, NestedMessage> my_map = 10;
+                    }
+
+                    service MyGreatService {
+                    option java_package = "com.example.foo";
                     }
                     """
             ).strip(),

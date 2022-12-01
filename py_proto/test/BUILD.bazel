@@ -129,6 +129,18 @@ py_test(
 )
 
 py_test(
+    name = "proto_service_test",
+    srcs = ["proto_service_test.py"],
+    deps = [
+        "//src:proto_constant",
+        "//src:proto_identifier",
+        "//src:proto_option",
+        "//src:proto_service",
+        "//src:proto_string_literal",
+    ],
+)
+
+py_test(
     name = "parser_test",
     srcs = ["parser_test.py"],
     deps = [
@@ -141,6 +153,7 @@ py_test(
         "//src:proto_int",
         "//src:proto_message",
         "//src:proto_option",
+        "//src:proto_service",
         "//src:proto_string_literal",
         "//src:proto_syntax",
     ],

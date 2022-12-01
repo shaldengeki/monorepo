@@ -4,9 +4,10 @@ from src.proto_enum import ProtoEnum
 from src.proto_file import ProtoFile
 from src.proto_import import ProtoImport
 from src.proto_message import ProtoMessage
-from src.proto_node import ParsedProtoNode, ProtoNode
+from src.proto_node import ParsedProtoNode
 from src.proto_option import ProtoOption
 from src.proto_package import ProtoPackage
+from src.proto_service import ProtoService
 from src.proto_syntax import ProtoSyntax
 
 
@@ -23,7 +24,8 @@ class Parser:
             ProtoPackage,
             ProtoOption,
             ProtoEnum,
-        ] # type: list[type[ProtoImport] | type[ProtoMessage] | type[ProtoPackage] | type[ProtoOption] | type[ProtoEnum]]
+            ProtoService,
+        ]  # type: list[type[ProtoImport] | type[ProtoMessage] | type[ProtoPackage] | type[ProtoOption] | type[ProtoEnum]]
         for node_type in node_types:
             try:
                 match_result = node_type.match(partial_proto_content)

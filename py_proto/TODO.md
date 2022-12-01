@@ -34,9 +34,9 @@
   - [x] Nested messages
   - [x] Nested enums
 - [ ] [Service support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#service_definition)
-  - [ ] Empty service
-  - [ ] Empty statements
-  - [ ] Service options
+  - [x] Empty service
+  - [x] Empty statements
+  - [x] Service options
   - [ ] rpcs
     - [ ] Basic RPC
     - [ ] stream request
