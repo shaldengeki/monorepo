@@ -25,7 +25,7 @@ from src.proto_message import (
 )
 from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved, ProtoReservedRange
-from src.proto_service import ProtoService
+from src.proto_service import ProtoService, ProtoServiceRPC
 from src.proto_string_literal import ProtoStringLiteral
 from src.proto_syntax import ProtoSyntaxType
 
@@ -77,7 +77,10 @@ class IntTest(unittest.TestCase):
                     map <sfixed64, NestedMessage> my_map = 10;
                 }
                 service MyGreatService {
-                    option java_package = "com.example.foo";
+                    option (foo.bar).baz = "bat";
+                    rpc OneRPC (OneRPCRequest) returns (OneRPCResponse);
+                    rpc TwoRPC (TwoRPCRequest) returns (stream TwoRPCResponse);
+                    rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
                 }
                 """
             )
@@ -239,9 +242,38 @@ class IntTest(unittest.TestCase):
                 ProtoIdentifier("MyGreatService"),
                 [
                     ProtoOption(
-                        ProtoIdentifier("java_package"),
-                        ProtoConstant(ProtoStringLiteral("com.example.foo")),
-                    )
+                        ProtoIdentifier("(foo.bar).baz"),
+                        ProtoConstant(ProtoStringLiteral("bat")),
+                    ),
+                    ProtoServiceRPC(
+                        ProtoIdentifier("OneRPC"),
+                        ProtoEnumOrMessageIdentifier("OneRPCRequest"),
+                        ProtoEnumOrMessageIdentifier("OneRPCResponse"),
+                    ),
+                    ProtoServiceRPC(
+                        ProtoIdentifier("TwoRPC"),
+                        ProtoEnumOrMessageIdentifier("TwoRPCRequest"),
+                        ProtoEnumOrMessageIdentifier("TwoRPCResponse"),
+                        False,
+                        True,
+                    ),
+                    ProtoServiceRPC(
+                        ProtoIdentifier("ThreeRPC"),
+                        ProtoEnumOrMessageIdentifier("ThreeRPCRequest"),
+                        ProtoEnumOrMessageIdentifier("ThreeRPCResponse"),
+                        False,
+                        False,
+                        [
+                            ProtoOption(
+                                ProtoIdentifier("java_package"),
+                                ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                            ),
+                            ProtoOption(
+                                ProtoFullIdentifier("(foo.bar).baz"),
+                                ProtoConstant(ProtoBool(False)),
+                            ),
+                        ],
+                    ),
                 ],
             ),
             proto_file.nodes,
@@ -331,8 +363,12 @@ class IntTest(unittest.TestCase):
                     map <sfixed64, NestedMessage> my_map = 10;
                 }
                 service MyGreatService {
-                    option java_package = "com.example.foo";
+                    option (foo.bar).baz = "bat";
+                    rpc OneRPC (OneRPCRequest) returns (OneRPCResponse);
+                    rpc TwoRPC (TwoRPCRequest) returns (stream TwoRPCResponse);
+                    rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
                 }
+
                 """
             )
         )
@@ -380,7 +416,10 @@ class IntTest(unittest.TestCase):
                     }
 
                     service MyGreatService {
-                    option java_package = "com.example.foo";
+                    option (foo.bar).baz = "bat";
+                    rpc OneRPC (OneRPCRequest) returns (OneRPCResponse);
+                    rpc TwoRPC (TwoRPCRequest) returns (stream TwoRPCResponse);
+                    rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
                     }
                     """
             ).strip(),

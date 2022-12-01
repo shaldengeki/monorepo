@@ -33,15 +33,15 @@
     - [x] Reserveds
   - [x] Nested messages
   - [x] Nested enums
-- [ ] [Service support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#service_definition)
+- [x] [Service support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#service_definition)
   - [x] Empty service
   - [x] Empty statements
   - [x] Service options
-  - [ ] rpcs
-    - [ ] Basic RPC
-    - [ ] stream request
-    - [ ] stream response
-    - [ ] RPC options & empty statements
+  - [x] rpcs
+    - [x] Basic RPC
+    - [x] stream request
+    - [x] stream response
+    - [x] RPC options & empty statements
 - [ ] Diffs
   - [ ] Normalizing
   - [ ] Complete diffs
