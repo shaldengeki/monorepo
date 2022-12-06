@@ -13,6 +13,8 @@ I recently hit my four-year mark at Stripe. This is more than twice as long as I
 
 I joined Stripe late November 2018, right after they had just moved into new offices on Townsend, next to the Caltrain station in San Francisco. My prior employer the day I left was roughly ~1/10th as big as Stripe on the day I joined, and stepping into a huge, shiny, mostly-empty office was definitely a shock. I remember standing in the ground floor presentation space, looking up the central shaft in the middle of the building at all the floors, and thinking to myself: _Well, you've joined a real company._
 
+![Stripe office on Townsend.](/images/2019-07-11-townsend-building.jpg)
+
 The first two weeks were set aside for onboarding -- back to back sessions for hours -- and I remember the flood of information and new people I was absorbing being... a little overwhelming, but also exhilarating. My onboarding class (~25, which was large at the time!) bonded, sort of like you'd imagine survivors of a shipwreck bonding as they're swept from place to place.
 
 I had a daily short 1:1 with my teammate and onboarding buddy - @roberto - that I was perpetually late to. Roberto, to his great credit, was patient and understanding with how flustered I was.
@@ -25,6 +27,7 @@ Two weeks later, we delivered the thing, wrote our first shipped email, and I tr
 
 # Insight/Efficiency
 
+![Row of desks in the Stripe office.](/images/2019-03-25-townsend-desks.jpg)
 
 - insight
 - checker
@@ -36,6 +39,10 @@ Two weeks later, we delivered the thing, wrote our first shipped email, and I tr
 - pre-EDP
 - RIs & savings plans (jenniferh)
 - zstd
+- going remote
+
+![Remote office setup at home. Black desk with a monitor and laptop on it in the corner of a room with windows on both sides.](/images/2019-06-04-ssf-office.jpg)
+
 
 # Scala/Zoolander Infra
 
