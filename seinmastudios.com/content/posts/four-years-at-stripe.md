@@ -54,18 +54,22 @@ On the other hand, there were some missteps in retrospect:
 - Early on, we made the decision not to invest in AWS Graviton instances, judging that the costs were far too high and the payoffs too uncertain to be worth it. Now it's clear that the payoffs are real, this decision was wrong, and it would have been worth it for us to drop virtually all of our other work to push this.
 - We attempted several times to roll out processes whereby teams would set cloud spend targets and try to hit them on some cadence. In retrospect, we should've gotten executive sponsorship and driven this from the top down. Teams repeatedly told us that they couldn't justify prioritizing efficiency work over product work, and we needed a clear reconciliation process between competing priorities.
 
-Either way, looking back, I dove into Efficiency knowing basically nothing about cloud costs, and coming out the other side an expert in a ton of new stuff, having done really impactful work on the top company priority for a decent stretch of time. I couldn't have done it without being surrounded by the incredibly-bright and motivated people I've mentioned, and without being in an environment that trusted and empowered us to take educated risks.
+Either way, looking back, I dove into Efficiency knowing basically nothing about cloud costs, and coming out the other side an expert in a ton of new stuff, having done really impactful work on the top company priority for a decent stretch of time. I couldn't have done it without being surrounded by the incredibly-bright and motivated people I've mentioned, and without being in an environment that trusted and empowered us to take educated risks. This was exactly the sort of experience I was looking to gain by working at Stripe, and even if my time at the company had ended here, I would've felt satisfied.
+
+It also helped that doing good work was rewarded. I was promoted pretty quickly after I joined, and Stripe rewarded me with stock grants and spot bonuses in cash when I did something particularly out of the ordinary. This was pretty great, considering I already felt pretty good about my compensation at Stripe, and the struggle to get a promotion through at my last company was what ultimately pushed me out the door.
 
 # Scala/Zoolander Infra
 
 Backtracking a bit, in May 2019, I took part in a four-month program at Stripe experimenting with converting Bay Area employees to fully-remote status. Stripe paid for all the equipment I needed to set up a remote office -- desk, monitor, chair, the works.
 
-- going remote
-
 ![Remote office setup at home. Black desk with a monitor and laptop on it in the corner of a room with windows on both sides.](/images/2019-06-04-ssf-office.jpg)
 
+For four months, I worked from home more or less full-time. I'd already been working from home once or twice a week before this, and was interested to see how fully-remote would work out for me -- this was one of the reasons I joined Stripe in the first place, as it had a reputation for being remote-friendly. The experience was kind of a letdown in terms of how much of a non-event it was! Basically nothing changed, aside from me having a _ton_ of extra time not spent commuting, and spending a _little_ extra time reading and writing docs.
 
-- transfer, devprod, nameth
+The reason I mention this is that in late 2019, I started thinking about transferring to another team at Stripe. I'd been talking to my manager (@smruti) for a few months about wanting to do this eventually - I joined Stripe to work on developer productivity and enablement, and Efficiency wasn't the greatest fit for that long-term. In November / December 2019, after talking with @nameth[^13] and then @dc[^14], I decided to pull the trigger and transfer onto the Scala team under the Developer Productivity org. To Stripe's credit, this process was _extremely_ smooth, and happened quickly with (as far as I can remember) no paperwork on my end, other than signing a revised employment contract with my new manager's name on it.
+
+And then in March 2020, COVID-19 happened. I remember Stripe moving quickly and responsibly early in the pandemic -- they shut down offices very quickly, and gave everyone a generous budget to procure home office equipment.
+
 - dc, long
 - dev/ij
 - JVM monorepo
@@ -76,8 +80,7 @@ Backtracking a bit, in May 2019, I took part in a four-month program at Stripe e
 # Schemas Infra
 
 - tech lead
-- schema sharing
-- registry
+- schema sharing & registry
 - mentoring
 
 # Looking forward
@@ -94,3 +97,5 @@ Backtracking a bit, in May 2019, I took part in a four-month program at Stripe e
 [^10]: Stephen Jung
 [^11]: Jennifer Hwang
 [^12]: David Judd
+[^13]: Nameth
+[^14]: Dan Crosby
