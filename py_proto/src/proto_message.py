@@ -43,13 +43,22 @@ class ProtoMessageField(ProtoNode):
         name: ProtoIdentifier,
         number: ProtoInt,
         repeated: bool = False,
+        optional: bool = False,
         enum_or_message_type_name: Optional[ProtoFullIdentifier] = None,
         options: Optional[list[ProtoMessageFieldOption]] = None,
     ):
         self.type = type
         self.name = name
         self.number = number
+
+        # Only allow one of repeated or optional to be true.
+        if repeated and optional:
+            raise ValueError(
+                f"Only one of repeated,optional can be True in message field {self.name}"
+            )
+
         self.repeated = repeated
+        self.optional = optional
         self.enum_or_message_type_name = enum_or_message_type_name
 
         if options is None:
@@ -79,6 +88,15 @@ class ProtoMessageField(ProtoNode):
         if proto_source.startswith("repeated "):
             repeated = True
             proto_source = proto_source[9:].strip()
+
+        optional = False
+        if proto_source.startswith("optional "):
+            optional = True
+            proto_source = proto_source[9:].strip()
+            if repeated:
+                raise ValueError(
+                    "Proto message field has invalid syntax, cannot have both repeated and optional"
+                )
 
         # Next, try to match the field type.
         matched_type: Optional[ProtoMessageFieldTypesEnum] = None
@@ -143,7 +161,13 @@ class ProtoMessageField(ProtoNode):
 
         return ParsedProtoNode(
             ProtoMessageField(
-                matched_type, name, number, repeated, enum_or_message_type_name, options
+                matched_type,
+                name,
+                number,
+                repeated,
+                optional,
+                enum_or_message_type_name,
+                options,
             ),
             proto_source[1:].strip(),
         )

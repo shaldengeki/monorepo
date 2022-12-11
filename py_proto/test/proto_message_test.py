@@ -94,6 +94,7 @@ class MessageTest(unittest.TestCase):
                     ProtoIdentifier("some_field"),
                     ProtoInt(4, ProtoIntSign.POSITIVE),
                     True,
+                    False,
                     None,
                     [
                         ProtoMessageFieldOption(
@@ -110,8 +111,6 @@ class MessageTest(unittest.TestCase):
                     ProtoMessageFieldTypesEnum.BOOL,
                     ProtoIdentifier("some_bool_field"),
                     ProtoInt(5, ProtoIntSign.POSITIVE),
-                    False,
-                    None,
                 ),
                 ProtoOneOf(
                     ProtoIdentifier("one_of_field"),
@@ -120,9 +119,6 @@ class MessageTest(unittest.TestCase):
                             ProtoMessageFieldTypesEnum.STRING,
                             ProtoIdentifier("name"),
                             ProtoInt(4, ProtoIntSign.POSITIVE),
-                            False,
-                            None,
-                            [],
                         ),
                         ProtoOption(
                             ProtoIdentifier("java_package"),
@@ -132,6 +128,7 @@ class MessageTest(unittest.TestCase):
                             ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
                             ProtoIdentifier("sub_message"),
                             ProtoInt(9, ProtoIntSign.POSITIVE),
+                            False,
                             False,
                             ProtoFullIdentifier("SubMessage"),
                             [
@@ -383,8 +380,6 @@ class MessageTest(unittest.TestCase):
                         ProtoMessageFieldTypesEnum.STRING,
                         ProtoIdentifier("single_field"),
                         ProtoInt(1, ProtoIntSign.POSITIVE),
-                        False,
-                        None,
                     )
                 ],
             ),
@@ -410,7 +405,6 @@ class MessageTest(unittest.TestCase):
                         ProtoIdentifier("repeated_field"),
                         ProtoInt(3, ProtoIntSign.POSITIVE),
                         True,
-                        None,
                     )
                 ],
             ),
@@ -435,6 +429,7 @@ class MessageTest(unittest.TestCase):
                         ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
                         ProtoIdentifier("enum_or_message_field"),
                         ProtoInt(1, ProtoIntSign.POSITIVE),
+                        False,
                         False,
                         ProtoFullIdentifier("foo.SomeEnumOrMessage"),
                     )
@@ -487,14 +482,12 @@ class MessageTest(unittest.TestCase):
                         ProtoMessageFieldTypesEnum.STRING,
                         ProtoIdentifier("name"),
                         ProtoInt(4, ProtoIntSign.POSITIVE),
-                        False,
-                        None,
-                        [],
                     ),
                     ProtoMessageField(
                         ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
                         ProtoIdentifier("sub_message"),
                         ProtoInt(9, ProtoIntSign.POSITIVE),
+                        False,
                         False,
                         ProtoFullIdentifier("SubMessage"),
                         [],
@@ -541,6 +534,7 @@ class MessageTest(unittest.TestCase):
                         ProtoMessageFieldTypesEnum.STRING,
                         ProtoIdentifier("name"),
                         ProtoInt(4, ProtoIntSign.POSITIVE),
+                        False,
                         False,
                         None,
                         [
@@ -615,6 +609,44 @@ class MessageTest(unittest.TestCase):
                 [],
             ),
         )
+
+    def test_field_optional_default_false(self):
+        string_field = ProtoMessageField.match("string single_field = 1;")
+        self.assertEqual(
+            string_field.node,
+            ProtoMessageField(
+                ProtoMessageFieldTypesEnum.STRING,
+                ProtoIdentifier("single_field"),
+                ProtoInt(1, ProtoIntSign.POSITIVE),
+                False,
+                False,
+            ),
+        )
+
+    def test_field_optional_set(self):
+        string_field = ProtoMessageField.match(
+            "optional string single_field = 1;".strip()
+        )
+        self.assertEqual(
+            string_field.node,
+            ProtoMessageField(
+                ProtoMessageFieldTypesEnum.STRING,
+                ProtoIdentifier("single_field"),
+                ProtoInt(1, ProtoIntSign.POSITIVE),
+                False,
+                True,
+            ),
+        )
+
+    def test_field_cannot_have_repeated_and_optional(self):
+        with self.assertRaises(ValueError):
+            ProtoMessageField(
+                ProtoMessageFieldTypesEnum.STRING,
+                ProtoIdentifier("single_field"),
+                ProtoInt(1, ProtoIntSign.POSITIVE),
+                True,
+                True,
+            )
 
 
 if __name__ == "__main__":

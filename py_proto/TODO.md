@@ -31,6 +31,7 @@
       - [x] Basic maps
       - [x] Map options
     - [x] Reserveds
+    - [x] Optional
   - [x] Nested messages
   - [x] Nested enums
 - [x] [Service support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#service_definition)

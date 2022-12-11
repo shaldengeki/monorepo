@@ -180,6 +180,7 @@ class IntTest(unittest.TestCase):
                         ProtoIdentifier("field_two"),
                         ProtoInt(2, ProtoIntSign.POSITIVE),
                         False,
+                        False,
                         ProtoIdentifier("MyNestedMessage"),
                         [
                             ProtoMessageFieldOption(
@@ -195,9 +196,6 @@ class IntTest(unittest.TestCase):
                                 ProtoMessageFieldTypesEnum.STRING,
                                 ProtoIdentifier("name"),
                                 ProtoInt(4, ProtoIntSign.POSITIVE),
-                                False,
-                                None,
-                                [],
                             ),
                             ProtoOption(
                                 ProtoIdentifier("java_package"),
@@ -207,6 +205,7 @@ class IntTest(unittest.TestCase):
                                 ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
                                 ProtoIdentifier("sub_message"),
                                 ProtoInt(9, ProtoIntSign.POSITIVE),
+                                False,
                                 False,
                                 ProtoFullIdentifier("SubMessage"),
                                 [
