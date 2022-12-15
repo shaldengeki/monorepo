@@ -15,7 +15,7 @@ class ProtoReservedFieldQuoteEnum(Enum):
     DOUBLE = '"'
 
 
-class ProtoReservedRange:
+class ProtoReservedRange(ProtoNode):
     def __init__(
         self, min: ProtoInt, max: Optional[ProtoInt | ProtoReservedRangeEnum] = None
     ):
@@ -40,6 +40,9 @@ class ProtoReservedRange:
 
     def __repr__(self) -> str:
         return str(self)
+
+    def normalize(self) -> "ProtoReservedRange":
+        return self
 
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
@@ -127,6 +130,14 @@ class ProtoReserved(ProtoNode):
 
     def __repr__(self) -> str:
         return str(self)
+
+    def normalize(self) -> "ProtoReserved":
+        # sort the ranges.
+        return ProtoReserved(
+            sorted(self.ranges, key=lambda r: r.min),
+            sorted(self.fields),
+            self.quote_type
+        )
 
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:

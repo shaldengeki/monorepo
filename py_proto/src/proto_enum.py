@@ -57,6 +57,13 @@ class ProtoEnumValue(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
+    def normalize(self) -> "ProtoEnumValue":
+        return ProtoEnumValue(
+            self.identifier,
+            self.value,
+            sorted(self.options, key=lambda o: o.name),
+        )
+
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         match = ProtoIdentifier.match(proto_source)
@@ -133,6 +140,12 @@ class ProtoEnum(ProtoNode):
 
     def __repr__(self) -> str:
         return str(self)
+
+    def normalize(self) -> "ProtoEnum":
+        return ProtoEnum(
+            self.name,
+            sorted(self.nodes, key=lambda n: str(n.normalize())),
+        )
 
     @staticmethod
     def parse_partial_content(partial_enum_content: str) -> ParsedProtoNode:

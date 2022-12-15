@@ -1,12 +1,18 @@
+import abc
 from typing import NamedTuple, Optional
 
-
-class ProtoNode:
+class ProtoNode(abc.ABC):
     @classmethod
+    @abc.abstractmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         raise NotImplementedError
 
+    @abc.abstractmethod
     def serialize(self) -> str:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def normalize(self) -> "ProtoNode":
         raise NotImplementedError
 
 

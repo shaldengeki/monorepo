@@ -25,6 +25,9 @@ class ProtoConstant(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
+    def normalize(self) -> "ProtoConstant":
+        return self
+
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         match = ProtoBool.match(proto_source)

@@ -23,6 +23,9 @@ class ProtoSyntax(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
+    def normalize(self) -> "ProtoSyntax":
+        return self
+
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("syntax = "):

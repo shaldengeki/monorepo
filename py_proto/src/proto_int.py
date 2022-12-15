@@ -34,6 +34,9 @@ class ProtoInt(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
+    def normalize(self) -> "ProtoInt":
+        return self
+
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if proto_source[0] not in ProtoInt.DECIMAL:

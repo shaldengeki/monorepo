@@ -5,16 +5,6 @@ from src.proto_package import ProtoPackage
 from src.proto_syntax import ProtoSyntax
 
 
-class ProtoMessage(ProtoNode):
-    def __init__(self):
-        pass
-
-
-class ProtoService(ProtoNode):
-    def __init__(self):
-        pass
-
-
 class ProtoFile:
     def __init__(self, syntax: ProtoSyntax, nodes: list[ProtoNode]):
         self.syntax = syntax

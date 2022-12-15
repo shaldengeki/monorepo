@@ -71,6 +71,7 @@ class ProtoMessageField(ProtoNode):
             and self.name == other.name
             and self.number == other.number
             and self.repeated == other.repeated
+            and self.optional == other.optional
             and self.enum_or_message_type_name == other.enum_or_message_type_name
             and self.options == other.options
         )
@@ -80,6 +81,17 @@ class ProtoMessageField(ProtoNode):
 
     def __repr__(self) -> str:
         return str(self)
+
+    def normalize(self) -> "ProtoMessageField":
+        return ProtoMessageField(
+            type=self.type,
+            name=self.name,
+            number=self.number,
+            repeated=self.repeated,
+            optional=self.optional,
+            enum_or_message_type_name=self.enum_or_message_type_name,
+            options=sorted(self.options, key=lambda o: o.name),
+        )
 
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
@@ -215,6 +227,12 @@ class ProtoOneOf(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
+    def normalize(self) -> "ProtoOneOf":
+        return ProtoOneOf(
+            self.name,
+            nodes=sorted(self.nodes, key=lambda n: str(n.normalize())),
+        )
+
     @staticmethod
     def parse_partial_content(partial_oneof_content: str) -> ParsedProtoNode:
         for node_type in (
@@ -338,6 +356,16 @@ class ProtoMap(ProtoNode):
 
     def __repr__(self) -> str:
         return str(self)
+
+    def normalize(self) -> "ProtoMap":
+        return ProtoMap(
+            key_type=self.key_type,
+            value_type=self.value_type,
+            name=self.name,
+            number=self.number,
+            enum_or_message_type_name=self.enum_or_message_type_name,
+            options=sorted(self.options, key=lambda o: str(o.normalize())),
+        )
 
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
@@ -477,6 +505,12 @@ class ProtoMessage(ProtoNode):
 
     def __repr__(self) -> str:
         return str(self)
+
+    def normalize(self) -> "ProtoMessage":
+        return ProtoMessage(
+            name=self.name,
+            nodes=sorted(self.nodes, key=lambda n: str(n.normalize())),
+        )
 
     @staticmethod
     def parse_partial_content(partial_message_content: str) -> ParsedProtoNode:

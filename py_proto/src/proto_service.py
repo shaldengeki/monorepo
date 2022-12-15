@@ -41,6 +41,16 @@ class ProtoServiceRPC(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
+    def normalize(self) -> "ProtoServiceRPC":
+        return ProtoServiceRPC(
+            name=self.name,
+            request_type=self.request_type,
+            response_type=self.response_type,
+            request_stream=self.request_stream,
+            response_stream=self.response_stream,
+            options=sorted(self.options, key=lambda o: str(o.normalize())),
+        )
+
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("rpc "):
@@ -205,6 +215,12 @@ class ProtoService(ProtoNode):
 
     def __repr__(self) -> str:
         return str(self)
+
+    def normalize(self) -> "ProtoService":
+        return ProtoService(
+            name=self.name,
+            nodes=sorted(self.nodes, key=lambda n: str(n.normalize())),
+        )
 
     @staticmethod
     def parse_partial_content(partial_service_content: str) -> ParsedProtoNode:

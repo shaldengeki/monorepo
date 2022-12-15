@@ -34,6 +34,10 @@ class ProtoFloat(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
+
+    def normalize(self) -> "ProtoFloat":
+        return self
+
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if proto_source.startswith("inf"):

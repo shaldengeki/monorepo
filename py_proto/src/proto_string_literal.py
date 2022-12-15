@@ -19,6 +19,9 @@ class ProtoStringLiteral(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
+    def normalize(self) -> "ProtoStringLiteral":
+        return self
+
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
         if not any(proto_source.startswith(c) for c in ProtoStringLiteral.QUOTES):
