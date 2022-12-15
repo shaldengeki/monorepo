@@ -44,7 +44,7 @@
     - [x] stream response
     - [x] RPC options & empty statements
 - [ ] Diffs
-  - [ ] Normalizing
+  - [x] Normalizing
   - [ ] Complete diffs
     - [ ] Proto file-level diffs
       - [ ] Syntax changes
