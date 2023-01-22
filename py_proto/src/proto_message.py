@@ -1,6 +1,11 @@
 from enum import Enum
 from typing import Optional
 
+from src.proto_comment import (
+    ProtoComment,
+    ProtoMultiLineComment,
+    ProtoSingleLineComment,
+)
 from src.proto_enum import ProtoEnum, ProtoEnumValueOption
 from src.proto_identifier import (
     ProtoEnumOrMessageIdentifier,
@@ -228,9 +233,32 @@ class ProtoOneOf(ProtoNode):
         return str(self)
 
     def normalize(self) -> "ProtoOneOf":
+        non_comment_nodes = filter(
+            lambda n: not isinstance(n, ProtoComment), self.nodes
+        )
+        options = []
+        fields = []
+        for node in non_comment_nodes:
+            if isinstance(node, ProtoOption):
+                options.append(node.normalize())
+            elif (
+                isinstance(node, ProtoMessageField)
+                or isinstance(node, ProtoOneOf)
+                or isinstance(node, ProtoMap)
+            ):
+                fields.append(node.normalize())
+            else:
+                raise ValueError(
+                    f"Can't sort message {self} node for normalizing: {node}"
+                )
+
+        sorted_nodes_for_normalizing = sorted(
+            options, key=lambda o: str(o.normalize())
+        ) + sorted(fields, key=lambda f: int(f.number))
+
         return ProtoOneOf(
             self.name,
-            nodes=sorted(self.nodes, key=lambda n: str(n.normalize())),
+            nodes=sorted_nodes_for_normalizing,
         )
 
     @staticmethod
@@ -238,6 +266,8 @@ class ProtoOneOf(ProtoNode):
         for node_type in (
             ProtoMessageField,
             ProtoOption,
+            ProtoSingleLineComment,
+            ProtoMultiLineComment,
         ):
             try:
                 match_result = node_type.match(partial_oneof_content)
@@ -507,14 +537,53 @@ class ProtoMessage(ProtoNode):
         return str(self)
 
     def normalize(self) -> "ProtoMessage":
+        non_comment_nodes = filter(
+            lambda n: not isinstance(n, ProtoComment), self.nodes
+        )
+
+        options = []
+        enums = []
+        messages = []
+        fields = []
+        reserveds = []
+        for node in non_comment_nodes:
+            if isinstance(node, ProtoOption):
+                options.append(node.normalize())
+            elif isinstance(node, ProtoEnum):
+                options.append(node.normalize())
+            elif isinstance(node, ProtoMessage):
+                messages.append(node.normalize())
+            elif (
+                isinstance(node, ProtoMessageField)
+                or isinstance(node, ProtoOneOf)
+                or isinstance(node, ProtoMap)
+            ):
+                fields.append(node.normalize())
+            elif isinstance(node, ProtoReserved):
+                reserveds.append(node.normalize())
+            else:
+                raise ValueError(
+                    f"Can't sort message {self} node for normalizing: {node}"
+                )
+
+        sorted_nodes_for_normalizing = (
+            sorted(options, key=lambda o: str(o.normalize()))
+            + sorted(enums, key=lambda e: str(e))
+            + sorted(messages, key=lambda m: str(m))
+            + sorted(fields, key=lambda f: int(f.number))
+            + sorted(reserveds, key=lambda r: (r.min, r.max))
+        )
+
         return ProtoMessage(
             name=self.name,
-            nodes=sorted(self.nodes, key=lambda n: str(n.normalize())),
+            nodes=sorted_nodes_for_normalizing,
         )
 
     @staticmethod
     def parse_partial_content(partial_message_content: str) -> ParsedProtoNode:
         for node_type in (
+            ProtoSingleLineComment,
+            ProtoMultiLineComment,
             ProtoEnum,
             ProtoOption,
             ProtoMessage,

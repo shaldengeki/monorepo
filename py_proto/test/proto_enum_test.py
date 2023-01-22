@@ -2,6 +2,7 @@ import unittest
 from textwrap import dedent
 
 from src.proto_bool import ProtoBool
+from src.proto_comment import ProtoMultiLineComment, ProtoSingleLineComment
 from src.proto_constant import ProtoConstant
 from src.proto_enum import ProtoEnum, ProtoEnumValue, ProtoEnumValueOption
 from src.proto_identifier import ProtoIdentifier
@@ -21,8 +22,13 @@ class EnumTest(unittest.TestCase):
             enum FooEnum {
                 reserved 1, 2, 5 to max;
                 FE_NEGATIVE = -1 [ foo = false ];
-                FE_UNDEFINED = 0;
+                FE_UNDEFINED = 0; // single-line comment
                 option java_package = "foobar";
+                /*
+                multiple
+                line
+                comment
+                */
                 FE_VALONE = 1 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                 reserved "FE_RESERVED", "FE_OLD";
                 FE_VALTWO = 2;
@@ -55,9 +61,13 @@ class EnumTest(unittest.TestCase):
                 ProtoEnumValue(
                     ProtoIdentifier("FE_UNDEFINED"), ProtoInt(0, ProtoIntSign.POSITIVE)
                 ),
+                ProtoSingleLineComment(" single-line comment"),
                 ProtoOption(
                     ProtoIdentifier("java_package"),
                     ProtoConstant(ProtoStringLiteral("foobar")),
+                ),
+                ProtoMultiLineComment(
+                    "\n                multiple\n                line\n                comment\n                "
                 ),
                 ProtoEnumValue(
                     ProtoIdentifier("FE_VALONE"),
@@ -81,6 +91,7 @@ class EnumTest(unittest.TestCase):
                 ),
             ],
         )
+        # TODO: The serialization of the multi-line comment here is obviously off.
         self.assertEqual(
             parsed_enum_multiple_values.node.serialize(),
             dedent(
@@ -89,7 +100,13 @@ class EnumTest(unittest.TestCase):
             reserved 1, 2, 5 to max;
             FE_NEGATIVE = -1 [ foo = false ];
             FE_UNDEFINED = 0;
+            // single-line comment
             option java_package = "foobar";
+            /*
+                            multiple
+                            line
+                            comment
+                            */
             FE_VALONE = 1 [ (bar.baz).bat = "bat", baz.bat = -100 ];
             reserved "FE_RESERVED", "FE_OLD";
             FE_VALTWO = 2;
@@ -191,6 +208,76 @@ class EnumTest(unittest.TestCase):
         )
         self.assertEqual(
             parsed_enum_multiple_values.node.nodes,
+            [
+                ProtoEnumValue(
+                    ProtoIdentifier("FE_NEGATIVE"), ProtoInt(1, ProtoIntSign.NEGATIVE)
+                ),
+                ProtoEnumValue(
+                    ProtoIdentifier("FE_UNDEFINED"), ProtoInt(0, ProtoIntSign.POSITIVE)
+                ),
+                ProtoEnumValue(
+                    ProtoIdentifier("FE_VALONE"), ProtoInt(1, ProtoIntSign.POSITIVE)
+                ),
+                ProtoEnumValue(
+                    ProtoIdentifier("FE_VALTWO"), ProtoInt(2, ProtoIntSign.POSITIVE)
+                ),
+            ],
+        )
+
+    def test_enum_comments(self):
+        parsed_enum_multiple_values = ProtoEnum.match(
+            dedent(
+                """
+            enum FooEnum {
+                FE_NEGATIVE = -1; // test single-line comment
+                FE_UNDEFINED = 0; /* test multiple
+                FE_UNUSED = 200;
+                line comment */
+                FE_VALONE = 1;
+                FE_VALTWO = 2;
+            }
+        """.strip()
+            )
+        )
+        self.assertEqual(
+            parsed_enum_multiple_values.node.nodes,
+            [
+                ProtoEnumValue(
+                    ProtoIdentifier("FE_NEGATIVE"), ProtoInt(1, ProtoIntSign.NEGATIVE)
+                ),
+                ProtoSingleLineComment(" test single-line comment"),
+                ProtoEnumValue(
+                    ProtoIdentifier("FE_UNDEFINED"), ProtoInt(0, ProtoIntSign.POSITIVE)
+                ),
+                ProtoMultiLineComment(
+                    " test multiple\n                FE_UNUSED = 200;\n                line comment "
+                ),
+                ProtoEnumValue(
+                    ProtoIdentifier("FE_VALONE"), ProtoInt(1, ProtoIntSign.POSITIVE)
+                ),
+                ProtoEnumValue(
+                    ProtoIdentifier("FE_VALTWO"), ProtoInt(2, ProtoIntSign.POSITIVE)
+                ),
+            ],
+        )
+
+    def test_enum_normalize_away_comments(self):
+        parsed_enum_multiple_values = ProtoEnum.match(
+            dedent(
+                """
+            enum FooEnum {
+                FE_NEGATIVE = -1; // test single-line comment
+                FE_UNDEFINED = 0; /* test multiple
+                FE_UNUSED = 200;
+                line comment */
+                FE_VALONE = 1;
+                FE_VALTWO = 2;
+            }
+        """.strip()
+            )
+        ).node.normalize()
+        self.assertEqual(
+            parsed_enum_multiple_values.nodes,
             [
                 ProtoEnumValue(
                     ProtoIdentifier("FE_NEGATIVE"), ProtoInt(1, ProtoIntSign.NEGATIVE)

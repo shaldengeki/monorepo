@@ -2,6 +2,7 @@ import unittest
 from textwrap import dedent
 
 from src.proto_bool import ProtoBool
+from src.proto_comment import ProtoMultiLineComment, ProtoSingleLineComment
 from src.proto_constant import ProtoConstant
 from src.proto_enum import ProtoEnum, ProtoEnumValue
 from src.proto_identifier import (
@@ -42,6 +43,7 @@ class MessageTest(unittest.TestCase):
                 message NestedMessage {}
                 reserved "a";
                 reserved 1 to 3;
+                // single-line comment
                 repeated string some_field = 4 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                 bool some_bool_field = 5;
                 oneof one_of_field {
@@ -89,6 +91,7 @@ class MessageTest(unittest.TestCase):
                         )
                     ]
                 ),
+                ProtoSingleLineComment(" single-line comment"),
                 ProtoMessageField(
                     ProtoMessageFieldTypesEnum.STRING,
                     ProtoIdentifier("some_field"),
@@ -187,6 +190,7 @@ class MessageTest(unittest.TestCase):
             }
             reserved "a";
             reserved 1 to 3;
+            // single-line comment
             repeated string some_field = 4 [ (bar.baz).bat = "bat", baz.bat = -100 ];
             bool some_bool_field = 5;
             oneof one_of_field {
@@ -552,6 +556,70 @@ class MessageTest(unittest.TestCase):
             ),
         )
 
+    def test_oneof_with_comment(self):
+        parsed_oneof_with_comment = ProtoOneOf.match(
+            dedent(
+                """oneof one_of_field {
+                string name = 4;
+                // single-line comment!
+                SubMessage sub_message = 9;
+            }""".strip()
+            )
+        )
+        self.assertEqual(
+            parsed_oneof_with_comment.node,
+            ProtoOneOf(
+                ProtoIdentifier("one_of_field"),
+                [
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.STRING,
+                        ProtoIdentifier("name"),
+                        ProtoInt(4, ProtoIntSign.POSITIVE),
+                    ),
+                    ProtoSingleLineComment(" single-line comment!"),
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
+                        ProtoIdentifier("sub_message"),
+                        ProtoInt(9, ProtoIntSign.POSITIVE),
+                        False,
+                        False,
+                        ProtoFullIdentifier("SubMessage"),
+                        [],
+                    ),
+                ],
+            ),
+        )
+
+    def test_oneof_normalize_removes_comment(self):
+        normalized_oneof = ProtoOneOf.match(
+            dedent(
+                """oneof one_of_field {
+                string name = 4;
+                // single-line comment!
+                SubMessage sub_message = 9;
+            }""".strip()
+            )
+        ).node.normalize()
+        self.assertEqual(
+            normalized_oneof.nodes,
+            [
+                ProtoMessageField(
+                    ProtoMessageFieldTypesEnum.STRING,
+                    ProtoIdentifier("name"),
+                    ProtoInt(4, ProtoIntSign.POSITIVE),
+                ),
+                ProtoMessageField(
+                    ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
+                    ProtoIdentifier("sub_message"),
+                    ProtoInt(9, ProtoIntSign.POSITIVE),
+                    False,
+                    False,
+                    ProtoFullIdentifier("SubMessage"),
+                    [],
+                ),
+            ],
+        )
+
     def test_simple_map(self):
         parsed_map_simple = ProtoMap.match("map <sfixed64, NestedMessage> my_map = 10;")
         self.assertEqual(
@@ -647,6 +715,88 @@ class MessageTest(unittest.TestCase):
                 True,
                 True,
             )
+
+    def test_message_parses_comments(self):
+        parsed_comments = ProtoMessage.match(
+            dedent(
+                """
+                message MyMessage {
+                    string foo = 1;
+                    // single-line comment!
+                    bool bar = 2;
+                    /*
+                    multiple
+                    line
+                    comment!
+                    */
+                    string baz = 3;
+                }
+                """.strip()
+            )
+        )
+        self.assertEqual(
+            parsed_comments.node.nodes,
+            [
+                ProtoMessageField(
+                    ProtoMessageFieldTypesEnum.STRING,
+                    ProtoIdentifier("foo"),
+                    ProtoInt(1, ProtoIntSign.POSITIVE),
+                ),
+                ProtoSingleLineComment(" single-line comment!"),
+                ProtoMessageField(
+                    ProtoMessageFieldTypesEnum.BOOL,
+                    ProtoIdentifier("bar"),
+                    ProtoInt(2, ProtoIntSign.POSITIVE),
+                ),
+                ProtoMultiLineComment(
+                    "\n                    multiple\n                    line\n                    comment!\n                    "
+                ),
+                ProtoMessageField(
+                    ProtoMessageFieldTypesEnum.STRING,
+                    ProtoIdentifier("baz"),
+                    ProtoInt(3, ProtoIntSign.POSITIVE),
+                ),
+            ],
+        )
+
+    def test_message_normalizes_away_comments(self):
+        parsed_comments = ProtoMessage.match(
+            dedent(
+                """
+                message MyMessage {
+                    string foo = 1;
+                    // single-line comment!
+                    bool bar = 2;
+                    /*
+                    multiple
+                    line
+                    comment!
+                    */
+                    string baz = 3;
+                }
+                """.strip()
+            )
+        ).node.normalize()
+        self.assertEqual(
+            parsed_comments.nodes,
+            [
+                ProtoMessageField(
+                    ProtoMessageFieldTypesEnum.STRING,
+                    ProtoIdentifier("foo"),
+                    ProtoInt(1, ProtoIntSign.POSITIVE),
+                ),
+                ProtoMessageField(
+                    ProtoMessageFieldTypesEnum.BOOL,
+                    ProtoIdentifier("bar"),
+                    ProtoInt(2, ProtoIntSign.POSITIVE),
+                ),
+                ProtoMessageField(
+                    ProtoMessageFieldTypesEnum.STRING,
+                    ProtoIdentifier("baz"),
+                    ProtoInt(3, ProtoIntSign.POSITIVE),
+                ),
+            ],
+        )
 
 
 if __name__ == "__main__":

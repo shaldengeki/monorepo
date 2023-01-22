@@ -1,5 +1,10 @@
 from typing import Optional
 
+from src.proto_comment import (
+    ProtoComment,
+    ProtoMultiLineComment,
+    ProtoSingleLineComment,
+)
 from src.proto_identifier import ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_node import ParsedProtoNode, ProtoNode
@@ -142,14 +147,19 @@ class ProtoEnum(ProtoNode):
         return str(self)
 
     def normalize(self) -> "ProtoEnum":
+        non_comment_nodes = filter(
+            lambda n1: not isinstance(n1, ProtoComment), self.nodes
+        )
         return ProtoEnum(
             self.name,
-            sorted(self.nodes, key=lambda n: str(n.normalize())),
+            sorted(non_comment_nodes, key=lambda n: str(n.normalize())),
         )
 
     @staticmethod
     def parse_partial_content(partial_enum_content: str) -> ParsedProtoNode:
         for node_type in (
+            ProtoSingleLineComment,
+            ProtoMultiLineComment,
             ProtoOption,
             ProtoReserved,
             ProtoEnumValue,

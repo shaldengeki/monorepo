@@ -1,5 +1,6 @@
 import sys
 
+from src.proto_comment import ProtoMultiLineComment, ProtoSingleLineComment
 from src.proto_enum import ProtoEnum
 from src.proto_file import ProtoFile
 from src.proto_import import ProtoImport
@@ -25,6 +26,8 @@ class Parser:
             ProtoOption,
             ProtoEnum,
             ProtoService,
+            ProtoSingleLineComment,
+            ProtoMultiLineComment,
         ]  # type: list[type[ProtoImport] | type[ProtoMessage] | type[ProtoPackage] | type[ProtoOption] | type[ProtoEnum]]
         for node_type in node_types:
             try:

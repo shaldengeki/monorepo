@@ -3,6 +3,7 @@ from textwrap import dedent
 
 from src.parser import ParseError, Parser
 from src.proto_bool import ProtoBool
+from src.proto_comment import ProtoSingleLineComment, ProtoMultiLineComment
 from src.proto_constant import ProtoConstant
 from src.proto_enum import ProtoEnum, ProtoEnumValue
 from src.proto_float import ProtoFloat, ProtoFloatSign
@@ -49,6 +50,8 @@ class IntTest(unittest.TestCase):
                 option java_package = "my.test.package";
                 option (fully.qualified).option = .314159265e1;
 
+                // Testing top-level single-line comment
+
                 enum MyAwesomeEnum {
                     option allow_alias = true;
                     MAE_UNSPECIFIED = 0;
@@ -67,6 +70,7 @@ class IntTest(unittest.TestCase):
                     }
                     reserved 1 to 3;
                     reserved "yay";
+                    // testing nested comment
                     repeated string field_one = 1;
                     MyNestedMessage field_two = 2 [ bar.baz = true ];
                     oneof foo {
@@ -169,6 +173,7 @@ class IntTest(unittest.TestCase):
                         ]
                     ),
                     ProtoReserved(fields=[ProtoIdentifier("yay")]),
+                    ProtoSingleLineComment(" testing nested comment"),
                     ProtoMessageField(
                         ProtoMessageFieldTypesEnum.STRING,
                         ProtoIdentifier("field_one"),
@@ -335,6 +340,8 @@ class IntTest(unittest.TestCase):
                 option java_package = "my.test.package";
                 option (fully.qualified).option = .314159265e1;
 
+                // Testing top-level comment!
+
                 enum MyAwesomeEnum {
                     MAE_UNSPECIFIED = 0;
                     option allow_alias = true;
@@ -363,6 +370,7 @@ class IntTest(unittest.TestCase):
                 }
                 service MyGreatService {
                     option (foo.bar).baz = "bat";
+                    // Testing nested comment!
                     rpc OneRPC (OneRPCRequest) returns (OneRPCResponse);
                     rpc TwoRPC (TwoRPCRequest) returns (stream TwoRPCResponse);
                     rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
@@ -385,6 +393,8 @@ class IntTest(unittest.TestCase):
 
                     option java_package = "my.test.package";
                     option (fully.qualified).option = 3.14159265;
+
+                    // Testing top-level comment!
 
                     enum MyAwesomeEnum {
                     MAE_UNSPECIFIED = 0;
@@ -416,6 +426,7 @@ class IntTest(unittest.TestCase):
 
                     service MyGreatService {
                     option (foo.bar).baz = "bat";
+                    // Testing nested comment!
                     rpc OneRPC (OneRPCRequest) returns (OneRPCResponse);
                     rpc TwoRPC (TwoRPCRequest) returns (stream TwoRPCResponse);
                     rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }

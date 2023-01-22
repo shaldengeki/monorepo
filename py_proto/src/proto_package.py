@@ -8,7 +8,7 @@ class ProtoPackage(ProtoNode):
         self.package = package
 
     def __eq__(self, other) -> bool:
-        return hasattr(other, 'package') and self.package == other.package
+        return hasattr(other, "package") and self.package == other.package
 
     def __str__(self) -> str:
         return f"<ProtoPackage package={self.package}>"

@@ -14,9 +14,9 @@ class ProtoImport(ProtoNode):
 
     def __eq__(self, other) -> bool:
         return (
-            (hasattr(other, 'path') and self.path == other.path)
-            and (hasattr(other, 'weak') and self.weak == other.weak)
-            and (hasattr(other, 'public') and self.public == other.public)
+            (hasattr(other, "path") and self.path == other.path)
+            and (hasattr(other, "weak") and self.weak == other.weak)
+            and (hasattr(other, "public") and self.public == other.public)
         )
 
     def __str__(self) -> str:

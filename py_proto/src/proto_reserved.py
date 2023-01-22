@@ -136,7 +136,7 @@ class ProtoReserved(ProtoNode):
         return ProtoReserved(
             sorted(self.ranges, key=lambda r: r.min),
             sorted(self.fields),
-            self.quote_type
+            self.quote_type,
         )
 
     @classmethod

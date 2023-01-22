@@ -125,6 +125,7 @@ py_library(
     srcs = ["proto_message.py"],
     visibility = ["//visibility:public"],
     deps = [
+        ":proto_comment",
         ":proto_enum",
         ":proto_identifier",
         ":proto_node",
@@ -137,6 +138,7 @@ py_library(
     srcs = ["proto_enum.py"],
     visibility = ["//visibility:public"],
     deps = [
+        ":proto_comment",
         ":proto_identifier",
         ":proto_int",
         ":proto_node",
@@ -150,8 +152,19 @@ py_library(
     srcs = ["proto_service.py"],
     visibility = ["//visibility:public"],
     deps = [
+        ":proto_comment",
         ":proto_identifier",
         ":proto_option",
+    ],
+)
+
+py_library(
+    name = "proto_comment",
+    srcs = ["proto_comment.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":proto_identifier",
+        ":proto_node",
     ],
 )
 

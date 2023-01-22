@@ -7,7 +7,10 @@ from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_node import ParsedProtoNode, ProtoNode
 from src.proto_string_literal import ProtoStringLiteral
 
-ProtoConstantTypes = ProtoFullIdentifier | ProtoStringLiteral | ProtoInt | ProtoFloat | ProtoBool
+ProtoConstantTypes = (
+    ProtoFullIdentifier | ProtoStringLiteral | ProtoInt | ProtoFloat | ProtoBool
+)
+
 
 class ProtoConstant(ProtoNode):
     def __init__(
