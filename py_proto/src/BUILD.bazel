@@ -189,6 +189,7 @@ py_library(
         ":proto_enum",
         ":proto_file",
         ":proto_import",
+        ":proto_message",
         ":proto_node",
         ":proto_option",
         ":proto_package",
