@@ -2,7 +2,7 @@
 
 - [x] Set up Bazel scaffolding
 - [x] Set up testing
-- [ ] Mount in Google protobufs
+- [x] Mount in Google protobufs
 - [x] [Proto file support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#proto_file)
   - [x] Syntax
   - [x] Imports
