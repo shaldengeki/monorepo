@@ -202,5 +202,6 @@ py_binary(
     name = "parser_binary",
     srcs = ["parser.py"],
     main = "parser.py",
+    visibility = ["//visibility:public"],
     deps = [":parser"],
 )

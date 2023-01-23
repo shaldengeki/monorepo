@@ -171,3 +171,12 @@ py_test(
         "//src:proto_syntax",
     ],
 )
+
+sh_test(
+    name = "parser_binary_test",
+    srcs = ["parser_binary_test.sh"],
+    data = [
+        "//src:parser_binary",
+        "//test/resources:empty_proto",
+    ],
+)
