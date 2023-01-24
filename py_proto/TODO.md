@@ -49,6 +49,10 @@
   - [x] Multi-line /* */ comments
   - [ ] Same-line comment serialization support
   - [x] Top-of-file comment support
+- [ ] [Extending support](https://protobuf.dev/reference/protobuf/proto2-spec/#extend)
+  - This is required by [a Google well-known proto file.](https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/unittest_proto3_optional.proto#L96)
+  - [ ] Top-level extends
+  - [ ] Message-escope extends
 - [ ] Diffs
   - [x] Normalizing
   - [ ] Complete diffs
