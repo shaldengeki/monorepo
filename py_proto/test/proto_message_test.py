@@ -669,6 +669,20 @@ class MessageTest(unittest.TestCase):
             ),
         )
 
+    def test_map_without_spaces(self):
+        map_without_spaces = ProtoMap.match("map<sfixed64, NestedMessage> my_map = 10;")
+        self.assertEqual(
+            map_without_spaces.node,
+            ProtoMap(
+                ProtoMapKeyTypesEnum.SFIXED64,
+                ProtoMapValueTypesEnum.ENUM_OR_MESSAGE,
+                ProtoIdentifier("my_map"),
+                ProtoInt(10, ProtoIntSign.POSITIVE),
+                ProtoEnumOrMessageIdentifier("NestedMessage"),
+                [],
+            ),
+        )
+
     def test_map_with_options(self):
         parsed_map_simple = ProtoMap.match(
             "map <sfixed64, NestedMessage> my_map = 10  [ java_package = 'com.example.foo', baz.bat = 48 ];"

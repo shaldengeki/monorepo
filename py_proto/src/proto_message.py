@@ -400,12 +400,11 @@ class ProtoMap(ProtoNode):
 
     @classmethod
     def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
-        if not proto_source.startswith("map "):
-            return None
-
-        proto_source = proto_source[4:].strip()
-
-        if not proto_source.startswith("<"):
+        if proto_source.startswith("map "):
+            proto_source = proto_source[4:].strip()
+        elif proto_source.startswith("map<"):
+            proto_source = proto_source[3:].strip()
+        else:
             return None
 
         # Try to match the map key type.
