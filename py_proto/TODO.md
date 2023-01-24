@@ -47,6 +47,7 @@
   - [x] Single-line // comments
   - [x] Multi-line /* */ comments
   - [ ] Same-line comment serialization support
+  - [x] Top-of-file comment support
 - [ ] Diffs
   - [x] Normalizing
   - [ ] Complete diffs

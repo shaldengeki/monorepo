@@ -41,8 +41,25 @@ class Parser:
         raise ParseError(f"Could not parse proto content:\n{partial_proto_content}")
 
     @staticmethod
-    def loads(proto_content: str) -> ProtoFile:
-        # First, parse syntax out of the first line.
+    def parse_syntax_and_preceding_comments(
+        proto_content: str,
+    ) -> tuple[ProtoSyntax, list[ProtoSingleLineComment | ProtoMultiLineComment], str]:
+        # First, parse any preceding comments.
+        parsed_tree = []
+        while True:
+            for node_type in [ProtoSingleLineComment, ProtoMultiLineComment]:
+                try:
+                    match_result = node_type.match(proto_content)
+                except (ValueError, IndexError, TypeError):
+                    raise ParseError(f"Could not parse proto content:\n{proto_content}")
+                if match_result is not None:
+                    parsed_tree.append(match_result.node)
+                    proto_content = match_result.remaining_source.strip()
+                    break
+            if match_result is None:
+                break
+
+        # Next, parse syntax.
         try:
             match_result = ProtoSyntax.match(proto_content.strip())
         except (ValueError, IndexError, TypeError):
@@ -52,8 +69,13 @@ class Parser:
         syntax = match_result.node
         proto_content = match_result.remaining_source.strip()
 
-        # Next, parse the rest.
-        parsed_tree = []
+        return syntax, parsed_tree, proto_content
+
+    @staticmethod
+    def loads(proto_content: str) -> ProtoFile:
+        syntax, parsed_tree, proto_content = Parser.parse_syntax_and_preceding_comments(
+            proto_content
+        )
         while proto_content:
             # Remove empty statements.
             if proto_content.startswith(";"):
