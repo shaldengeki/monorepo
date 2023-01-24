@@ -2,7 +2,6 @@
 
 - [x] Set up Bazel scaffolding
 - [x] Set up testing
-- [x] Mount in Google protobufs
 - [x] [Proto file support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#proto_file)
   - [x] Syntax
   - [x] Imports
@@ -53,6 +52,10 @@
   - This is required by [a Google well-known proto file.](https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/unittest_proto3_optional.proto#L96)
   - [ ] Top-level extends
   - [ ] Message-escope extends
+- [ ] Google well-known protobuf support
+  - [x] Mount in Google protobufs
+  - [ ] Parseable
+  - [ ] Idempotent de/serialization
 - [ ] Diffs
   - [x] Normalizing
   - [ ] Complete diffs
