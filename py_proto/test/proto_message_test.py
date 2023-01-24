@@ -394,6 +394,36 @@ class MessageTest(unittest.TestCase):
             ),
         )
 
+    def test_message_field_starts_with_underscore(self):
+        parsed_message_with_single_field_simple = ProtoMessage.match(
+            dedent(
+                """
+            message FooMessage {
+                string _test_field = 1;
+                string __test_field2 = 1;
+            }
+        """.strip()
+            )
+        )
+        self.assertEqual(
+            parsed_message_with_single_field_simple.node,
+            ProtoMessage(
+                ProtoIdentifier("FooMessage"),
+                [
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.STRING,
+                        ProtoIdentifier("_test_field"),
+                        ProtoInt(1, ProtoIntSign.POSITIVE),
+                    ),
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.STRING,
+                        ProtoIdentifier("__test_field2"),
+                        ProtoInt(1, ProtoIntSign.POSITIVE),
+                    ),
+                ],
+            ),
+        )
+
     def test_message_repeated_field(self):
         parsed_message_with_repeated_field_simple = ProtoMessage.match(
             dedent(

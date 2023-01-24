@@ -5,7 +5,7 @@ from src.proto_node import ParsedProtoNode, ProtoNode
 
 class ProtoIdentifier(ProtoNode):
     ALPHABETICAL = set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
-    STARTING = ALPHABETICAL
+    STARTING = ALPHABETICAL | set("_")
     ALL = STARTING | set("0123456789_")
 
     def __init__(self, identifier: str):
