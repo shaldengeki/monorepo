@@ -53,6 +53,14 @@ py_test(
 )
 
 py_test(
+    name = "proto_extensions_test",
+    srcs = ["proto_extensions_test.py"],
+    deps = [
+        "//src:proto_extensions",
+    ],
+)
+
+py_test(
     name = "proto_option_test",
     srcs = ["proto_option_test.py"],
     deps = [
@@ -62,6 +70,14 @@ py_test(
         "//src:proto_int",
         "//src:proto_option",
         "//src:proto_string_literal",
+    ],
+)
+
+py_test(
+    name = "proto_range_test",
+    srcs = ["proto_range_test.py"],
+    deps = [
+        "//src:proto_range",
     ],
 )
 
@@ -106,6 +122,7 @@ py_test(
         "//src:proto_comment",
         "//src:proto_constant",
         "//src:proto_enum",
+        "//src:proto_extensions",
         "//src:proto_identifier",
         "//src:proto_int",
         "//src:proto_message",

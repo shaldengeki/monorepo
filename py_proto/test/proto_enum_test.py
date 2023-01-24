@@ -8,7 +8,8 @@ from src.proto_enum import ProtoEnum, ProtoEnumValue, ProtoEnumValueOption
 from src.proto_identifier import ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_option import ProtoOption
-from src.proto_reserved import ProtoReserved, ProtoReservedRange, ProtoReservedRangeEnum
+from src.proto_range import ProtoRange, ProtoRangeEnum
+from src.proto_reserved import ProtoReserved
 from src.proto_string_literal import ProtoStringLiteral
 
 
@@ -41,11 +42,11 @@ class EnumTest(unittest.TestCase):
             [
                 ProtoReserved(
                     [
-                        ProtoReservedRange(ProtoInt(1, ProtoIntSign.POSITIVE)),
-                        ProtoReservedRange(ProtoInt(2, ProtoIntSign.POSITIVE)),
-                        ProtoReservedRange(
+                        ProtoRange(ProtoInt(1, ProtoIntSign.POSITIVE)),
+                        ProtoRange(ProtoInt(2, ProtoIntSign.POSITIVE)),
+                        ProtoRange(
                             ProtoInt(5, ProtoIntSign.POSITIVE),
-                            ProtoReservedRangeEnum.MAX,
+                            ProtoRangeEnum.MAX,
                         ),
                     ]
                 ),

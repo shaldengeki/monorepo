@@ -110,13 +110,32 @@ py_library(
 )
 
 py_library(
+    name = "proto_range",
+    srcs = ["proto_range.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":proto_int",
+        ":proto_node",
+    ],
+)
+
+py_library(
     name = "proto_reserved",
     srcs = ["proto_reserved.py"],
     visibility = ["//visibility:public"],
     deps = [
         ":proto_identifier",
-        ":proto_int",
-        ":proto_node",
+        ":proto_range",
+    ],
+)
+
+py_library(
+    name = "proto_extensions",
+    srcs = ["proto_extensions.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":proto_identifier",
+        ":proto_range",
     ],
 )
 
@@ -127,9 +146,11 @@ py_library(
     deps = [
         ":proto_comment",
         ":proto_enum",
+        ":proto_extensions",
         ":proto_identifier",
         ":proto_node",
         ":proto_option",
+        ":proto_reserved",
     ],
 )
 

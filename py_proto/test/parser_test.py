@@ -3,9 +3,10 @@ from textwrap import dedent
 
 from src.parser import ParseError, Parser
 from src.proto_bool import ProtoBool
-from src.proto_comment import ProtoSingleLineComment, ProtoMultiLineComment
+from src.proto_comment import ProtoSingleLineComment
 from src.proto_constant import ProtoConstant
 from src.proto_enum import ProtoEnum, ProtoEnumValue
+from src.proto_extensions import ProtoExtensions
 from src.proto_float import ProtoFloat, ProtoFloatSign
 from src.proto_identifier import (
     ProtoEnumOrMessageIdentifier,
@@ -25,7 +26,8 @@ from src.proto_message import (
     ProtoOneOf,
 )
 from src.proto_option import ProtoOption
-from src.proto_reserved import ProtoReserved, ProtoReservedRange
+from src.proto_range import ProtoRange, ProtoRangeEnum
+from src.proto_reserved import ProtoReserved
 from src.proto_service import ProtoService, ProtoServiceRPC
 from src.proto_string_literal import ProtoStringLiteral
 from src.proto_syntax import ProtoSyntaxType
@@ -73,6 +75,7 @@ class IntTest(unittest.TestCase):
                     // testing nested comment
                     repeated string field_one = 1;
                     MyNestedMessage field_two = 2 [ bar.baz = true ];
+                    extensions 8 to max;
                     oneof foo {
                         string name = 4;
                         option java_package = "com.example.foo";
@@ -166,7 +169,7 @@ class IntTest(unittest.TestCase):
                     ProtoMessage(ProtoIdentifier("MyNestedMessage"), []),
                     ProtoReserved(
                         ranges=[
-                            ProtoReservedRange(
+                            ProtoRange(
                                 ProtoInt(1, ProtoIntSign.POSITIVE),
                                 ProtoInt(3, ProtoIntSign.POSITIVE),
                             )
@@ -194,6 +197,7 @@ class IntTest(unittest.TestCase):
                             )
                         ],
                     ),
+                    ProtoExtensions([ProtoRange(8, ProtoRangeEnum.MAX)]),
                     ProtoOneOf(
                         ProtoIdentifier("foo"),
                         [
@@ -367,6 +371,7 @@ class IntTest(unittest.TestCase):
                         SubMessage sub_message = 9 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                     }
                     map <sfixed64, NestedMessage> my_map = 10;
+                    extensions 11 to max;
                 }
                 service MyGreatService {
                     option (foo.bar).baz = "bat";
@@ -422,6 +427,7 @@ class IntTest(unittest.TestCase):
                     SubMessage sub_message = 9 [ (bar.baz).bat = "bat", baz.bat = -100 ];
                     }
                     map <sfixed64, NestedMessage> my_map = 10;
+                    extensions 11 to max;
                     }
 
                     service MyGreatService {

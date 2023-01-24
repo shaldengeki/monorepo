@@ -7,6 +7,7 @@ from src.proto_comment import (
     ProtoSingleLineComment,
 )
 from src.proto_enum import ProtoEnum, ProtoEnumValueOption
+from src.proto_extensions import ProtoExtensions
 from src.proto_identifier import (
     ProtoEnumOrMessageIdentifier,
     ProtoFullIdentifier,
@@ -585,6 +586,7 @@ class ProtoMessage(ProtoNode):
             ProtoSingleLineComment,
             ProtoMultiLineComment,
             ProtoEnum,
+            ProtoExtensions,
             ProtoOption,
             ProtoMessage,
             ProtoReserved,
