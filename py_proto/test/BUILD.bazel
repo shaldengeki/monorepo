@@ -115,6 +115,16 @@ py_test(
 )
 
 py_test(
+    name = "proto_message_field_test",
+    srcs = ["proto_message_field_test.py"],
+    deps = [
+        "//src:proto_identifier",
+        "//src:proto_int",
+        "//src:proto_message_field",
+    ],
+)
+
+py_test(
     name = "proto_message_test",
     srcs = ["proto_message_test.py"],
     deps = [
@@ -122,6 +132,7 @@ py_test(
         "//src:proto_comment",
         "//src:proto_constant",
         "//src:proto_enum",
+        "//src:proto_extend",
         "//src:proto_extensions",
         "//src:proto_identifier",
         "//src:proto_int",
@@ -129,6 +140,17 @@ py_test(
         "//src:proto_option",
         "//src:proto_reserved",
         "//src:proto_string_literal",
+    ],
+)
+
+py_test(
+    name = "proto_extend_test",
+    srcs = ["proto_extend_test.py"],
+    deps = [
+        "//src:proto_extend",
+        "//src:proto_identifier",
+        "//src:proto_int",
+        "//src:proto_message",
     ],
 )
 
@@ -177,6 +199,8 @@ py_test(
         "//src:proto_comment",
         "//src:proto_constant",
         "//src:proto_enum",
+        "//src:proto_extend",
+        "//src:proto_extensions",
         "//src:proto_float",
         "//src:proto_identifier",
         "//src:proto_import",
@@ -194,7 +218,7 @@ sh_test(
     srcs = ["parser_binary_test.sh"],
     data = [
         "//src:parser_binary",
-        "//test/resources:empty_proto",
+        "//test/resources:all_protos",
         "@com_google_protobuf//:all_proto",
     ],
 )

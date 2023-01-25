@@ -6,6 +6,7 @@ from src.proto_bool import ProtoBool
 from src.proto_comment import ProtoSingleLineComment
 from src.proto_constant import ProtoConstant
 from src.proto_enum import ProtoEnum, ProtoEnumValue
+from src.proto_extend import ProtoExtend
 from src.proto_extensions import ProtoExtensions
 from src.proto_float import ProtoFloat, ProtoFloatSign
 from src.proto_identifier import (
@@ -53,6 +54,11 @@ class IntTest(unittest.TestCase):
                 option (fully.qualified).option = .314159265e1;
 
                 // Testing top-level single-line comment
+
+                extend SomeExtendableMessage {
+                    string some_extendable_field = 1;
+                    // yay
+                }
 
                 enum MyAwesomeEnum {
                     option allow_alias = true;
@@ -287,6 +293,21 @@ class IntTest(unittest.TestCase):
             proto_file.nodes,
         )
 
+        self.assertIn(
+            ProtoExtend(
+                ProtoIdentifier("SomeExtendableMessage"),
+                [
+                    ProtoMessageField(
+                        ProtoMessageFieldTypesEnum.STRING,
+                        ProtoIdentifier("some_extendable_field"),
+                        1,
+                    ),
+                    ProtoSingleLineComment(" yay"),
+                ],
+            ),
+            proto_file.nodes,
+        )
+
     def test_parser_no_syntax(self):
         with self.assertRaises(ParseError):
             Parser.loads(
@@ -346,6 +367,11 @@ class IntTest(unittest.TestCase):
 
                 // Testing top-level comment!
 
+                extend SomeExtendableMessage {
+                    string some_extendable_field = 1;
+                    // yay
+                }
+
                 enum MyAwesomeEnum {
                     MAE_UNSPECIFIED = 0;
                     option allow_alias = true;
@@ -400,6 +426,11 @@ class IntTest(unittest.TestCase):
                     option (fully.qualified).option = 3.14159265;
 
                     // Testing top-level comment!
+
+                    extend SomeExtendableMessage {
+                    string some_extendable_field = 1;
+                    // yay
+                    }
 
                     enum MyAwesomeEnum {
                     MAE_UNSPECIFIED = 0;

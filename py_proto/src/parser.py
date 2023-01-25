@@ -2,6 +2,7 @@ import sys
 
 from src.proto_comment import ProtoMultiLineComment, ProtoSingleLineComment
 from src.proto_enum import ProtoEnum
+from src.proto_extend import ProtoExtend
 from src.proto_file import ProtoFile
 from src.proto_import import ProtoImport
 from src.proto_message import ProtoMessage
@@ -25,10 +26,11 @@ class Parser:
             ProtoPackage,
             ProtoOption,
             ProtoEnum,
+            ProtoExtend,
             ProtoService,
             ProtoSingleLineComment,
             ProtoMultiLineComment,
-        ]  # type: list[type[ProtoImport] | type[ProtoMessage] | type[ProtoPackage] | type[ProtoOption] | type[ProtoEnum]]
+        ]  # type: list[type[ProtoImport] | type[ProtoMessage] | type[ProtoPackage] | type[ProtoOption] | type[ProtoEnum] | type[ProtoExtend]]
         for node_type in node_types:
             try:
                 match_result = node_type.match(partial_proto_content)

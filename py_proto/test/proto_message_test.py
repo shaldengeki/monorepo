@@ -5,6 +5,7 @@ from src.proto_bool import ProtoBool
 from src.proto_comment import ProtoMultiLineComment, ProtoSingleLineComment
 from src.proto_constant import ProtoConstant
 from src.proto_enum import ProtoEnum, ProtoEnumValue
+from src.proto_extend import ProtoExtend
 from src.proto_extensions import ProtoExtensions
 from src.proto_identifier import (
     ProtoEnumOrMessageIdentifier,
@@ -17,10 +18,12 @@ from src.proto_message import (
     ProtoMapKeyTypesEnum,
     ProtoMapValueTypesEnum,
     ProtoMessage,
+    ProtoOneOf,
+)
+from src.proto_message_field import (
     ProtoMessageField,
     ProtoMessageFieldOption,
     ProtoMessageFieldTypesEnum,
-    ProtoOneOf,
 )
 from src.proto_option import ProtoOption
 from src.proto_range import ProtoRange, ProtoRangeEnum
@@ -394,88 +397,6 @@ class MessageTest(unittest.TestCase):
             ),
         )
 
-    def test_message_field_starts_with_underscore(self):
-        parsed_message_with_single_field_simple = ProtoMessage.match(
-            dedent(
-                """
-            message FooMessage {
-                string _test_field = 1;
-                string __test_field2 = 1;
-            }
-        """.strip()
-            )
-        )
-        self.assertEqual(
-            parsed_message_with_single_field_simple.node,
-            ProtoMessage(
-                ProtoIdentifier("FooMessage"),
-                [
-                    ProtoMessageField(
-                        ProtoMessageFieldTypesEnum.STRING,
-                        ProtoIdentifier("_test_field"),
-                        ProtoInt(1, ProtoIntSign.POSITIVE),
-                    ),
-                    ProtoMessageField(
-                        ProtoMessageFieldTypesEnum.STRING,
-                        ProtoIdentifier("__test_field2"),
-                        ProtoInt(1, ProtoIntSign.POSITIVE),
-                    ),
-                ],
-            ),
-        )
-
-    def test_message_repeated_field(self):
-        parsed_message_with_repeated_field_simple = ProtoMessage.match(
-            dedent(
-                """
-            message FooMessage {
-                repeated bool repeated_field = 3;
-            }
-        """.strip()
-            )
-        )
-        self.assertEqual(
-            parsed_message_with_repeated_field_simple.node,
-            ProtoMessage(
-                ProtoIdentifier("FooMessage"),
-                [
-                    ProtoMessageField(
-                        ProtoMessageFieldTypesEnum.BOOL,
-                        ProtoIdentifier("repeated_field"),
-                        ProtoInt(3, ProtoIntSign.POSITIVE),
-                        True,
-                    )
-                ],
-            ),
-        )
-
-    def test_message_field_enum_or_message(self):
-        parsed_message_with_repeated_field_simple = ProtoMessage.match(
-            dedent(
-                """
-            message FooMessage {
-                foo.SomeEnumOrMessage enum_or_message_field = 1;
-            }
-        """.strip()
-            )
-        )
-        self.assertEqual(
-            parsed_message_with_repeated_field_simple.node,
-            ProtoMessage(
-                ProtoIdentifier("FooMessage"),
-                [
-                    ProtoMessageField(
-                        ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
-                        ProtoIdentifier("enum_or_message_field"),
-                        ProtoInt(1, ProtoIntSign.POSITIVE),
-                        False,
-                        False,
-                        ProtoFullIdentifier("foo.SomeEnumOrMessage"),
-                    )
-                ],
-            ),
-        )
-
     def test_oneof_empty(self):
         parsed_oneof_empty = ProtoOneOf.match(dedent("oneof one_of_field {}".strip()))
         self.assertEqual(
@@ -727,44 +648,6 @@ class MessageTest(unittest.TestCase):
             ),
         )
 
-    def test_field_optional_default_false(self):
-        string_field = ProtoMessageField.match("string single_field = 1;")
-        self.assertEqual(
-            string_field.node,
-            ProtoMessageField(
-                ProtoMessageFieldTypesEnum.STRING,
-                ProtoIdentifier("single_field"),
-                ProtoInt(1, ProtoIntSign.POSITIVE),
-                False,
-                False,
-            ),
-        )
-
-    def test_field_optional_set(self):
-        string_field = ProtoMessageField.match(
-            "optional string single_field = 1;".strip()
-        )
-        self.assertEqual(
-            string_field.node,
-            ProtoMessageField(
-                ProtoMessageFieldTypesEnum.STRING,
-                ProtoIdentifier("single_field"),
-                ProtoInt(1, ProtoIntSign.POSITIVE),
-                False,
-                True,
-            ),
-        )
-
-    def test_field_cannot_have_repeated_and_optional(self):
-        with self.assertRaises(ValueError):
-            ProtoMessageField(
-                ProtoMessageFieldTypesEnum.STRING,
-                ProtoIdentifier("single_field"),
-                ProtoInt(1, ProtoIntSign.POSITIVE),
-                True,
-                True,
-            )
-
     def test_message_parses_comments(self):
         parsed_comments = ProtoMessage.match(
             dedent(
@@ -804,6 +687,38 @@ class MessageTest(unittest.TestCase):
                     ProtoMessageFieldTypesEnum.STRING,
                     ProtoIdentifier("baz"),
                     ProtoInt(3, ProtoIntSign.POSITIVE),
+                ),
+            ],
+        )
+
+    def test_message_extends(self):
+        parsed_extends = ProtoMessage.match(
+            dedent(
+                """
+                message MyMessage {
+                    string foo = 1;
+                    extend SomeOtherMessage {
+                        string foo = 2;
+                    }
+                }
+                """.strip()
+            )
+        )
+        self.assertEqual(
+            parsed_extends.node.nodes,
+            [
+                ProtoMessageField(
+                    ProtoMessageFieldTypesEnum.STRING,
+                    ProtoIdentifier("foo"),
+                    ProtoInt(1, ProtoIntSign.POSITIVE),
+                ),
+                ProtoExtend(
+                    ProtoEnumOrMessageIdentifier("SomeOtherMessage"),
+                    [
+                        ProtoMessageField(
+                            ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("foo"), 2
+                        )
+                    ],
                 ),
             ],
         )

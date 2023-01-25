@@ -1,5 +1,5 @@
 filegroup(
-    name = "empty_proto",
-    srcs = ["empty.proto"],
+    name = "all_protos",
+    srcs = glob(["*.proto"]),
     visibility = ["//visibility:public"],
 )
