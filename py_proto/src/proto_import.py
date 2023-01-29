@@ -1,6 +1,6 @@
 from typing import Optional
 
-from src.proto_node import ParsedProtoNode, ProtoNode
+from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
 from src.proto_string_literal import ProtoStringLiteral
 
 
@@ -24,6 +24,13 @@ class ProtoImport(ProtoNode):
 
     def __repr__(self) -> str:
         return str(self)
+
+    def __dict__(self) -> dict:
+        return {
+            "path": self.path.serialize(),
+            "weak": self.weak,
+            "public": self.public,
+        }
 
     def normalize(self) -> "ProtoImport":
         return self
@@ -68,3 +75,60 @@ class ProtoImport(ProtoNode):
             parts.append("public")
         parts.append(f"{self.path.serialize()};")
         return " ".join(parts)
+
+    @staticmethod
+    def diff(
+        left: list["ProtoImport"], right: list["ProtoImport"]
+    ) -> list["ProtoNodeDiff"]:
+        diffs = []
+        left_names = set(i.path for i in left)
+        right_names = set(i.path for i in right)
+        for name in left_names - right_names:
+            diffs.append(ProtoImportAdded(next(i for i in left if i.path == name)))
+        for name in right_names - left_names:
+            diffs.append(ProtoImportRemoved(next(i for i in right if i.path == name)))
+        for name in left_names & right_names:
+            left_import = next(i for i in left if i.path == name)
+            right_import = next(i for i in right if i.path == name)
+            if left_import.weak and not right_import.weak:
+                diffs.append(ProtoImportMadeWeak(right_import))
+            if not left_import.weak and right_import.weak:
+                diffs.append(ProtoImportMadeNonWeak(right_import))
+            if left_import.public and not right_import.public:
+                diffs.append(ProtoImportMadePublic(right_import))
+            if not left_import.public and right_import.public:
+                diffs.append(ProtoImportMadeNonPublic(right_import))
+
+        return diffs
+
+
+class ProtoImportAdded(ProtoNodeDiff):
+    def __init__(self, proto_import: ProtoImport):
+        self.proto_import = proto_import
+
+    def __eq__(self, other: "ProtoImportAdded") -> bool:
+        return self.proto_import == other.proto_import
+
+
+class ProtoImportRemoved(ProtoImportAdded):
+    pass
+
+
+class ProtoImportMadeWeak(ProtoImportAdded):
+    pass
+
+
+class ProtoImportMadeWeak(ProtoImportAdded):
+    pass
+
+
+class ProtoImportMadeNonWeak(ProtoImportAdded):
+    pass
+
+
+class ProtoImportMadePublic(ProtoImportAdded):
+    pass
+
+
+class ProtoImportMadeNonPublic(ProtoImportAdded):
+    pass

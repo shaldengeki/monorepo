@@ -60,8 +60,8 @@
   - [x] Normalizing
   - [ ] Complete diffs
     - [ ] Proto file-level diffs
-      - [ ] Syntax changes
-      - [ ] Import changes
+      - [x] Syntax changes
+      - [x] Import changes
       - [ ] Package changes
       - [ ] Option changes
     - [ ] Enum-level diffs

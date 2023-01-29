@@ -1,7 +1,7 @@
 import unittest
 
 from src.proto_string_literal import ProtoStringLiteral
-from src.proto_syntax import ProtoSyntax, ProtoSyntaxType
+from src.proto_syntax import ProtoSyntax, ProtoSyntaxChanged
 
 
 class SyntaxTest(unittest.TestCase):
@@ -74,6 +74,24 @@ class SyntaxTest(unittest.TestCase):
             ProtoSyntax.match("syntax = proton'")
         with self.assertRaises(ValueError):
             ProtoSyntax.match("syntax = proton")
+
+    def test_diff_empty_same_syntax_returns_empty(self):
+        pf1 = ProtoSyntax(ProtoStringLiteral("proto3"))
+        pf2 = ProtoSyntax(ProtoStringLiteral("proto3"))
+        self.assertEqual(ProtoSyntax.diff(pf1, pf2), [])
+
+    def test_diff_empty_different_syntax_returns_syntax_diff(self):
+        pf1 = ProtoSyntax(ProtoStringLiteral("proto3"))
+        pf2 = ProtoSyntax(ProtoStringLiteral("proto2"))
+        self.assertEqual(
+            ProtoSyntax.diff(pf1, pf2),
+            [
+                ProtoSyntaxChanged(
+                    ProtoSyntax(ProtoStringLiteral("proto3")),
+                    ProtoSyntax(ProtoStringLiteral("proto2")),
+                )
+            ],
+        )
 
 
 if __name__ == "__main__":

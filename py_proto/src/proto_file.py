@@ -1,5 +1,7 @@
+from typing import Optional
+
 from src.proto_import import ProtoImport
-from src.proto_node import ProtoNode
+from src.proto_node import ProtoNode, ProtoNodeDiff
 from src.proto_option import ProtoOption
 from src.proto_package import ProtoPackage
 from src.proto_syntax import ProtoSyntax
@@ -18,7 +20,7 @@ class ProtoFile:
         return [node for node in self.nodes if isinstance(node, ProtoImport)]
 
     @property
-    def package(self) -> ProtoPackage:
+    def package(self) -> Optional[ProtoPackage]:
         return next(node for node in self.nodes if isinstance(node, ProtoPackage))
 
     @property
@@ -36,3 +38,9 @@ class ProtoFile:
             serialized_parts.append(node.serialize())
 
         return "\n".join(serialized_parts)
+
+    def diff(self, other: "ProtoFile") -> list[ProtoNodeDiff]:
+        diffs = []
+        diffs.extend(ProtoSyntax.diff(self.syntax, other.syntax))
+        diffs.extend(ProtoImport.diff(self.imports, other.imports))
+        return [d for d in diffs if d is not None]

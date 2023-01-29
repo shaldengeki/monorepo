@@ -1,7 +1,14 @@
 import unittest
 from textwrap import dedent
 
-from src.proto_import import ProtoImport
+from src.proto_import import (
+    ProtoImport,
+    ProtoImportAdded,
+    ProtoImportMadeNonWeak,
+    ProtoImportMadePublic,
+    ProtoImportRemoved,
+)
+from src.proto_string_literal import ProtoStringLiteral
 
 
 class ImportTest(unittest.TestCase):
@@ -126,6 +133,42 @@ class ImportTest(unittest.TestCase):
         self.assertEqual(third_parsed_import.node.public, True)
         self.assertEqual(
             third_parsed_import.node.serialize(), 'import public "bat.proto";'
+        )
+
+    def test_diff_same_path_simple(self):
+        pf1 = ProtoImport(ProtoStringLiteral("path/to/some.proto"))
+        pf2 = ProtoImport(ProtoStringLiteral("path/to/some.proto"))
+        self.assertEqual(ProtoImport.diff([pf1], [pf2]), [])
+
+    def test_diff_added_path_simple(self):
+        pf1 = ProtoImport(ProtoStringLiteral("path/to/some.proto"))
+        self.assertEqual(ProtoImport.diff([pf1], []), [ProtoImportAdded(pf1)])
+
+    def test_diff_removed_path_simple(self):
+        pf2 = ProtoImport(ProtoStringLiteral("path/to/some.proto"))
+        self.assertEqual(ProtoImport.diff([], [pf2]), [ProtoImportRemoved(pf2)])
+
+    def test_diff_different_path_simple(self):
+        pf1 = ProtoImport(ProtoStringLiteral("path/to/some.proto"))
+        pf2 = ProtoImport(ProtoStringLiteral("path/to/some/other.proto"))
+        self.assertEqual(
+            ProtoImport.diff([pf1], [pf2]),
+            [ProtoImportAdded(pf1), ProtoImportRemoved(pf2)],
+        )
+
+    def test_diff_changed_optional_attributes(self):
+        pf1 = ProtoImport(
+            ProtoStringLiteral("path/to/some.proto"), weak=False, public=True
+        )
+        pf2 = ProtoImport(
+            ProtoStringLiteral("path/to/some.proto"), weak=True, public=False
+        )
+        self.assertEqual(
+            ProtoImport.diff([pf1], [pf2]),
+            [
+                ProtoImportMadeNonWeak(pf2),
+                ProtoImportMadePublic(pf2),
+            ],
         )
 
 
