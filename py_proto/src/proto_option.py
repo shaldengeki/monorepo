@@ -6,7 +6,7 @@ from src.proto_identifier import (
     ProtoFullIdentifier,
     ProtoIdentifier,
 )
-from src.proto_node import ParsedProtoNode, ProtoNode
+from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
 
 
 class ProtoOption(ProtoNode):
@@ -22,6 +22,9 @@ class ProtoOption(ProtoNode):
 
     def __repr__(self) -> str:
         return str(self)
+
+    def __hash__(self):
+        return hash(str(self))
 
     def normalize(self) -> "ProtoOption":
         return self
@@ -91,3 +94,88 @@ class ProtoOption(ProtoNode):
 
     def serialize(self) -> str:
         return f"option {self.name.serialize()} = {self.value.serialize()};"
+
+    @staticmethod
+    def diff(left: "ProtoOption", right: "ProtoOption") -> list["ProtoNodeDiff"]:
+        if left is None and right is not None:
+            return [ProtoOptionAdded(right)]
+        elif left is not None and right is None:
+            return [ProtoOptionRemoved(left)]
+        elif left is None and right is None:
+            return []
+        elif left.name != right.name:
+            return []
+        elif left == right:
+            return []
+        return [ProtoOptionValueChanged(left.name, left.value, right.value)]
+
+    @staticmethod
+    def diff_sets(
+        left: list["ProtoOption"], right: list["ProtoOption"]
+    ) -> list["ProtoNodeDiff"]:
+        diffs = []
+        left_names = set(o.name.identifier for o in left)
+        right_names = set(o.name.identifier for o in right)
+        for name in left_names - right_names:
+            diffs.append(
+                ProtoOptionAdded(next(i for i in left if i.name.identifier == name))
+            )
+        for name in right_names - left_names:
+            diffs.append(
+                ProtoOptionRemoved(next(i for i in right if i.name.identifier == name))
+            )
+        for name in left_names & right_names:
+            left_option = next(i for i in left if i.name.identifier == name)
+            right_option = next(i for i in right if i.name.identifier == name)
+            diffs.extend(ProtoOption.diff(left_option, right_option))
+
+        return diffs
+
+
+class ProtoOptionValueChanged(ProtoNodeDiff):
+    def __init__(self, name: ProtoIdentifier, left: str, right: str):
+        self.name = name
+        self.left = left
+        self.right = right
+
+    def __eq__(self, other: "ProtoOptionValueChanged") -> bool:
+        return (
+            isinstance(other, ProtoOptionValueChanged)
+            and self.name == other.name
+            and self.left == other.left
+            and self.right == other.right
+        )
+
+    def __str__(self) -> str:
+        return f"<ProtoOptionValueChanged name={self.name} left={self.left} right={self.right}>"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+
+class ProtoOptionAdded(ProtoNodeDiff):
+    def __init__(self, left: str):
+        self.left = left
+
+    def __eq__(self, other: "ProtoOptionAdded") -> bool:
+        return isinstance(other, ProtoOptionAdded) and self.left == other.left
+
+    def __str__(self) -> str:
+        return f"<ProtoOptionAdded left={self.left}>"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+
+class ProtoOptionRemoved(ProtoNodeDiff):
+    def __init__(self, right: str):
+        self.right = right
+
+    def __eq__(self, other: "ProtoOptionRemoved") -> bool:
+        return isinstance(other, ProtoOptionRemoved) and self.right == other.right
+
+    def __str__(self) -> str:
+        return f"<ProtoOptionRemoved right={self.right}>"
+
+    def __repr__(self) -> str:
+        return str(self)

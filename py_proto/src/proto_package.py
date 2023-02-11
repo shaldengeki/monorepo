@@ -53,10 +53,10 @@ class ProtoPackage(ProtoNode):
     def diff(left: "ProtoPackage", right: "ProtoPackage") -> list["ProtoNodeDiff"]:
         if left == right:
             return []
-        elif left is None and right is not None:
-            return [ProtoPackageAdded(right)]
         elif left is not None and right is None:
-            return [ProtoPackageRemoved(left)]
+            return [ProtoPackageAdded(left)]
+        elif left is None and right is not None:
+            return [ProtoPackageRemoved(right)]
         return [ProtoPackageChanged(left, right)]
 
 

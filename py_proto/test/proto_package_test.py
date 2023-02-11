@@ -79,8 +79,8 @@ class PackageTest(unittest.TestCase):
         )
 
     def test_diff_package_added(self):
-        pp1 = None
-        pp2 = ProtoPackage("my.new.package")
+        pp1 = ProtoPackage("my.new.package")
+        pp2 = None
         self.assertEqual(
             ProtoPackage.diff(pp1, pp2),
             [
@@ -89,8 +89,8 @@ class PackageTest(unittest.TestCase):
         )
 
     def test_diff_package_removed(self):
-        pp1 = ProtoPackage("my.old.package")
-        pp2 = None
+        pp1 = None
+        pp2 = ProtoPackage("my.old.package")
         self.assertEqual(
             ProtoPackage.diff(pp1, pp2),
             [

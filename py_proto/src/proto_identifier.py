@@ -20,6 +20,9 @@ class ProtoIdentifier(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
+    def __hash__(self):
+        return hash(str(self))
+
     def normalize(self) -> "ProtoIdentifier":
         return self
 

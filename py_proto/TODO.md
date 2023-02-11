@@ -63,7 +63,7 @@
       - [x] Syntax changes
       - [x] Import changes
       - [x] Package changes
-      - [ ] Option changes
+      - [x] Option changes
     - [ ] Enum-level diffs
       - [ ] Additions/removals
       - [ ] Option changes
