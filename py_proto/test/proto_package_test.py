@@ -1,7 +1,12 @@
 import unittest
 from textwrap import dedent
 
-from src.proto_package import ProtoPackage
+from src.proto_package import (
+    ProtoPackage,
+    ProtoPackageAdded,
+    ProtoPackageChanged,
+    ProtoPackageRemoved,
+)
 
 
 class PackageTest(unittest.TestCase):
@@ -54,6 +59,44 @@ class PackageTest(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             ProtoPackage.match("packagefoo.bar;")
+
+    def test_diff_same_package_returns_empty(self):
+        pp1 = ProtoPackage("my.awesome.package")
+        pp2 = ProtoPackage("my.awesome.package")
+        self.assertEqual(ProtoPackage.diff(pp1, pp2), [])
+
+    def test_diff_different_package_returns_package_diff(self):
+        pp1 = ProtoPackage("my.awesome.package")
+        pp2 = ProtoPackage("my.other.awesome.package")
+        self.assertEqual(
+            ProtoPackage.diff(pp1, pp2),
+            [
+                ProtoPackageChanged(
+                    ProtoPackage("my.awesome.package"),
+                    ProtoPackage("my.other.awesome.package"),
+                )
+            ],
+        )
+
+    def test_diff_package_added(self):
+        pp1 = None
+        pp2 = ProtoPackage("my.new.package")
+        self.assertEqual(
+            ProtoPackage.diff(pp1, pp2),
+            [
+                ProtoPackageAdded(ProtoPackage("my.new.package")),
+            ],
+        )
+
+    def test_diff_package_removed(self):
+        pp1 = ProtoPackage("my.old.package")
+        pp2 = None
+        self.assertEqual(
+            ProtoPackage.diff(pp1, pp2),
+            [
+                ProtoPackageRemoved(ProtoPackage("my.old.package")),
+            ],
+        )
 
 
 if __name__ == "__main__":

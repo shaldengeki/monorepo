@@ -43,4 +43,5 @@ class ProtoFile:
         diffs = []
         diffs.extend(ProtoSyntax.diff(self.syntax, other.syntax))
         diffs.extend(ProtoImport.diff(self.imports, other.imports))
+        diffs.extend(ProtoPackage.diff(self.package, other.package))
         return [d for d in diffs if d is not None]

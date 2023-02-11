@@ -62,7 +62,7 @@
     - [ ] Proto file-level diffs
       - [x] Syntax changes
       - [x] Import changes
-      - [ ] Package changes
+      - [x] Package changes
       - [ ] Option changes
     - [ ] Enum-level diffs
       - [ ] Additions/removals
