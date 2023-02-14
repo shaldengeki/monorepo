@@ -7,7 +7,7 @@ from src.proto_comment import (
 )
 from src.proto_identifier import ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
-from src.proto_node import ParsedProtoNode, ProtoNode
+from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
 from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved
 
@@ -223,3 +223,152 @@ class ProtoEnum(ProtoNode):
             + ["}"]
         )
         return "\n".join(serialize_parts)
+
+    @staticmethod
+    def diff(left: "ProtoEnum", right: "ProtoEnum") -> list["ProtoNodeDiff"]:
+        if left is None and right is not None:
+            return [ProtoEnumAdded(right)]
+        elif left is not None and right is None:
+            return [ProtoEnumRemoved(left)]
+        elif left is None and right is None:
+            return []
+        elif left.name != right.name:
+            return []
+        elif left == right:
+            return []
+        # TODO: process the enum options and values.
+        return []
+
+    @staticmethod
+    def diff_sets(
+        left: list["ProtoEnum"], right: list["ProtoEnum"]
+    ) -> list["ProtoNodeDiff"]:
+        diffs = []
+        left_names = set(o.name.identifier for o in left)
+        right_names = set(o.name.identifier for o in right)
+        for name in left_names - right_names:
+            diffs.append(
+                ProtoEnumAdded(next(i for i in left if i.name.identifier == name))
+            )
+        for name in right_names - left_names:
+            diffs.append(
+                ProtoEnumRemoved(next(i for i in right if i.name.identifier == name))
+            )
+        for name in left_names & right_names:
+            left_option = next(i for i in left if i.name.identifier == name)
+            right_option = next(i for i in right if i.name.identifier == name)
+            diffs.extend(ProtoEnum.diff(left_option, right_option))
+
+        return diffs
+
+
+class ProtoEnumAdded(ProtoNodeDiff):
+    def __init__(self, enum: ProtoEnum):
+        self.enum = enum
+
+    def __eq__(self, other: "ProtoEnumAdded") -> bool:
+        return isinstance(other, ProtoEnumAdded) and self.enum == other.enum
+
+    def __str__(self) -> str:
+        return f"<ProtoEnumAdded enum={self.enum}>"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+
+class ProtoEnumRemoved(ProtoNodeDiff):
+    def __init__(self, enum: ProtoEnum):
+        self.enum = enum
+
+    def __eq__(self, other: "ProtoEnumRemoved") -> bool:
+        return isinstance(other, ProtoEnumRemoved) and self.enum == other.enum
+
+    def __str__(self) -> str:
+        return f"<ProtoEnumRemoved enum={self.enum}>"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+
+class ProtoEnumValueAdded(ProtoNodeDiff):
+    def __init__(self, enum: "ProtoEnum", enum_value: "ProtoEnumValue"):
+        self.enum = enum
+        self.enum_value = enum_value
+
+    def __eq__(self, other: "ProtoEnumValueAdded") -> bool:
+        return (
+            isinstance(other, ProtoEnumValueAdded)
+            and self.enum == other.enum
+            and self.enum_value == other.enum_value
+        )
+
+    def __str__(self) -> str:
+        return f"<ProtoEnumValueAdded enum={self.enum} enum_value={self.enum_value}>"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+
+class ProtoEnumValueRemoved(ProtoNodeDiff):
+    def __init__(self, enum: "ProtoEnum", enum_value: "ProtoEnumValue"):
+        self.enum = enum
+        self.enum_value = enum_value
+
+    def __eq__(self, other: "ProtoEnumValueRemoved") -> bool:
+        return (
+            isinstance(other, ProtoEnumValueRemoved)
+            and self.enum == other.enum
+            and self.enum_value == other.enum_value
+        )
+
+    def __str__(self) -> str:
+        return f"<ProtoEnumValueRemoved enum={self.enum} enum_value={self.enum_value}>"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+
+class ProtoEnumValueNameChanged(ProtoNodeDiff):
+    def __init__(
+        self, enum: ProtoEnum, enum_value: ProtoEnumValue, new_name: ProtoIdentifier
+    ):
+        self.enum = enum
+        self.enum_value = enum_value
+        self.new_name = new_name
+
+    def __eq__(self, other: "ProtoEnumValueNameChanged") -> bool:
+        return (
+            isinstance(other, ProtoEnumValueNameChanged)
+            and self.enum == other.enum
+            and self.enum_value == other.enum_value
+            and self.new_name == other.new_name
+        )
+
+    def __str__(self) -> str:
+        return f"<ProtoEnumValueNameChanged enum={self.enum} enum_value={self.enum_value} new_name={self.new_name}>"
+
+    def __repr__(self) -> str:
+        return str(self)
+
+
+class ProtoEnumValueValueChanged(ProtoNodeDiff):
+    def __init__(
+        self, enum: ProtoEnum, enum_value: ProtoEnumValue, new_value: ProtoInt
+    ):
+        self.enum = enum
+        self.enum_value = enum_value
+        self.new_value = new_value
+
+    def __eq__(self, other: "ProtoEnumValueNameChanged") -> bool:
+        return (
+            isinstance(other, ProtoEnumValueNameChanged)
+            and self.enum == other.enum
+            and self.enum_value == other.enum_value
+            and self.new_value == other.new_value
+        )
+
+    def __str__(self) -> str:
+        return f"<ProtoEnumValueNameChanged enum={self.enum} enum_value={self.enum_value} new_value={self.new_value}>"
+
+    def __repr__(self) -> str:
+        return str(self)

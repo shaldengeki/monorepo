@@ -59,13 +59,13 @@
 - [ ] Diffs
   - [x] Normalizing
   - [ ] Complete diffs
-    - [ ] Proto file-level diffs
+    - [x] Proto file-level diffs
       - [x] Syntax changes
       - [x] Import changes
       - [x] Package changes
       - [x] Option changes
     - [ ] Enum-level diffs
-      - [ ] Additions/removals
+      - [x] Additions/removals
       - [ ] Option changes
       - [ ] Field changes
         - [ ] Value changes

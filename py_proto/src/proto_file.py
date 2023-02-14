@@ -1,5 +1,6 @@
 from typing import Optional
 
+from src.proto_enum import ProtoEnum
 from src.proto_import import ProtoImport
 from src.proto_node import ProtoNode, ProtoNodeDiff
 from src.proto_option import ProtoOption
@@ -27,6 +28,10 @@ class ProtoFile:
     def options(self) -> list[ProtoOption]:
         return [node for node in self.nodes if isinstance(node, ProtoOption)]
 
+    @property
+    def enums(self) -> list[ProtoEnum]:
+        return [node for node in self.nodes if isinstance(node, ProtoEnum)]
+
     def serialize(self) -> str:
         serialized_parts = [self.syntax.serialize()]
         previous_type = self.syntax.__class__
@@ -42,6 +47,8 @@ class ProtoFile:
     def diff(self, other: "ProtoFile") -> list[ProtoNodeDiff]:
         diffs = []
         diffs.extend(ProtoSyntax.diff(self.syntax, other.syntax))
-        diffs.extend(ProtoImport.diff(self.imports, other.imports))
+        diffs.extend(ProtoImport.diff_sets(self.imports, other.imports))
         diffs.extend(ProtoPackage.diff(self.package, other.package))
+        diffs.extend(ProtoEnum.diff_sets(self.enums, other.enums))
+
         return [d for d in diffs if d is not None]

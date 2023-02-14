@@ -77,7 +77,7 @@ class ProtoImport(ProtoNode):
         return " ".join(parts)
 
     @staticmethod
-    def diff(
+    def diff_sets(
         left: list["ProtoImport"], right: list["ProtoImport"]
     ) -> list["ProtoNodeDiff"]:
         diffs = []

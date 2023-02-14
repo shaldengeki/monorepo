@@ -219,6 +219,7 @@ py_library(
     srcs = ["proto_file.py"],
     visibility = ["//visibility:public"],
     deps = [
+        ":proto_enum",
         ":proto_import",
         ":proto_node",
         ":proto_option",

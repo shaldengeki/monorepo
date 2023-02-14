@@ -135,28 +135,28 @@ class ImportTest(unittest.TestCase):
             third_parsed_import.node.serialize(), 'import public "bat.proto";'
         )
 
-    def test_diff_same_path_simple(self):
+    def test_diff_sets_same_path_simple(self):
         pf1 = ProtoImport(ProtoStringLiteral("path/to/some.proto"))
         pf2 = ProtoImport(ProtoStringLiteral("path/to/some.proto"))
-        self.assertEqual(ProtoImport.diff([pf1], [pf2]), [])
+        self.assertEqual(ProtoImport.diff_sets([pf1], [pf2]), [])
 
-    def test_diff_added_path_simple(self):
+    def test_diff_sets_added_path_simple(self):
         pf1 = ProtoImport(ProtoStringLiteral("path/to/some.proto"))
-        self.assertEqual(ProtoImport.diff([pf1], []), [ProtoImportAdded(pf1)])
+        self.assertEqual(ProtoImport.diff_sets([pf1], []), [ProtoImportAdded(pf1)])
 
-    def test_diff_removed_path_simple(self):
+    def test_diff_sets_removed_path_simple(self):
         pf2 = ProtoImport(ProtoStringLiteral("path/to/some.proto"))
-        self.assertEqual(ProtoImport.diff([], [pf2]), [ProtoImportRemoved(pf2)])
+        self.assertEqual(ProtoImport.diff_sets([], [pf2]), [ProtoImportRemoved(pf2)])
 
-    def test_diff_different_path_simple(self):
+    def test_diff_sets_different_path_simple(self):
         pf1 = ProtoImport(ProtoStringLiteral("path/to/some.proto"))
         pf2 = ProtoImport(ProtoStringLiteral("path/to/some/other.proto"))
         self.assertEqual(
-            ProtoImport.diff([pf1], [pf2]),
+            ProtoImport.diff_sets([pf1], [pf2]),
             [ProtoImportAdded(pf1), ProtoImportRemoved(pf2)],
         )
 
-    def test_diff_changed_optional_attributes(self):
+    def test_diff_sets_changed_optional_attributes(self):
         pf1 = ProtoImport(
             ProtoStringLiteral("path/to/some.proto"), weak=False, public=True
         )
@@ -164,7 +164,7 @@ class ImportTest(unittest.TestCase):
             ProtoStringLiteral("path/to/some.proto"), weak=True, public=False
         )
         self.assertEqual(
-            ProtoImport.diff([pf1], [pf2]),
+            ProtoImport.diff_sets([pf1], [pf2]),
             [
                 ProtoImportMadeNonWeak(pf2),
                 ProtoImportMadePublic(pf2),
