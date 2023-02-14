@@ -29,4 +29,8 @@ class ParsedProtoNode(NamedTuple):
 
 
 class ProtoNodeDiff(abc.ABC):
-    pass
+    def __repr__(self) -> str:
+        return str(self)
+
+    def __hash__(self) -> str:
+        return hash(str(self))

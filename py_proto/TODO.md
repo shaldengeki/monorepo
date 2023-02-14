@@ -66,10 +66,10 @@
       - [x] Option changes
     - [ ] Enum-level diffs
       - [x] Additions/removals
-      - [ ] Option changes
-      - [ ] Field changes
-        - [ ] Value changes
-        - [ ] Option changes
+      - [x] Option changes
+      - [x] Field changes
+        - [x] Value changes
+        - [x] Option changes
       - [ ] Reserveds changes
     - [ ] Message-level diffs
       - [ ] Additions/removals

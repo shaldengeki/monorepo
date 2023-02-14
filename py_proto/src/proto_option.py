@@ -149,9 +149,6 @@ class ProtoOptionValueChanged(ProtoNodeDiff):
     def __str__(self) -> str:
         return f"<ProtoOptionValueChanged name={self.name} left={self.left} right={self.right}>"
 
-    def __repr__(self) -> str:
-        return str(self)
-
 
 class ProtoOptionAdded(ProtoNodeDiff):
     def __init__(self, left: str):
@@ -163,9 +160,6 @@ class ProtoOptionAdded(ProtoNodeDiff):
     def __str__(self) -> str:
         return f"<ProtoOptionAdded left={self.left}>"
 
-    def __repr__(self) -> str:
-        return str(self)
-
 
 class ProtoOptionRemoved(ProtoNodeDiff):
     def __init__(self, right: str):
@@ -176,6 +170,3 @@ class ProtoOptionRemoved(ProtoNodeDiff):
 
     def __str__(self) -> str:
         return f"<ProtoOptionRemoved right={self.right}>"
-
-    def __repr__(self) -> str:
-        return str(self)

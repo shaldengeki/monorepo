@@ -62,6 +62,9 @@ class ProtoEnumValue(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
+    def __hash__(self) -> str:
+        return hash(str(self))
+
     def normalize(self) -> "ProtoEnumValue":
         return ProtoEnumValue(
             self.identifier,
@@ -131,13 +134,72 @@ class ProtoEnumValue(ProtoNode):
             serialized_parts.append("]")
         return " ".join(serialized_parts) + ";"
 
+    @staticmethod
+    def diff(
+        enum: "ProtoEnum", left: "ProtoEnumValue", right: "ProtoEnumValue"
+    ) -> list["ProtoNodeDiff"]:
+        if left is None and right is not None:
+            return [ProtoEnumValueAdded(right)]
+        elif left is not None and right is None:
+            return [ProtoEnumValueRemoved(left)]
+        elif left is None and right is None:
+            return []
+        elif left.identifier != right.identifier:
+            return []
+        elif left == right:
+            return []
+        diffs = []
+        diffs.extend(ProtoOption.diff_sets(left.options, right.options))
+        diffs.append(ProtoEnumValueValueChanged(enum, right, left.value))
+
+        return diffs
+
+    @staticmethod
+    def diff_sets(
+        enum: "ProtoEnum", left: list["ProtoEnumValue"], right: list["ProtoEnumValue"]
+    ) -> list["ProtoNodeDiff"]:
+        diffs = []
+        left_names = set(o.identifier.identifier for o in left)
+        left_values = set(int(o.value) for o in left)
+        right_names = set(o.identifier.identifier for o in right)
+        right_values = set(int(o.value) for o in right)
+
+        for name in left_names - right_names:
+            # Check to see if this is a renamed field number.
+            left_value = next(i for i in left if i.identifier.identifier == name)
+            if int(left_value.value) in right_values:
+                # This is a renamed field number.
+                right_value = next(
+                    i for i in right if int(i.value) == int(left_value.value)
+                )
+                diffs.append(
+                    ProtoEnumValueNameChanged(enum, right_value, left_value.identifier)
+                )
+            else:
+                diffs.append(ProtoEnumValueAdded(enum, left_value))
+        for name in right_names - left_names:
+            # Check to see if this is a renamed field number.
+            right_value = next(i for i in right if i.identifier.identifier == name)
+            if int(right_value.value) not in left_values:
+                diffs.append(
+                    ProtoEnumValueRemoved(
+                        enum, next(i for i in right if i.identifier.identifier == name)
+                    )
+                )
+        for name in left_names & right_names:
+            left_enum_value = next(i for i in left if i.identifier.identifier == name)
+            right_enum_value = next(i for i in right if i.identifier.identifier == name)
+            diffs.extend(ProtoEnumValue.diff(enum, left_enum_value, right_enum_value))
+
+        return diffs
+
 
 class ProtoEnum(ProtoNode):
     def __init__(self, name: ProtoIdentifier, nodes: list[ProtoNode]):
         self.name = name
         self.nodes = nodes
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: "ProtoEnum") -> bool:
         return self.name == other.name and self.nodes == other.nodes
 
     def __str__(self) -> str:
@@ -216,6 +278,10 @@ class ProtoEnum(ProtoNode):
     def options(self) -> list[ProtoOption]:
         return [node for node in self.nodes if isinstance(node, ProtoOption)]
 
+    @property
+    def values(self) -> list[ProtoEnumValue]:
+        return [node for node in self.nodes if isinstance(node, ProtoEnumValue)]
+
     def serialize(self) -> str:
         serialize_parts = (
             [f"enum {self.name.serialize()} {{"]
@@ -236,8 +302,10 @@ class ProtoEnum(ProtoNode):
             return []
         elif left == right:
             return []
-        # TODO: process the enum options and values.
-        return []
+        diffs = []
+        diffs.extend(ProtoOption.diff_sets(left.options, right.options))
+        diffs.extend(ProtoEnumValue.diff_sets(left, left.values, right.values))
+        return diffs
 
     @staticmethod
     def diff_sets(
@@ -255,9 +323,9 @@ class ProtoEnum(ProtoNode):
                 ProtoEnumRemoved(next(i for i in right if i.name.identifier == name))
             )
         for name in left_names & right_names:
-            left_option = next(i for i in left if i.name.identifier == name)
-            right_option = next(i for i in right if i.name.identifier == name)
-            diffs.extend(ProtoEnum.diff(left_option, right_option))
+            left_enum = next(i for i in left if i.name.identifier == name)
+            right_enum = next(i for i in right if i.name.identifier == name)
+            diffs.extend(ProtoEnum.diff(left_enum, right_enum))
 
         return diffs
 
@@ -272,9 +340,6 @@ class ProtoEnumAdded(ProtoNodeDiff):
     def __str__(self) -> str:
         return f"<ProtoEnumAdded enum={self.enum}>"
 
-    def __repr__(self) -> str:
-        return str(self)
-
 
 class ProtoEnumRemoved(ProtoNodeDiff):
     def __init__(self, enum: ProtoEnum):
@@ -285,9 +350,6 @@ class ProtoEnumRemoved(ProtoNodeDiff):
 
     def __str__(self) -> str:
         return f"<ProtoEnumRemoved enum={self.enum}>"
-
-    def __repr__(self) -> str:
-        return str(self)
 
 
 class ProtoEnumValueAdded(ProtoNodeDiff):
@@ -305,9 +367,6 @@ class ProtoEnumValueAdded(ProtoNodeDiff):
     def __str__(self) -> str:
         return f"<ProtoEnumValueAdded enum={self.enum} enum_value={self.enum_value}>"
 
-    def __repr__(self) -> str:
-        return str(self)
-
 
 class ProtoEnumValueRemoved(ProtoNodeDiff):
     def __init__(self, enum: "ProtoEnum", enum_value: "ProtoEnumValue"):
@@ -323,9 +382,6 @@ class ProtoEnumValueRemoved(ProtoNodeDiff):
 
     def __str__(self) -> str:
         return f"<ProtoEnumValueRemoved enum={self.enum} enum_value={self.enum_value}>"
-
-    def __repr__(self) -> str:
-        return str(self)
 
 
 class ProtoEnumValueNameChanged(ProtoNodeDiff):
@@ -347,9 +403,6 @@ class ProtoEnumValueNameChanged(ProtoNodeDiff):
     def __str__(self) -> str:
         return f"<ProtoEnumValueNameChanged enum={self.enum} enum_value={self.enum_value} new_name={self.new_name}>"
 
-    def __repr__(self) -> str:
-        return str(self)
-
 
 class ProtoEnumValueValueChanged(ProtoNodeDiff):
     def __init__(
@@ -359,16 +412,13 @@ class ProtoEnumValueValueChanged(ProtoNodeDiff):
         self.enum_value = enum_value
         self.new_value = new_value
 
-    def __eq__(self, other: "ProtoEnumValueNameChanged") -> bool:
+    def __eq__(self, other: "ProtoEnumValueValueChanged") -> bool:
         return (
-            isinstance(other, ProtoEnumValueNameChanged)
+            isinstance(other, ProtoEnumValueValueChanged)
             and self.enum == other.enum
             and self.enum_value == other.enum_value
             and self.new_value == other.new_value
         )
 
     def __str__(self) -> str:
-        return f"<ProtoEnumValueNameChanged enum={self.enum} enum_value={self.enum_value} new_value={self.new_value}>"
-
-    def __repr__(self) -> str:
-        return str(self)
+        return f"<ProtoEnumValueValueChanged enum={self.enum} enum_value={self.enum_value} new_value={self.new_value}>"

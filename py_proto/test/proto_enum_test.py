@@ -327,62 +327,63 @@ class EnumTest(unittest.TestCase):
         )
         self.assertEqual(ProtoEnum.diff(pe1, pe2), [])
 
-    # TODO: handle enum value diffs
-    # def test_diff_different_enum_value_name_returns_enum_diff(self):
-    #     pe1 = ProtoEnum(
-    #         ProtoIdentifier("MyEnum"),
-    #         [
-    #             ProtoEnumValue(
-    #                 ProtoIdentifier("ME_UNKNOWN"), ProtoInt(0, ProtoIntSign.POSITIVE)
-    #             )
-    #         ],
-    #     )
-    #     pe2 = ProtoEnum(
-    #         ProtoIdentifier("MyEnum"),
-    #         [
-    #             ProtoEnumValue(
-    #                 ProtoIdentifier("ME_KNOWN"), ProtoInt(0, ProtoIntSign.POSITIVE)
-    #             )
-    #         ],
-    #     )
-    #     self.assertEqual(
-    #         ProtoEnum.diff(pe1, pe2),
-    #         [
-    #             ProtoEnumValueNameChanged(
-    #                 pe1,
-    #                 pe1.nodes[0],
-    #                 ProtoIdentifier("ME_KNOWN"),
-    #             )
-    #         ],
-    #     )
+    def test_diff_different_enum_value_name_returns_enum_diff(self):
+        pe1 = ProtoEnum(
+            ProtoIdentifier("MyEnum"),
+            [
+                ProtoEnumValue(
+                    ProtoIdentifier("ME_UNKNOWN"), ProtoInt(0, ProtoIntSign.POSITIVE)
+                )
+            ],
+        )
+        pe2 = ProtoEnum(
+            ProtoIdentifier("MyEnum"),
+            [
+                ProtoEnumValue(
+                    ProtoIdentifier("ME_KNOWN"), ProtoInt(0, ProtoIntSign.POSITIVE)
+                )
+            ],
+        )
+        self.assertEqual(
+            ProtoEnum.diff(pe1, pe2),
+            [
+                ProtoEnumValueNameChanged(
+                    pe1,
+                    pe2.nodes[0],
+                    ProtoIdentifier("ME_UNKNOWN"),
+                )
+            ],
+        )
 
-    # def test_diff_different_enum_value_value_returns_enum_diff(self):
-    #     pe1 = ProtoEnum(
-    #         ProtoIdentifier("MyEnum"),
-    #         [
-    #             ProtoEnumValue(
-    #                 ProtoIdentifier("ME_UNKNOWN"), ProtoInt(0, ProtoIntSign.POSITIVE)
-    #             )
-    #         ],
-    #     )
-    #     pe2 = ProtoEnum(
-    #         ProtoIdentifier("MyEnum"),
-    #         [
-    #             ProtoEnumValue(
-    #                 ProtoIdentifier("ME_UNKNOWN"), ProtoInt(1, ProtoIntSign.POSITIVE)
-    #             )
-    #         ],
-    #     )
-    #     self.assertEqual(
-    #         ProtoEnum.diff(pe1, pe2),
-    #         [
-    #             ProtoEnumValueValueChanged(
-    #                 pe1,
-    #                 pe1.nodes[0],
-    #                 ProtoInt(1, ProtoIntSign.POSITIVE),
-    #             )
-    #         ],
-    #     )
+    def test_diff_different_enum_value_value_returns_enum_diff(self):
+        pe1 = ProtoEnum(
+            ProtoIdentifier("MyEnum"),
+            [
+                ProtoEnumValue(
+                    ProtoIdentifier("ME_UNKNOWN"), ProtoInt(0, ProtoIntSign.POSITIVE)
+                )
+            ],
+        )
+        pe2 = ProtoEnum(
+            ProtoIdentifier("MyEnum"),
+            [
+                ProtoEnumValue(
+                    ProtoIdentifier("ME_UNKNOWN"), ProtoInt(1, ProtoIntSign.POSITIVE)
+                )
+            ],
+        )
+
+        diff = ProtoEnum.diff(pe1, pe2)
+
+        self.assertIn(
+            ProtoEnumValueValueChanged(
+                pe1,
+                pe2.values[0],
+                ProtoInt(0, ProtoIntSign.POSITIVE),
+            ),
+            diff,
+        )
+        self.assertEqual(1, len(diff))
 
     def test_diff_enum_added(self):
         pe1 = None
@@ -782,145 +783,144 @@ class EnumTest(unittest.TestCase):
 
         self.assertEqual(6, len(diff))
 
-    # TODO: handle enum value diffs
-    # def test_diff_sets_overlap(self):
-    #     set1 = [
-    #         ProtoEnum(
-    #             ProtoIdentifier("FooEnum"),
-    #             [
-    #                 ProtoEnumValue(
-    #                     ProtoIdentifier("FE_UNKNOWN"),
-    #                     ProtoInt(0, ProtoIntSign.POSITIVE),
-    #                 )
-    #             ],
-    #         ),
-    #         ProtoEnum(
-    #             ProtoIdentifier("BarEnum"),
-    #             [
-    #                 ProtoEnumValue(
-    #                     ProtoIdentifier("BE_UNKNOWN"),
-    #                     ProtoInt(0, ProtoIntSign.POSITIVE),
-    #                 )
-    #             ],
-    #         ),
-    #         ProtoEnum(
-    #             ProtoIdentifier("TagEnum"),
-    #             [
-    #                 ProtoEnumValue(
-    #                     ProtoIdentifier("TE_UNKNOWN"),
-    #                     ProtoInt(0, ProtoIntSign.POSITIVE),
-    #                 )
-    #             ],
-    #         ),
-    #     ]
-    #     set2 = [
-    #         ProtoEnum(
-    #             ProtoIdentifier("FooEnum2"),
-    #             [
-    #                 ProtoEnumValue(
-    #                     ProtoIdentifier("FE_UNKNOWN2"),
-    #                     ProtoInt(0, ProtoIntSign.POSITIVE),
-    #                 )
-    #             ],
-    #         ),
-    #         ProtoEnum(
-    #             ProtoIdentifier("BarEnum"),
-    #             [
-    #                 ProtoEnumValue(
-    #                     ProtoIdentifier("BE_UNKNOWN2"),
-    #                     ProtoInt(1, ProtoIntSign.POSITIVE),
-    #                 )
-    #             ],
-    #         ),
-    #         ProtoEnum(
-    #             ProtoIdentifier("TagEnum2"),
-    #             [
-    #                 ProtoEnumValue(
-    #                     ProtoIdentifier("TE_UNKNOWN2"),
-    #                     ProtoInt(0, ProtoIntSign.POSITIVE),
-    #                 )
-    #             ],
-    #         ),
-    #     ]
+    def test_diff_sets_overlap(self):
+        set1 = [
+            ProtoEnum(
+                ProtoIdentifier("FooEnum"),
+                [
+                    ProtoEnumValue(
+                        ProtoIdentifier("FE_UNKNOWN"),
+                        ProtoInt(0, ProtoIntSign.POSITIVE),
+                    )
+                ],
+            ),
+            ProtoEnum(
+                ProtoIdentifier("BarEnum"),
+                [
+                    ProtoEnumValue(
+                        ProtoIdentifier("BE_UNKNOWN"),
+                        ProtoInt(0, ProtoIntSign.POSITIVE),
+                    )
+                ],
+            ),
+            ProtoEnum(
+                ProtoIdentifier("TagEnum"),
+                [
+                    ProtoEnumValue(
+                        ProtoIdentifier("TE_UNKNOWN"),
+                        ProtoInt(0, ProtoIntSign.POSITIVE),
+                    )
+                ],
+            ),
+        ]
+        set2 = [
+            ProtoEnum(
+                ProtoIdentifier("FooEnum2"),
+                [
+                    ProtoEnumValue(
+                        ProtoIdentifier("FE_UNKNOWN2"),
+                        ProtoInt(0, ProtoIntSign.POSITIVE),
+                    )
+                ],
+            ),
+            ProtoEnum(
+                ProtoIdentifier("BarEnum"),
+                [
+                    ProtoEnumValue(
+                        ProtoIdentifier("BE_UNKNOWN2"),
+                        ProtoInt(0, ProtoIntSign.POSITIVE),
+                    )
+                ],
+            ),
+            ProtoEnum(
+                ProtoIdentifier("TagEnum2"),
+                [
+                    ProtoEnumValue(
+                        ProtoIdentifier("TE_UNKNOWN2"),
+                        ProtoInt(0, ProtoIntSign.POSITIVE),
+                    )
+                ],
+            ),
+        ]
 
-    #     diff = ProtoEnum.diff_sets(set1, set2)
+        diff = ProtoEnum.diff_sets(set1, set2)
 
-    #     self.assertIn(
-    #         ProtoEnumRemoved(
-    #             ProtoEnum(
-    #                 ProtoIdentifier("FooEnum"),
-    #                 [
-    #                     ProtoEnumValue(
-    #                         ProtoIdentifier("FE_UNKNOWN"),
-    #                         ProtoInt(0, ProtoIntSign.POSITIVE),
-    #                     )
-    #                 ],
-    #             ),
-    #         ),
-    #         diff,
-    #     )
+        self.assertIn(
+            ProtoEnumRemoved(
+                ProtoEnum(
+                    ProtoIdentifier("FooEnum2"),
+                    [
+                        ProtoEnumValue(
+                            ProtoIdentifier("FE_UNKNOWN2"),
+                            ProtoInt(0, ProtoIntSign.POSITIVE),
+                        )
+                    ],
+                ),
+            ),
+            diff,
+        )
 
-    #     self.assertIn(
-    #         ProtoEnumRemoved(
-    #             ProtoEnum(
-    #                 ProtoIdentifier("TagEnum"),
-    #                 [
-    #                     ProtoEnumValue(
-    #                         ProtoIdentifier("TE_UNKNOWN"),
-    #                         ProtoInt(0, ProtoIntSign.POSITIVE),
-    #                     )
-    #                 ],
-    #             ),
-    #         ),
-    #         diff,
-    #     )
-    #     self.assertIn(
-    #         ProtoEnumAdded(
-    #             ProtoEnum(
-    #                 ProtoIdentifier("FooEnum2"),
-    #                 [
-    #                     ProtoEnumValue(
-    #                         ProtoIdentifier("FE_UNKNOWN2"),
-    #                         ProtoInt(0, ProtoIntSign.POSITIVE),
-    #                     )
-    #                 ],
-    #             ),
-    #         ),
-    #         diff,
-    #     )
-    #     self.assertIn(
-    #         ProtoEnumAdded(
-    #             ProtoEnum(
-    #                 ProtoIdentifier("TagEnum2"),
-    #                 [
-    #                     ProtoEnumValue(
-    #                         ProtoIdentifier("TE_UNKNOWN2"),
-    #                         ProtoInt(0, ProtoIntSign.POSITIVE),
-    #                     )
-    #                 ],
-    #             ),
-    #         ),
-    #         diff,
-    #     )
-    #     self.assertIn(
-    #         ProtoEnumValueRemoved(
-    #             ProtoIdentifier("BarEnum"),
-    #             ProtoEnumValue(
-    #                 ProtoIdentifier("BE_UNKNOWN"), ProtoInt(0, ProtoIntSign.POSITIVE)
-    #             ),
-    #         ),
-    #         diff,
-    #     )
-    #     self.assertIn(
-    #         ProtoEnumValueAdded(
-    #             ProtoIdentifier("BarEnum"),
-    #             ProtoEnumValue(
-    #                 ProtoIdentifier("BE_UNKNOWN2"), ProtoInt(1, ProtoIntSign.POSITIVE)
-    #             ),
-    #         ),
-    #         diff,
-    #     )
-    #     self.assertEqual(6, len(diff))
+        self.assertIn(
+            ProtoEnumRemoved(
+                ProtoEnum(
+                    ProtoIdentifier("TagEnum2"),
+                    [
+                        ProtoEnumValue(
+                            ProtoIdentifier("TE_UNKNOWN2"),
+                            ProtoInt(0, ProtoIntSign.POSITIVE),
+                        )
+                    ],
+                ),
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoEnumAdded(
+                ProtoEnum(
+                    ProtoIdentifier("FooEnum"),
+                    [
+                        ProtoEnumValue(
+                            ProtoIdentifier("FE_UNKNOWN"),
+                            ProtoInt(0, ProtoIntSign.POSITIVE),
+                        )
+                    ],
+                ),
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoEnumAdded(
+                ProtoEnum(
+                    ProtoIdentifier("TagEnum"),
+                    [
+                        ProtoEnumValue(
+                            ProtoIdentifier("TE_UNKNOWN"),
+                            ProtoInt(0, ProtoIntSign.POSITIVE),
+                        )
+                    ],
+                ),
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoEnumValueNameChanged(
+                ProtoEnum(
+                    ProtoIdentifier("BarEnum"),
+                    [
+                        ProtoEnumValue(
+                            ProtoIdentifier("BE_UNKNOWN"),
+                            ProtoInt(0, ProtoIntSign.POSITIVE),
+                        )
+                    ],
+                ),
+                ProtoEnumValue(
+                    ProtoIdentifier("BE_UNKNOWN2"), ProtoInt(0, ProtoIntSign.POSITIVE)
+                ),
+                ProtoIdentifier("BE_UNKNOWN"),
+            ),
+            diff,
+        )
+        self.assertEqual(5, len(diff))
 
 
 if __name__ == "__main__":
