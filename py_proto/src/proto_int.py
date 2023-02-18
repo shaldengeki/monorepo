@@ -10,6 +10,11 @@ class ProtoIntSign(Enum):
     NEGATIVE = "-"
 
 
+class ParsedProtoIntNode(ParsedProtoNode):
+    node: "ProtoInt"
+    remaining_source: str
+
+
 class ProtoInt(ProtoNode):
     OCTAL = set("01234567")
     DECIMAL = OCTAL | set("89")
@@ -38,7 +43,7 @@ class ProtoInt(ProtoNode):
         return self
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(cls, proto_source: str) -> Optional["ParsedProtoIntNode"]:
         if proto_source[0] not in ProtoInt.DECIMAL:
             return None
 
@@ -58,7 +63,7 @@ class ProtoInt(ProtoNode):
                     value = int(f"0x{proto_source[:i + 1]}", 16)
                 except ValueError:
                     raise ValueError(f"Proto has invalid hex: {proto_source}")
-                return ParsedProtoNode(
+                return ParsedProtoIntNode(
                     ProtoInt(value, ProtoIntSign.POSITIVE),
                     proto_source[i + 1 :].strip(),
                 )
@@ -74,7 +79,7 @@ class ProtoInt(ProtoNode):
                     value = int(f"0{proto_source[:i + 1]}", 8)
                 except ValueError:
                     raise ValueError(f"Proto has invalid octal: {proto_source}")
-                return ParsedProtoNode(
+                return ParsedProtoIntNode(
                     ProtoInt(value, ProtoIntSign.POSITIVE),
                     proto_source[i + 1 :].strip(),
                 )
@@ -91,7 +96,7 @@ class ProtoInt(ProtoNode):
             except ValueError:
                 return None
 
-            return ParsedProtoNode(
+            return ParsedProtoIntNode(
                 ProtoInt(value, ProtoIntSign.POSITIVE),
                 proto_source[i + 1 :].strip(),
             )

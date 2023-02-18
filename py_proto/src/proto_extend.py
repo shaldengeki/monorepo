@@ -30,16 +30,17 @@ class ProtoExtend(ProtoNode):
         )
         return ProtoExtend(
             name=self.name,
-            nodes=sorted(non_comment_nodes, key=lambda f: int(f.number)),
+            nodes=sorted(non_comment_nodes, key=lambda f: str(f)),
         )
 
     @staticmethod
     def parse_partial_content(partial_content: str) -> ParsedProtoNode:
-        for node_type in (
+        supported_types: list[type[ProtoNode]] = [
             ProtoSingleLineComment,
             ProtoMultiLineComment,
             ProtoMessageField,
-        ):
+        ]
+        for node_type in supported_types:
             try:
                 match_result = node_type.match(partial_content)
             except (ValueError, IndexError, TypeError):

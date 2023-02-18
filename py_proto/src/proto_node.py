@@ -32,5 +32,5 @@ class ProtoNodeDiff(abc.ABC):
     def __repr__(self) -> str:
         return str(self)
 
-    def __hash__(self) -> str:
+    def __hash__(self) -> int:
         return hash(str(self))

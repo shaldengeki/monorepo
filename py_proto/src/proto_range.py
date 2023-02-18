@@ -5,6 +5,11 @@ from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_node import ParsedProtoNode, ProtoNode
 
 
+class ParsedProtoRangeNode(ParsedProtoNode):
+    node: "ProtoRange"
+    remaining_source: str
+
+
 class ProtoRangeEnum(Enum):
     MAX = "max"
 
@@ -35,7 +40,7 @@ class ProtoRange(ProtoNode):
         return self
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(cls, proto_source: str) -> Optional["ParsedProtoRangeNode"]:
         sign = ProtoIntSign.POSITIVE
         if proto_source.startswith("-") and proto_source != "-":
             sign = next(x for x in ProtoIntSign if x.value == proto_source[0])
@@ -53,7 +58,7 @@ class ProtoRange(ProtoNode):
         if proto_source.startswith("to "):
             proto_source = proto_source[3:]
             if proto_source.startswith("max"):
-                return ParsedProtoNode(
+                return ParsedProtoRangeNode(
                     ProtoRange(min, ProtoRangeEnum.MAX),
                     proto_source[3:].strip(),
                 )
@@ -72,7 +77,7 @@ class ProtoRange(ProtoNode):
                 max = match.node
                 proto_source = match.remaining_source
 
-        return ParsedProtoNode(ProtoRange(min, max), proto_source.strip())
+        return ParsedProtoRangeNode(ProtoRange(min, max), proto_source.strip())
 
     def serialize(self) -> str:
         if self.max is not None:

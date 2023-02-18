@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Sequence
 
 from src.proto_enum import ProtoEnum
 from src.proto_import import ProtoImport
@@ -42,7 +42,7 @@ class ProtoFile:
 
     def serialize(self) -> str:
         serialized_parts = [self.syntax.serialize()]
-        previous_type = self.syntax.__class__
+        previous_type: type[ProtoNode] = self.syntax.__class__
         for node in self.nodes:
             # Attempt to group up lines of the same type.
             if node.__class__ != previous_type:
@@ -52,8 +52,8 @@ class ProtoFile:
 
         return "\n".join(serialized_parts)
 
-    def diff(self, other: "ProtoFile") -> list[ProtoNodeDiff]:
-        diffs = []
+    def diff(self, other: "ProtoFile") -> Sequence[ProtoNodeDiff]:
+        diffs: list[ProtoNodeDiff] = []
         diffs.extend(ProtoSyntax.diff(self.syntax, other.syntax))
         diffs.extend(ProtoImport.diff_sets(self.imports, other.imports))
         diffs.extend(ProtoPackage.diff(self.package, other.package))

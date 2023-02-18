@@ -3,6 +3,11 @@ from typing import Optional
 from src.proto_node import ParsedProtoNode, ProtoNode
 
 
+class ParsedProtoStringLiteralNode(ParsedProtoNode):
+    node: "ProtoStringLiteral"
+    remaining_source: str
+
+
 class ProtoStringLiteral(ProtoNode):
     QUOTES = ['"', "'"]
 
@@ -26,7 +31,7 @@ class ProtoStringLiteral(ProtoNode):
         return self
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(cls, proto_source: str) -> Optional["ParsedProtoStringLiteralNode"]:
         if not any(proto_source.startswith(c) for c in ProtoStringLiteral.QUOTES):
             return None
         escaped = False
@@ -36,7 +41,7 @@ class ProtoStringLiteral(ProtoNode):
                 escaped = True
                 continue
             if c == starting_quote and not escaped:
-                return ParsedProtoNode(
+                return ParsedProtoStringLiteralNode(
                     ProtoStringLiteral(proto_source[1 : i + 1], quote=starting_quote),
                     proto_source[i + 2 :].strip(),
                 )

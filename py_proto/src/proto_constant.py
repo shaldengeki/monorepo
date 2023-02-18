@@ -12,6 +12,11 @@ ProtoConstantTypes = (
 )
 
 
+class ParsedProtoConstantNode(ParsedProtoNode):
+    node: "ProtoConstant"
+    remaining_source: str
+
+
 class ProtoConstant(ProtoNode):
     def __init__(
         self,
@@ -32,10 +37,10 @@ class ProtoConstant(ProtoNode):
         return self
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(cls, proto_source: str) -> Optional["ParsedProtoConstantNode"]:
         match = ProtoBool.match(proto_source)
         if match is not None:
-            return ParsedProtoNode(
+            return ParsedProtoConstantNode(
                 ProtoConstant(match.node),
                 match.remaining_source.strip(),
             )
@@ -43,41 +48,41 @@ class ProtoConstant(ProtoNode):
         sign = ProtoIntSign.POSITIVE
         if proto_source.startswith("+") or proto_source.startswith("-"):
             sign = next(x for x in ProtoIntSign if x.value == proto_source[0])
-            match = ProtoInt.match(proto_source[1:])
+            proto_int_match = ProtoInt.match(proto_source[1:])
         else:
-            match = ProtoInt.match(proto_source)
-        if match is not None:
-            match.node.sign = sign
-            return ParsedProtoNode(
-                ProtoConstant(match.node),
-                match.remaining_source.strip(),
+            proto_int_match = ProtoInt.match(proto_source)
+        if proto_int_match is not None:
+            proto_int_match.node.sign = sign
+            return ParsedProtoConstantNode(
+                ProtoConstant(proto_int_match.node),
+                proto_int_match.remaining_source.strip(),
             )
 
-        sign = ProtoFloatSign.POSITIVE
+        float_sign = ProtoFloatSign.POSITIVE
         if proto_source.startswith("+") or proto_source.startswith("-"):
-            sign = next(x for x in ProtoFloatSign if x.value == proto_source[0])
-            match = ProtoFloat.match(proto_source[1:])
+            float_sign = next(x for x in ProtoFloatSign if x.value == proto_source[0])
+            float_match = ProtoFloat.match(proto_source[1:])
         else:
-            match = ProtoFloat.match(proto_source)
-        if match is not None:
-            match.node.sign = sign
-            return ParsedProtoNode(
-                ProtoConstant(match.node),
-                match.remaining_source.strip(),
+            float_match = ProtoFloat.match(proto_source)
+        if float_match is not None:
+            float_match.node.sign = float_sign
+            return ParsedProtoConstantNode(
+                ProtoConstant(float_match.node),
+                float_match.remaining_source.strip(),
             )
 
-        match = ProtoFullIdentifier.match(proto_source)
-        if match is not None:
-            return ParsedProtoNode(
-                ProtoConstant(match.node),
-                match.remaining_source.strip(),
+        identifier_match = ProtoFullIdentifier.match(proto_source)
+        if identifier_match is not None:
+            return ParsedProtoConstantNode(
+                ProtoConstant(identifier_match.node),
+                identifier_match.remaining_source.strip(),
             )
 
-        match = ProtoStringLiteral.match(proto_source)
-        if match is not None:
-            return ParsedProtoNode(
-                ProtoConstant(match.node),
-                match.remaining_source.strip(),
+        string_literal_match = ProtoStringLiteral.match(proto_source)
+        if string_literal_match is not None:
+            return ParsedProtoConstantNode(
+                ProtoConstant(string_literal_match.node),
+                string_literal_match.remaining_source.strip(),
             )
 
         return None

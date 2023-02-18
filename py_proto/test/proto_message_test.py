@@ -72,7 +72,7 @@ class MessageTest(unittest.TestCase):
                     ProtoIdentifier("(foo.bar).baz"),
                     ProtoConstant(ProtoStringLiteral("bat")),
                 ),
-                ProtoMessage(
+                ProtoEnum(
                     ProtoIdentifier("MyEnum"),
                     [
                         ProtoEnumValue(
@@ -295,7 +295,7 @@ class MessageTest(unittest.TestCase):
             ProtoMessage(
                 ProtoIdentifier("FooMessage"),
                 [
-                    ProtoMessage(
+                    ProtoEnum(
                         ProtoIdentifier("MyEnum"),
                         [
                             ProtoEnumValue(

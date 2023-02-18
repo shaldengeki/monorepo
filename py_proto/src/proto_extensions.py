@@ -25,8 +25,7 @@ class ProtoExtensions(ProtoNode):
     def normalize(self) -> "ProtoExtensions":
         # sort the ranges.
         return ProtoExtensions(
-            sorted(self.ranges, key=lambda r: r.min),
-            self.quote_type,
+            sorted(self.ranges, key=lambda r: int(r.min)),
         )
 
     @classmethod

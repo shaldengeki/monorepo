@@ -25,7 +25,7 @@ class ProtoImport(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
-    def __dict__(self) -> dict:
+    def __dict__(self):
         return {
             "path": self.path.serialize(),
             "weak": self.weak,
@@ -80,7 +80,7 @@ class ProtoImport(ProtoNode):
     def diff_sets(
         left: list["ProtoImport"], right: list["ProtoImport"]
     ) -> list["ProtoNodeDiff"]:
-        diffs = []
+        diffs: list[ProtoNodeDiff] = []
         left_names = set(i.path for i in left)
         right_names = set(i.path for i in right)
         for name in left_names - right_names:
@@ -106,15 +106,14 @@ class ProtoImportAdded(ProtoNodeDiff):
     def __init__(self, proto_import: ProtoImport):
         self.proto_import = proto_import
 
-    def __eq__(self, other: "ProtoImportAdded") -> bool:
-        return self.proto_import == other.proto_import
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, ProtoImportAdded)
+            and self.proto_import == other.proto_import
+        )
 
 
 class ProtoImportRemoved(ProtoImportAdded):
-    pass
-
-
-class ProtoImportMadeWeak(ProtoImportAdded):
     pass
 
 

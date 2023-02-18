@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Sequence
 
 from src.proto_comment import (
     ProtoComment,
@@ -8,30 +8,37 @@ from src.proto_comment import (
 from src.proto_identifier import ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
-from src.proto_option import ProtoOption
+from src.proto_option import ParsedProtoOptionNode, ProtoOption, ProtoOptionDiff
 from src.proto_reserved import ProtoReserved
 
 
-class ProtoEnumValueOption(ProtoOption):
-    def __eq__(self, other) -> bool:
-        return super().__eq__(other)
+class ParsedProtoEnumValueOptionNode(ParsedProtoOptionNode):
+    node: "ProtoEnumValueOption"
+    remaining_source: str
 
+
+class ProtoEnumValueOption(ProtoOption):
     def __str__(self) -> str:
         return f"<{self.__class__.__name__} name={self.name}, value={self.value}>"
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(cls, proto_source: str) -> Optional["ParsedProtoEnumValueOptionNode"]:
         test_source = "option " + proto_source.strip() + ";"
         match = ProtoOption.match(test_source)
         if match is None:
             return None
-        return ParsedProtoNode(
+        return ParsedProtoEnumValueOptionNode(
             cls(match.node.name, match.node.value),
             match.remaining_source.strip(),
         )
 
     def serialize(self) -> str:
         return f"{self.name.serialize()} = {self.value.serialize()}"
+
+
+class ParsedProtoEnumValueNode(ParsedProtoNode):
+    node: "ProtoEnumValue"
+    remaining_source: str
 
 
 class ProtoEnumValue(ProtoNode):
@@ -62,18 +69,18 @@ class ProtoEnumValue(ProtoNode):
     def __repr__(self) -> str:
         return str(self)
 
-    def __hash__(self) -> str:
+    def __hash__(self) -> int:
         return hash(str(self))
 
     def normalize(self) -> "ProtoEnumValue":
         return ProtoEnumValue(
             self.identifier,
             self.value,
-            sorted(self.options, key=lambda o: o.name),
+            sorted(self.options, key=lambda o: str(o.name)),
         )
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(cls, proto_source: str) -> Optional["ParsedProtoEnumValueNode"]:
         match = ProtoIdentifier.match(proto_source)
         if match is None:
             raise ValueError(f"Proto has invalid enum value name: {proto_source}")
@@ -91,19 +98,19 @@ class ProtoEnumValue(ProtoNode):
         sign = ProtoIntSign.POSITIVE
         if proto_source.startswith("-"):
             sign = next(x for x in ProtoIntSign if x.value == proto_source[0])
-            match = ProtoInt.match(proto_source[1:])
+            int_match = ProtoInt.match(proto_source[1:])
         else:
-            match = ProtoInt.match(proto_source)
-        if match is None:
+            int_match = ProtoInt.match(proto_source)
+        if int_match is None:
             raise ValueError(
                 f"Proto has invalid enum value, expecting int: {proto_source}"
             )
 
-        match.node.sign = sign
-        enum_value = match.node
-        proto_source = match.remaining_source.strip()
+        int_match.node.sign = sign
+        enum_value = int_match.node
+        proto_source = int_match.remaining_source.strip()
 
-        options = []
+        options: list[ProtoEnumValueOption] = []
         if proto_source.startswith("["):
             proto_source = proto_source[1:].strip()
             end_bracket = proto_source.find("]")
@@ -112,15 +119,17 @@ class ProtoEnumValue(ProtoNode):
                     f"Proto has invalid enum value option syntax, cannot find ]: {proto_source}"
                 )
             for option_part in proto_source[:end_bracket].strip().split(","):
-                match = ProtoEnumValueOption.match(option_part.strip())
-                if match is None:
+                proto_enum_value_option_match = ProtoEnumValueOption.match(
+                    option_part.strip()
+                )
+                if proto_enum_value_option_match is None:
                     raise ValueError(
                         f"Proto has invalid enum value option syntax: {proto_source}"
                     )
-                options.append(match.node)
+                options.append(proto_enum_value_option_match.node)
             proto_source = proto_source[end_bracket + 1 :].strip()
 
-        return ParsedProtoNode(
+        return ParsedProtoEnumValueNode(
             ProtoEnumValue(enum_value_name, enum_value, options), proto_source.strip()
         )
 
@@ -137,7 +146,7 @@ class ProtoEnumValue(ProtoNode):
     @staticmethod
     def diff(
         enum: "ProtoEnum", left: "ProtoEnumValue", right: "ProtoEnumValue"
-    ) -> list["ProtoNodeDiff"]:
+    ) -> Sequence["ProtoNodeDiff"]:
         if left is None and right is not None:
             return [ProtoEnumValueAdded(right)]
         elif left is not None and right is None:
@@ -148,9 +157,9 @@ class ProtoEnumValue(ProtoNode):
             return []
         elif left == right:
             return []
-        diffs = []
+        diffs: list["ProtoNodeDiff"] = []
         # TODO: scope these diffs under ProtoEnumValue
-        diffs.extend(ProtoOption.diff_sets(left.options, right.options))
+        diffs.extend(ProtoEnumValueOption.diff_sets(left.options, right.options))
         diffs.append(ProtoEnumValueValueChanged(enum, right, left.value))
 
         return diffs
@@ -159,7 +168,7 @@ class ProtoEnumValue(ProtoNode):
     def diff_sets(
         enum: "ProtoEnum", left: list["ProtoEnumValue"], right: list["ProtoEnumValue"]
     ) -> list["ProtoNodeDiff"]:
-        diffs = []
+        diffs: list[ProtoNodeDiff] = []
         left_names = set(o.identifier.identifier for o in left)
         left_values = set(int(o.value) for o in left)
         right_names = set(o.identifier.identifier for o in right)
@@ -200,8 +209,12 @@ class ProtoEnum(ProtoNode):
         self.name = name
         self.nodes = nodes
 
-    def __eq__(self, other: "ProtoEnum") -> bool:
-        return self.name == other.name and self.nodes == other.nodes
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, ProtoEnum)
+            and self.name == other.name
+            and self.nodes == other.nodes
+        )
 
     def __str__(self) -> str:
         return f"<ProtoEnum name={self.name}, nodes={self.nodes}>"
@@ -220,13 +233,14 @@ class ProtoEnum(ProtoNode):
 
     @staticmethod
     def parse_partial_content(partial_enum_content: str) -> ParsedProtoNode:
-        for node_type in (
+        supported_types: list[type[ProtoNode]] = [
             ProtoSingleLineComment,
             ProtoMultiLineComment,
             ProtoOption,
             ProtoReserved,
             ProtoEnumValue,
-        ):
+        ]
+        for node_type in supported_types:
             try:
                 match_result = node_type.match(partial_enum_content)
             except (ValueError, IndexError, TypeError):
@@ -303,7 +317,7 @@ class ProtoEnum(ProtoNode):
             return []
         elif left == right:
             return []
-        diffs = []
+        diffs: list[ProtoNodeDiff] = []
         # TODO: scope these diffs under ProtoEnum
         diffs.extend(ProtoOption.diff_sets(left.options, right.options))
         diffs.extend(ProtoEnumValue.diff_sets(left, left.values, right.values))
@@ -313,7 +327,7 @@ class ProtoEnum(ProtoNode):
     def diff_sets(
         left: list["ProtoEnum"], right: list["ProtoEnum"]
     ) -> list["ProtoNodeDiff"]:
-        diffs = []
+        diffs: list[ProtoNodeDiff] = []
         left_names = set(o.name.identifier for o in left)
         right_names = set(o.name.identifier for o in right)
         for name in left_names - right_names:
@@ -332,73 +346,62 @@ class ProtoEnum(ProtoNode):
         return diffs
 
 
-class ProtoEnumAdded(ProtoNodeDiff):
+class ProtoEnumDiff(ProtoNodeDiff):
     def __init__(self, enum: ProtoEnum):
         self.enum = enum
 
-    def __eq__(self, other: "ProtoEnumAdded") -> bool:
-        return isinstance(other, ProtoEnumAdded) and self.enum == other.enum
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, ProtoEnumDiff) and self.enum == other.enum
 
     def __str__(self) -> str:
-        return f"<ProtoEnumAdded enum={self.enum}>"
+        return f"<{self.__class__.__name__} enum={self.enum}>"
 
 
-class ProtoEnumRemoved(ProtoNodeDiff):
-    def __init__(self, enum: ProtoEnum):
-        self.enum = enum
-
-    def __eq__(self, other: "ProtoEnumRemoved") -> bool:
-        return isinstance(other, ProtoEnumRemoved) and self.enum == other.enum
-
-    def __str__(self) -> str:
-        return f"<ProtoEnumRemoved enum={self.enum}>"
+class ProtoEnumAdded(ProtoEnumDiff):
+    pass
 
 
-class ProtoEnumValueAdded(ProtoNodeDiff):
+class ProtoEnumRemoved(ProtoEnumDiff):
+    pass
+
+
+class ProtoEnumValueDiff(ProtoEnumDiff):
     def __init__(self, enum: "ProtoEnum", enum_value: "ProtoEnumValue"):
-        self.enum = enum
+        super().__init__(enum)
         self.enum_value = enum_value
 
-    def __eq__(self, other: "ProtoEnumValueAdded") -> bool:
+    def __eq__(self, other: object) -> bool:
         return (
-            isinstance(other, ProtoEnumValueAdded)
-            and self.enum == other.enum
+            super().__eq__(other)
+            and isinstance(other, ProtoEnumValueDiff)
             and self.enum_value == other.enum_value
         )
 
     def __str__(self) -> str:
-        return f"<ProtoEnumValueAdded enum={self.enum} enum_value={self.enum_value}>"
-
-
-class ProtoEnumValueRemoved(ProtoNodeDiff):
-    def __init__(self, enum: "ProtoEnum", enum_value: "ProtoEnumValue"):
-        self.enum = enum
-        self.enum_value = enum_value
-
-    def __eq__(self, other: "ProtoEnumValueRemoved") -> bool:
         return (
-            isinstance(other, ProtoEnumValueRemoved)
-            and self.enum == other.enum
-            and self.enum_value == other.enum_value
+            f"<{self.__class__.__name__} enum={self.enum} enum_value={self.enum_value}>"
         )
 
-    def __str__(self) -> str:
-        return f"<ProtoEnumValueRemoved enum={self.enum} enum_value={self.enum_value}>"
+
+class ProtoEnumValueAdded(ProtoEnumValueDiff):
+    pass
 
 
-class ProtoEnumValueNameChanged(ProtoNodeDiff):
+class ProtoEnumValueRemoved(ProtoEnumValueDiff):
+    pass
+
+
+class ProtoEnumValueNameChanged(ProtoEnumValueDiff):
     def __init__(
         self, enum: ProtoEnum, enum_value: ProtoEnumValue, new_name: ProtoIdentifier
     ):
-        self.enum = enum
-        self.enum_value = enum_value
+        super().__init__(enum, enum_value)
         self.new_name = new_name
 
-    def __eq__(self, other: "ProtoEnumValueNameChanged") -> bool:
+    def __eq__(self, other: object) -> bool:
         return (
-            isinstance(other, ProtoEnumValueNameChanged)
-            and self.enum == other.enum
-            and self.enum_value == other.enum_value
+            super().__eq__(other)
+            and isinstance(other, ProtoEnumValueNameChanged)
             and self.new_name == other.new_name
         )
 
@@ -406,19 +409,17 @@ class ProtoEnumValueNameChanged(ProtoNodeDiff):
         return f"<ProtoEnumValueNameChanged enum={self.enum} enum_value={self.enum_value} new_name={self.new_name}>"
 
 
-class ProtoEnumValueValueChanged(ProtoNodeDiff):
+class ProtoEnumValueValueChanged(ProtoEnumValueDiff):
     def __init__(
         self, enum: ProtoEnum, enum_value: ProtoEnumValue, new_value: ProtoInt
     ):
-        self.enum = enum
-        self.enum_value = enum_value
+        super().__init__(enum, enum_value)
         self.new_value = new_value
 
-    def __eq__(self, other: "ProtoEnumValueValueChanged") -> bool:
+    def __eq__(self, other: object) -> bool:
         return (
-            isinstance(other, ProtoEnumValueValueChanged)
-            and self.enum == other.enum
-            and self.enum_value == other.enum_value
+            super().__eq__(other)
+            and isinstance(other, ProtoEnumValueValueChanged)
             and self.new_value == other.new_value
         )
 

@@ -11,6 +11,11 @@ class ProtoFloatSign(Enum):
     NEGATIVE = "-"
 
 
+class ParsedProtoFloatNode(ParsedProtoNode):
+    node: "ProtoFloat"
+    remaining_source: str
+
+
 class ProtoFloat(ProtoNode):
     SIGNS = set("+-")
     DIGITS = ProtoInt.DECIMAL
@@ -38,14 +43,14 @@ class ProtoFloat(ProtoNode):
         return self
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(cls, proto_source: str) -> Optional["ParsedProtoFloatNode"]:
         if proto_source.startswith("inf"):
             proto_source = proto_source[3:]
             if proto_source and proto_source[0] in ProtoIdentifier.ALL:
                 raise ValueError(
                     f"Proto has invalid float, invalid post-inf character: {proto_source}"
                 )
-            return ParsedProtoNode(
+            return ParsedProtoFloatNode(
                 ProtoFloat(float("inf"), ProtoFloatSign.POSITIVE), proto_source.strip()
             )
 
@@ -55,7 +60,7 @@ class ProtoFloat(ProtoNode):
                 raise ValueError(
                     f"Proto has invalid float, invalid post-nan character: {proto_source}"
                 )
-            return ParsedProtoNode(
+            return ParsedProtoFloatNode(
                 ProtoFloat(float("nan"), ProtoFloatSign.POSITIVE), proto_source.strip()
             )
 
@@ -107,7 +112,7 @@ class ProtoFloat(ProtoNode):
             base *= pow(10, sign * int(proto_source[: i + 1]))
             proto_source = proto_source[i + 1 :]
 
-        return ParsedProtoNode(
+        return ParsedProtoFloatNode(
             ProtoFloat(base, ProtoFloatSign.POSITIVE), proto_source.strip()
         )
 

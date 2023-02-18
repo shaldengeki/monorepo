@@ -50,36 +50,44 @@ class ProtoPackage(ProtoNode):
         return f"package {self.package};"
 
     @staticmethod
-    def diff(left: "ProtoPackage", right: "ProtoPackage") -> list["ProtoNodeDiff"]:
+    def diff(
+        left: Optional["ProtoPackage"], right: Optional["ProtoPackage"]
+    ) -> list["ProtoNodeDiff"]:
         if left == right:
             return []
         elif left is not None and right is None:
             return [ProtoPackageAdded(left)]
         elif left is None and right is not None:
             return [ProtoPackageRemoved(right)]
+
+        assert left is not None and right is not None
         return [ProtoPackageChanged(left, right)]
 
 
 class ProtoPackageChanged(ProtoNodeDiff):
-    def __init__(self, left: str, right: str):
+    def __init__(self, left: ProtoPackage, right: ProtoPackage):
         self.left = left
         self.right = right
 
-    def __eq__(self, other: "ProtoPackageChanged") -> bool:
-        return self.left == other.left and self.right == other.right
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, ProtoPackageChanged)
+            and self.left == other.left
+            and self.right == other.right
+        )
 
 
 class ProtoPackageAdded(ProtoNodeDiff):
-    def __init__(self, left: str):
+    def __init__(self, left: ProtoPackage):
         self.left = left
 
-    def __eq__(self, other: "ProtoPackageAdded") -> bool:
-        return self.left == other.left
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, ProtoPackageAdded) and self.left == other.left
 
 
 class ProtoPackageRemoved(ProtoNodeDiff):
-    def __init__(self, right: str):
+    def __init__(self, right: ProtoPackage):
         self.right = right
 
-    def __eq__(self, other: "ProtoPackageRemoved") -> bool:
-        return self.right == other.right
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, ProtoPackageRemoved) and self.right == other.right

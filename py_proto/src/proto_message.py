@@ -1,7 +1,9 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Sequence
 
 from src.proto_comment import (
+    ParsedProtoMultiLineCommentNode,
+    ParsedProtoSingleLineCommentNode,
     ProtoComment,
     ProtoMultiLineComment,
     ProtoSingleLineComment,
@@ -16,19 +18,33 @@ from src.proto_identifier import (
 )
 from src.proto_int import ProtoInt
 from src.proto_message_field import (
+    ParsedProtoMessageFieldNode,
     ProtoMessageField,
     ProtoMessageFieldOption,
     ProtoMessageFieldTypesEnum,
 )
 from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
-from src.proto_option import ProtoOption
+from src.proto_option import ParsedProtoOptionNode, ProtoOption
 from src.proto_reserved import ProtoReserved
 
-ProtoOneOfNodeTypes = ProtoOption | ProtoMessageField
+ProtoOneOfNodeTypes = (
+    ProtoOption | ProtoMessageField | ProtoSingleLineComment | ProtoMultiLineComment
+)
+ProtoParsedOneOfNodeTypes = (
+    ParsedProtoOptionNode
+    | ParsedProtoMessageFieldNode
+    | ParsedProtoSingleLineCommentNode
+    | ParsedProtoMultiLineCommentNode
+)
+
+
+class ParsedProtoOneOfNode(ParsedProtoNode):
+    node: "ProtoOneOf"
+    remaining_source: str
 
 
 class ProtoOneOf(ProtoNode):
-    def __init__(self, name: ProtoIdentifier, nodes: list[ProtoOneOfNodeTypes]):
+    def __init__(self, name: ProtoIdentifier, nodes: Sequence[ProtoOneOfNodeTypes]):
         self.name = name
         self.nodes = nodes
 
@@ -71,13 +87,14 @@ class ProtoOneOf(ProtoNode):
         )
 
     @staticmethod
-    def parse_partial_content(partial_oneof_content: str) -> ParsedProtoNode:
-        for node_type in (
+    def parse_partial_content(partial_oneof_content: str) -> ProtoParsedOneOfNodeTypes:
+        supported_types: list[type[ProtoOneOfNodeTypes]] = [
             ProtoMessageField,
             ProtoOption,
             ProtoSingleLineComment,
             ProtoMultiLineComment,
-        ):
+        ]
+        for node_type in supported_types:
             try:
                 match_result = node_type.match(partial_oneof_content)
             except (ValueError, IndexError, TypeError):
@@ -91,7 +108,7 @@ class ProtoOneOf(ProtoNode):
         )
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(cls, proto_source: str) -> Optional["ParsedProtoOneOfNode"]:
         if not proto_source.startswith("oneof "):
             return None
 
@@ -127,7 +144,9 @@ class ProtoOneOf(ProtoNode):
             parsed_tree.append(match_result.node)
             proto_source = match_result.remaining_source.strip()
 
-        return ParsedProtoNode(ProtoOneOf(oneof_name, nodes=parsed_tree), proto_source)
+        return ParsedProtoOneOfNode(
+            ProtoOneOf(oneof_name, nodes=parsed_tree), proto_source
+        )
 
     @property
     def options(self) -> list[ProtoOption]:
@@ -167,7 +186,7 @@ class ProtoMap(ProtoNode):
         value_type: ProtoMapValueTypesEnum,
         name: ProtoIdentifier,
         number: ProtoInt,
-        enum_or_message_type_name: Optional[ProtoFullIdentifier] = None,
+        enum_or_message_type_name: Optional[ProtoEnumOrMessageIdentifier] = None,
         options: Optional[list[ProtoMessageFieldOption]] = None,
     ):
         self.key_type = key_type
@@ -256,22 +275,22 @@ class ProtoMap(ProtoNode):
         proto_source = proto_source[1:].strip()
 
         # Try to match the map field's name.
-        match = ProtoIdentifier.match(proto_source)
-        if match is None:
+        identifier_match = ProtoIdentifier.match(proto_source)
+        if identifier_match is None:
             return None
-        name = match.node
-        proto_source = match.remaining_source.strip()
+        name = identifier_match.node
+        proto_source = identifier_match.remaining_source.strip()
 
         if not proto_source.startswith("="):
             return None
         proto_source = proto_source[1:].strip()
 
         # Try to match the map field number.
-        match = ProtoInt.match(proto_source)
-        if match is None:
+        int_match = ProtoInt.match(proto_source)
+        if int_match is None:
             return None
-        number = match.node
-        proto_source = match.remaining_source.strip()
+        number = int_match.node
+        proto_source = int_match.remaining_source.strip()
 
         # Try to match map field options, if any.
         options = []
@@ -283,12 +302,14 @@ class ProtoMap(ProtoNode):
                     f"Proto has invalid map field option syntax, cannot find ]: {proto_source}"
                 )
             for option_part in proto_source[:end_bracket].strip().split(","):
-                match = ProtoMessageFieldOption.match(option_part.strip())
-                if match is None:
+                message_field_option_match = ProtoMessageFieldOption.match(
+                    option_part.strip()
+                )
+                if message_field_option_match is None:
                     raise ValueError(
                         f"Proto has invalid map field option syntax: {proto_source}"
                     )
-                options.append(match.node)
+                options.append(message_field_option_match.node)
             proto_source = proto_source[end_bracket + 1 :].strip()
 
         if not proto_source.startswith(";"):
@@ -310,6 +331,10 @@ class ProtoMap(ProtoNode):
         ]
 
         if self.value_type == ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE:
+            if self.enum_or_message_type_name is None:
+                raise ValueError(
+                    f"Enum or message type name was not set for: {str(self)}"
+                )
             serialized_parts.append(f"{self.enum_or_message_type_name.serialize()}>")
         else:
             serialized_parts.append(f"{self.value_type.value}>")
@@ -331,7 +356,7 @@ class ProtoMap(ProtoNode):
 
 
 class ProtoMessage(ProtoNode):
-    def __init__(self, name: ProtoIdentifier, nodes: list[ProtoNode]):
+    def __init__(self, name: ProtoIdentifier, nodes: Sequence[ProtoNode]):
         self.name = name
         self.nodes = nodes
 
@@ -353,20 +378,19 @@ class ProtoMessage(ProtoNode):
         enums = []
         messages = []
         fields = []
+        oneofs = []
         reserveds = []
         for node in non_comment_nodes:
             if isinstance(node, ProtoOption):
                 options.append(node.normalize())
             elif isinstance(node, ProtoEnum):
-                options.append(node.normalize())
+                enums.append(node.normalize())
             elif isinstance(node, ProtoMessage):
                 messages.append(node.normalize())
-            elif (
-                isinstance(node, ProtoMessageField)
-                or isinstance(node, ProtoOneOf)
-                or isinstance(node, ProtoMap)
-            ):
+            elif isinstance(node, ProtoMessageField) or isinstance(node, ProtoMap):
                 fields.append(node.normalize())
+            elif isinstance(node, ProtoOneOf):
+                oneofs.append(node.normalize())
             elif isinstance(node, ProtoReserved):
                 reserveds.append(node.normalize())
             else:
@@ -379,7 +403,8 @@ class ProtoMessage(ProtoNode):
             + sorted(enums, key=lambda e: str(e))
             + sorted(messages, key=lambda m: str(m))
             + sorted(fields, key=lambda f: int(f.number))
-            + sorted(reserveds, key=lambda r: (r.min, r.max))
+            + sorted(oneofs, key=lambda o: str(o))
+            + sorted(reserveds, key=lambda r: int(r.min))
         )
 
         return ProtoMessage(
@@ -389,7 +414,7 @@ class ProtoMessage(ProtoNode):
 
     @staticmethod
     def parse_partial_content(partial_message_content: str) -> ParsedProtoNode:
-        for node_type in (
+        supported_types: list[type[ProtoNode]] = [
             ProtoSingleLineComment,
             ProtoMultiLineComment,
             ProtoEnum,
@@ -401,7 +426,8 @@ class ProtoMessage(ProtoNode):
             ProtoMessageField,
             ProtoOneOf,
             ProtoMap,
-        ):
+        ]
+        for node_type in supported_types:
             try:
                 match_result = node_type.match(partial_message_content)
             except (ValueError, IndexError, TypeError):
@@ -463,7 +489,7 @@ class ProtoMessage(ProtoNode):
         return "\n".join(serialize_parts)
 
     @staticmethod
-    def diff(left: "ProtoMessage", right: "ProtoMessage") -> list["ProtoNodeDiff"]:
+    def diff(left: "ProtoMessage", right: "ProtoMessage") -> Sequence["ProtoNodeDiff"]:
         if left is None and right is not None:
             return [ProtoMessageAdded(right)]
         elif left is not None and right is None:
@@ -482,8 +508,8 @@ class ProtoMessage(ProtoNode):
     @staticmethod
     def diff_sets(
         left: list["ProtoMessage"], right: list["ProtoMessage"]
-    ) -> list["ProtoNodeDiff"]:
-        diffs = []
+    ) -> Sequence["ProtoNodeDiff"]:
+        diffs: list[ProtoNodeDiff] = []
         left_names = set(o.name.identifier for o in left)
         right_names = set(o.name.identifier for o in right)
         for name in left_names - right_names:
@@ -502,23 +528,22 @@ class ProtoMessage(ProtoNode):
         return diffs
 
 
-class ProtoMessageAdded(ProtoNodeDiff):
+class ProtoMessageDiff(ProtoNodeDiff):
     def __init__(self, message: ProtoMessage):
         self.message = message
 
-    def __eq__(self, other: "ProtoMessageAdded") -> bool:
-        return isinstance(other, ProtoMessageAdded) and self.message == other.message
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, ProtoMessageDiff) and self.message == other.message
 
     def __str__(self) -> str:
-        return f"<ProtoMessageAdded message={self.message}>"
+        return f"<{self.__class__.__name__} message={self.message}>"
 
 
-class ProtoMessageRemoved(ProtoNodeDiff):
-    def __init__(self, message: ProtoMessage):
-        self.message = message
+class ProtoMessageAdded(ProtoMessageDiff):
+    def __eq__(self, other: object) -> bool:
+        return super().__eq__(other) and isinstance(other, ProtoMessageAdded)
 
-    def __eq__(self, other: "ProtoMessageRemoved") -> bool:
-        return isinstance(other, ProtoMessageRemoved) and self.message == other.message
 
-    def __str__(self) -> str:
-        return f"<ProtoMessageRemoved message={self.message}>"
+class ProtoMessageRemoved(ProtoMessageDiff):
+    def __eq__(self, other: object) -> bool:
+        return super().__eq__(other) and isinstance(other, ProtoMessageRemoved)

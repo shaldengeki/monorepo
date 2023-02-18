@@ -142,10 +142,9 @@ class ProtoServiceRPC(ProtoNode):
         proto_source = proto_source[1:].strip()
 
         # Try to parse options.
-        options = []
+        options: list[ProtoOption] = []
         if proto_source.startswith("{"):
             proto_source = proto_source[1:].strip()
-            options = []
             while proto_source:
                 # Remove empty statements.
                 if proto_source.startswith(";"):
@@ -232,12 +231,13 @@ class ProtoService(ProtoNode):
 
     @staticmethod
     def parse_partial_content(partial_service_content: str) -> ParsedProtoNode:
-        for node_type in (
+        supported_types: list[type[ProtoNode]] = [
             ProtoOption,
             ProtoServiceRPC,
             ProtoSingleLineComment,
             ProtoMultiLineComment,
-        ):
+        ]
+        for node_type in supported_types:
             try:
                 match_result = node_type.match(partial_service_content)
             except (ValueError, IndexError, TypeError):

@@ -1,8 +1,12 @@
 import abc
 from typing import Optional
 
-from src.proto_identifier import ProtoFullIdentifier
 from src.proto_node import ParsedProtoNode, ProtoNode
+
+
+class ParsedProtoCommentNode(ParsedProtoNode):
+    node: "ProtoComment"
+    remaining_source: str
 
 
 class ProtoComment(ProtoNode):
@@ -22,11 +26,16 @@ class ProtoComment(ProtoNode):
         return None
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(cls, proto_source: str) -> Optional["ParsedProtoCommentNode"]:
         return None
 
     def serialize(self) -> str:
         return ""
+
+
+class ParsedProtoSingleLineCommentNode(ParsedProtoCommentNode):
+    node: "ProtoSingleLineComment"
+    remaining_source: str
 
 
 class ProtoSingleLineComment(ProtoComment):
@@ -34,7 +43,7 @@ class ProtoSingleLineComment(ProtoComment):
         return f"<ProtoSingleLineComment value={self.value}>"
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(cls, proto_source: str) -> Optional["ParsedProtoSingleLineCommentNode"]:
         if not proto_source.startswith("//"):
             return None
 
@@ -42,7 +51,7 @@ class ProtoSingleLineComment(ProtoComment):
         newline_pos = proto_source.find("\n")
         if newline_pos == -1:
             newline_pos = len(proto_source)
-        return ParsedProtoNode(
+        return ParsedProtoSingleLineCommentNode(
             ProtoSingleLineComment(proto_source[:newline_pos]),
             proto_source[newline_pos + 1 :],
         )
@@ -51,12 +60,17 @@ class ProtoSingleLineComment(ProtoComment):
         return f"//{self.value}"
 
 
+class ParsedProtoMultiLineCommentNode(ParsedProtoCommentNode):
+    node: "ProtoMultiLineComment"
+    remaining_source: str
+
+
 class ProtoMultiLineComment(ProtoComment):
     def __str__(self) -> str:
         return f"<ProtoMultiLineComment value={self.value}>"
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(cls, proto_source: str) -> Optional["ParsedProtoMultiLineCommentNode"]:
         if not proto_source.startswith("/*"):
             return None
 
@@ -64,7 +78,7 @@ class ProtoMultiLineComment(ProtoComment):
         close_comment_pos = proto_source.find("*/")
         if close_comment_pos == -1:
             return None
-        return ParsedProtoNode(
+        return ParsedProtoMultiLineCommentNode(
             ProtoMultiLineComment(proto_source[:close_comment_pos]),
             proto_source[close_comment_pos + 2 :],
         )
