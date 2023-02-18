@@ -20,7 +20,7 @@ from src.proto_message_field import (
     ProtoMessageFieldOption,
     ProtoMessageFieldTypesEnum,
 )
-from src.proto_node import ParsedProtoNode, ProtoNode
+from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
 from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved
 
@@ -461,3 +461,64 @@ class ProtoMessage(ProtoNode):
             + ["}"]
         )
         return "\n".join(serialize_parts)
+
+    @staticmethod
+    def diff(left: "ProtoMessage", right: "ProtoMessage") -> list["ProtoNodeDiff"]:
+        if left is None and right is not None:
+            return [ProtoMessageAdded(right)]
+        elif left is not None and right is None:
+            return [ProtoMessageRemoved(left)]
+        elif left is None and right is None:
+            return []
+        elif left.name != right.name:
+            return []
+        elif left == right:
+            return []
+        diffs = []
+        diffs.extend(ProtoOption.diff_sets(left.options, right.options))
+        # diffs.extend(ProtoMessageValue.diff_sets(left, left.values, right.values))
+        return diffs
+
+    @staticmethod
+    def diff_sets(
+        left: list["ProtoMessage"], right: list["ProtoMessage"]
+    ) -> list["ProtoNodeDiff"]:
+        diffs = []
+        left_names = set(o.name.identifier for o in left)
+        right_names = set(o.name.identifier for o in right)
+        for name in left_names - right_names:
+            diffs.append(
+                ProtoMessageAdded(next(i for i in left if i.name.identifier == name))
+            )
+        for name in right_names - left_names:
+            diffs.append(
+                ProtoMessageRemoved(next(i for i in right if i.name.identifier == name))
+            )
+        for name in left_names & right_names:
+            left_enum = next(i for i in left if i.name.identifier == name)
+            right_enum = next(i for i in right if i.name.identifier == name)
+            diffs.extend(ProtoMessage.diff(left_enum, right_enum))
+
+        return diffs
+
+
+class ProtoMessageAdded(ProtoNodeDiff):
+    def __init__(self, message: ProtoMessage):
+        self.message = message
+
+    def __eq__(self, other: "ProtoMessageAdded") -> bool:
+        return isinstance(other, ProtoMessageAdded) and self.message == other.message
+
+    def __str__(self) -> str:
+        return f"<ProtoMessageAdded message={self.message}>"
+
+
+class ProtoMessageRemoved(ProtoNodeDiff):
+    def __init__(self, message: ProtoMessage):
+        self.message = message
+
+    def __eq__(self, other: "ProtoMessageRemoved") -> bool:
+        return isinstance(other, ProtoMessageRemoved) and self.message == other.message
+
+    def __str__(self) -> str:
+        return f"<ProtoMessageRemoved message={self.message}>"

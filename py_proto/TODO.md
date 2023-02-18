@@ -72,8 +72,8 @@
         - [x] Option changes
       - [ ] Reserveds changes
     - [ ] Message-level diffs
-      - [ ] Additions/removals
-      - [ ] Option changes
+      - [x] Additions/removals
+      - [x] Option changes
       - [ ] Field changes
       - [ ] Reserved changes
       - [ ] Nested enum changes
@@ -85,3 +85,13 @@
         - [ ] Additions/removals
         - [ ] Option changes
   - [ ] Backwards-compatibility check
+  - [ ] Scoping of diffs under containing objects
+    - [ ] Enum options under enums
+    - [ ] Enum value changes under enums
+    - [ ] Enum value option changes under enum values
+    - [ ] Enum reserved changes under enums
+    - [ ] Message option changes under messages
+    - [ ] Message field changes under messages
+    - [ ] Message reserved changes under messages
+    - [ ] Message nested enum changes under messages
+    - [ ] Message nested message changes under messages

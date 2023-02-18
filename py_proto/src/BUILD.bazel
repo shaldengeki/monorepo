@@ -221,6 +221,7 @@ py_library(
     deps = [
         ":proto_enum",
         ":proto_import",
+        ":proto_message",
         ":proto_node",
         ":proto_option",
         ":proto_package",

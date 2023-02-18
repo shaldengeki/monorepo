@@ -149,6 +149,7 @@ class ProtoEnumValue(ProtoNode):
         elif left == right:
             return []
         diffs = []
+        # TODO: scope these diffs under ProtoEnumValue
         diffs.extend(ProtoOption.diff_sets(left.options, right.options))
         diffs.append(ProtoEnumValueValueChanged(enum, right, left.value))
 
@@ -303,6 +304,7 @@ class ProtoEnum(ProtoNode):
         elif left == right:
             return []
         diffs = []
+        # TODO: scope these diffs under ProtoEnum
         diffs.extend(ProtoOption.diff_sets(left.options, right.options))
         diffs.extend(ProtoEnumValue.diff_sets(left, left.values, right.values))
         return diffs
