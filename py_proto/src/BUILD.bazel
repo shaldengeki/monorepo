@@ -254,3 +254,22 @@ py_binary(
     visibility = ["//visibility:public"],
     deps = [":parser"],
 )
+
+py_library(
+    name = "compatibility_checker",
+    srcs = ["compatibility_checker.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":parser",
+        ":proto_file",
+        ":proto_node",
+    ],
+)
+
+py_binary(
+    name = "compatibility_checker_binary",
+    srcs = ["compatibility_checker.py"],
+    main = "compatibility_checker.py",
+    visibility = ["//visibility:public"],
+    deps = [":compatibility_checker"],
+)

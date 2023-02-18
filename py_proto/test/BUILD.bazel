@@ -231,3 +231,12 @@ sh_test(
         "@com_google_protobuf//:all_proto",
     ],
 )
+
+sh_test(
+    name = "compatibility_checker_binary_test",
+    srcs = ["compatibility_checker_binary_test.sh"],
+    data = [
+        "//src:compatibility_checker_binary",
+        "//test/resources:all_protos",
+    ],
+)

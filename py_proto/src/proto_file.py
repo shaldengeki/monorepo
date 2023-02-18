@@ -23,7 +23,10 @@ class ProtoFile:
 
     @property
     def package(self) -> Optional[ProtoPackage]:
-        return next(node for node in self.nodes if isinstance(node, ProtoPackage))
+        try:
+            return next(node for node in self.nodes if isinstance(node, ProtoPackage))
+        except StopIteration:
+            return None
 
     @property
     def options(self) -> list[ProtoOption]:
@@ -55,6 +58,6 @@ class ProtoFile:
         diffs.extend(ProtoImport.diff_sets(self.imports, other.imports))
         diffs.extend(ProtoPackage.diff(self.package, other.package))
         diffs.extend(ProtoEnum.diff_sets(self.enums, other.enums))
-        diffs.extend(ProtoMessage.diff_sets(self.message, other.messages))
+        diffs.extend(ProtoMessage.diff_sets(self.messages, other.messages))
 
         return [d for d in diffs if d is not None]
