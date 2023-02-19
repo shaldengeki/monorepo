@@ -11,9 +11,18 @@ from src.proto_node import ParsedProtoNode, ProtoNode
 
 
 class ProtoExtend(ProtoNode):
-    def __init__(self, name: ProtoEnumOrMessageIdentifier, nodes: list[ProtoNode]):
+    def __init__(
+        self,
+        parent: Optional[ProtoNode],
+        name: ProtoEnumOrMessageIdentifier,
+        nodes: list[ProtoNode],
+    ):
+        super().__init__(parent)
         self.name = name
+        self.name.parent = self
         self.nodes = nodes
+        for node in self.nodes:
+            node.parent = self
 
     def __eq__(self, other) -> bool:
         return self.name == other.name and self.nodes == other.nodes
@@ -29,6 +38,7 @@ class ProtoExtend(ProtoNode):
             lambda n: not isinstance(n, ProtoComment), self.nodes
         )
         return ProtoExtend(
+            self.parent,
             name=self.name,
             nodes=sorted(non_comment_nodes, key=lambda f: str(f)),
         )
@@ -42,7 +52,7 @@ class ProtoExtend(ProtoNode):
         ]
         for node_type in supported_types:
             try:
-                match_result = node_type.match(partial_content)
+                match_result = node_type.match(None, partial_content)
             except (ValueError, IndexError, TypeError):
                 raise ValueError(
                     f"Could not parse partial extend content:\n{partial_content}"
@@ -52,12 +62,14 @@ class ProtoExtend(ProtoNode):
         raise ValueError(f"Could not parse partial extend content:\n{partial_content}")
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("extend "):
             return None
 
         proto_source = proto_source[7:]
-        match = ProtoEnumOrMessageIdentifier.match(proto_source)
+        match = ProtoEnumOrMessageIdentifier.match(None, proto_source)
         if match is None:
             raise ValueError(f"Proto extend has invalid message name: {proto_source}")
 
@@ -85,7 +97,9 @@ class ProtoExtend(ProtoNode):
             parsed_tree.append(match_result.node)
             proto_source = match_result.remaining_source.strip()
 
-        return ParsedProtoNode(ProtoExtend(name, nodes=parsed_tree), proto_source)
+        return ParsedProtoNode(
+            ProtoExtend(parent, name, nodes=parsed_tree), proto_source
+        )
 
     def serialize(self) -> str:
         serialize_parts = (

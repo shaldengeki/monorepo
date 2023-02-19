@@ -10,7 +10,8 @@ class ParsedProtoCommentNode(ParsedProtoNode):
 
 
 class ProtoComment(ProtoNode):
-    def __init__(self, value: str):
+    def __init__(self, parent: Optional[ProtoNode], value: str):
+        super().__init__(parent)
         self.value = value
 
     def __eq__(self, other) -> bool:
@@ -26,7 +27,9 @@ class ProtoComment(ProtoNode):
         return None
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoCommentNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoCommentNode"]:
         return None
 
     def serialize(self) -> str:
@@ -43,7 +46,9 @@ class ProtoSingleLineComment(ProtoComment):
         return f"<ProtoSingleLineComment value={self.value}>"
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoSingleLineCommentNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoSingleLineCommentNode"]:
         if not proto_source.startswith("//"):
             return None
 
@@ -52,7 +57,7 @@ class ProtoSingleLineComment(ProtoComment):
         if newline_pos == -1:
             newline_pos = len(proto_source)
         return ParsedProtoSingleLineCommentNode(
-            ProtoSingleLineComment(proto_source[:newline_pos]),
+            ProtoSingleLineComment(parent, proto_source[:newline_pos]),
             proto_source[newline_pos + 1 :],
         )
 
@@ -70,7 +75,9 @@ class ProtoMultiLineComment(ProtoComment):
         return f"<ProtoMultiLineComment value={self.value}>"
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoMultiLineCommentNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoMultiLineCommentNode"]:
         if not proto_source.startswith("/*"):
             return None
 
@@ -79,7 +86,7 @@ class ProtoMultiLineComment(ProtoComment):
         if close_comment_pos == -1:
             return None
         return ParsedProtoMultiLineCommentNode(
-            ProtoMultiLineComment(proto_source[:close_comment_pos]),
+            ProtoMultiLineComment(parent, proto_source[:close_comment_pos]),
             proto_source[close_comment_pos + 2 :],
         )
 

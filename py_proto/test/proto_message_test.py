@@ -38,6 +38,7 @@ class MessageTest(unittest.TestCase):
 
     def test_message_all_features(self):
         parsed_message_multiple_fields = ProtoMessage.match(
+            None,
             dedent(
                 """
             message FooMessage {
@@ -63,125 +64,158 @@ class MessageTest(unittest.TestCase):
                 extensions 8 to max;
             }
         """.strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_message_multiple_fields.node.nodes,
             [
                 ProtoOption(
-                    ProtoIdentifier("(foo.bar).baz"),
-                    ProtoConstant(ProtoStringLiteral("bat")),
+                    None,
+                    ProtoIdentifier(None, "(foo.bar).baz"),
+                    ProtoConstant(None, ProtoStringLiteral(None, "bat")),
                 ),
                 ProtoEnum(
-                    ProtoIdentifier("MyEnum"),
+                    None,
+                    ProtoIdentifier(None, "MyEnum"),
                     [
                         ProtoEnumValue(
-                            ProtoIdentifier("ME_UNDEFINED"),
-                            ProtoInt(0, ProtoIntSign.POSITIVE),
+                            None,
+                            ProtoIdentifier(None, "ME_UNDEFINED"),
+                            ProtoInt(None, 0, ProtoIntSign.POSITIVE),
                         ),
                         ProtoEnumValue(
-                            ProtoIdentifier("ME_VALONE"),
-                            ProtoInt(1, ProtoIntSign.POSITIVE),
+                            None,
+                            ProtoIdentifier(None, "ME_VALONE"),
+                            ProtoInt(None, 1, ProtoIntSign.POSITIVE),
                         ),
                         ProtoEnumValue(
-                            ProtoIdentifier("ME_VALTWO"),
-                            ProtoInt(2, ProtoIntSign.POSITIVE),
+                            None,
+                            ProtoIdentifier(None, "ME_VALTWO"),
+                            ProtoInt(None, 2, ProtoIntSign.POSITIVE),
                         ),
                     ],
                 ),
-                ProtoMessage(ProtoIdentifier("NestedMessage"), []),
-                ProtoReserved(fields=[ProtoIdentifier("a")]),
+                ProtoMessage(None, ProtoIdentifier(None, "NestedMessage"), []),
+                ProtoReserved(None, fields=[ProtoIdentifier(None, "a")]),
                 ProtoReserved(
+                    None,
                     ranges=[
                         ProtoRange(
-                            ProtoInt(1, ProtoIntSign.POSITIVE),
-                            ProtoInt(3, ProtoIntSign.POSITIVE),
+                            None,
+                            ProtoInt(None, 1, ProtoIntSign.POSITIVE),
+                            ProtoInt(None, 3, ProtoIntSign.POSITIVE),
                         )
-                    ]
+                    ],
                 ),
-                ProtoSingleLineComment(" single-line comment"),
+                ProtoSingleLineComment(None, " single-line comment"),
                 ProtoMessageField(
+                    None,
                     ProtoMessageFieldTypesEnum.STRING,
-                    ProtoIdentifier("some_field"),
-                    ProtoInt(4, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "some_field"),
+                    ProtoInt(None, 4, ProtoIntSign.POSITIVE),
                     True,
                     False,
                     None,
                     [
                         ProtoMessageFieldOption(
-                            ProtoIdentifier("(bar.baz).bat"),
-                            ProtoConstant(ProtoStringLiteral("bat")),
+                            None,
+                            ProtoIdentifier(None, "(bar.baz).bat"),
+                            ProtoConstant(None, ProtoStringLiteral(None, "bat")),
                         ),
                         ProtoMessageFieldOption(
-                            ProtoIdentifier("baz.bat"),
-                            ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE)),
+                            None,
+                            ProtoIdentifier(None, "baz.bat"),
+                            ProtoConstant(
+                                None, ProtoInt(None, 100, ProtoIntSign.NEGATIVE)
+                            ),
                         ),
                     ],
                 ),
                 ProtoMessageField(
+                    None,
                     ProtoMessageFieldTypesEnum.BOOL,
-                    ProtoIdentifier("some_bool_field"),
-                    ProtoInt(5, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "some_bool_field"),
+                    ProtoInt(None, 5, ProtoIntSign.POSITIVE),
                 ),
                 ProtoOneOf(
-                    ProtoIdentifier("one_of_field"),
+                    None,
+                    ProtoIdentifier(None, "one_of_field"),
                     [
                         ProtoMessageField(
+                            None,
                             ProtoMessageFieldTypesEnum.STRING,
-                            ProtoIdentifier("name"),
-                            ProtoInt(4, ProtoIntSign.POSITIVE),
+                            ProtoIdentifier(None, "name"),
+                            ProtoInt(None, 4, ProtoIntSign.POSITIVE),
                         ),
                         ProtoOption(
-                            ProtoIdentifier("java_package"),
-                            ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                            None,
+                            ProtoIdentifier(None, "java_package"),
+                            ProtoConstant(
+                                None, ProtoStringLiteral(None, "com.example.foo")
+                            ),
                         ),
                         ProtoMessageField(
+                            None,
                             ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
-                            ProtoIdentifier("sub_message"),
-                            ProtoInt(9, ProtoIntSign.POSITIVE),
+                            ProtoIdentifier(None, "sub_message"),
+                            ProtoInt(None, 9, ProtoIntSign.POSITIVE),
                             False,
                             False,
-                            ProtoFullIdentifier("SubMessage"),
+                            ProtoFullIdentifier(None, "SubMessage"),
                             [
                                 ProtoMessageFieldOption(
-                                    ProtoIdentifier("(bar.baz).bat"),
-                                    ProtoConstant(ProtoStringLiteral("bat")),
+                                    None,
+                                    ProtoIdentifier(None, "(bar.baz).bat"),
+                                    ProtoConstant(
+                                        None, ProtoStringLiteral(None, "bat")
+                                    ),
                                 ),
                                 ProtoMessageFieldOption(
-                                    ProtoIdentifier("baz.bat"),
-                                    ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE)),
+                                    None,
+                                    ProtoIdentifier(None, "baz.bat"),
+                                    ProtoConstant(
+                                        None, ProtoInt(None, 100, ProtoIntSign.NEGATIVE)
+                                    ),
                                 ),
                             ],
                         ),
                     ],
                 ),
                 ProtoMap(
+                    None,
                     ProtoMapKeyTypesEnum.SFIXED64,
                     ProtoMapValueTypesEnum.ENUM_OR_MESSAGE,
-                    ProtoIdentifier("my_map"),
-                    ProtoInt(10, ProtoIntSign.POSITIVE),
-                    ProtoEnumOrMessageIdentifier("NestedMessage"),
+                    ProtoIdentifier(None, "my_map"),
+                    ProtoInt(None, 10, ProtoIntSign.POSITIVE),
+                    ProtoEnumOrMessageIdentifier(None, "NestedMessage"),
                     [],
                 ),
                 ProtoMap(
+                    None,
                     # map <string, string> string_map = 11 [ java_package = "com.example.foo", baz.bat = 48 ];
                     ProtoMapKeyTypesEnum.STRING,
                     ProtoMapValueTypesEnum.STRING,
-                    ProtoIdentifier("string_map"),
-                    ProtoInt(11, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "string_map"),
+                    ProtoInt(None, 11, ProtoIntSign.POSITIVE),
                     None,
                     [
                         ProtoMessageFieldOption(
-                            ProtoIdentifier("java_package"),
-                            ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                            None,
+                            ProtoIdentifier(None, "java_package"),
+                            ProtoConstant(
+                                None, ProtoStringLiteral(None, "com.example.foo")
+                            ),
                         ),
                         ProtoMessageFieldOption(
-                            ProtoFullIdentifier("baz.bat"),
-                            ProtoConstant(ProtoInt(48, ProtoIntSign.POSITIVE)),
+                            None,
+                            ProtoFullIdentifier(None, "baz.bat"),
+                            ProtoConstant(
+                                None, ProtoInt(None, 48, ProtoIntSign.POSITIVE)
+                            ),
                         ),
                     ],
                 ),
-                ProtoExtensions([ProtoRange(8, ProtoRangeEnum.MAX)]),
+                ProtoExtensions(None, [ProtoRange(None, 8, ProtoRangeEnum.MAX)]),
             ],
         )
         self.assertEqual(
@@ -216,24 +250,30 @@ class MessageTest(unittest.TestCase):
         )
 
     def test_empty_message(self):
-        parsed_empty_message = ProtoMessage.match("""message FooMessage {}""")
+        parsed_empty_message = ProtoMessage.match(None, """message FooMessage {}""")
         self.assertIsNotNone(parsed_empty_message)
-        self.assertEqual(parsed_empty_message.node.name, ProtoIdentifier("FooMessage"))
+        self.assertEqual(
+            parsed_empty_message.node.name, ProtoIdentifier(None, "FooMessage")
+        )
 
         parsed_spaced_message = ProtoMessage.match(
+            None,
             dedent(
                 """
             message FooMessage {
 
             }
         """.strip()
-            )
+            ),
         )
         self.assertIsNotNone(parsed_spaced_message)
-        self.assertEqual(parsed_spaced_message.node.name, ProtoIdentifier("FooMessage"))
+        self.assertEqual(
+            parsed_spaced_message.node.name, ProtoIdentifier(None, "FooMessage")
+        )
 
     def test_message_empty_statements(self):
         empty_statement_message = ProtoMessage.match(
+            None,
             dedent(
                 """
             message FooMessage {
@@ -241,15 +281,16 @@ class MessageTest(unittest.TestCase):
                 ;
             }
         """.strip()
-            )
+            ),
         )
         self.assertIsNotNone(empty_statement_message)
         self.assertEqual(
-            empty_statement_message.node.name, ProtoIdentifier("FooMessage")
+            empty_statement_message.node.name, ProtoIdentifier(None, "FooMessage")
         )
 
     def test_message_optionals(self):
         parsed_message_with_optionals = ProtoMessage.match(
+            None,
             dedent(
                 """
             message FooMessage {
@@ -257,27 +298,30 @@ class MessageTest(unittest.TestCase):
                 option (foo.bar).baz = false;
             }
         """.strip()
-            )
+            ),
         )
         self.assertIsNotNone(
             parsed_message_with_optionals.node.options,
             [
                 ProtoOption(
-                    ProtoIdentifier("java_package"),
-                    ProtoConstant(ProtoStringLiteral("foobar")),
+                    None,
+                    ProtoIdentifier(None, "java_package"),
+                    ProtoConstant(None, ProtoStringLiteral(None, "foobar")),
                 ),
                 ProtoOption(
-                    ProtoIdentifier("(foo.bar).baz"),
-                    ProtoConstant(ProtoBool(False)),
+                    None,
+                    ProtoIdentifier(None, "(foo.bar).baz"),
+                    ProtoConstant(None, ProtoBool(None, False)),
                 ),
             ],
         )
         self.assertEqual(
-            parsed_message_with_optionals.node.name, ProtoIdentifier("FooMessage")
+            parsed_message_with_optionals.node.name, ProtoIdentifier(None, "FooMessage")
         )
 
     def test_message_nested_enum(self):
         parsed_message_with_enum = ProtoMessage.match(
+            None,
             dedent(
                 """
             message FooMessage {
@@ -288,27 +332,32 @@ class MessageTest(unittest.TestCase):
                 }
             }
         """.strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_message_with_enum.node,
             ProtoMessage(
-                ProtoIdentifier("FooMessage"),
+                None,
+                ProtoIdentifier(None, "FooMessage"),
                 [
                     ProtoEnum(
-                        ProtoIdentifier("MyEnum"),
+                        None,
+                        ProtoIdentifier(None, "MyEnum"),
                         [
                             ProtoEnumValue(
-                                ProtoIdentifier("ME_UNDEFINED"),
-                                ProtoInt(0, ProtoIntSign.POSITIVE),
+                                None,
+                                ProtoIdentifier(None, "ME_UNDEFINED"),
+                                ProtoInt(None, 0, ProtoIntSign.POSITIVE),
                             ),
                             ProtoEnumValue(
-                                ProtoIdentifier("ME_NEGATIVE"),
-                                ProtoInt(1, ProtoIntSign.NEGATIVE),
+                                None,
+                                ProtoIdentifier(None, "ME_NEGATIVE"),
+                                ProtoInt(None, 1, ProtoIntSign.NEGATIVE),
                             ),
                             ProtoEnumValue(
-                                ProtoIdentifier("ME_VALONE"),
-                                ProtoInt(1, ProtoIntSign.POSITIVE),
+                                None,
+                                ProtoIdentifier(None, "ME_VALONE"),
+                                ProtoInt(None, 1, ProtoIntSign.POSITIVE),
                             ),
                         ],
                     )
@@ -318,26 +367,29 @@ class MessageTest(unittest.TestCase):
 
     def test_message_nested_message(self):
         parsed_message_with_enum = ProtoMessage.match(
+            None,
             dedent(
                 """
             message FooMessage {
                 message NestedMessage {}
             }
         """.strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_message_with_enum.node,
             ProtoMessage(
-                ProtoIdentifier("FooMessage"),
+                None,
+                ProtoIdentifier(None, "FooMessage"),
                 [
-                    ProtoMessage(ProtoIdentifier("NestedMessage"), []),
+                    ProtoMessage(None, ProtoIdentifier(None, "NestedMessage"), []),
                 ],
             ),
         )
 
     def test_message_reserved_single_field(self):
         parsed_message_with_reserved_single_field = ProtoMessage.match(
+            None,
             dedent(
                 """
             message FooMessage {
@@ -345,31 +397,36 @@ class MessageTest(unittest.TestCase):
                 reserved "foo", "barBaz";
             }
         """.strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_message_with_reserved_single_field.node,
             ProtoMessage(
-                ProtoIdentifier("FooMessage"),
+                None,
+                ProtoIdentifier(None, "FooMessage"),
                 [
                     ProtoReserved(
+                        None,
                         ranges=[
-                            ProtoRange(ProtoInt(38, ProtoIntSign.POSITIVE)),
+                            ProtoRange(None, ProtoInt(None, 38, ProtoIntSign.POSITIVE)),
                             ProtoRange(
-                                ProtoInt(48, ProtoIntSign.POSITIVE),
-                                ProtoInt(100, ProtoIntSign.POSITIVE),
+                                None,
+                                ProtoInt(None, 48, ProtoIntSign.POSITIVE),
+                                ProtoInt(None, 100, ProtoIntSign.POSITIVE),
                             ),
                             ProtoRange(
-                                ProtoInt(72, ProtoIntSign.POSITIVE),
+                                None,
+                                ProtoInt(None, 72, ProtoIntSign.POSITIVE),
                                 ProtoRangeEnum.MAX,
                             ),
-                        ]
+                        ],
                     ),
                     ProtoReserved(
+                        None,
                         fields=[
-                            ProtoIdentifier("foo"),
-                            ProtoIdentifier("barBaz"),
-                        ]
+                            ProtoIdentifier(None, "foo"),
+                            ProtoIdentifier(None, "barBaz"),
+                        ],
                     ),
                 ],
             ),
@@ -377,81 +434,93 @@ class MessageTest(unittest.TestCase):
 
     def test_message_simple_field(self):
         parsed_message_with_single_field_simple = ProtoMessage.match(
+            None,
             dedent(
                 """
             message FooMessage {
                 string single_field = 1;
             }
         """.strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_message_with_single_field_simple.node,
             ProtoMessage(
-                ProtoIdentifier("FooMessage"),
+                None,
+                ProtoIdentifier(None, "FooMessage"),
                 [
                     ProtoMessageField(
+                        None,
                         ProtoMessageFieldTypesEnum.STRING,
-                        ProtoIdentifier("single_field"),
-                        ProtoInt(1, ProtoIntSign.POSITIVE),
+                        ProtoIdentifier(None, "single_field"),
+                        ProtoInt(None, 1, ProtoIntSign.POSITIVE),
                     )
                 ],
             ),
         )
 
     def test_oneof_empty(self):
-        parsed_oneof_empty = ProtoOneOf.match(dedent("oneof one_of_field {}".strip()))
+        parsed_oneof_empty = ProtoOneOf.match(
+            None, dedent("oneof one_of_field {}".strip())
+        )
         self.assertEqual(
             parsed_oneof_empty.node,
             ProtoOneOf(
-                ProtoIdentifier("one_of_field"),
+                None,
+                ProtoIdentifier(None, "one_of_field"),
                 [],
             ),
         )
 
     def test_oneof_empty_statements(self):
         parsed_oneof_empty = ProtoOneOf.match(
+            None,
             dedent(
                 """oneof one_of_field {
                 ;
                 ;
             }""".strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_oneof_empty.node,
             ProtoOneOf(
-                ProtoIdentifier("one_of_field"),
+                None,
+                ProtoIdentifier(None, "one_of_field"),
                 [],
             ),
         )
 
     def test_oneof_basic_fields(self):
         parsed_oneof_basic_fields = ProtoOneOf.match(
+            None,
             dedent(
                 """oneof one_of_field {
                 string name = 4;
                 SubMessage sub_message = 9;
             }""".strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_oneof_basic_fields.node,
             ProtoOneOf(
-                ProtoIdentifier("one_of_field"),
+                None,
+                ProtoIdentifier(None, "one_of_field"),
                 [
                     ProtoMessageField(
+                        None,
                         ProtoMessageFieldTypesEnum.STRING,
-                        ProtoIdentifier("name"),
-                        ProtoInt(4, ProtoIntSign.POSITIVE),
+                        ProtoIdentifier(None, "name"),
+                        ProtoInt(None, 4, ProtoIntSign.POSITIVE),
                     ),
                     ProtoMessageField(
+                        None,
                         ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
-                        ProtoIdentifier("sub_message"),
-                        ProtoInt(9, ProtoIntSign.POSITIVE),
+                        ProtoIdentifier(None, "sub_message"),
+                        ProtoInt(None, 9, ProtoIntSign.POSITIVE),
                         False,
                         False,
-                        ProtoFullIdentifier("SubMessage"),
+                        ProtoFullIdentifier(None, "SubMessage"),
                         [],
                     ),
                 ],
@@ -460,20 +529,25 @@ class MessageTest(unittest.TestCase):
 
     def test_oneof_options(self):
         parsed_oneof_options = ProtoOneOf.match(
+            None,
             dedent(
                 """oneof one_of_field {
                 option java_package = "com.example.foo";
             }""".strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_oneof_options.node,
             ProtoOneOf(
-                ProtoIdentifier("one_of_field"),
+                None,
+                ProtoIdentifier(None, "one_of_field"),
                 [
                     ProtoOption(
-                        ProtoIdentifier("java_package"),
-                        ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                        None,
+                        ProtoIdentifier(None, "java_package"),
+                        ProtoConstant(
+                            None, ProtoStringLiteral(None, "com.example.foo")
+                        ),
                     ),
                 ],
             ),
@@ -481,32 +555,39 @@ class MessageTest(unittest.TestCase):
 
     def test_oneof_field_option(self):
         parsed_oneof_field_option = ProtoOneOf.match(
+            None,
             dedent(
                 """oneof one_of_field {
                 string name = 4 [ (bar.baz).bat = "bat", baz.bat = -100 ];
             }""".strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_oneof_field_option.node,
             ProtoOneOf(
-                ProtoIdentifier("one_of_field"),
+                None,
+                ProtoIdentifier(None, "one_of_field"),
                 [
                     ProtoMessageField(
+                        None,
                         ProtoMessageFieldTypesEnum.STRING,
-                        ProtoIdentifier("name"),
-                        ProtoInt(4, ProtoIntSign.POSITIVE),
+                        ProtoIdentifier(None, "name"),
+                        ProtoInt(None, 4, ProtoIntSign.POSITIVE),
                         False,
                         False,
                         None,
                         [
                             ProtoMessageFieldOption(
-                                ProtoIdentifier("(bar.baz).bat"),
-                                ProtoConstant(ProtoStringLiteral("bat")),
+                                None,
+                                ProtoIdentifier(None, "(bar.baz).bat"),
+                                ProtoConstant(None, ProtoStringLiteral(None, "bat")),
                             ),
                             ProtoMessageFieldOption(
-                                ProtoIdentifier("baz.bat"),
-                                ProtoConstant(ProtoInt(100, ProtoIntSign.NEGATIVE)),
+                                None,
+                                ProtoIdentifier(None, "baz.bat"),
+                                ProtoConstant(
+                                    None, ProtoInt(None, 100, ProtoIntSign.NEGATIVE)
+                                ),
                             ),
                         ],
                     )
@@ -516,32 +597,36 @@ class MessageTest(unittest.TestCase):
 
     def test_oneof_with_comment(self):
         parsed_oneof_with_comment = ProtoOneOf.match(
+            None,
             dedent(
                 """oneof one_of_field {
                 string name = 4;
                 // single-line comment!
                 SubMessage sub_message = 9;
             }""".strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_oneof_with_comment.node,
             ProtoOneOf(
-                ProtoIdentifier("one_of_field"),
+                None,
+                ProtoIdentifier(None, "one_of_field"),
                 [
                     ProtoMessageField(
+                        None,
                         ProtoMessageFieldTypesEnum.STRING,
-                        ProtoIdentifier("name"),
-                        ProtoInt(4, ProtoIntSign.POSITIVE),
+                        ProtoIdentifier(None, "name"),
+                        ProtoInt(None, 4, ProtoIntSign.POSITIVE),
                     ),
-                    ProtoSingleLineComment(" single-line comment!"),
+                    ProtoSingleLineComment(None, " single-line comment!"),
                     ProtoMessageField(
+                        None,
                         ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
-                        ProtoIdentifier("sub_message"),
-                        ProtoInt(9, ProtoIntSign.POSITIVE),
+                        ProtoIdentifier(None, "sub_message"),
+                        ProtoInt(None, 9, ProtoIntSign.POSITIVE),
                         False,
                         False,
-                        ProtoFullIdentifier("SubMessage"),
+                        ProtoFullIdentifier(None, "SubMessage"),
                         [],
                     ),
                 ],
@@ -550,101 +635,116 @@ class MessageTest(unittest.TestCase):
 
     def test_oneof_normalize_removes_comment(self):
         normalized_oneof = ProtoOneOf.match(
+            None,
             dedent(
                 """oneof one_of_field {
                 string name = 4;
                 // single-line comment!
                 SubMessage sub_message = 9;
             }""".strip()
-            )
+            ),
         ).node.normalize()
         self.assertEqual(
             normalized_oneof.nodes,
             [
                 ProtoMessageField(
+                    None,
                     ProtoMessageFieldTypesEnum.STRING,
-                    ProtoIdentifier("name"),
-                    ProtoInt(4, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "name"),
+                    ProtoInt(None, 4, ProtoIntSign.POSITIVE),
                 ),
                 ProtoMessageField(
+                    None,
                     ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
-                    ProtoIdentifier("sub_message"),
-                    ProtoInt(9, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "sub_message"),
+                    ProtoInt(None, 9, ProtoIntSign.POSITIVE),
                     False,
                     False,
-                    ProtoFullIdentifier("SubMessage"),
+                    ProtoFullIdentifier(None, "SubMessage"),
                     [],
                 ),
             ],
         )
 
     def test_simple_map(self):
-        parsed_map_simple = ProtoMap.match("map <sfixed64, NestedMessage> my_map = 10;")
+        parsed_map_simple = ProtoMap.match(
+            None, "map <sfixed64, NestedMessage> my_map = 10;"
+        )
         self.assertEqual(
             parsed_map_simple.node,
             ProtoMap(
+                None,
                 ProtoMapKeyTypesEnum.SFIXED64,
                 ProtoMapValueTypesEnum.ENUM_OR_MESSAGE,
-                ProtoIdentifier("my_map"),
-                ProtoInt(10, ProtoIntSign.POSITIVE),
-                ProtoEnumOrMessageIdentifier("NestedMessage"),
+                ProtoIdentifier(None, "my_map"),
+                ProtoInt(None, 10, ProtoIntSign.POSITIVE),
+                ProtoEnumOrMessageIdentifier(None, "NestedMessage"),
                 [],
             ),
         )
 
     def test_map_without_spaces(self):
-        map_without_spaces = ProtoMap.match("map<sfixed64, NestedMessage> my_map = 10;")
+        map_without_spaces = ProtoMap.match(
+            None, "map<sfixed64, NestedMessage> my_map = 10;"
+        )
         self.assertEqual(
             map_without_spaces.node,
             ProtoMap(
+                None,
                 ProtoMapKeyTypesEnum.SFIXED64,
                 ProtoMapValueTypesEnum.ENUM_OR_MESSAGE,
-                ProtoIdentifier("my_map"),
-                ProtoInt(10, ProtoIntSign.POSITIVE),
-                ProtoEnumOrMessageIdentifier("NestedMessage"),
+                ProtoIdentifier(None, "my_map"),
+                ProtoInt(None, 10, ProtoIntSign.POSITIVE),
+                ProtoEnumOrMessageIdentifier(None, "NestedMessage"),
                 [],
             ),
         )
 
     def test_map_with_options(self):
         parsed_map_simple = ProtoMap.match(
-            "map <sfixed64, NestedMessage> my_map = 10  [ java_package = 'com.example.foo', baz.bat = 48 ];"
+            None,
+            "map <sfixed64, NestedMessage> my_map = 10  [ java_package = 'com.example.foo', baz.bat = 48 ];",
         )
         self.assertEqual(parsed_map_simple.node.key_type, ProtoMapKeyTypesEnum.SFIXED64)
         self.assertEqual(
             parsed_map_simple.node.value_type, ProtoMapValueTypesEnum.ENUM_OR_MESSAGE
         )
-        self.assertEqual(parsed_map_simple.node.name, ProtoIdentifier("my_map"))
+        self.assertEqual(parsed_map_simple.node.name, ProtoIdentifier(None, "my_map"))
         self.assertEqual(
-            parsed_map_simple.node.number, ProtoInt(10, ProtoIntSign.POSITIVE)
+            parsed_map_simple.node.number, ProtoInt(None, 10, ProtoIntSign.POSITIVE)
         )
         self.assertEqual(
             parsed_map_simple.node.enum_or_message_type_name,
-            ProtoEnumOrMessageIdentifier("NestedMessage"),
+            ProtoEnumOrMessageIdentifier(None, "NestedMessage"),
         )
         self.assertEqual(
             parsed_map_simple.node.options,
             [
                 ProtoMessageFieldOption(
-                    ProtoIdentifier("java_package"),
-                    ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                    None,
+                    ProtoIdentifier(None, "java_package"),
+                    ProtoConstant(None, ProtoStringLiteral(None, "com.example.foo")),
                 ),
                 ProtoMessageFieldOption(
-                    ProtoFullIdentifier("baz.bat"),
-                    ProtoConstant(ProtoInt(48, ProtoIntSign.POSITIVE)),
+                    None,
+                    ProtoFullIdentifier(None, "baz.bat"),
+                    ProtoConstant(None, ProtoInt(None, 48, ProtoIntSign.POSITIVE)),
                 ),
             ],
         )
 
     def test_map_message_value(self):
-        parsed_map_simple = ProtoMap.match("map <string, string> string_map = 11;")
+        parsed_map_simple = ProtoMap.match(
+            None, "map <string, string> string_map = 11;"
+        )
         self.assertEqual(
             parsed_map_simple.node,
             ProtoMap(
+                None,
                 ProtoMapKeyTypesEnum.STRING,
                 ProtoMapValueTypesEnum.STRING,
-                ProtoIdentifier("string_map"),
-                ProtoInt(11, ProtoIntSign.POSITIVE),
+                ProtoIdentifier(None, "string_map"),
+                ProtoInt(None, 11, ProtoIntSign.POSITIVE),
                 None,
                 [],
             ),
@@ -652,6 +752,7 @@ class MessageTest(unittest.TestCase):
 
     def test_message_parses_comments(self):
         parsed_comments = ProtoMessage.match(
+            None,
             dedent(
                 """
                 message MyMessage {
@@ -666,35 +767,40 @@ class MessageTest(unittest.TestCase):
                     string baz = 3;
                 }
                 """.strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_comments.node.nodes,
             [
                 ProtoMessageField(
+                    None,
                     ProtoMessageFieldTypesEnum.STRING,
-                    ProtoIdentifier("foo"),
-                    ProtoInt(1, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "foo"),
+                    ProtoInt(None, 1, ProtoIntSign.POSITIVE),
                 ),
-                ProtoSingleLineComment(" single-line comment!"),
+                ProtoSingleLineComment(None, " single-line comment!"),
                 ProtoMessageField(
+                    None,
                     ProtoMessageFieldTypesEnum.BOOL,
-                    ProtoIdentifier("bar"),
-                    ProtoInt(2, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "bar"),
+                    ProtoInt(None, 2, ProtoIntSign.POSITIVE),
                 ),
                 ProtoMultiLineComment(
-                    "\n                    multiple\n                    line\n                    comment!\n                    "
+                    None,
+                    "\n                    multiple\n                    line\n                    comment!\n                    ",
                 ),
                 ProtoMessageField(
+                    None,
                     ProtoMessageFieldTypesEnum.STRING,
-                    ProtoIdentifier("baz"),
-                    ProtoInt(3, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "baz"),
+                    ProtoInt(None, 3, ProtoIntSign.POSITIVE),
                 ),
             ],
         )
 
     def test_message_extends(self):
         parsed_extends = ProtoMessage.match(
+            None,
             dedent(
                 """
                 message MyMessage {
@@ -704,21 +810,26 @@ class MessageTest(unittest.TestCase):
                     }
                 }
                 """.strip()
-            )
+            ),
         )
         self.assertEqual(
             parsed_extends.node.nodes,
             [
                 ProtoMessageField(
+                    None,
                     ProtoMessageFieldTypesEnum.STRING,
-                    ProtoIdentifier("foo"),
-                    ProtoInt(1, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "foo"),
+                    ProtoInt(None, 1, ProtoIntSign.POSITIVE),
                 ),
                 ProtoExtend(
-                    ProtoEnumOrMessageIdentifier("SomeOtherMessage"),
+                    None,
+                    ProtoEnumOrMessageIdentifier(None, "SomeOtherMessage"),
                     [
                         ProtoMessageField(
-                            ProtoMessageFieldTypesEnum.STRING, ProtoIdentifier("foo"), 2
+                            None,
+                            ProtoMessageFieldTypesEnum.STRING,
+                            ProtoIdentifier(None, "foo"),
+                            ProtoInt(None, 2, ProtoIntSign.POSITIVE),
                         )
                     ],
                 ),
@@ -727,6 +838,7 @@ class MessageTest(unittest.TestCase):
 
     def test_message_normalizes_away_comments(self):
         parsed_comments = ProtoMessage.match(
+            None,
             dedent(
                 """
                 message MyMessage {
@@ -741,68 +853,79 @@ class MessageTest(unittest.TestCase):
                     string baz = 3;
                 }
                 """.strip()
-            )
+            ),
         ).node.normalize()
         self.assertEqual(
             parsed_comments.nodes,
             [
                 ProtoMessageField(
+                    None,
                     ProtoMessageFieldTypesEnum.STRING,
-                    ProtoIdentifier("foo"),
-                    ProtoInt(1, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "foo"),
+                    ProtoInt(None, 1, ProtoIntSign.POSITIVE),
                 ),
                 ProtoMessageField(
+                    None,
                     ProtoMessageFieldTypesEnum.BOOL,
-                    ProtoIdentifier("bar"),
-                    ProtoInt(2, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "bar"),
+                    ProtoInt(None, 2, ProtoIntSign.POSITIVE),
                 ),
                 ProtoMessageField(
+                    None,
                     ProtoMessageFieldTypesEnum.STRING,
-                    ProtoIdentifier("baz"),
-                    ProtoInt(3, ProtoIntSign.POSITIVE),
+                    ProtoIdentifier(None, "baz"),
+                    ProtoInt(None, 3, ProtoIntSign.POSITIVE),
                 ),
             ],
         )
 
     def test_diff_same_message_returns_empty(self):
         pm1 = ProtoMessage(
-            ProtoIdentifier("MyMessage"),
+            None,
+            ProtoIdentifier(None, "MyMessage"),
             [],
         )
         pm2 = ProtoMessage(
-            ProtoIdentifier("MyMessage"),
+            None,
+            ProtoIdentifier(None, "MyMessage"),
             [],
         )
         self.assertEqual(ProtoMessage.diff(pm1, pm2), [])
 
     def test_diff_different_message_name_returns_empty(self):
         pm1 = ProtoMessage(
-            ProtoIdentifier("MyMessage"),
+            None,
+            ProtoIdentifier(None, "MyMessage"),
             [],
         )
         pm2 = ProtoMessage(
-            ProtoIdentifier("OtherMessage"),
+            None,
+            ProtoIdentifier(None, "OtherMessage"),
             [],
         )
         self.assertEqual(ProtoMessage.diff(pm1, pm2), [])
 
     def test_diff_enum_added(self):
         pm1 = None
-        pm2 = ProtoMessage(ProtoIdentifier("MyMessage"), [])
+        pm2 = ProtoMessage(None, ProtoIdentifier(None, "MyMessage"), [])
         self.assertEqual(
             ProtoMessage.diff(pm1, pm2),
             [
-                ProtoMessageAdded(ProtoMessage(ProtoIdentifier("MyMessage"), [])),
+                ProtoMessageAdded(
+                    ProtoMessage(None, ProtoIdentifier(None, "MyMessage"), [])
+                ),
             ],
         )
 
     def test_diff_message_removed(self):
-        pm1 = ProtoMessage(ProtoIdentifier("MyMessage"), [])
+        pm1 = ProtoMessage(None, ProtoIdentifier(None, "MyMessage"), [])
         pm2 = None
         self.assertEqual(
             ProtoMessage.diff(pm1, pm2),
             [
-                ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("MyMessage"), [])),
+                ProtoMessageRemoved(
+                    ProtoMessage(None, ProtoIdentifier(None, "MyMessage"), [])
+                ),
             ],
         )
 
@@ -813,107 +936,155 @@ class MessageTest(unittest.TestCase):
 
     def test_diff_sets_no_change_returns_empty(self):
         set1 = [
-            ProtoMessage(ProtoIdentifier("FooMessage"), []),
-            ProtoMessage(ProtoIdentifier("BarMessage"), []),
-            ProtoMessage(ProtoIdentifier("BazMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), []),
         ]
         self.assertEqual(ProtoMessage.diff_sets(set1, set1), [])
 
     def test_diff_sets_all_removed(self):
         set1 = []
         set2 = [
-            ProtoMessage(ProtoIdentifier("FooMessage"), []),
-            ProtoMessage(ProtoIdentifier("BarMessage"), []),
-            ProtoMessage(ProtoIdentifier("BazMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), []),
         ]
         diff = ProtoMessage.diff_sets(set1, set2)
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("FooMessage"), [])), diff
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("BarMessage"), [])), diff
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("BazMessage"), [])), diff
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), [])
+            ),
+            diff,
         )
         self.assertEqual(3, len(diff))
 
     def test_diff_sets_all_added(self):
         set1 = [
-            ProtoMessage(ProtoIdentifier("FooMessage"), []),
-            ProtoMessage(ProtoIdentifier("BarMessage"), []),
-            ProtoMessage(ProtoIdentifier("BazMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), []),
         ]
         set2 = []
 
         diff = ProtoMessage.diff_sets(set1, set2)
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("FooMessage"), [])), diff
+            ProtoMessageAdded(
+                ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("BarMessage"), [])), diff
+            ProtoMessageAdded(
+                ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("BazMessage"), [])), diff
+            ProtoMessageAdded(
+                ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), [])
+            ),
+            diff,
         )
         self.assertEqual(3, len(diff))
 
     def test_diff_sets_mutually_exclusive(self):
         set1 = [
-            ProtoMessage(ProtoIdentifier("FooMessage"), []),
-            ProtoMessage(ProtoIdentifier("BarMessage"), []),
-            ProtoMessage(ProtoIdentifier("BazMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), []),
         ]
         set2 = [
-            ProtoMessage(ProtoIdentifier("FooMessage2"), []),
-            ProtoMessage(ProtoIdentifier("BarMessage2"), []),
-            ProtoMessage(ProtoIdentifier("BazMessage2"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "FooMessage2"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BarMessage2"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BazMessage2"), []),
         ]
         diff = ProtoMessage.diff_sets(set1, set2)
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("FooMessage"), [])), diff
+            ProtoMessageAdded(
+                ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("BarMessage"), [])), diff
+            ProtoMessageAdded(
+                ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("BazMessage"), [])), diff
+            ProtoMessageAdded(
+                ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("FooMessage2"), [])), diff
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "FooMessage2"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("BarMessage2"), [])), diff
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "BarMessage2"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("BazMessage2"), [])), diff
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "BazMessage2"), [])
+            ),
+            diff,
         )
         self.assertEqual(6, len(diff))
 
     def test_diff_sets_overlap(self):
 
         set1 = [
-            ProtoMessage(ProtoIdentifier("FooMessage"), []),
-            ProtoMessage(ProtoIdentifier("BarMessage"), []),
-            ProtoMessage(ProtoIdentifier("BazMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), []),
         ]
         set2 = [
-            ProtoMessage(ProtoIdentifier("FooMessage2"), []),
-            ProtoMessage(ProtoIdentifier("BarMessage"), []),
-            ProtoMessage(ProtoIdentifier("BazMessage2"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "FooMessage2"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), []),
+            ProtoMessage(None, ProtoIdentifier(None, "BazMessage2"), []),
         ]
         diff = ProtoMessage.diff_sets(set1, set2)
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("FooMessage"), [])), diff
+            ProtoMessageAdded(
+                ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("BazMessage"), [])), diff
+            ProtoMessageAdded(
+                ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("FooMessage2"), [])), diff
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "FooMessage2"), [])
+            ),
+            diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("BazMessage2"), [])), diff
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "BazMessage2"), [])
+            ),
+            diff,
         )
         self.assertEqual(4, len(diff))
 

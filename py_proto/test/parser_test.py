@@ -103,44 +103,54 @@ class IntTest(unittest.TestCase):
         self.assertEqual(
             proto_file.imports,
             [
-                ProtoImport(ProtoStringLiteral("foo.proto"), public=True),
-                ProtoImport(ProtoStringLiteral("bar/baz.proto"), weak=True),
-                ProtoImport(ProtoStringLiteral("bat.proto")),
+                ProtoImport(None, ProtoStringLiteral(None, "foo.proto"), public=True),
+                ProtoImport(None, ProtoStringLiteral(None, "bar/baz.proto"), weak=True),
+                ProtoImport(None, ProtoStringLiteral(None, "bat.proto")),
             ],
         )
         self.assertEqual(
             proto_file.options,
             [
                 ProtoOption(
-                    ProtoIdentifier("java_package"),
-                    ProtoConstant(ProtoStringLiteral("my.test.package")),
+                    None,
+                    ProtoIdentifier(None, "java_package"),
+                    ProtoConstant(None, ProtoStringLiteral(None, "my.test.package")),
                 ),
                 ProtoOption(
-                    ProtoIdentifier("(fully.qualified).option"),
-                    ProtoConstant(ProtoFloat(3.14159265, ProtoFloatSign.POSITIVE)),
+                    None,
+                    ProtoIdentifier(None, "(fully.qualified).option"),
+                    ProtoConstant(
+                        None, ProtoFloat(None, 3.14159265, ProtoFloatSign.POSITIVE)
+                    ),
                 ),
             ],
         )
         self.assertIn(
             ProtoEnum(
-                ProtoIdentifier("MyAwesomeEnum"),
+                None,
+                ProtoIdentifier(None, "MyAwesomeEnum"),
                 [
                     ProtoOption(
-                        ProtoIdentifier("allow_alias"), ProtoConstant(ProtoBool(True))
+                        None,
+                        ProtoIdentifier(None, "allow_alias"),
+                        ProtoConstant(None, ProtoBool(None, True)),
                     ),
                     ProtoEnumValue(
-                        ProtoIdentifier("MAE_UNSPECIFIED"),
-                        ProtoInt(0, ProtoIntSign.POSITIVE),
+                        None,
+                        ProtoIdentifier(None, "MAE_UNSPECIFIED"),
+                        ProtoInt(None, 0, ProtoIntSign.POSITIVE),
                         [],
                     ),
                     ProtoEnumValue(
-                        ProtoIdentifier("MAE_STARTED"),
-                        ProtoInt(1, ProtoIntSign.POSITIVE),
+                        None,
+                        ProtoIdentifier(None, "MAE_STARTED"),
+                        ProtoInt(None, 1, ProtoIntSign.POSITIVE),
                         [],
                     ),
                     ProtoEnumValue(
-                        ProtoIdentifier("MAE_RUNNING"),
-                        ProtoInt(2, ProtoIntSign.POSITIVE),
+                        None,
+                        ProtoIdentifier(None, "MAE_RUNNING"),
+                        ProtoInt(None, 2, ProtoIntSign.POSITIVE),
                         [],
                     ),
                 ],
@@ -149,89 +159,113 @@ class IntTest(unittest.TestCase):
         )
         self.assertIn(
             ProtoMessage(
-                ProtoIdentifier("MyAwesomeMessage"),
+                None,
+                ProtoIdentifier(None, "MyAwesomeMessage"),
                 [
                     ProtoOption(
-                        ProtoIdentifier("(bar).baz"),
-                        ProtoConstant(ProtoFloat(1.2, ProtoFloatSign.POSITIVE)),
+                        None,
+                        ProtoFullIdentifier(None, "(bar).baz"),
+                        ProtoConstant(
+                            None, ProtoFloat(None, 1.2, ProtoFloatSign.POSITIVE)
+                        ),
                     ),
                     ProtoEnum(
-                        ProtoIdentifier("MyNestedEnum"),
+                        None,
+                        ProtoIdentifier(None, "MyNestedEnum"),
                         [
                             ProtoEnumValue(
-                                ProtoIdentifier("MNE_UNDEFINED"),
-                                ProtoInt(0, ProtoIntSign.POSITIVE),
+                                None,
+                                ProtoIdentifier(None, "MNE_UNDEFINED"),
+                                ProtoInt(None, 0, ProtoIntSign.POSITIVE),
                             ),
                             ProtoEnumValue(
-                                ProtoIdentifier("MNE_NEGATIVE"),
-                                ProtoInt(1, ProtoIntSign.NEGATIVE),
+                                None,
+                                ProtoIdentifier(None, "MNE_NEGATIVE"),
+                                ProtoInt(None, 1, ProtoIntSign.NEGATIVE),
                             ),
                             ProtoEnumValue(
-                                ProtoIdentifier("MNE_POSITIVE"),
-                                ProtoInt(2, ProtoIntSign.POSITIVE),
+                                None,
+                                ProtoIdentifier(None, "MNE_POSITIVE"),
+                                ProtoInt(None, 2, ProtoIntSign.POSITIVE),
                             ),
                         ],
                     ),
-                    ProtoMessage(ProtoIdentifier("MyNestedMessage"), []),
+                    ProtoMessage(None, ProtoIdentifier(None, "MyNestedMessage"), []),
                     ProtoReserved(
+                        None,
                         ranges=[
                             ProtoRange(
-                                ProtoInt(1, ProtoIntSign.POSITIVE),
-                                ProtoInt(3, ProtoIntSign.POSITIVE),
+                                None,
+                                ProtoInt(None, 1, ProtoIntSign.POSITIVE),
+                                ProtoInt(None, 3, ProtoIntSign.POSITIVE),
                             )
-                        ]
+                        ],
                     ),
-                    ProtoReserved(fields=[ProtoIdentifier("yay")]),
-                    ProtoSingleLineComment(" testing nested comment"),
+                    ProtoReserved(None, fields=[ProtoIdentifier(None, "yay")]),
+                    ProtoSingleLineComment(None, " testing nested comment"),
                     ProtoMessageField(
+                        None,
                         ProtoMessageFieldTypesEnum.STRING,
-                        ProtoIdentifier("field_one"),
-                        ProtoInt(1, ProtoIntSign.POSITIVE),
+                        ProtoIdentifier(None, "field_one"),
+                        ProtoInt(None, 1, ProtoIntSign.POSITIVE),
                         True,
                     ),
                     ProtoMessageField(
+                        None,
                         ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
-                        ProtoIdentifier("field_two"),
-                        ProtoInt(2, ProtoIntSign.POSITIVE),
+                        ProtoIdentifier(None, "field_two"),
+                        ProtoInt(None, 2, ProtoIntSign.POSITIVE),
                         False,
                         False,
-                        ProtoIdentifier("MyNestedMessage"),
+                        ProtoIdentifier(None, "MyNestedMessage"),
                         [
                             ProtoMessageFieldOption(
-                                ProtoFullIdentifier("bar.baz"),
-                                ProtoConstant(ProtoBool(True)),
+                                None,
+                                ProtoFullIdentifier(None, "bar.baz"),
+                                ProtoConstant(None, ProtoBool(None, True)),
                             )
                         ],
                     ),
-                    ProtoExtensions([ProtoRange(8, ProtoRangeEnum.MAX)]),
+                    ProtoExtensions(None, [ProtoRange(None, 8, ProtoRangeEnum.MAX)]),
                     ProtoOneOf(
-                        ProtoIdentifier("foo"),
+                        None,
+                        ProtoIdentifier(None, "foo"),
                         [
                             ProtoMessageField(
+                                None,
                                 ProtoMessageFieldTypesEnum.STRING,
-                                ProtoIdentifier("name"),
-                                ProtoInt(4, ProtoIntSign.POSITIVE),
+                                ProtoIdentifier(None, "name"),
+                                ProtoInt(None, 4, ProtoIntSign.POSITIVE),
                             ),
                             ProtoOption(
-                                ProtoIdentifier("java_package"),
-                                ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                                None,
+                                ProtoIdentifier(None, "java_package"),
+                                ProtoConstant(
+                                    None, ProtoStringLiteral(None, "com.example.foo")
+                                ),
                             ),
                             ProtoMessageField(
+                                None,
                                 ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE,
-                                ProtoIdentifier("sub_message"),
-                                ProtoInt(9, ProtoIntSign.POSITIVE),
+                                ProtoIdentifier(None, "sub_message"),
+                                ProtoInt(None, 9, ProtoIntSign.POSITIVE),
                                 False,
                                 False,
-                                ProtoFullIdentifier("SubMessage"),
+                                ProtoFullIdentifier(None, "SubMessage"),
                                 [
                                     ProtoMessageFieldOption(
-                                        ProtoIdentifier("(bar.baz).bat"),
-                                        ProtoConstant(ProtoStringLiteral("bat")),
+                                        None,
+                                        ProtoIdentifier(None, "(bar.baz).bat"),
+                                        ProtoConstant(
+                                            None, ProtoStringLiteral(None, "bat")
+                                        ),
                                     ),
                                     ProtoMessageFieldOption(
-                                        ProtoIdentifier("baz.bat"),
+                                        None,
+                                        ProtoIdentifier(None, "baz.bat"),
                                         ProtoConstant(
-                                            ProtoInt(100, ProtoIntSign.NEGATIVE)
+                                            None,
+                                            ProtoInt(None, 100, ProtoIntSign.NEGATIVE),
                                         ),
                                     ),
                                 ],
@@ -239,11 +273,12 @@ class IntTest(unittest.TestCase):
                         ],
                     ),
                     ProtoMap(
+                        None,
                         ProtoMapKeyTypesEnum.SFIXED64,
                         ProtoMapValueTypesEnum.ENUM_OR_MESSAGE,
-                        ProtoIdentifier("my_map"),
-                        ProtoInt(10, ProtoIntSign.POSITIVE),
-                        ProtoEnumOrMessageIdentifier("NestedMessage"),
+                        ProtoIdentifier(None, "my_map"),
+                        ProtoInt(None, 10, ProtoIntSign.POSITIVE),
+                        ProtoEnumOrMessageIdentifier(None, "NestedMessage"),
                         [],
                     ),
                 ],
@@ -253,38 +288,47 @@ class IntTest(unittest.TestCase):
 
         self.assertIn(
             ProtoService(
-                ProtoIdentifier("MyGreatService"),
+                None,
+                ProtoIdentifier(None, "MyGreatService"),
                 [
                     ProtoOption(
-                        ProtoIdentifier("(foo.bar).baz"),
-                        ProtoConstant(ProtoStringLiteral("bat")),
+                        None,
+                        ProtoIdentifier(None, "(foo.bar).baz"),
+                        ProtoConstant(None, ProtoStringLiteral(None, "bat")),
                     ),
                     ProtoServiceRPC(
-                        ProtoIdentifier("OneRPC"),
-                        ProtoEnumOrMessageIdentifier("OneRPCRequest"),
-                        ProtoEnumOrMessageIdentifier("OneRPCResponse"),
+                        None,
+                        ProtoIdentifier(None, "OneRPC"),
+                        ProtoEnumOrMessageIdentifier(None, "OneRPCRequest"),
+                        ProtoEnumOrMessageIdentifier(None, "OneRPCResponse"),
                     ),
                     ProtoServiceRPC(
-                        ProtoIdentifier("TwoRPC"),
-                        ProtoEnumOrMessageIdentifier("TwoRPCRequest"),
-                        ProtoEnumOrMessageIdentifier("TwoRPCResponse"),
+                        None,
+                        ProtoIdentifier(None, "TwoRPC"),
+                        ProtoEnumOrMessageIdentifier(None, "TwoRPCRequest"),
+                        ProtoEnumOrMessageIdentifier(None, "TwoRPCResponse"),
                         False,
                         True,
                     ),
                     ProtoServiceRPC(
-                        ProtoIdentifier("ThreeRPC"),
-                        ProtoEnumOrMessageIdentifier("ThreeRPCRequest"),
-                        ProtoEnumOrMessageIdentifier("ThreeRPCResponse"),
+                        None,
+                        ProtoIdentifier(None, "ThreeRPC"),
+                        ProtoEnumOrMessageIdentifier(None, "ThreeRPCRequest"),
+                        ProtoEnumOrMessageIdentifier(None, "ThreeRPCResponse"),
                         False,
                         False,
                         [
                             ProtoOption(
-                                ProtoIdentifier("java_package"),
-                                ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                                None,
+                                ProtoIdentifier(None, "java_package"),
+                                ProtoConstant(
+                                    None, ProtoStringLiteral(None, "com.example.foo")
+                                ),
                             ),
                             ProtoOption(
-                                ProtoFullIdentifier("(foo.bar).baz"),
-                                ProtoConstant(ProtoBool(False)),
+                                None,
+                                ProtoFullIdentifier(None, "(foo.bar).baz"),
+                                ProtoConstant(None, ProtoBool(None, False)),
                             ),
                         ],
                     ),
@@ -295,14 +339,16 @@ class IntTest(unittest.TestCase):
 
         self.assertIn(
             ProtoExtend(
-                ProtoIdentifier("SomeExtendableMessage"),
+                None,
+                ProtoIdentifier(None, "SomeExtendableMessage"),
                 [
                     ProtoMessageField(
+                        None,
                         ProtoMessageFieldTypesEnum.STRING,
-                        ProtoIdentifier("some_extendable_field"),
-                        1,
+                        ProtoIdentifier(None, "some_extendable_field"),
+                        ProtoInt(None, 1, ProtoIntSign.POSITIVE),
                     ),
-                    ProtoSingleLineComment(" yay"),
+                    ProtoSingleLineComment(None, " yay"),
                 ],
             ),
             proto_file.nodes,

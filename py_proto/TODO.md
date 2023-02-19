@@ -85,6 +85,7 @@
         - [ ] Additions/removals
         - [ ] Option changes
   - [ ] Backwards-compatibility check
+  - [ ] __eq__ should enforce parent equality
   - [ ] Scoping of diffs under containing objects
     - [ ] Enum options under enums
     - [ ] Enum value changes under enums

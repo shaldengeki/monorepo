@@ -14,10 +14,13 @@ class ParsedProtoMessageFieldOptionNode(ParsedProtoEnumValueOptionNode):
 
 class ProtoMessageFieldOption(ProtoEnumValueOption):
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoMessageFieldOptionNode"]:
-        match = super().match(proto_source)
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoMessageFieldOptionNode"]:
+        match = super().match(parent, proto_source)
         if match is None:
             return None
+
         return ParsedProtoMessageFieldOptionNode(
             match.node,
             match.remaining_source.strip(),
@@ -51,6 +54,7 @@ class ParsedProtoMessageFieldNode(ParsedProtoNode):
 class ProtoMessageField(ProtoNode):
     def __init__(
         self,
+        parent: Optional[ProtoNode],
         type: ProtoMessageFieldTypesEnum,
         name: ProtoIdentifier,
         number: ProtoInt,
@@ -59,9 +63,12 @@ class ProtoMessageField(ProtoNode):
         enum_or_message_type_name: Optional[ProtoEnumOrMessageIdentifier] = None,
         options: Optional[list[ProtoMessageFieldOption]] = None,
     ):
+        super().__init__(parent)
         self.type = type
         self.name = name
+        self.name.parent = self
         self.number = number
+        self.number.parent = self
 
         # Only allow one of repeated or optional to be true.
         if repeated and optional:
@@ -72,10 +79,14 @@ class ProtoMessageField(ProtoNode):
         self.repeated = repeated
         self.optional = optional
         self.enum_or_message_type_name = enum_or_message_type_name
+        if self.enum_or_message_type_name is not None:
+            self.enum_or_message_type_name.parent = self
 
         if options is None:
             options = []
         self.options = options
+        for option in self.options:
+            option.parent = self
 
     def __eq__(self, other) -> bool:
         return (
@@ -96,6 +107,7 @@ class ProtoMessageField(ProtoNode):
 
     def normalize(self) -> "ProtoMessageField":
         return ProtoMessageField(
+            parent=self.parent,
             type=self.type,
             name=self.name,
             number=self.number,
@@ -106,7 +118,9 @@ class ProtoMessageField(ProtoNode):
         )
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoMessageFieldNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoMessageFieldNode"]:
         # First, try to match the optional repeated.
         repeated = False
         if proto_source.startswith("repeated "):
@@ -136,7 +150,7 @@ class ProtoMessageField(ProtoNode):
         enum_or_message_type_name = None
         if matched_type is None:
             # See if this is an enum or message type.
-            match = ProtoEnumOrMessageIdentifier.match(proto_source)
+            match = ProtoEnumOrMessageIdentifier.match(None, proto_source)
             if match is None:
                 return None
             matched_type = ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE
@@ -144,7 +158,7 @@ class ProtoMessageField(ProtoNode):
             proto_source = match.remaining_source.strip()
 
         # Match the field name.
-        identifier_match = ProtoIdentifier.match(proto_source)
+        identifier_match = ProtoIdentifier.match(None, proto_source)
         if identifier_match is None:
             return None
         name = identifier_match.node
@@ -155,7 +169,7 @@ class ProtoMessageField(ProtoNode):
         proto_source = proto_source[2:].strip()
 
         # Match the field number.
-        int_match = ProtoInt.match(proto_source)
+        int_match = ProtoInt.match(None, proto_source)
         if int_match is None:
             return None
         number = int_match.node
@@ -171,7 +185,7 @@ class ProtoMessageField(ProtoNode):
                 )
             for option_part in proto_source[:end_bracket].strip().split(","):
                 message_field_option_match = ProtoMessageFieldOption.match(
-                    option_part.strip()
+                    None, option_part.strip()
                 )
                 if message_field_option_match is None:
                     raise ValueError(
@@ -187,6 +201,7 @@ class ProtoMessageField(ProtoNode):
 
         return ParsedProtoMessageFieldNode(
             ProtoMessageField(
+                parent,
                 matched_type,
                 name,
                 number,

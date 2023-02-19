@@ -20,7 +20,8 @@ class ProtoInt(ProtoNode):
     DECIMAL = OCTAL | set("89")
     HEX = DECIMAL | set("ABCDEFabcdef")
 
-    def __init__(self, value: int, sign: ProtoIntSign):
+    def __init__(self, parent: Optional[ProtoNode], value: int, sign: ProtoIntSign):
+        super().__init__(parent)
         self.value = value
         self.sign = sign
 
@@ -43,7 +44,9 @@ class ProtoInt(ProtoNode):
         return self
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoIntNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoIntNode"]:
         if proto_source[0] not in ProtoInt.DECIMAL:
             return None
 
@@ -64,7 +67,7 @@ class ProtoInt(ProtoNode):
                 except ValueError:
                     raise ValueError(f"Proto has invalid hex: {proto_source}")
                 return ParsedProtoIntNode(
-                    ProtoInt(value, ProtoIntSign.POSITIVE),
+                    ProtoInt(parent, value, ProtoIntSign.POSITIVE),
                     proto_source[i + 1 :].strip(),
                 )
             else:
@@ -80,7 +83,7 @@ class ProtoInt(ProtoNode):
                 except ValueError:
                     raise ValueError(f"Proto has invalid octal: {proto_source}")
                 return ParsedProtoIntNode(
-                    ProtoInt(value, ProtoIntSign.POSITIVE),
+                    ProtoInt(parent, value, ProtoIntSign.POSITIVE),
                     proto_source[i + 1 :].strip(),
                 )
         else:
@@ -97,7 +100,7 @@ class ProtoInt(ProtoNode):
                 return None
 
             return ParsedProtoIntNode(
-                ProtoInt(value, ProtoIntSign.POSITIVE),
+                ProtoInt(parent, value, ProtoIntSign.POSITIVE),
                 proto_source[i + 1 :].strip(),
             )
 

@@ -15,7 +15,13 @@ class ProtoRangeEnum(Enum):
 
 
 class ProtoRange(ProtoNode):
-    def __init__(self, min: ProtoInt, max: Optional[ProtoInt | ProtoRangeEnum] = None):
+    def __init__(
+        self,
+        parent: Optional[ProtoNode],
+        min: ProtoInt,
+        max: Optional[ProtoInt | ProtoRangeEnum] = None,
+    ):
+        super().__init__(parent)
         self.min = min
 
         if (
@@ -40,13 +46,15 @@ class ProtoRange(ProtoNode):
         return self
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoRangeNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoRangeNode"]:
         sign = ProtoIntSign.POSITIVE
         if proto_source.startswith("-") and proto_source != "-":
             sign = next(x for x in ProtoIntSign if x.value == proto_source[0])
-            match = ProtoInt.match(proto_source[1:])
+            match = ProtoInt.match(None, proto_source[1:])
         else:
-            match = ProtoInt.match(proto_source)
+            match = ProtoInt.match(None, proto_source)
         if match is None:
             return None
 
@@ -58,17 +66,19 @@ class ProtoRange(ProtoNode):
         if proto_source.startswith("to "):
             proto_source = proto_source[3:]
             if proto_source.startswith("max"):
+                proto_range = ProtoRange(parent, min, ProtoRangeEnum.MAX)
+                min.parent = proto_range
                 return ParsedProtoRangeNode(
-                    ProtoRange(min, ProtoRangeEnum.MAX),
+                    proto_range,
                     proto_source[3:].strip(),
                 )
             else:
                 sign = ProtoIntSign.POSITIVE
                 if proto_source.startswith("-"):
                     sign = next(x for x in ProtoIntSign if x.value == proto_source[0])
-                    match = ProtoInt.match(proto_source[1:])
+                    match = ProtoInt.match(None, proto_source[1:])
                 else:
-                    match = ProtoInt.match(proto_source)
+                    match = ProtoInt.match(None, proto_source)
                 if match is None:
                     raise ValueError(
                         f"Proto source has invalid range, expecting int for max: {proto_source}"
@@ -77,7 +87,11 @@ class ProtoRange(ProtoNode):
                 max = match.node
                 proto_source = match.remaining_source
 
-        return ParsedProtoRangeNode(ProtoRange(min, max), proto_source.strip())
+        proto_range = ProtoRange(parent, min, max)
+        min.parent = proto_range
+        if isinstance(max, ProtoNode):
+            max.parent = proto_range
+        return ParsedProtoRangeNode(proto_range, proto_source.strip())
 
     def serialize(self) -> str:
         if self.max is not None:

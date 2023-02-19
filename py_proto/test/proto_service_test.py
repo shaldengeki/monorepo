@@ -20,6 +20,7 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_all_features(self):
         test_service_all_features = ProtoService.match(
+            None,
             dedent(
                 """
             service FooService {
@@ -35,47 +36,57 @@ class ServiceTest(unittest.TestCase):
                 rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
             }
         """.strip()
-            )
+            ),
         )
         self.assertEqual(
             test_service_all_features.node,
             ProtoService(
-                ProtoIdentifier("FooService"),
+                None,
+                ProtoIdentifier(None, "FooService"),
                 [
                     ProtoOption(
-                        ProtoIdentifier("(foo.bar).baz"),
-                        ProtoConstant(ProtoStringLiteral("bat")),
+                        None,
+                        ProtoIdentifier(None, "(foo.bar).baz"),
+                        ProtoConstant(None, ProtoStringLiteral(None, "bat")),
                     ),
-                    ProtoSingleLineComment(" single-line comment!"),
+                    ProtoSingleLineComment(None, " single-line comment!"),
                     ProtoServiceRPC(
-                        ProtoIdentifier("OneRPC"),
-                        ProtoEnumOrMessageIdentifier("OneRPCRequest"),
-                        ProtoEnumOrMessageIdentifier("OneRPCResponse"),
+                        None,
+                        ProtoIdentifier(None, "OneRPC"),
+                        ProtoEnumOrMessageIdentifier(None, "OneRPCRequest"),
+                        ProtoEnumOrMessageIdentifier(None, "OneRPCResponse"),
                     ),
                     ProtoServiceRPC(
-                        ProtoIdentifier("TwoRPC"),
-                        ProtoEnumOrMessageIdentifier("TwoRPCRequest"),
-                        ProtoEnumOrMessageIdentifier("TwoRPCResponse"),
+                        None,
+                        ProtoIdentifier(None, "TwoRPC"),
+                        ProtoEnumOrMessageIdentifier(None, "TwoRPCRequest"),
+                        ProtoEnumOrMessageIdentifier(None, "TwoRPCResponse"),
                         False,
                         True,
                     ),
                     ProtoMultiLineComment(
-                        "\n                multiple\n                line\n                comment\n                "
+                        None,
+                        "\n                multiple\n                line\n                comment\n                ",
                     ),
                     ProtoServiceRPC(
-                        ProtoIdentifier("ThreeRPC"),
-                        ProtoEnumOrMessageIdentifier("ThreeRPCRequest"),
-                        ProtoEnumOrMessageIdentifier("ThreeRPCResponse"),
+                        None,
+                        ProtoIdentifier(None, "ThreeRPC"),
+                        ProtoEnumOrMessageIdentifier(None, "ThreeRPCRequest"),
+                        ProtoEnumOrMessageIdentifier(None, "ThreeRPCResponse"),
                         False,
                         False,
                         [
                             ProtoOption(
-                                ProtoIdentifier("java_package"),
-                                ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                                None,
+                                ProtoIdentifier(None, "java_package"),
+                                ProtoConstant(
+                                    None, ProtoStringLiteral(None, "com.example.foo")
+                                ),
                             ),
                             ProtoOption(
-                                ProtoFullIdentifier("(foo.bar).baz"),
-                                ProtoConstant(ProtoBool(False)),
+                                None,
+                                ProtoFullIdentifier(None, "(foo.bar).baz"),
+                                ProtoConstant(None, ProtoBool(None, False)),
                             ),
                         ],
                     ),
@@ -103,26 +114,31 @@ class ServiceTest(unittest.TestCase):
         )
 
     def test_service_empty(self):
-        parsed_empty_service = ProtoService.match("""service FooService {}""")
+        parsed_empty_service = ProtoService.match(None, """service FooService {}""")
         self.assertIsNotNone(parsed_empty_service)
-        self.assertEqual(parsed_empty_service.node.name, ProtoIdentifier("FooService"))
+        self.assertEqual(
+            parsed_empty_service.node.name, ProtoIdentifier(None, "FooService")
+        )
 
         parsed_spaced_service = ProtoService.match(
+            None,
             dedent(
                 """
             service FooService {
 
             }
         """.strip()
-            )
+            ),
         )
         self.assertIsNotNone(parsed_spaced_service)
         self.assertEqual(
-            parsed_spaced_service.node, ProtoService(ProtoIdentifier("FooService"), [])
+            parsed_spaced_service.node,
+            ProtoService(None, ProtoIdentifier(None, "FooService"), []),
         )
 
     def test_service_empty_statements(self):
         empty_statement_service = ProtoService.match(
+            None,
             dedent(
                 """
             service FooService {
@@ -130,36 +146,39 @@ class ServiceTest(unittest.TestCase):
                 ;
             }
         """.strip()
-            )
+            ),
         )
         self.assertIsNotNone(empty_statement_service)
         self.assertEqual(
             empty_statement_service.node,
-            ProtoService(ProtoIdentifier("FooService"), []),
+            ProtoService(None, ProtoIdentifier(None, "FooService"), []),
         )
 
     def test_service_option(self):
         service_with_options = ProtoService.match(
+            None,
             dedent(
                 """
             service FooService {
                 option (foo.bar).baz = "bat";
             }
         """.strip()
-            )
+            ),
         )
         self.assertEqual(
             service_with_options.node.nodes,
             [
                 ProtoOption(
-                    ProtoIdentifier("(foo.bar).baz"),
-                    ProtoConstant(ProtoStringLiteral("bat")),
+                    None,
+                    ProtoIdentifier(None, "(foo.bar).baz"),
+                    ProtoConstant(None, ProtoStringLiteral(None, "bat")),
                 )
             ],
         )
 
     def test_service_rpc_basic(self):
         service_with_options = ProtoService.match(
+            None,
             dedent(
                 """
             service FooService {
@@ -168,31 +187,35 @@ class ServiceTest(unittest.TestCase):
                 rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse);
             }
         """.strip()
-            )
+            ),
         )
         self.assertEqual(
             service_with_options.node.nodes,
             [
                 ProtoServiceRPC(
-                    ProtoIdentifier("OneRPC"),
-                    ProtoEnumOrMessageIdentifier("OneRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("OneRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "OneRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "OneRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "OneRPCResponse"),
                 ),
                 ProtoServiceRPC(
-                    ProtoIdentifier("TwoRPC"),
-                    ProtoEnumOrMessageIdentifier("TwoRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("TwoRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "TwoRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "TwoRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "TwoRPCResponse"),
                 ),
                 ProtoServiceRPC(
-                    ProtoIdentifier("ThreeRPC"),
-                    ProtoEnumOrMessageIdentifier("ThreeRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("ThreeRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "ThreeRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "ThreeRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "ThreeRPCResponse"),
                 ),
             ],
         )
 
     def test_service_rpc_stream(self):
         service_with_options = ProtoService.match(
+            None,
             dedent(
                 """
             service FooService {
@@ -200,22 +223,24 @@ class ServiceTest(unittest.TestCase):
                 rpc TwoRPC (TwoRPCRequest) returns (stream TwoRPCResponse);
             }
         """.strip()
-            )
+            ),
         )
         self.assertEqual(
             service_with_options.node.nodes,
             [
                 ProtoServiceRPC(
-                    ProtoIdentifier("OneRPC"),
-                    ProtoEnumOrMessageIdentifier("OneRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("OneRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "OneRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "OneRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "OneRPCResponse"),
                     True,
                     False,
                 ),
                 ProtoServiceRPC(
-                    ProtoIdentifier("TwoRPC"),
-                    ProtoEnumOrMessageIdentifier("TwoRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("TwoRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "TwoRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "TwoRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "TwoRPCResponse"),
                     False,
                     True,
                 ),
@@ -224,6 +249,7 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_rpc_options(self):
         service_with_options = ProtoService.match(
+            None,
             dedent(
                 """
             service FooService {
@@ -231,30 +257,36 @@ class ServiceTest(unittest.TestCase):
                 rpc TwoRPC (TwoRPCRequest) returns (TwoRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
             }
         """.strip()
-            )
+            ),
         )
         self.assertEqual(
             service_with_options.node.nodes,
             [
                 ProtoServiceRPC(
-                    ProtoIdentifier("OneRPC"),
-                    ProtoEnumOrMessageIdentifier("OneRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("OneRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "OneRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "OneRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "OneRPCResponse"),
                 ),
                 ProtoServiceRPC(
-                    ProtoIdentifier("TwoRPC"),
-                    ProtoEnumOrMessageIdentifier("TwoRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("TwoRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "TwoRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "TwoRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "TwoRPCResponse"),
                     False,
                     False,
                     [
                         ProtoOption(
-                            ProtoIdentifier("java_package"),
-                            ProtoConstant(ProtoStringLiteral("com.example.foo")),
+                            None,
+                            ProtoIdentifier(None, "java_package"),
+                            ProtoConstant(
+                                None, ProtoStringLiteral(None, "com.example.foo")
+                            ),
                         ),
                         ProtoOption(
-                            ProtoFullIdentifier("(foo.bar).baz"),
-                            ProtoConstant(ProtoBool(False)),
+                            None,
+                            ProtoFullIdentifier(None, "(foo.bar).baz"),
+                            ProtoConstant(None, ProtoBool(None, False)),
                         ),
                     ],
                 ),
@@ -263,6 +295,7 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_parses_comments(self):
         service_with_comments = ProtoService.match(
+            None,
             dedent(
                 """
             service FooService {
@@ -277,35 +310,40 @@ class ServiceTest(unittest.TestCase):
                 rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse);
             }
         """.strip()
-            )
+            ),
         )
         self.assertEqual(
             service_with_comments.node.nodes,
             [
                 ProtoServiceRPC(
-                    ProtoIdentifier("OneRPC"),
-                    ProtoEnumOrMessageIdentifier("OneRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("OneRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "OneRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "OneRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "OneRPCResponse"),
                 ),
-                ProtoSingleLineComment(" single-line comment!"),
+                ProtoSingleLineComment(None, " single-line comment!"),
                 ProtoServiceRPC(
-                    ProtoIdentifier("TwoRPC"),
-                    ProtoEnumOrMessageIdentifier("TwoRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("TwoRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "TwoRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "TwoRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "TwoRPCResponse"),
                 ),
                 ProtoMultiLineComment(
-                    "\n                multiple\n                line\n                comment\n                "
+                    None,
+                    "\n                multiple\n                line\n                comment\n                ",
                 ),
                 ProtoServiceRPC(
-                    ProtoIdentifier("ThreeRPC"),
-                    ProtoEnumOrMessageIdentifier("ThreeRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("ThreeRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "ThreeRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "ThreeRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "ThreeRPCResponse"),
                 ),
             ],
         )
 
     def test_service_normalize_removes_comments(self):
         normalized_service = ProtoService.match(
+            None,
             dedent(
                 """
             service FooService {
@@ -320,25 +358,28 @@ class ServiceTest(unittest.TestCase):
                 rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse);
             }
         """.strip()
-            )
+            ),
         ).node.normalize()
         self.assertEqual(
             normalized_service.nodes,
             [
                 ProtoServiceRPC(
-                    ProtoIdentifier("OneRPC"),
-                    ProtoEnumOrMessageIdentifier("OneRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("OneRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "OneRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "OneRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "OneRPCResponse"),
                 ),
                 ProtoServiceRPC(
-                    ProtoIdentifier("ThreeRPC"),
-                    ProtoEnumOrMessageIdentifier("ThreeRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("ThreeRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "ThreeRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "ThreeRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "ThreeRPCResponse"),
                 ),
                 ProtoServiceRPC(
-                    ProtoIdentifier("TwoRPC"),
-                    ProtoEnumOrMessageIdentifier("TwoRPCRequest"),
-                    ProtoEnumOrMessageIdentifier("TwoRPCResponse"),
+                    None,
+                    ProtoIdentifier(None, "TwoRPC"),
+                    ProtoEnumOrMessageIdentifier(None, "TwoRPCRequest"),
+                    ProtoEnumOrMessageIdentifier(None, "TwoRPCResponse"),
                 ),
             ],
         )

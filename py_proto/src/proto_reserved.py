@@ -14,12 +14,14 @@ class ProtoReservedFieldQuoteEnum(Enum):
 class ProtoReserved(ProtoNode):
     def __init__(
         self,
+        parent: Optional[ProtoNode],
         ranges: Optional[list[ProtoRange]] = None,
         fields: Optional[list[ProtoIdentifier]] = None,
         quote_type: Optional[
             ProtoReservedFieldQuoteEnum
         ] = ProtoReservedFieldQuoteEnum.DOUBLE,
     ):
+        super().__init__(parent)
         if (not ranges and not fields) or (ranges and fields):
             raise ValueError(
                 "Exactly one of ranges or fields must be set in a ProtoReserved"
@@ -30,11 +32,17 @@ class ProtoReserved(ProtoNode):
             if quote_type is None:
                 raise ValueError("Quote type must be specified when reserving fields")
 
+        self.ranges = ranges
+        for range in self.ranges:
+            range.parent = self
+
         if fields is None:
             fields = []
 
-        self.ranges = ranges
         self.fields = fields
+        for field in self.fields:
+            field.parent = self
+
         self.quote_type = quote_type
 
     def __eq__(self, other) -> bool:
@@ -49,9 +57,10 @@ class ProtoReserved(ProtoNode):
     def normalize(self) -> "ProtoReserved":
         # sort the ranges.
         return ProtoReserved(
-            sorted(self.ranges, key=lambda r: int(r.min)),
-            sorted(self.fields, key=lambda f: str(f)),
-            self.quote_type,
+            parent=self.parent,
+            ranges=sorted(self.ranges, key=lambda r: int(r.min)),
+            fields=sorted(self.fields, key=lambda f: str(f)),
+            quote_type=self.quote_type,
         )
 
     @property
@@ -62,7 +71,9 @@ class ProtoReserved(ProtoNode):
             return str(min(self.fields, key=lambda f: str(f)))
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("reserved "):
             return None
 
@@ -81,7 +92,7 @@ class ProtoReserved(ProtoNode):
                 )
             if proto_source[0] == ",":
                 proto_source = proto_source[1:].strip()
-            range_match = ProtoRange.match(proto_source)
+            range_match = ProtoRange.match(None, proto_source)
             if range_match is not None:
                 ranges.append(range_match.node)
                 proto_source = range_match.remaining_source
@@ -98,7 +109,7 @@ class ProtoReserved(ProtoNode):
                     )
                 quote_type = quote_types[0]
                 proto_source = proto_source[1:]
-                match = ProtoIdentifier.match(proto_source)
+                match = ProtoIdentifier.match(None, proto_source)
                 if match is None:
                     raise ValueError(
                         f"Proto source has invalid reserved syntax, expecting field identifier: {proto_source}"
@@ -113,7 +124,7 @@ class ProtoReserved(ProtoNode):
                 proto_source = proto_source[1:].strip()
 
         return ParsedProtoNode(
-            ProtoReserved(ranges, fields, quote_type), proto_source.strip()
+            ProtoReserved(parent, ranges, fields, quote_type), proto_source.strip()
         )
 
     def serialize(self) -> str:

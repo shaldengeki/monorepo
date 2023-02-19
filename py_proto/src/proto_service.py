@@ -13,6 +13,7 @@ from src.proto_option import ProtoOption
 class ProtoServiceRPC(ProtoNode):
     def __init__(
         self,
+        parent: Optional[ProtoNode],
         name: ProtoIdentifier,
         request_type: ProtoEnumOrMessageIdentifier,
         response_type: ProtoEnumOrMessageIdentifier,
@@ -20,15 +21,21 @@ class ProtoServiceRPC(ProtoNode):
         response_stream: bool = False,
         options: Optional[list[ProtoOption]] = None,
     ):
+        super().__init__(parent)
         self.name = name
+        self.name.parent = self
         self.request_type = request_type
+        self.request_type.parent = self
         self.response_type = response_type
+        self.response_type.parent = self
         self.request_stream = request_stream
         self.response_stream = response_stream
 
         if options is None:
             options = []
         self.options = options
+        for option in self.options:
+            option.parent = self
 
     def __eq__(self, other) -> bool:
         return (
@@ -48,6 +55,7 @@ class ProtoServiceRPC(ProtoNode):
 
     def normalize(self) -> "ProtoServiceRPC":
         return ProtoServiceRPC(
+            parent=self.parent,
             name=self.name,
             request_type=self.request_type,
             response_type=self.response_type,
@@ -57,13 +65,15 @@ class ProtoServiceRPC(ProtoNode):
         )
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("rpc "):
             return None
         proto_source = proto_source[4:].strip()
 
         # Match the RPC name.
-        name_match = ProtoIdentifier.match(proto_source)
+        name_match = ProtoIdentifier.match(None, proto_source)
         if name_match is None:
             return None
         name = name_match.node
@@ -74,7 +84,9 @@ class ProtoServiceRPC(ProtoNode):
         proto_source = proto_source[1:].strip()
 
         # Try to parse the request type.
-        stream_or_request_name_match = ProtoEnumOrMessageIdentifier.match(proto_source)
+        stream_or_request_name_match = ProtoEnumOrMessageIdentifier.match(
+            None, proto_source
+        )
         if stream_or_request_name_match is None:
             return None
 
@@ -85,7 +97,7 @@ class ProtoServiceRPC(ProtoNode):
         elif stream_or_request_name_match.node.identifier == "stream":
             # Try matching the request name.
             potential_request_name_match = ProtoEnumOrMessageIdentifier.match(
-                stream_or_request_name_match.remaining_source.strip()
+                None, stream_or_request_name_match.remaining_source.strip()
             )
             if potential_request_name_match is None:
                 # No further name.
@@ -112,7 +124,9 @@ class ProtoServiceRPC(ProtoNode):
         proto_source = proto_source[1:].strip()
 
         # Try to parse the response type.
-        stream_or_response_name_match = ProtoEnumOrMessageIdentifier.match(proto_source)
+        stream_or_response_name_match = ProtoEnumOrMessageIdentifier.match(
+            None, proto_source
+        )
         if stream_or_response_name_match is None:
             return None
 
@@ -123,7 +137,7 @@ class ProtoServiceRPC(ProtoNode):
         elif stream_or_response_name_match.node.identifier == "stream":
             # Try matching the response name.
             potential_response_name_match = ProtoEnumOrMessageIdentifier.match(
-                stream_or_response_name_match.remaining_source.strip()
+                None, stream_or_response_name_match.remaining_source.strip()
             )
             if potential_response_name_match is None:
                 # No further name.
@@ -155,7 +169,7 @@ class ProtoServiceRPC(ProtoNode):
                     proto_source = proto_source[1:].strip()
                     break
 
-                option_match = ProtoOption.match(proto_source)
+                option_match = ProtoOption.match(None, proto_source)
                 if option_match is None:
                     return None
                 options.append(option_match.node)
@@ -167,6 +181,7 @@ class ProtoServiceRPC(ProtoNode):
 
         return ParsedProtoNode(
             ProtoServiceRPC(
+                parent,
                 name,
                 request_name,
                 response_name,
@@ -207,9 +222,15 @@ class ProtoServiceRPC(ProtoNode):
 
 
 class ProtoService(ProtoNode):
-    def __init__(self, name: ProtoIdentifier, nodes: list[ProtoNode]):
+    def __init__(
+        self, parent: Optional[ProtoNode], name: ProtoIdentifier, nodes: list[ProtoNode]
+    ):
+        super().__init__(parent)
         self.name = name
+        self.name.parent = self
         self.nodes = nodes
+        for node in self.nodes:
+            node.parent = self
 
     def __eq__(self, other) -> bool:
         return self.name == other.name and self.nodes == other.nodes
@@ -225,6 +246,7 @@ class ProtoService(ProtoNode):
             lambda n: not isinstance(n, ProtoComment), self.nodes
         )
         return ProtoService(
+            parent=self.parent,
             name=self.name,
             nodes=sorted(non_comment_nodes, key=lambda n: str(n.normalize())),
         )
@@ -239,7 +261,7 @@ class ProtoService(ProtoNode):
         ]
         for node_type in supported_types:
             try:
-                match_result = node_type.match(partial_service_content)
+                match_result = node_type.match(None, partial_service_content)
             except (ValueError, IndexError, TypeError):
                 raise ValueError(
                     f"Could not parse partial service content:\n{partial_service_content}"
@@ -251,12 +273,14 @@ class ProtoService(ProtoNode):
         )
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("service "):
             return None
 
         proto_source = proto_source[8:]
-        match = ProtoIdentifier.match(proto_source)
+        match = ProtoIdentifier.match(None, proto_source)
         if match is None:
             raise ValueError(f"Proto has invalid service name: {proto_source}")
 
@@ -284,7 +308,9 @@ class ProtoService(ProtoNode):
             parsed_tree.append(match_result.node)
             proto_source = match_result.remaining_source.strip()
 
-        return ParsedProtoNode(ProtoService(enum_name, nodes=parsed_tree), proto_source)
+        return ParsedProtoNode(
+            ProtoService(parent, enum_name, nodes=parsed_tree), proto_source
+        )
 
     @property
     def options(self) -> list[ProtoOption]:

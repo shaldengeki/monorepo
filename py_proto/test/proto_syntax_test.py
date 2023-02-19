@@ -7,88 +7,88 @@ from src.proto_syntax import ProtoSyntax, ProtoSyntaxChanged
 class SyntaxTest(unittest.TestCase):
     def test_correct_syntax(self):
         self.assertEqual(
-            ProtoSyntax.match("syntax = 'proto3';").node.syntax.value, "proto3"
+            ProtoSyntax.match(None, "syntax = 'proto3';").node.syntax.value, "proto3"
         )
         self.assertEqual(
-            ProtoSyntax.match('syntax = "proto3";').node.syntax.value, "proto3"
+            ProtoSyntax.match(None, 'syntax = "proto3";').node.syntax.value, "proto3"
         )
         self.assertEqual(
-            ProtoSyntax.match("syntax = 'proto2';").node.syntax.value, "proto2"
+            ProtoSyntax.match(None, "syntax = 'proto2';").node.syntax.value, "proto2"
         )
         self.assertEqual(
-            ProtoSyntax.match('syntax = "proto2";').node.syntax.value, "proto2"
+            ProtoSyntax.match(None, 'syntax = "proto2";').node.syntax.value, "proto2"
         )
 
     def test_serialize(self):
         self.assertEqual(
-            ProtoSyntax.match("syntax = 'proto3';").node.serialize(),
+            ProtoSyntax.match(None, "syntax = 'proto3';").node.serialize(),
             "syntax = 'proto3';",
         )
         self.assertEqual(
-            ProtoSyntax.match('syntax = "proto3";').node.serialize(),
+            ProtoSyntax.match(None, 'syntax = "proto3";').node.serialize(),
             'syntax = "proto3";',
         )
         self.assertEqual(
-            ProtoSyntax.match("syntax = 'proto2';").node.serialize(),
+            ProtoSyntax.match(None, "syntax = 'proto2';").node.serialize(),
             "syntax = 'proto2';",
         )
         self.assertEqual(
-            ProtoSyntax.match('syntax = "proto2";').node.serialize(),
+            ProtoSyntax.match(None, 'syntax = "proto2";').node.serialize(),
             'syntax = "proto2";',
         )
 
     def test_syntax_not_present(self):
-        self.assertIsNone(ProtoSyntax.match(""))
-        self.assertIsNone(ProtoSyntax.match('import "foo.proto";'))
+        self.assertIsNone(ProtoSyntax.match(None, ""))
+        self.assertIsNone(ProtoSyntax.match(None, 'import "foo.proto";'))
 
     def test_syntax_malformed(self):
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = 'proto3'")
+            ProtoSyntax.match(None, "syntax = 'proto3'")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match('syntax = "proto3"')
+            ProtoSyntax.match(None, 'syntax = "proto3"')
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = 'proto2'")
+            ProtoSyntax.match(None, "syntax = 'proto2'")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match('syntax = "proto2"')
+            ProtoSyntax.match(None, 'syntax = "proto2"')
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = proto3")
+            ProtoSyntax.match(None, "syntax = proto3")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = proto3;")
+            ProtoSyntax.match(None, "syntax = proto3;")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = 'proto3")
+            ProtoSyntax.match(None, "syntax = 'proto3")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = 'proto3;")
+            ProtoSyntax.match(None, "syntax = 'proto3;")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = proto3'")
+            ProtoSyntax.match(None, "syntax = proto3'")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = proto3';")
+            ProtoSyntax.match(None, "syntax = proto3';")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = 'proton';")
+            ProtoSyntax.match(None, "syntax = 'proton';")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = 'proton'")
+            ProtoSyntax.match(None, "syntax = 'proton'")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = 'proton")
+            ProtoSyntax.match(None, "syntax = 'proton")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = proton';")
+            ProtoSyntax.match(None, "syntax = proton';")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = proton'")
+            ProtoSyntax.match(None, "syntax = proton'")
         with self.assertRaises(ValueError):
-            ProtoSyntax.match("syntax = proton")
+            ProtoSyntax.match(None, "syntax = proton")
 
     def test_diff_empty_same_syntax_returns_empty(self):
-        pf1 = ProtoSyntax(ProtoStringLiteral("proto3"))
-        pf2 = ProtoSyntax(ProtoStringLiteral("proto3"))
+        pf1 = ProtoSyntax(None, ProtoStringLiteral(None, "proto3"))
+        pf2 = ProtoSyntax(None, ProtoStringLiteral(None, "proto3"))
         self.assertEqual(ProtoSyntax.diff(pf1, pf2), [])
 
     def test_diff_empty_different_syntax_returns_syntax_diff(self):
-        pf1 = ProtoSyntax(ProtoStringLiteral("proto3"))
-        pf2 = ProtoSyntax(ProtoStringLiteral("proto2"))
+        pf1 = ProtoSyntax(None, ProtoStringLiteral(None, "proto3"))
+        pf2 = ProtoSyntax(None, ProtoStringLiteral(None, "proto2"))
         self.assertEqual(
             ProtoSyntax.diff(pf1, pf2),
             [
                 ProtoSyntaxChanged(
-                    ProtoSyntax(ProtoStringLiteral("proto3")),
-                    ProtoSyntax(ProtoStringLiteral("proto2")),
+                    ProtoSyntax(None, ProtoStringLiteral(None, "proto3")),
+                    ProtoSyntax(None, ProtoStringLiteral(None, "proto2")),
                 )
             ],
         )

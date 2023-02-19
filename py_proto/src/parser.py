@@ -38,7 +38,7 @@ class Parser:
         ]
         for node_type in node_types:
             try:
-                match_result = node_type.match(partial_proto_content)
+                match_result = node_type.match(None, partial_proto_content)
             except (ValueError, IndexError, TypeError):
                 raise ParseError(
                     f"Could not parse proto content:\n{partial_proto_content}"
@@ -56,7 +56,7 @@ class Parser:
         while True:
             for node_type in [ProtoSingleLineComment, ProtoMultiLineComment]:
                 try:
-                    match_result = node_type.match(proto_content)
+                    match_result = node_type.match(None, proto_content)
                 except (ValueError, IndexError, TypeError):
                     raise ParseError(f"Could not parse proto content:\n{proto_content}")
                 if match_result is not None:
@@ -68,7 +68,7 @@ class Parser:
 
         # Next, parse syntax.
         try:
-            syntax_match = ProtoSyntax.match(proto_content.strip())
+            syntax_match = ProtoSyntax.match(None, proto_content.strip())
         except (ValueError, IndexError, TypeError):
             raise ParseError(f"Proto doesn't have parseable syntax:\n{proto_content}")
         if syntax_match is None:

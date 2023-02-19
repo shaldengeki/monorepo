@@ -6,9 +6,15 @@ from src.proto_string_literal import ProtoStringLiteral
 
 class ProtoImport(ProtoNode):
     def __init__(
-        self, path: ProtoStringLiteral, weak: bool = False, public: bool = False
+        self,
+        parent: Optional[ProtoNode],
+        path: ProtoStringLiteral,
+        weak: bool = False,
+        public: bool = False,
     ):
+        super().__init__(parent)
         self.path = path
+        self.path.parent = self
         self.weak = weak
         self.public = public
 
@@ -36,7 +42,9 @@ class ProtoImport(ProtoNode):
         return self
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("import "):
             return None
         proto_source = proto_source[7:]
@@ -53,7 +61,7 @@ class ProtoImport(ProtoNode):
             public = True
             proto_source = proto_source[7:]
 
-        match = ProtoStringLiteral.match(proto_source)
+        match = ProtoStringLiteral.match(None, proto_source)
         if match is None:
             raise ValueError(f"Proto has invalid import syntax: {proto_source}")
 
@@ -63,7 +71,7 @@ class ProtoImport(ProtoNode):
             )
 
         return ParsedProtoNode(
-            ProtoImport(match.node, weak=weak, public=public),
+            ProtoImport(parent, match.node, weak=weak, public=public),
             match.remaining_source[1:].strip(),
         )
 

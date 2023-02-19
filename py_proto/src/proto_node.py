@@ -5,8 +5,13 @@ from typing import NamedTuple, Optional
 class ProtoNode(abc.ABC):
     @classmethod
     @abc.abstractmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(
+        cls, parent: Optional["ProtoNode"], proto_source: str
+    ) -> Optional["ParsedProtoNode"]:
         raise NotImplementedError
+
+    def __init__(self, parent: Optional["ProtoNode"]):
+        self.parent = parent
 
     @abc.abstractmethod
     def serialize(self) -> str:

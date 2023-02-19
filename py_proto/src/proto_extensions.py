@@ -9,9 +9,13 @@ from src.proto_range import ProtoRange
 class ProtoExtensions(ProtoNode):
     def __init__(
         self,
+        parent: Optional[ProtoNode],
         ranges: list[ProtoRange],
     ):
+        super().__init__(parent)
         self.ranges = ranges
+        for range in self.ranges:
+            range.parent = self
 
     def __eq__(self, other) -> bool:
         return self.ranges == other.ranges
@@ -25,11 +29,14 @@ class ProtoExtensions(ProtoNode):
     def normalize(self) -> "ProtoExtensions":
         # sort the ranges.
         return ProtoExtensions(
+            self.parent,
             sorted(self.ranges, key=lambda r: int(r.min)),
         )
 
     @classmethod
-    def match(cls, proto_source: str) -> Optional["ParsedProtoNode"]:
+    def match(
+        cls, parent: Optional[ProtoNode], proto_source: str
+    ) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("extensions "):
             return None
 
@@ -46,13 +53,13 @@ class ProtoExtensions(ProtoNode):
                 )
             if proto_source[0] == ",":
                 proto_source = proto_source[1:].strip()
-            match = ProtoRange.match(proto_source)
+            match = ProtoRange.match(None, proto_source)
             if match is None:
                 return None
             ranges.append(match.node)
             proto_source = match.remaining_source
 
-        return ParsedProtoNode(ProtoExtensions(ranges), proto_source.strip())
+        return ParsedProtoNode(ProtoExtensions(parent, ranges), proto_source.strip())
 
     def serialize(self) -> str:
         serialize_parts = ["extensions", ", ".join(r.serialize() for r in self.ranges)]
