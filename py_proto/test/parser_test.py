@@ -16,15 +16,12 @@ from src.proto_identifier import (
 )
 from src.proto_import import ProtoImport
 from src.proto_int import ProtoInt, ProtoIntSign
-from src.proto_message import (
-    ProtoMap,
-    ProtoMapKeyTypesEnum,
-    ProtoMapValueTypesEnum,
-    ProtoMessage,
+from src.proto_map import ProtoMap, ProtoMapKeyTypesEnum, ProtoMapValueTypesEnum
+from src.proto_message import ProtoMessage, ProtoOneOf
+from src.proto_message_field import (
     ProtoMessageField,
     ProtoMessageFieldOption,
     ProtoMessageFieldTypesEnum,
-    ProtoOneOf,
 )
 from src.proto_option import ProtoOption
 from src.proto_range import ProtoRange, ProtoRangeEnum

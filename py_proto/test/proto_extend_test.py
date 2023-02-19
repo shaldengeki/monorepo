@@ -4,7 +4,7 @@ from textwrap import dedent
 from src.proto_extend import ProtoExtend
 from src.proto_identifier import ProtoEnumOrMessageIdentifier, ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
-from src.proto_message import ProtoMessageField, ProtoMessageFieldTypesEnum
+from src.proto_message_field import ProtoMessageField, ProtoMessageFieldTypesEnum
 
 
 class ExtendTest(unittest.TestCase):

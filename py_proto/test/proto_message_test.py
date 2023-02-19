@@ -13,10 +13,8 @@ from src.proto_identifier import (
     ProtoIdentifier,
 )
 from src.proto_int import ProtoInt, ProtoIntSign
+from src.proto_map import ProtoMap, ProtoMapKeyTypesEnum, ProtoMapValueTypesEnum
 from src.proto_message import (
-    ProtoMap,
-    ProtoMapKeyTypesEnum,
-    ProtoMapValueTypesEnum,
     ProtoMessage,
     ProtoMessageAdded,
     ProtoMessageRemoved,

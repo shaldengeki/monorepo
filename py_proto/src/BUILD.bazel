@@ -173,9 +173,38 @@ py_library(
         ":proto_extend",
         ":proto_extensions",
         ":proto_identifier",
+        ":proto_map",
+        ":proto_message_field",
         ":proto_node",
+        ":proto_oneof",
         ":proto_option",
         ":proto_reserved",
+    ],
+)
+
+py_library(
+    name = "proto_oneof",
+    srcs = ["proto_oneof.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":proto_comment",
+        ":proto_identifier",
+        ":proto_map",
+        ":proto_message_field",
+        ":proto_node",
+        ":proto_option",
+    ],
+)
+
+py_library(
+    name = "proto_map",
+    srcs = ["proto_map.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":proto_identifier",
+        ":proto_int",
+        ":proto_message_field",
+        ":proto_node",
     ],
 )
 

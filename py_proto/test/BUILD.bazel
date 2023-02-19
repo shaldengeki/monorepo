@@ -126,6 +126,26 @@ py_test(
 )
 
 py_test(
+    name = "proto_map_test",
+    srcs = ["proto_map_test.py"],
+    deps = [
+        "//src:proto_bool",
+        "//src:proto_comment",
+        "//src:proto_constant",
+        "//src:proto_enum",
+        "//src:proto_extend",
+        "//src:proto_extensions",
+        "//src:proto_identifier",
+        "//src:proto_int",
+        "//src:proto_map",
+        "//src:proto_message_field",
+        "//src:proto_option",
+        "//src:proto_reserved",
+        "//src:proto_string_literal",
+    ],
+)
+
+py_test(
     name = "proto_message_test",
     srcs = ["proto_message_test.py"],
     deps = [
@@ -137,6 +157,7 @@ py_test(
         "//src:proto_extensions",
         "//src:proto_identifier",
         "//src:proto_int",
+        "//src:proto_map",
         "//src:proto_message",
         "//src:proto_option",
         "//src:proto_reserved",
@@ -151,7 +172,7 @@ py_test(
         "//src:proto_extend",
         "//src:proto_identifier",
         "//src:proto_int",
-        "//src:proto_message",
+        "//src:proto_message_field",
     ],
 )
 
@@ -206,7 +227,9 @@ py_test(
         "//src:proto_identifier",
         "//src:proto_import",
         "//src:proto_int",
+        "//src:proto_map",
         "//src:proto_message",
+        "//src:proto_message_field",
         "//src:proto_option",
         "//src:proto_service",
         "//src:proto_string_literal",
