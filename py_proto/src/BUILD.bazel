@@ -1,4 +1,4 @@
-load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("@rules_python//python:defs.bzl", "py_library")
 
 py_library(
     name = "proto_node",
@@ -256,49 +256,4 @@ py_library(
         ":proto_package",
         ":proto_syntax",
     ],
-)
-
-py_library(
-    name = "parser",
-    srcs = ["parser.py"],
-    visibility = ["//visibility:public"],
-    deps = [
-        ":proto_enum",
-        ":proto_extend",
-        ":proto_file",
-        ":proto_import",
-        ":proto_message",
-        ":proto_node",
-        ":proto_option",
-        ":proto_package",
-        ":proto_service",
-        ":proto_syntax",
-    ],
-)
-
-py_binary(
-    name = "parser_binary",
-    srcs = ["parser.py"],
-    main = "parser.py",
-    visibility = ["//visibility:public"],
-    deps = [":parser"],
-)
-
-py_library(
-    name = "compatibility_checker",
-    srcs = ["compatibility_checker.py"],
-    visibility = ["//visibility:public"],
-    deps = [
-        ":parser",
-        ":proto_file",
-        ":proto_node",
-    ],
-)
-
-py_binary(
-    name = "compatibility_checker_binary",
-    srcs = ["compatibility_checker.py"],
-    main = "compatibility_checker.py",
-    visibility = ["//visibility:public"],
-    deps = [":compatibility_checker"],
 )

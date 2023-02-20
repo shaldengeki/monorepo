@@ -214,52 +214,9 @@ py_test(
 )
 
 py_test(
-    name = "parser_test",
-    srcs = ["parser_test.py"],
-    deps = [
-        "//src:parser",
-        "//src:proto_comment",
-        "//src:proto_constant",
-        "//src:proto_enum",
-        "//src:proto_extend",
-        "//src:proto_extensions",
-        "//src:proto_float",
-        "//src:proto_identifier",
-        "//src:proto_import",
-        "//src:proto_int",
-        "//src:proto_map",
-        "//src:proto_message",
-        "//src:proto_message_field",
-        "//src:proto_option",
-        "//src:proto_service",
-        "//src:proto_string_literal",
-        "//src:proto_syntax",
-    ],
-)
-
-py_test(
     name = "proto_file_test",
     srcs = ["proto_file_test.py"],
     deps = [
         "//src:proto_file",
-    ],
-)
-
-sh_test(
-    name = "parser_binary_test",
-    srcs = ["parser_binary_test.sh"],
-    data = [
-        "//src:parser_binary",
-        "//test/resources:all_protos",
-        "@com_google_protobuf//:all_proto",
-    ],
-)
-
-sh_test(
-    name = "compatibility_checker_binary_test",
-    srcs = ["compatibility_checker_binary_test.sh"],
-    data = [
-        "//src:compatibility_checker_binary",
-        "//test/resources:all_protos",
     ],
 )

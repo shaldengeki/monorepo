@@ -21,7 +21,7 @@ py_library(
 
 Then, in your Python code, use the parser:
 ```python
-from src.parser import ParseError, Parser
+from src.util.parser import ParseError, Parser
 with open("your.proto", "r") as proto_file:
     parsed_proto = Parser.loads(proto_file.read())
 

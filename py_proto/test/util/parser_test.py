@@ -1,7 +1,6 @@
 import unittest
 from textwrap import dedent
 
-from src.parser import ParseError, Parser
 from src.proto_bool import ProtoBool
 from src.proto_comment import ProtoSingleLineComment
 from src.proto_constant import ProtoConstant
@@ -29,6 +28,7 @@ from src.proto_reserved import ProtoReserved
 from src.proto_service import ProtoService, ProtoServiceRPC
 from src.proto_string_literal import ProtoStringLiteral
 from src.proto_syntax import ProtoSyntaxType
+from src.util.parser import ParseError, Parser
 
 
 class IntTest(unittest.TestCase):
