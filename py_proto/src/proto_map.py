@@ -219,44 +219,44 @@ class ProtoMap(ProtoNode):
 
     @staticmethod
     def diff(
-        parent: Optional[ProtoNode], left: "ProtoMap", right: "ProtoMap"
+        parent: Optional[ProtoNode], before: "ProtoMap", after: "ProtoMap"
     ) -> list["ProtoNodeDiff"]:
-        if left is None and right is not None:
-            return [ProtoMapAdded(parent, right)]
-        elif left is not None and right is None:
-            return [ProtoMapRemoved(parent, left)]
-        elif left is None and right is None:
+        if before is None and after is not None:
+            return [ProtoMapAdded(parent, after)]
+        elif before is not None and after is None:
+            return [ProtoMapRemoved(parent, before)]
+        elif before is None and after is None:
             return []
-        elif left.name != right.name:
+        elif before.name != after.name:
             return []
-        elif left == right:
+        elif before == after:
             return []
         diffs: list["ProtoNodeDiff"] = []
         return diffs
 
     @staticmethod
     def diff_sets(
-        parent: Optional[ProtoNode], left: list["ProtoMap"], right: list["ProtoMap"]
+        parent: Optional[ProtoNode], before: list["ProtoMap"], after: list["ProtoMap"]
     ) -> Sequence["ProtoNodeDiff"]:
         diffs: list[ProtoNodeDiff] = []
-        left_names = set(o.name.identifier for o in left)
-        right_names = set(o.name.identifier for o in right)
-        for name in left_names - right_names:
-            diffs.append(
-                ProtoMapAdded(
-                    parent, next(i for i in left if i.name.identifier == name)
-                )
-            )
-        for name in right_names - left_names:
+        before_names = set(o.name.identifier for o in before)
+        after_names = set(o.name.identifier for o in after)
+        for name in before_names - after_names:
             diffs.append(
                 ProtoMapRemoved(
-                    parent, next(i for i in right if i.name.identifier == name)
+                    parent, next(i for i in before if i.name.identifier == name)
                 )
             )
-        for name in left_names & right_names:
-            left_enum = next(i for i in left if i.name.identifier == name)
-            right_enum = next(i for i in right if i.name.identifier == name)
-            diffs.extend(ProtoMap.diff(parent, left_enum, right_enum))
+        for name in after_names - before_names:
+            diffs.append(
+                ProtoMapAdded(
+                    parent, next(i for i in after if i.name.identifier == name)
+                )
+            )
+        for name in before_names & after_names:
+            before_enum = next(i for i in before if i.name.identifier == name)
+            after_enum = next(i for i in after if i.name.identifier == name)
+            diffs.extend(ProtoMap.diff(parent, before_enum, after_enum))
 
         return diffs
 

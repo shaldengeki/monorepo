@@ -12,8 +12,8 @@ from src.util.parser import Parser
 class CompatibilityChecker:
     allowed_diff_types: list[Type[ProtoNodeDiff]]
 
-    def check_compatibility(self, left: ProtoFile, right: ProtoFile):
-        for diff in left.diff(right):
+    def check_compatibility(self, before: ProtoFile, after: ProtoFile):
+        for diff in before.diff(after):
             if diff.__class__ in self.allowed_diff_types:
                 continue
             yield diff
@@ -21,13 +21,13 @@ class CompatibilityChecker:
 
 def main() -> int:
     with open(sys.argv[1], "r") as proto_file:
-        left = Parser.loads(proto_file.read())
+        before = Parser.loads(proto_file.read())
 
     with open(sys.argv[2], "r") as proto_file:
-        right = Parser.loads(proto_file.read())
+        after = Parser.loads(proto_file.read())
 
     violations = list(
-        CompatibilityChecker([ProtoMessageAdded]).check_compatibility(left, right)
+        CompatibilityChecker([ProtoMessageAdded]).check_compatibility(before, after)
     )
     if violations:
         print(f"Violations: {violations}")

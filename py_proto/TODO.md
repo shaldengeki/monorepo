@@ -74,7 +74,7 @@
     - [ ] Message-level diffs
       - [x] Additions/removals
       - [x] Option changes
-      - [ ] Field changes
+      - [x] Field changes
       - [ ] Reserved changes
       - [ ] Nested enum changes
       - [ ] Nested message changes

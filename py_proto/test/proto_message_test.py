@@ -941,12 +941,12 @@ class MessageTest(unittest.TestCase):
         self.assertEqual(ProtoMessage.diff_sets(set1, set1), [])
 
     def test_diff_sets_all_removed(self):
-        set1 = []
-        set2 = [
+        set1 = [
             ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), []),
             ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), []),
             ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), []),
         ]
+        set2 = []
         diff = ProtoMessage.diff_sets(set1, set2)
         self.assertIn(
             ProtoMessageRemoved(
@@ -969,12 +969,12 @@ class MessageTest(unittest.TestCase):
         self.assertEqual(3, len(diff))
 
     def test_diff_sets_all_added(self):
-        set1 = [
+        set1 = []
+        set2 = [
             ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), []),
             ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), []),
             ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), []),
         ]
-        set2 = []
 
         diff = ProtoMessage.diff_sets(set1, set2)
         self.assertIn(
@@ -1011,37 +1011,37 @@ class MessageTest(unittest.TestCase):
         diff = ProtoMessage.diff_sets(set1, set2)
         self.assertIn(
             ProtoMessageAdded(
-                ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), [])
-            ),
-            diff,
-        )
-        self.assertIn(
-            ProtoMessageAdded(
-                ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), [])
-            ),
-            diff,
-        )
-        self.assertIn(
-            ProtoMessageAdded(
-                ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), [])
-            ),
-            diff,
-        )
-        self.assertIn(
-            ProtoMessageRemoved(
                 ProtoMessage(None, ProtoIdentifier(None, "FooMessage2"), [])
             ),
             diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(
+            ProtoMessageAdded(
                 ProtoMessage(None, ProtoIdentifier(None, "BarMessage2"), [])
             ),
             diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(
+            ProtoMessageAdded(
                 ProtoMessage(None, ProtoIdentifier(None, "BazMessage2"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "BarMessage"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), [])
             ),
             diff,
         )
@@ -1062,25 +1062,25 @@ class MessageTest(unittest.TestCase):
         diff = ProtoMessage.diff_sets(set1, set2)
         self.assertIn(
             ProtoMessageAdded(
-                ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), [])
-            ),
-            diff,
-        )
-        self.assertIn(
-            ProtoMessageAdded(
-                ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), [])
-            ),
-            diff,
-        )
-        self.assertIn(
-            ProtoMessageRemoved(
                 ProtoMessage(None, ProtoIdentifier(None, "FooMessage2"), [])
             ),
             diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(
+            ProtoMessageAdded(
                 ProtoMessage(None, ProtoIdentifier(None, "BazMessage2"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "FooMessage"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoMessageRemoved(
+                ProtoMessage(None, ProtoIdentifier(None, "BazMessage"), [])
             ),
             diff,
         )

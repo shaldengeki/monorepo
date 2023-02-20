@@ -328,8 +328,7 @@ class OptionTest(unittest.TestCase):
         self.assertEqual(ProtoOption.diff_sets(set1, set1), [])
 
     def test_diff_sets_all_removed(self):
-        set1 = []
-        set2 = [
+        set1 = [
             ProtoOption(
                 None,
                 ProtoIdentifier(None, "some.custom.option"),
@@ -346,6 +345,7 @@ class OptionTest(unittest.TestCase):
                 ProtoConstant(None, ProtoInt(None, 100, ProtoIntSign.POSITIVE)),
             ),
         ]
+        set2 = []
         diff = ProtoOption.diff_sets(set1, set2)
 
         self.assertIn(
@@ -381,7 +381,8 @@ class OptionTest(unittest.TestCase):
         self.assertEqual(3, len(diff))
 
     def test_diff_sets_all_added(self):
-        set1 = [
+        set1 = []
+        set2 = [
             ProtoOption(
                 None,
                 ProtoIdentifier(None, "some.custom.option"),
@@ -398,7 +399,6 @@ class OptionTest(unittest.TestCase):
                 ProtoConstant(None, ProtoInt(None, 100, ProtoIntSign.POSITIVE)),
             ),
         ]
-        set2 = []
         diff = ProtoOption.diff_sets(set1, set2)
 
         self.assertIn(
@@ -437,23 +437,6 @@ class OptionTest(unittest.TestCase):
         set1 = [
             ProtoOption(
                 None,
-                ProtoIdentifier(None, "some.custom.option.but.not.prior"),
-                ProtoConstant(None, ProtoStringLiteral(None, "some value")),
-            ),
-            ProtoOption(
-                None,
-                ProtoIdentifier(None, "ruby_package"),
-                ProtoConstant(None, ProtoStringLiteral(None, "foo.bar.baz")),
-            ),
-            ProtoOption(
-                None,
-                ProtoIdentifier(None, "other.option.but.stil.not.prior"),
-                ProtoConstant(None, ProtoInt(None, 100, ProtoIntSign.POSITIVE)),
-            ),
-        ]
-        set2 = [
-            ProtoOption(
-                None,
                 ProtoIdentifier(None, "some.custom.option"),
                 ProtoConstant(None, ProtoStringLiteral(None, "some value")),
             ),
@@ -465,6 +448,23 @@ class OptionTest(unittest.TestCase):
             ProtoOption(
                 None,
                 ProtoIdentifier(None, "other.option"),
+                ProtoConstant(None, ProtoInt(None, 100, ProtoIntSign.POSITIVE)),
+            ),
+        ]
+        set2 = [
+            ProtoOption(
+                None,
+                ProtoIdentifier(None, "some.custom.option.but.not.prior"),
+                ProtoConstant(None, ProtoStringLiteral(None, "some value")),
+            ),
+            ProtoOption(
+                None,
+                ProtoIdentifier(None, "ruby_package"),
+                ProtoConstant(None, ProtoStringLiteral(None, "foo.bar.baz")),
+            ),
+            ProtoOption(
+                None,
+                ProtoIdentifier(None, "other.option.but.stil.not.prior"),
                 ProtoConstant(None, ProtoInt(None, 100, ProtoIntSign.POSITIVE)),
             ),
         ]
@@ -542,23 +542,6 @@ class OptionTest(unittest.TestCase):
         set1 = [
             ProtoOption(
                 None,
-                ProtoIdentifier(None, "some.custom.option.but.not.prior"),
-                ProtoConstant(None, ProtoStringLiteral(None, "some value")),
-            ),
-            ProtoOption(
-                None,
-                ProtoIdentifier(None, "java_package"),
-                ProtoConstant(None, ProtoStringLiteral(None, "foo.bar.bat")),
-            ),
-            ProtoOption(
-                None,
-                ProtoIdentifier(None, "other.option.but.stil.not.prior"),
-                ProtoConstant(None, ProtoInt(None, 100, ProtoIntSign.POSITIVE)),
-            ),
-        ]
-        set2 = [
-            ProtoOption(
-                None,
                 ProtoIdentifier(None, "some.custom.option"),
                 ProtoConstant(None, ProtoStringLiteral(None, "some value")),
             ),
@@ -570,6 +553,23 @@ class OptionTest(unittest.TestCase):
             ProtoOption(
                 None,
                 ProtoIdentifier(None, "other.option"),
+                ProtoConstant(None, ProtoInt(None, 100, ProtoIntSign.POSITIVE)),
+            ),
+        ]
+        set2 = [
+            ProtoOption(
+                None,
+                ProtoIdentifier(None, "some.custom.option.but.not.prior"),
+                ProtoConstant(None, ProtoStringLiteral(None, "some value")),
+            ),
+            ProtoOption(
+                None,
+                ProtoIdentifier(None, "java_package"),
+                ProtoConstant(None, ProtoStringLiteral(None, "foo.bar.bat")),
+            ),
+            ProtoOption(
+                None,
+                ProtoIdentifier(None, "other.option.but.stil.not.prior"),
                 ProtoConstant(None, ProtoInt(None, 100, ProtoIntSign.POSITIVE)),
             ),
         ]
@@ -620,8 +620,8 @@ class OptionTest(unittest.TestCase):
         self.assertIn(
             ProtoOptionValueChanged(
                 ProtoIdentifier(None, "java_package"),
-                ProtoConstant(None, ProtoStringLiteral(None, "foo.bar.bat")),
                 ProtoConstant(None, ProtoStringLiteral(None, "foo.bar.baz")),
+                ProtoConstant(None, ProtoStringLiteral(None, "foo.bar.bat")),
             ),
             diff,
         )

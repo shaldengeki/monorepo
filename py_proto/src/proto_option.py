@@ -123,38 +123,40 @@ class ProtoOption(ProtoNode):
         return f"option {self.name.serialize()} = {self.value.serialize()};"
 
     @staticmethod
-    def diff(left: "ProtoOption", right: "ProtoOption") -> Sequence["ProtoOptionDiff"]:
-        if left is None and right is not None:
-            return [ProtoOptionAdded(right)]
-        elif left is not None and right is None:
-            return [ProtoOptionRemoved(left)]
-        elif left is None and right is None:
+    def diff(
+        before: "ProtoOption", after: "ProtoOption"
+    ) -> Sequence["ProtoOptionDiff"]:
+        if before is None and after is not None:
+            return [ProtoOptionAdded(after)]
+        elif before is not None and after is None:
+            return [ProtoOptionRemoved(before)]
+        elif before is None and after is None:
             return []
-        elif left.name != right.name:
+        elif before.name != after.name:
             return []
-        elif left == right:
+        elif before == after:
             return []
-        return [ProtoOptionValueChanged(left.name, left.value, right.value)]
+        return [ProtoOptionValueChanged(before.name, before.value, after.value)]
 
     @staticmethod
     def diff_sets(
-        left: Sequence["ProtoOption"], right: Sequence["ProtoOption"]
+        before: Sequence["ProtoOption"], after: Sequence["ProtoOption"]
     ) -> list["ProtoOptionDiff"]:
         diffs: list[ProtoOptionDiff] = []
-        left_names = set(o.name.identifier for o in left)
-        right_names = set(o.name.identifier for o in right)
-        for name in left_names - right_names:
+        before_names = set(o.name.identifier for o in before)
+        after_names = set(o.name.identifier for o in after)
+        for name in before_names - after_names:
             diffs.append(
-                ProtoOptionAdded(next(i for i in left if i.name.identifier == name))
+                ProtoOptionRemoved(next(i for i in before if i.name.identifier == name))
             )
-        for name in right_names - left_names:
+        for name in after_names - before_names:
             diffs.append(
-                ProtoOptionRemoved(next(i for i in right if i.name.identifier == name))
+                ProtoOptionAdded(next(i for i in after if i.name.identifier == name))
             )
-        for name in left_names & right_names:
-            left_option = next(i for i in left if i.name.identifier == name)
-            right_option = next(i for i in right if i.name.identifier == name)
-            diffs.extend(ProtoOption.diff(left_option, right_option))
+        for name in before_names & after_names:
+            before_option = next(i for i in before if i.name.identifier == name)
+            after_option = next(i for i in after if i.name.identifier == name)
+            diffs.extend(ProtoOption.diff(before_option, after_option))
 
         return diffs
 
@@ -165,41 +167,41 @@ class ProtoOptionDiff(ProtoNodeDiff):
 
 class ProtoOptionValueChanged(ProtoOptionDiff):
     def __init__(
-        self, name: ProtoIdentifier, left: ProtoConstant, right: ProtoConstant
+        self, name: ProtoIdentifier, before: ProtoConstant, after: ProtoConstant
     ):
         self.name = name
-        self.left = left
-        self.right = right
+        self.before = before
+        self.after = after
 
     def __eq__(self, other: object) -> bool:
         return (
             isinstance(other, ProtoOptionValueChanged)
             and self.name == other.name
-            and self.left == other.left
-            and self.right == other.right
+            and self.before == other.before
+            and self.after == other.after
         )
 
     def __str__(self) -> str:
-        return f"<ProtoOptionValueChanged name={self.name} left={self.left} right={self.right}>"
+        return f"<ProtoOptionValueChanged name={self.name} before={self.before} after={self.after}>"
 
 
 class ProtoOptionAdded(ProtoOptionDiff):
-    def __init__(self, left: ProtoOption):
-        self.left = left
+    def __init__(self, before: ProtoOption):
+        self.before = before
 
     def __eq__(self, other: object) -> bool:
-        return isinstance(other, ProtoOptionAdded) and self.left == other.left
+        return isinstance(other, ProtoOptionAdded) and self.before == other.before
 
     def __str__(self) -> str:
-        return f"<ProtoOptionAdded left={self.left}>"
+        return f"<ProtoOptionAdded before={self.before}>"
 
 
 class ProtoOptionRemoved(ProtoOptionDiff):
-    def __init__(self, right: ProtoOption):
-        self.right = right
+    def __init__(self, after: ProtoOption):
+        self.after = after
 
     def __eq__(self, other: object) -> bool:
-        return isinstance(other, ProtoOptionRemoved) and self.right == other.right
+        return isinstance(other, ProtoOptionRemoved) and self.after == other.after
 
     def __str__(self) -> str:
-        return f"<ProtoOptionRemoved right={self.right}>"
+        return f"<ProtoOptionRemoved after={self.after}>"

@@ -160,6 +160,10 @@ class ProtoMessage(ProtoNode):
     def maps(self) -> list[ProtoMap]:
         return [node for node in self.nodes if isinstance(node, ProtoMap)]
 
+    @property
+    def message_fields(self) -> list[ProtoMessageField]:
+        return [node for node in self.nodes if isinstance(node, ProtoMessageField)]
+
     def serialize(self) -> str:
         serialize_parts = (
             [f"message {self.name.serialize()} {{"]
@@ -169,43 +173,51 @@ class ProtoMessage(ProtoNode):
         return "\n".join(serialize_parts)
 
     @staticmethod
-    def diff(left: "ProtoMessage", right: "ProtoMessage") -> Sequence["ProtoNodeDiff"]:
-        if left is None and right is not None:
-            return [ProtoMessageAdded(right)]
-        elif left is not None and right is None:
-            return [ProtoMessageRemoved(left)]
-        elif left is None and right is None:
+    def diff(
+        before: "ProtoMessage", after: "ProtoMessage"
+    ) -> Sequence["ProtoNodeDiff"]:
+        if before is None and after is not None:
+            return [ProtoMessageAdded(after)]
+        elif before is not None and after is None:
+            return [ProtoMessageRemoved(before)]
+        elif before is None and after is None:
             return []
-        elif left.name != right.name:
+        elif before.name != after.name:
             return []
-        elif left == right:
+        elif before == after:
             return []
         diffs: list[ProtoNodeDiff] = []
-        diffs.extend(ProtoOption.diff_sets(left.options, right.options))
-        # diffs.extend(ProtoOneOf.diff_sets(left, left.oneofs, right.oneofs))
-        diffs.extend(ProtoMap.diff_sets(left, left.maps, right.maps))
-        # diffs.extend(ProtoMessageField.diff_sets(left, left.message_fields, right.message_fields))
+        diffs.extend(ProtoOption.diff_sets(before.options, after.options))
+        # diffs.extend(ProtoOneOf.diff_sets(before, before.oneofs, after.oneofs))
+        diffs.extend(ProtoMap.diff_sets(before, before.maps, after.maps))
+        diffs.extend(
+            ProtoMessageField.diff_sets(
+                before, before.message_fields, after.message_fields
+            )
+        )
         return diffs
 
     @staticmethod
     def diff_sets(
-        left: list["ProtoMessage"], right: list["ProtoMessage"]
+        before: list["ProtoMessage"], after: list["ProtoMessage"]
     ) -> Sequence["ProtoNodeDiff"]:
         diffs: list[ProtoNodeDiff] = []
-        left_names = set(o.name.identifier for o in left)
-        right_names = set(o.name.identifier for o in right)
-        for name in left_names - right_names:
+        before_names = set(o.name.identifier for o in before)
+        after_names = set(o.name.identifier for o in after)
+        for name in before_names - after_names:
             diffs.append(
-                ProtoMessageAdded(next(i for i in left if i.name.identifier == name))
+                ProtoMessageRemoved(
+                    next(i for i in before if i.name.identifier == name)
+                )
             )
-        for name in right_names - left_names:
+        for name in after_names - before_names:
             diffs.append(
-                ProtoMessageRemoved(next(i for i in right if i.name.identifier == name))
+                ProtoMessageAdded(next(i for i in after if i.name.identifier == name))
             )
-        for name in left_names & right_names:
-            left_enum = next(i for i in left if i.name.identifier == name)
-            right_enum = next(i for i in right if i.name.identifier == name)
-            diffs.extend(ProtoMessage.diff(left_enum, right_enum))
+        for name in before_names & after_names:
+            before_enum = next(i for i in before if i.name.identifier == name)
+            after_enum = next(i for i in after if i.name.identifier == name)
+            diffs.extend(ProtoMessage.diff(before_enum, after_enum))
 
         return diffs
 

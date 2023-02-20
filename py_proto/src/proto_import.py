@@ -86,26 +86,26 @@ class ProtoImport(ProtoNode):
 
     @staticmethod
     def diff_sets(
-        left: list["ProtoImport"], right: list["ProtoImport"]
+        before: list["ProtoImport"], after: list["ProtoImport"]
     ) -> list["ProtoNodeDiff"]:
         diffs: list[ProtoNodeDiff] = []
-        left_names = set(i.path for i in left)
-        right_names = set(i.path for i in right)
-        for name in left_names - right_names:
-            diffs.append(ProtoImportAdded(next(i for i in left if i.path == name)))
-        for name in right_names - left_names:
-            diffs.append(ProtoImportRemoved(next(i for i in right if i.path == name)))
-        for name in left_names & right_names:
-            left_import = next(i for i in left if i.path == name)
-            right_import = next(i for i in right if i.path == name)
-            if left_import.weak and not right_import.weak:
-                diffs.append(ProtoImportMadeWeak(right_import))
-            if not left_import.weak and right_import.weak:
-                diffs.append(ProtoImportMadeNonWeak(right_import))
-            if left_import.public and not right_import.public:
-                diffs.append(ProtoImportMadePublic(right_import))
-            if not left_import.public and right_import.public:
-                diffs.append(ProtoImportMadeNonPublic(right_import))
+        before_names = set(i.path for i in before)
+        after_names = set(i.path for i in after)
+        for name in before_names - after_names:
+            diffs.append(ProtoImportRemoved(next(i for i in before if i.path == name)))
+        for name in after_names - before_names:
+            diffs.append(ProtoImportAdded(next(i for i in after if i.path == name)))
+        for name in before_names & after_names:
+            before_import = next(i for i in before if i.path == name)
+            after_import = next(i for i in after if i.path == name)
+            if before_import.weak and not after_import.weak:
+                diffs.append(ProtoImportMadeNonWeak(after_import))
+            elif not before_import.weak and after_import.weak:
+                diffs.append(ProtoImportMadeWeak(after_import))
+            if before_import.public and not after_import.public:
+                diffs.append(ProtoImportMadeNonPublic(after_import))
+            elif not before_import.public and after_import.public:
+                diffs.append(ProtoImportMadePublic(after_import))
 
         return diffs
 

@@ -54,43 +54,43 @@ class ProtoPackage(ProtoNode):
 
     @staticmethod
     def diff(
-        left: Optional["ProtoPackage"], right: Optional["ProtoPackage"]
+        before: Optional["ProtoPackage"], after: Optional["ProtoPackage"]
     ) -> list["ProtoNodeDiff"]:
-        if left == right:
+        if before == after:
             return []
-        elif left is not None and right is None:
-            return [ProtoPackageAdded(left)]
-        elif left is None and right is not None:
-            return [ProtoPackageRemoved(right)]
+        elif before is not None and after is None:
+            return [ProtoPackageRemoved(before)]
+        elif before is None and after is not None:
+            return [ProtoPackageAdded(after)]
 
-        assert left is not None and right is not None
-        return [ProtoPackageChanged(left, right)]
+        assert before is not None and after is not None
+        return [ProtoPackageChanged(before, after)]
 
 
 class ProtoPackageChanged(ProtoNodeDiff):
-    def __init__(self, left: ProtoPackage, right: ProtoPackage):
-        self.left = left
-        self.right = right
+    def __init__(self, before: ProtoPackage, after: ProtoPackage):
+        self.before = before
+        self.after = after
 
     def __eq__(self, other: object) -> bool:
         return (
             isinstance(other, ProtoPackageChanged)
-            and self.left == other.left
-            and self.right == other.right
+            and self.before == other.before
+            and self.after == other.after
         )
 
 
 class ProtoPackageAdded(ProtoNodeDiff):
-    def __init__(self, left: ProtoPackage):
-        self.left = left
+    def __init__(self, after: ProtoPackage):
+        self.after = after
 
     def __eq__(self, other: object) -> bool:
-        return isinstance(other, ProtoPackageAdded) and self.left == other.left
+        return isinstance(other, ProtoPackageAdded) and self.after == other.after
 
 
 class ProtoPackageRemoved(ProtoNodeDiff):
-    def __init__(self, right: ProtoPackage):
-        self.right = right
+    def __init__(self, before: ProtoPackage):
+        self.before = before
 
     def __eq__(self, other: object) -> bool:
-        return isinstance(other, ProtoPackageRemoved) and self.right == other.right
+        return isinstance(other, ProtoPackageRemoved) and self.before == other.before

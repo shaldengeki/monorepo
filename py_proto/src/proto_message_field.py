@@ -1,10 +1,10 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Sequence
 
 from src.proto_enum import ParsedProtoEnumValueOptionNode, ProtoEnumValueOption
 from src.proto_identifier import ProtoEnumOrMessageIdentifier, ProtoIdentifier
 from src.proto_int import ProtoInt
-from src.proto_node import ParsedProtoNode, ProtoNode
+from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
 
 
 class ParsedProtoMessageFieldOptionNode(ParsedProtoEnumValueOptionNode):
@@ -241,3 +241,101 @@ class ProtoMessageField(ProtoNode):
             serialized_parts.append("]")
 
         return " ".join(serialized_parts) + ";"
+
+    @staticmethod
+    def diff(
+        parent: "ProtoNode",
+        before: Optional["ProtoMessageField"],
+        after: Optional["ProtoMessageField"],
+    ) -> Sequence["ProtoNodeDiff"]:
+        # TODO: scope these diffs under ProtoMessageField
+        diffs: list["ProtoNodeDiff"] = []
+        if before is None or after is None:
+            if after is not None:
+                diffs.append(ProtoMessageFieldAdded(parent, after))
+            elif before is not None:
+                diffs.append(ProtoMessageFieldRemoved(parent, before))
+        else:
+            if before.name != after.name:
+                diffs.append(ProtoMessageFieldNameChanged(parent, before, after.name))
+            if before.number != after.number:
+                raise ValueError(
+                    f"Don't know how to handle diff between message fields whose names are identical: {before}, {after}"
+                )
+            diffs.extend(
+                ProtoMessageFieldOption.diff_sets(before.options, after.options)
+            )
+        return diffs
+
+    @staticmethod
+    def diff_sets(
+        parent: "ProtoNode",
+        before: list["ProtoMessageField"],
+        after: list["ProtoMessageField"],
+    ) -> list["ProtoNodeDiff"]:
+        diffs: list[ProtoNodeDiff] = []
+
+        before_number_to_fields = {int(mf.number): mf for mf in before}
+        after_number_to_fields = {int(mf.number): mf for mf in after}
+        all_numbers = sorted(
+            set(before_number_to_fields.keys()).union(
+                set(after_number_to_fields.keys())
+            )
+        )
+        for number in all_numbers:
+            diffs.extend(
+                ProtoMessageField.diff(
+                    parent,
+                    before_number_to_fields.get(number, None),
+                    after_number_to_fields.get(number, None),
+                )
+            )
+
+        return diffs
+
+
+class ProtoMessageFieldDiff(ProtoNodeDiff):
+    def __init__(self, message: "ProtoNode", message_field: "ProtoMessageField"):
+        super().__init__()
+        self.message = message
+        self.message_field = message_field
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            super().__eq__(other)
+            and isinstance(other, ProtoMessageFieldDiff)
+            and self.message == other.message
+            and self.message_field == other.message_field
+        )
+
+    def __str__(self) -> str:
+        return f"<{self.__class__.__name__} message={self.message} message_field={self.message_field}>"
+
+
+class ProtoMessageFieldAdded(ProtoMessageFieldDiff):
+    pass
+
+
+class ProtoMessageFieldRemoved(ProtoMessageFieldDiff):
+    pass
+
+
+class ProtoMessageFieldNameChanged(ProtoMessageFieldDiff):
+    def __init__(
+        self,
+        message: ProtoNode,
+        message_field: ProtoMessageField,
+        new_name: ProtoIdentifier,
+    ):
+        super().__init__(message, message_field)
+        self.new_name = new_name
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            super().__eq__(other)
+            and isinstance(other, ProtoMessageFieldNameChanged)
+            and self.new_name == other.new_name
+        )
+
+    def __str__(self) -> str:
+        return f"<ProtoMessageFieldNameChanged message={self.message} message_field={self.message_field} new_name={self.new_name}>"

@@ -63,20 +63,20 @@ class ProtoSyntax(ProtoNode):
         return f"syntax = {self.syntax.serialize()};"
 
     @staticmethod
-    def diff(left: "ProtoSyntax", right: "ProtoSyntax") -> list["ProtoNodeDiff"]:
-        if left == right:
+    def diff(before: "ProtoSyntax", after: "ProtoSyntax") -> list["ProtoNodeDiff"]:
+        if before == after:
             return []
-        return [ProtoSyntaxChanged(left, right)]
+        return [ProtoSyntaxChanged(before, after)]
 
 
 class ProtoSyntaxChanged(ProtoNodeDiff):
-    def __init__(self, left: ProtoSyntax, right: ProtoSyntax):
-        self.left = left
-        self.right = right
+    def __init__(self, before: ProtoSyntax, after: ProtoSyntax):
+        self.before = before
+        self.after = after
 
     def __eq__(self, other: object) -> bool:
         return (
             isinstance(other, ProtoSyntaxChanged)
-            and self.left == other.left
-            and self.right == other.right
+            and self.before == other.before
+            and self.after == other.after
         )
