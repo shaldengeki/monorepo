@@ -8,13 +8,13 @@ This is a Python-based protobuf parser. It is intended to serve as a reference i
 
 Right now, the primary way to use this as a library in your Bazelified Python code.
 
-Mount this repo in your Bazel workspace, then add `@py_proto//src:parser` as a dependency:
+Mount this repo in your Bazel workspace, then add `@py_proto//src/util:parser` as a dependency:
 ```
 py_library(
     name = "your_python_code",
     # ...
     deps = [
-        "@py_proto//src:parser",
+        "@py_proto//src/util:parser",
     ]
 )
 ```
