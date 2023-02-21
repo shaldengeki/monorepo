@@ -400,3 +400,7 @@ class MessageFieldTest(unittest.TestCase):
         )
 
         self.assertEqual(4, len(diff))
+
+
+if __name__ == "__main__":
+    unittest.main()
