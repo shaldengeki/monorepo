@@ -28,15 +28,16 @@ ProtoMapValueTypesEnum = ProtoMessageFieldTypesEnum
 class ProtoMap(ProtoNode):
     def __init__(
         self,
-        parent: Optional[ProtoNode],
         key_type: ProtoMapKeyTypesEnum,
         value_type: ProtoMapValueTypesEnum,
         name: ProtoIdentifier,
         number: ProtoInt,
         enum_or_message_type_name: Optional[ProtoEnumOrMessageIdentifier] = None,
         options: Optional[list[ProtoMessageFieldOption]] = None,
+        *args,
+        **kwargs,
     ):
-        super().__init__(parent)
+        super().__init__(*args, **kwargs)
         self.key_type = key_type
         self.value_type = value_type
         self.name = name
@@ -82,7 +83,7 @@ class ProtoMap(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoNode"]:
         if proto_source.startswith("map "):
             proto_source = proto_source[4:].strip()
@@ -120,7 +121,7 @@ class ProtoMap(ProtoNode):
         enum_or_message_type_name = None
         if value_type is None:
             # See if this is an enum or message type.
-            match = ProtoEnumOrMessageIdentifier.match(None, proto_source)
+            match = ProtoEnumOrMessageIdentifier.match(proto_source)
             if match is None:
                 return None
             value_type = ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE
@@ -132,7 +133,7 @@ class ProtoMap(ProtoNode):
         proto_source = proto_source[1:].strip()
 
         # Try to match the map field's name.
-        identifier_match = ProtoIdentifier.match(None, proto_source)
+        identifier_match = ProtoIdentifier.match(proto_source)
         if identifier_match is None:
             return None
         name = identifier_match.node
@@ -143,7 +144,7 @@ class ProtoMap(ProtoNode):
         proto_source = proto_source[1:].strip()
 
         # Try to match the map field number.
-        int_match = ProtoInt.match(None, proto_source)
+        int_match = ProtoInt.match(proto_source)
         if int_match is None:
             return None
         number = int_match.node
@@ -160,7 +161,7 @@ class ProtoMap(ProtoNode):
                 )
             for option_part in proto_source[:end_bracket].strip().split(","):
                 message_field_option_match = ProtoMessageFieldOption.match(
-                    None, option_part.strip()
+                    option_part.strip()
                 )
                 if message_field_option_match is None:
                     raise ValueError(
@@ -176,13 +177,13 @@ class ProtoMap(ProtoNode):
 
         return ParsedProtoNode(
             ProtoMap(
-                parent,
-                key_type,
-                value_type,
-                name,
-                number,
-                enum_or_message_type_name,
-                options,
+                key_type=key_type,
+                value_type=value_type,
+                name=name,
+                number=number,
+                enum_or_message_type_name=enum_or_message_type_name,
+                options=options,
+                parent=parent,
             ),
             proto_source[1:].strip(),
         )

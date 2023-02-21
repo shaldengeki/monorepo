@@ -4,8 +4,8 @@ from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
 
 
 class ProtoPackage(ProtoNode):
-    def __init__(self, parent: Optional[ProtoNode], package: str):
-        super().__init__(parent)
+    def __init__(self, package: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.package = package
 
     def __eq__(self, other) -> bool:
@@ -22,7 +22,7 @@ class ProtoPackage(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("package"):
             return None
@@ -47,7 +47,9 @@ class ProtoPackage(ProtoNode):
         if package.startswith(".") or package.endswith("."):
             raise ValueError(f"Proto has invalid package: {package}")
 
-        return ParsedProtoNode(ProtoPackage(parent, package), proto_source.strip())
+        return ParsedProtoNode(
+            ProtoPackage(package=package, parent=parent), proto_source.strip()
+        )
 
     def serialize(self) -> str:
         return f"package {self.package};"

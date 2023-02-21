@@ -6,11 +6,13 @@ class ProtoNode(abc.ABC):
     @classmethod
     @abc.abstractmethod
     def match(
-        cls, parent: Optional["ProtoNode"], proto_source: str
+        cls,
+        proto_source: str,
+        parent: Optional["ProtoNode"] = None,
     ) -> Optional["ParsedProtoNode"]:
         raise NotImplementedError
 
-    def __init__(self, parent: Optional["ProtoNode"]):
+    def __init__(self, parent: Optional["ProtoNode"] = None):
         self.parent = parent
 
     @abc.abstractmethod

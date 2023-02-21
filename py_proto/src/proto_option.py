@@ -15,10 +15,8 @@ class ParsedProtoOptionNode(ParsedProtoNode):
 
 
 class ProtoOption(ProtoNode):
-    def __init__(
-        self, parent: Optional[ProtoNode], name: ProtoIdentifier, value: ProtoConstant
-    ):
-        super().__init__(parent)
+    def __init__(self, name: ProtoIdentifier, value: ProtoConstant, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.name = name
         self.name.parent = self
         self.value = value
@@ -41,7 +39,7 @@ class ProtoOption(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoOptionNode"]:
         if not proto_source.startswith("option "):
             return None
@@ -50,10 +48,10 @@ class ProtoOption(ProtoNode):
         name_parts = []
         if proto_source.startswith("("):
             proto_source = proto_source[1:]
-            match = ProtoFullIdentifier.match(None, proto_source)
+            match = ProtoFullIdentifier.match(proto_source)
             if match is None or not match.remaining_source.startswith(")"):
                 # This might be a regular identifier.
-                identifier_match = ProtoIdentifier.match(None, proto_source)
+                identifier_match = ProtoIdentifier.match(proto_source)
                 if (
                     not identifier_match
                     or not identifier_match.remaining_source.startswith(")")
@@ -62,19 +60,21 @@ class ProtoOption(ProtoNode):
                         f"Proto has invalid option when expecting ): {proto_source}"
                     )
                 name_parts.append(
-                    ProtoIdentifier(None, f"({identifier_match.node.identifier})")
+                    ProtoIdentifier(identifier=f"({identifier_match.node.identifier})")
                 )
                 proto_source = identifier_match.remaining_source[1:]
             else:
                 name_parts.append(
-                    ProtoFullIdentifier(None, f"({match.node.identifier})")
+                    ProtoFullIdentifier(identifier=f"({match.node.identifier})")
                 )
                 proto_source = match.remaining_source[1:]
 
         while True:
-            identifier_match = ProtoEnumOrMessageIdentifier.match(None, proto_source)
+            identifier_match = ProtoEnumOrMessageIdentifier.match(
+                proto_source=proto_source
+            )
             if identifier_match is None:
-                identifier_match = ProtoIdentifier.match(None, proto_source)
+                identifier_match = ProtoIdentifier.match(proto_source=proto_source)
                 if identifier_match is None:
                     break
             name_parts.append(identifier_match.node)
@@ -86,7 +86,7 @@ class ProtoOption(ProtoNode):
                 f"Proto has invalid option when expecting =: {proto_source}"
             )
         proto_source = proto_source[1:].strip()
-        constant_match = ProtoConstant.match(None, proto_source)
+        constant_match = ProtoConstant.match(proto_source)
         if constant_match is None:
             raise ValueError(
                 f"Proto has invalid option when expecting constant: {proto_source}"
@@ -101,15 +101,15 @@ class ProtoOption(ProtoNode):
         identifier: ProtoFullIdentifier | ProtoIdentifier
         if len(name_parts) > 1:
             identifier = ProtoFullIdentifier(
-                None, "".join(x.identifier for x in name_parts)
+                identifier="".join(x.identifier for x in name_parts)
             )
         else:
-            identifier = ProtoIdentifier(None, name_parts[0].identifier)
+            identifier = ProtoIdentifier(identifier=name_parts[0].identifier)
 
         proto_option = ProtoOption(
-            parent,
             name=identifier,
             value=constant_match.node,
+            parent=parent,
         )
         identifier.parent = proto_option
         constant_match.node.parent = proto_option

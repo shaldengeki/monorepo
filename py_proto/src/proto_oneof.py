@@ -32,11 +32,12 @@ class ParsedProtoOneOfNode(ParsedProtoNode):
 class ProtoOneOf(ProtoNode):
     def __init__(
         self,
-        parent: Optional[ProtoNode],
         name: ProtoIdentifier,
         nodes: Sequence[ProtoOneOfNodeTypes],
+        *args,
+        **kwargs,
     ):
-        super().__init__(parent)
+        super().__init__(*args, **kwargs)
         self.name = name
         self.name.parent = self
         self.nodes = nodes
@@ -77,9 +78,9 @@ class ProtoOneOf(ProtoNode):
         ) + sorted(fields, key=lambda f: int(f.number))
 
         return ProtoOneOf(
-            parent=self.parent,
             name=self.name,
             nodes=sorted_nodes_for_normalizing,
+            parent=self.parent,
         )
 
     @staticmethod
@@ -92,7 +93,7 @@ class ProtoOneOf(ProtoNode):
         ]
         for node_type in supported_types:
             try:
-                match_result = node_type.match(None, partial_oneof_content)
+                match_result = node_type.match(partial_oneof_content)
             except (ValueError, IndexError, TypeError):
                 raise ValueError(
                     f"Could not parse partial oneof content:\n{partial_oneof_content}"
@@ -105,14 +106,14 @@ class ProtoOneOf(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoOneOfNode"]:
         if not proto_source.startswith("oneof "):
             return None
 
         proto_source = proto_source[6:].strip()
 
-        match = ProtoIdentifier.match(None, proto_source)
+        match = ProtoIdentifier.match(proto_source)
         if match is None:
             raise ValueError(
                 f"Proto has invalid syntax, expecting identifier for oneof: {proto_source}"
@@ -143,7 +144,7 @@ class ProtoOneOf(ProtoNode):
             proto_source = match_result.remaining_source.strip()
 
         return ParsedProtoOneOfNode(
-            ProtoOneOf(parent, oneof_name, nodes=parsed_tree), proto_source
+            ProtoOneOf(name=oneof_name, nodes=parsed_tree, parent=parent), proto_source
         )
 
     @property

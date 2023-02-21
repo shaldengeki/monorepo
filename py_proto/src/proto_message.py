@@ -20,11 +20,12 @@ from src.proto_reserved import ProtoReserved
 class ProtoMessage(ProtoNode):
     def __init__(
         self,
-        parent: Optional[ProtoNode],
         name: ProtoIdentifier,
         nodes: Sequence[ProtoNode],
+        *args,
+        **kwargs,
     ):
-        super().__init__(parent)
+        super().__init__(*args, **kwargs)
         self.name = name
         self.name.parent = self
         self.nodes = nodes
@@ -79,9 +80,9 @@ class ProtoMessage(ProtoNode):
         )
 
         return ProtoMessage(
-            parent=self.parent,
             name=self.name,
             nodes=sorted_nodes_for_normalizing,
+            parent=self.parent,
         )
 
     @staticmethod
@@ -101,7 +102,7 @@ class ProtoMessage(ProtoNode):
         ]
         for node_type in supported_types:
             try:
-                match_result = node_type.match(None, partial_message_content)
+                match_result = node_type.match(partial_message_content)
             except (ValueError, IndexError, TypeError):
                 raise ValueError(
                     f"Could not parse partial message content:\n{partial_message_content}"
@@ -114,13 +115,13 @@ class ProtoMessage(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("message "):
             return None
 
         proto_source = proto_source[8:]
-        match = ProtoIdentifier.match(None, proto_source)
+        match = ProtoIdentifier.match(proto_source)
         if match is None:
             raise ValueError(f"Proto has invalid message name: {proto_source}")
 
@@ -149,7 +150,7 @@ class ProtoMessage(ProtoNode):
             proto_source = match_result.remaining_source.strip()
 
         return ParsedProtoNode(
-            ProtoMessage(parent, enum_name, nodes=parsed_tree), proto_source
+            ProtoMessage(name=enum_name, nodes=parsed_tree, parent=parent), proto_source
         )
 
     @property

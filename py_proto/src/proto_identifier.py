@@ -23,8 +23,8 @@ class ProtoIdentifier(ProtoNode):
     STARTING = ALPHABETICAL | set("_")
     ALL = STARTING | set("0123456789_")
 
-    def __init__(self, parent: Optional[ProtoNode], identifier: str):
-        super().__init__(parent)
+    def __init__(self, identifier: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.identifier = identifier
 
     def __eq__(self, other) -> bool:
@@ -44,7 +44,7 @@ class ProtoIdentifier(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoIdentifierNode"]:
         if proto_source[0] not in ProtoIdentifier.STARTING:
             return None
@@ -52,9 +52,12 @@ class ProtoIdentifier(ProtoNode):
         for i, c in enumerate(proto_source):
             if c not in ProtoIdentifier.ALL:
                 return ParsedProtoIdentifierNode(
-                    ProtoIdentifier(parent, proto_source[:i]), proto_source[i:]
+                    ProtoIdentifier(identifier=proto_source[:i], parent=parent),
+                    proto_source[i:],
                 )
-        return ParsedProtoIdentifierNode(ProtoIdentifier(parent, proto_source), "")
+        return ParsedProtoIdentifierNode(
+            ProtoIdentifier(identifier=proto_source, parent=parent), ""
+        )
 
     def serialize(self) -> str:
         return self.identifier
@@ -66,7 +69,7 @@ class ProtoFullIdentifier(ProtoIdentifier):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoFullIdentifierNode"]:
         if proto_source[0] not in ProtoFullIdentifier.STARTING:
             return None
@@ -82,7 +85,9 @@ class ProtoFullIdentifier(ProtoIdentifier):
                     )
                 identifier_parts.append(proto_source[last_part_start:i])
                 return ParsedProtoFullIdentifierNode(
-                    ProtoFullIdentifier(parent, ".".join(identifier_parts)),
+                    ProtoFullIdentifier(
+                        identifier=".".join(identifier_parts), parent=parent
+                    ),
                     proto_source[i:],
                 )
             elif c == ".":
@@ -96,7 +101,8 @@ class ProtoFullIdentifier(ProtoIdentifier):
             )
         identifier_parts.append(proto_source[last_part_start:])
         return ParsedProtoFullIdentifierNode(
-            ProtoFullIdentifier(parent, ".".join(identifier_parts)), ""
+            ProtoFullIdentifier(identifier=".".join(identifier_parts), parent=parent),
+            "",
         )
 
 
@@ -106,17 +112,19 @@ class ProtoEnumOrMessageIdentifier(ProtoIdentifier):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoEnumOrMessageIdentifierNode"]:
         if proto_source[0] == ".":
             matched_source = proto_source[1:]
         else:
             matched_source = proto_source
 
-        identifier_match = ProtoFullIdentifier.match(parent, matched_source)
+        identifier_match = ProtoFullIdentifier.match(matched_source, parent=parent)
         if identifier_match is not None:
             match = ParsedProtoEnumOrMessageIdentifierNode(
-                ProtoEnumOrMessageIdentifier(parent, identifier_match.node.identifier),
+                ProtoEnumOrMessageIdentifier(
+                    identifier=identifier_match.node.identifier, parent=parent
+                ),
                 identifier_match.remaining_source,
             )
 

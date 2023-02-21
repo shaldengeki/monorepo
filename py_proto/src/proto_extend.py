@@ -13,11 +13,12 @@ from src.proto_node import ParsedProtoNode, ProtoNode
 class ProtoExtend(ProtoNode):
     def __init__(
         self,
-        parent: Optional[ProtoNode],
         name: ProtoEnumOrMessageIdentifier,
         nodes: list[ProtoNode],
+        *args,
+        **kwargs,
     ):
-        super().__init__(parent)
+        super().__init__(*args, **kwargs)
         self.name = name
         self.name.parent = self
         self.nodes = nodes
@@ -38,9 +39,9 @@ class ProtoExtend(ProtoNode):
             lambda n: not isinstance(n, ProtoComment), self.nodes
         )
         return ProtoExtend(
-            self.parent,
             name=self.name,
             nodes=sorted(non_comment_nodes, key=lambda f: str(f)),
+            parent=self.parent,
         )
 
     @staticmethod
@@ -52,7 +53,7 @@ class ProtoExtend(ProtoNode):
         ]
         for node_type in supported_types:
             try:
-                match_result = node_type.match(None, partial_content)
+                match_result = node_type.match(partial_content)
             except (ValueError, IndexError, TypeError):
                 raise ValueError(
                     f"Could not parse partial extend content:\n{partial_content}"
@@ -63,13 +64,13 @@ class ProtoExtend(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("extend "):
             return None
 
         proto_source = proto_source[7:]
-        match = ProtoEnumOrMessageIdentifier.match(None, proto_source)
+        match = ProtoEnumOrMessageIdentifier.match(proto_source)
         if match is None:
             raise ValueError(f"Proto extend has invalid message name: {proto_source}")
 
@@ -98,7 +99,7 @@ class ProtoExtend(ProtoNode):
             proto_source = match_result.remaining_source.strip()
 
         return ParsedProtoNode(
-            ProtoExtend(parent, name, nodes=parsed_tree), proto_source
+            ProtoExtend(name=name, nodes=parsed_tree, parent=parent), proto_source
         )
 
     def serialize(self) -> str:

@@ -16,8 +16,8 @@ class ProtoSyntaxType(Enum):
 
 
 class ProtoSyntax(ProtoNode):
-    def __init__(self, parent: Optional[ProtoNode], syntax: ProtoStringLiteral):
-        super().__init__(parent)
+    def __init__(self, syntax: ProtoStringLiteral, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.syntax = syntax
 
     def __eq__(self, other) -> bool:
@@ -37,25 +37,25 @@ class ProtoSyntax(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoSyntaxNode"]:
         if not proto_source.startswith("syntax = "):
             return None
         proto_source = proto_source[9:]
-        match = ProtoStringLiteral.match(None, proto_source)
+        match = ProtoStringLiteral.match(proto_source)
         if match is None:
             raise ValueError(f"Proto has invalid syntax syntax: {proto_source}")
         if not match.remaining_source.startswith(";"):
             raise ValueError(f"Proto has invalid syntax: {proto_source}")
         try:
-            syntax_type = ProtoSyntaxType[match.node.value.upper()]
+            ProtoSyntaxType[match.node.value.upper()]
         except KeyError:
             raise ValueError(
                 f"Proto has unknown syntax type: {match.node.value}, must be one of: {[proto_type.name for proto_type in ProtoSyntaxType]}"
             )
 
         return ParsedProtoSyntaxNode(
-            ProtoSyntax(parent, match.node),
+            ProtoSyntax(syntax=match.node, parent=parent),
             match.remaining_source.strip(),
         )
 

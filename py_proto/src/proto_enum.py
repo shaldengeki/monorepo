@@ -23,14 +23,14 @@ class ProtoEnumValueOption(ProtoOption):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoEnumValueOptionNode"]:
         test_source = "option " + proto_source.strip() + ";"
-        match = ProtoOption.match(None, test_source)
+        match = ProtoOption.match(proto_source=test_source)
         if match is None:
             return None
         return ParsedProtoEnumValueOptionNode(
-            cls(parent, match.node.name, match.node.value),
+            cls(name=match.node.name, value=match.node.value, parent=parent),
             match.remaining_source.strip(),
         )
 
@@ -46,12 +46,13 @@ class ParsedProtoEnumValueNode(ParsedProtoNode):
 class ProtoEnumValue(ProtoNode):
     def __init__(
         self,
-        parent: Optional[ProtoNode],
         identifier: ProtoIdentifier,
         value: ProtoInt,
         options: Optional[list[ProtoEnumValueOption]] = None,
+        *args,
+        **kwargs,
     ):
-        super().__init__(parent)
+        super().__init__(*args, **kwargs)
         self.identifier = identifier
         self.identifier.parent = self
         self.value = value
@@ -82,17 +83,17 @@ class ProtoEnumValue(ProtoNode):
 
     def normalize(self) -> "ProtoEnumValue":
         return ProtoEnumValue(
-            self.parent,
             self.identifier,
             self.value,
             sorted(self.options, key=lambda o: str(o.name)),
+            parent=self.parent,
         )
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoEnumValueNode"]:
-        match = ProtoIdentifier.match(None, proto_source)
+        match = ProtoIdentifier.match(proto_source=proto_source)
         if match is None:
             raise ValueError(f"Proto has invalid enum value name: {proto_source}")
 
@@ -109,9 +110,9 @@ class ProtoEnumValue(ProtoNode):
         sign = ProtoIntSign.POSITIVE
         if proto_source.startswith("-"):
             sign = next(x for x in ProtoIntSign if x.value == proto_source[0])
-            int_match = ProtoInt.match(None, proto_source[1:])
+            int_match = ProtoInt.match(proto_source=proto_source[1:])
         else:
-            int_match = ProtoInt.match(None, proto_source)
+            int_match = ProtoInt.match(proto_source=proto_source)
         if int_match is None:
             raise ValueError(
                 f"Proto has invalid enum value, expecting int: {proto_source}"
@@ -131,7 +132,7 @@ class ProtoEnumValue(ProtoNode):
                 )
             for option_part in proto_source[:end_bracket].strip().split(","):
                 proto_enum_value_option_match = ProtoEnumValueOption.match(
-                    None, option_part.strip()
+                    proto_source=option_part.strip(), parent=None
                 )
                 if proto_enum_value_option_match is None:
                     raise ValueError(
@@ -141,7 +142,12 @@ class ProtoEnumValue(ProtoNode):
             proto_source = proto_source[end_bracket + 1 :].strip()
 
         return ParsedProtoEnumValueNode(
-            ProtoEnumValue(parent, enum_value_name, enum_value, options),
+            ProtoEnumValue(
+                identifier=enum_value_name,
+                value=enum_value,
+                options=options,
+                parent=parent,
+            ),
             proto_source.strip(),
         )
 
@@ -205,10 +211,8 @@ class ProtoEnumValue(ProtoNode):
 
 
 class ProtoEnum(ProtoNode):
-    def __init__(
-        self, parent: Optional[ProtoNode], name: ProtoIdentifier, nodes: list[ProtoNode]
-    ):
-        super().__init__(parent)
+    def __init__(self, name: ProtoIdentifier, nodes: list[ProtoNode], *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.name = name
         self.name.parent = self
         self.nodes = nodes
@@ -233,9 +237,9 @@ class ProtoEnum(ProtoNode):
             lambda n1: not isinstance(n1, ProtoComment), self.nodes
         )
         return ProtoEnum(
-            self.parent,
-            self.name,
-            sorted(non_comment_nodes, key=lambda n: str(n.normalize())),
+            name=self.name,
+            nodes=sorted(non_comment_nodes, key=lambda n: str(n.normalize())),
+            parent=self.parent,
         )
 
     @staticmethod
@@ -249,7 +253,9 @@ class ProtoEnum(ProtoNode):
         ]
         for node_type in supported_types:
             try:
-                match_result = node_type.match(None, partial_enum_content)
+                match_result = node_type.match(
+                    proto_source=partial_enum_content, parent=None
+                )
             except (ValueError, IndexError, TypeError):
                 raise ValueError(
                     f"Could not parse partial enum content:\n{partial_enum_content}"
@@ -262,13 +268,13 @@ class ProtoEnum(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("enum "):
             return None
 
         proto_source = proto_source[5:]
-        match = ProtoIdentifier.match(None, proto_source)
+        match = ProtoIdentifier.match(proto_source=proto_source)
         if match is None:
             raise ValueError(f"Proto has invalid enum name: {proto_source}")
 
@@ -297,7 +303,7 @@ class ProtoEnum(ProtoNode):
             proto_source = match_result.remaining_source.strip()
 
         return ParsedProtoNode(
-            ProtoEnum(parent, enum_name, nodes=parsed_tree), proto_source
+            ProtoEnum(name=enum_name, nodes=parsed_tree, parent=parent), proto_source
         )
 
     @property

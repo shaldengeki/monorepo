@@ -15,9 +15,9 @@ class ParsedProtoMessageFieldOptionNode(ParsedProtoEnumValueOptionNode):
 class ProtoMessageFieldOption(ProtoEnumValueOption):
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoMessageFieldOptionNode"]:
-        match = super().match(parent, proto_source)
+        match = super().match(proto_source=proto_source, parent=parent)
         if match is None:
             return None
 
@@ -54,7 +54,6 @@ class ParsedProtoMessageFieldNode(ParsedProtoNode):
 class ProtoMessageField(ProtoNode):
     def __init__(
         self,
-        parent: Optional[ProtoNode],
         type: ProtoMessageFieldTypesEnum,
         name: ProtoIdentifier,
         number: ProtoInt,
@@ -62,8 +61,10 @@ class ProtoMessageField(ProtoNode):
         optional: bool = False,
         enum_or_message_type_name: Optional[ProtoEnumOrMessageIdentifier] = None,
         options: Optional[list[ProtoMessageFieldOption]] = None,
+        *args,
+        **kwargs,
     ):
-        super().__init__(parent)
+        super().__init__(*args, **kwargs)
         self.type = type
         self.name = name
         self.name.parent = self
@@ -107,7 +108,6 @@ class ProtoMessageField(ProtoNode):
 
     def normalize(self) -> "ProtoMessageField":
         return ProtoMessageField(
-            parent=self.parent,
             type=self.type,
             name=self.name,
             number=self.number,
@@ -115,11 +115,12 @@ class ProtoMessageField(ProtoNode):
             optional=self.optional,
             enum_or_message_type_name=self.enum_or_message_type_name,
             options=sorted(self.options, key=lambda o: str(o.name)),
+            parent=self.parent,
         )
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoMessageFieldNode"]:
         # First, try to match the optional repeated.
         repeated = False
@@ -150,7 +151,7 @@ class ProtoMessageField(ProtoNode):
         enum_or_message_type_name = None
         if matched_type is None:
             # See if this is an enum or message type.
-            match = ProtoEnumOrMessageIdentifier.match(None, proto_source)
+            match = ProtoEnumOrMessageIdentifier.match(proto_source)
             if match is None:
                 return None
             matched_type = ProtoMessageFieldTypesEnum.ENUM_OR_MESSAGE
@@ -158,7 +159,7 @@ class ProtoMessageField(ProtoNode):
             proto_source = match.remaining_source.strip()
 
         # Match the field name.
-        identifier_match = ProtoIdentifier.match(None, proto_source)
+        identifier_match = ProtoIdentifier.match(proto_source)
         if identifier_match is None:
             return None
         name = identifier_match.node
@@ -169,7 +170,7 @@ class ProtoMessageField(ProtoNode):
         proto_source = proto_source[2:].strip()
 
         # Match the field number.
-        int_match = ProtoInt.match(None, proto_source)
+        int_match = ProtoInt.match(proto_source)
         if int_match is None:
             return None
         number = int_match.node
@@ -185,7 +186,7 @@ class ProtoMessageField(ProtoNode):
                 )
             for option_part in proto_source[:end_bracket].strip().split(","):
                 message_field_option_match = ProtoMessageFieldOption.match(
-                    None, option_part.strip()
+                    option_part.strip()
                 )
                 if message_field_option_match is None:
                     raise ValueError(
@@ -201,14 +202,14 @@ class ProtoMessageField(ProtoNode):
 
         return ParsedProtoMessageFieldNode(
             ProtoMessageField(
-                parent,
-                matched_type,
-                name,
-                number,
-                repeated,
-                optional,
-                enum_or_message_type_name,
-                options,
+                type=matched_type,
+                name=name,
+                number=number,
+                repeated=repeated,
+                optional=optional,
+                enum_or_message_type_name=enum_or_message_type_name,
+                options=options,
+                parent=parent,
             ),
             proto_source[1:].strip(),
         )

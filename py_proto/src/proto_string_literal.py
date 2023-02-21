@@ -11,8 +11,8 @@ class ParsedProtoStringLiteralNode(ParsedProtoNode):
 class ProtoStringLiteral(ProtoNode):
     QUOTES = ['"', "'"]
 
-    def __init__(self, parent: Optional[ProtoNode], val: str, quote: str = QUOTES[0]):
-        super().__init__(parent)
+    def __init__(self, val: str, quote: str = QUOTES[0], *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.value = val
         self.quote = quote
 
@@ -33,7 +33,7 @@ class ProtoStringLiteral(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoStringLiteralNode"]:
         if not any(proto_source.startswith(c) for c in ProtoStringLiteral.QUOTES):
             return None
@@ -46,7 +46,7 @@ class ProtoStringLiteral(ProtoNode):
             if c == starting_quote and not escaped:
                 return ParsedProtoStringLiteralNode(
                     ProtoStringLiteral(
-                        parent, proto_source[1 : i + 1], quote=starting_quote
+                        val=proto_source[1 : i + 1], quote=starting_quote, parent=parent
                     ),
                     proto_source[i + 2 :].strip(),
                 )

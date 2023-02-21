@@ -22,8 +22,8 @@ class ProtoFloat(ProtoNode):
     DECIMAL = DIGITS | set(".")
     EXPONENTIAL = set("eE")
 
-    def __init__(self, parent: Optional[ProtoNode], value: float, sign: ProtoFloatSign):
-        super().__init__(parent)
+    def __init__(self, value: float, sign: ProtoFloatSign, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.value = value
         self.sign = sign
 
@@ -45,7 +45,7 @@ class ProtoFloat(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoFloatNode"]:
         if proto_source.startswith("inf"):
             proto_source = proto_source[3:]
@@ -54,7 +54,9 @@ class ProtoFloat(ProtoNode):
                     f"Proto has invalid float, invalid post-inf character: {proto_source}"
                 )
             return ParsedProtoFloatNode(
-                ProtoFloat(parent, float("inf"), ProtoFloatSign.POSITIVE),
+                ProtoFloat(
+                    value=float("inf"), sign=ProtoFloatSign.POSITIVE, parent=parent
+                ),
                 proto_source.strip(),
             )
 
@@ -65,7 +67,9 @@ class ProtoFloat(ProtoNode):
                     f"Proto has invalid float, invalid post-nan character: {proto_source}"
                 )
             return ParsedProtoFloatNode(
-                ProtoFloat(parent, float("nan"), ProtoFloatSign.POSITIVE),
+                ProtoFloat(
+                    value=float("nan"), sign=ProtoFloatSign.POSITIVE, parent=parent
+                ),
                 proto_source.strip(),
             )
 
@@ -118,7 +122,8 @@ class ProtoFloat(ProtoNode):
             proto_source = proto_source[i + 1 :]
 
         return ParsedProtoFloatNode(
-            ProtoFloat(parent, base, ProtoFloatSign.POSITIVE), proto_source.strip()
+            ProtoFloat(value=base, sign=ProtoFloatSign.POSITIVE, parent=parent),
+            proto_source.strip(),
         )
 
     def serialize(self) -> str:

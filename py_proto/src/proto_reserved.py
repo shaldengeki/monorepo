@@ -14,14 +14,15 @@ class ProtoReservedFieldQuoteEnum(Enum):
 class ProtoReserved(ProtoNode):
     def __init__(
         self,
-        parent: Optional[ProtoNode],
         ranges: Optional[list[ProtoRange]] = None,
         fields: Optional[list[ProtoIdentifier]] = None,
         quote_type: Optional[
             ProtoReservedFieldQuoteEnum
         ] = ProtoReservedFieldQuoteEnum.DOUBLE,
+        *args,
+        **kwargs,
     ):
-        super().__init__(parent)
+        super().__init__(*args, **kwargs)
         if (not ranges and not fields) or (ranges and fields):
             raise ValueError(
                 "Exactly one of ranges or fields must be set in a ProtoReserved"
@@ -72,7 +73,7 @@ class ProtoReserved(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoNode"]:
         if not proto_source.startswith("reserved "):
             return None
@@ -92,7 +93,7 @@ class ProtoReserved(ProtoNode):
                 )
             if proto_source[0] == ",":
                 proto_source = proto_source[1:].strip()
-            range_match = ProtoRange.match(None, proto_source)
+            range_match = ProtoRange.match(proto_source)
             if range_match is not None:
                 ranges.append(range_match.node)
                 proto_source = range_match.remaining_source
@@ -109,7 +110,7 @@ class ProtoReserved(ProtoNode):
                     )
                 quote_type = quote_types[0]
                 proto_source = proto_source[1:]
-                match = ProtoIdentifier.match(None, proto_source)
+                match = ProtoIdentifier.match(proto_source)
                 if match is None:
                     raise ValueError(
                         f"Proto source has invalid reserved syntax, expecting field identifier: {proto_source}"
@@ -124,7 +125,10 @@ class ProtoReserved(ProtoNode):
                 proto_source = proto_source[1:].strip()
 
         return ParsedProtoNode(
-            ProtoReserved(parent, ranges, fields, quote_type), proto_source.strip()
+            ProtoReserved(
+                ranges=ranges, fields=fields, quote_type=quote_type, parent=parent
+            ),
+            proto_source.strip(),
         )
 
     def serialize(self) -> str:

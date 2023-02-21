@@ -10,8 +10,8 @@ class ParsedProtoCommentNode(ParsedProtoNode):
 
 
 class ProtoComment(ProtoNode):
-    def __init__(self, parent: Optional[ProtoNode], value: str):
-        super().__init__(parent)
+    def __init__(self, value: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.value = value
 
     def __eq__(self, other) -> bool:
@@ -28,7 +28,7 @@ class ProtoComment(ProtoNode):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoCommentNode"]:
         return None
 
@@ -47,7 +47,7 @@ class ProtoSingleLineComment(ProtoComment):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoSingleLineCommentNode"]:
         if not proto_source.startswith("//"):
             return None
@@ -57,7 +57,7 @@ class ProtoSingleLineComment(ProtoComment):
         if newline_pos == -1:
             newline_pos = len(proto_source)
         return ParsedProtoSingleLineCommentNode(
-            ProtoSingleLineComment(parent, proto_source[:newline_pos]),
+            ProtoSingleLineComment(value=proto_source[:newline_pos], parent=parent),
             proto_source[newline_pos + 1 :],
         )
 
@@ -76,7 +76,7 @@ class ProtoMultiLineComment(ProtoComment):
 
     @classmethod
     def match(
-        cls, parent: Optional[ProtoNode], proto_source: str
+        cls, proto_source: str, parent: Optional[ProtoNode] = None
     ) -> Optional["ParsedProtoMultiLineCommentNode"]:
         if not proto_source.startswith("/*"):
             return None
@@ -86,7 +86,9 @@ class ProtoMultiLineComment(ProtoComment):
         if close_comment_pos == -1:
             return None
         return ParsedProtoMultiLineCommentNode(
-            ProtoMultiLineComment(parent, proto_source[:close_comment_pos]),
+            ProtoMultiLineComment(
+                value=proto_source[:close_comment_pos], parent=parent
+            ),
             proto_source[close_comment_pos + 2 :],
         )
 
