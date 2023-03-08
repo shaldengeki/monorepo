@@ -5,16 +5,7 @@ py_library(
     srcs = ["parser.py"],
     visibility = ["//visibility:public"],
     deps = [
-        "//src:proto_enum",
-        "//src:proto_extend",
         "//src:proto_file",
-        "//src:proto_import",
-        "//src:proto_message",
-        "//src:proto_node",
-        "//src:proto_option",
-        "//src:proto_package",
-        "//src:proto_service",
-        "//src:proto_syntax",
     ],
 )
 
