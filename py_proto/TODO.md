@@ -84,6 +84,7 @@
       - [ ] RPC changes
         - [ ] Additions/removals
         - [ ] Option changes
+    - [ ] Comment diffs
   - [ ] Backwards-compatibility check
   - [ ] __eq__ should enforce parent equality
   - [ ] Scoping of diffs under containing objects

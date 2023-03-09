@@ -182,7 +182,9 @@ class ProtoEnumValue(ProtoNode):
                     f"Don't know how to handle diff between enums whose names aren't identical: {before}, {after}"
                 )
 
-            diffs.extend(ProtoEnumValueOption.diff_sets(before.options, after.options))
+            diffs.extend(
+                ProtoEnumValueOption.diff_sets(before, before.options, after.options)
+            )
         return diffs
 
     @staticmethod
@@ -323,11 +325,13 @@ class ProtoEnum(ProtoNode):
         return "\n".join(serialize_parts)
 
     @staticmethod
-    def diff(before: "ProtoEnum", after: "ProtoEnum") -> list["ProtoNodeDiff"]:
+    def diff(
+        parent: ProtoNode, before: "ProtoEnum", after: "ProtoEnum"
+    ) -> list["ProtoNodeDiff"]:
         if before is None and after is not None:
-            return [ProtoEnumAdded(after)]
+            return [ProtoEnumAdded(parent, after)]
         elif before is not None and after is None:
-            return [ProtoEnumRemoved(before)]
+            return [ProtoEnumRemoved(parent, before)]
         elif before is None and after is None:
             return []
         elif before.name != after.name:
@@ -336,42 +340,51 @@ class ProtoEnum(ProtoNode):
             return []
         diffs: list[ProtoNodeDiff] = []
         # TODO: scope these diffs under ProtoEnum
-        diffs.extend(ProtoOption.diff_sets(before.options, after.options))
+        diffs.extend(ProtoOption.diff_sets(parent, before.options, after.options))
         diffs.extend(ProtoEnumValue.diff_sets(before, before.values, after.values))
         return diffs
 
     @staticmethod
     def diff_sets(
-        before: list["ProtoEnum"], after: list["ProtoEnum"]
+        parent: ProtoNode, before: list["ProtoEnum"], after: list["ProtoEnum"]
     ) -> list["ProtoNodeDiff"]:
         diffs: list[ProtoNodeDiff] = []
         before_names = set(o.name.identifier for o in before)
         after_names = set(o.name.identifier for o in after)
         for name in before_names - after_names:
             diffs.append(
-                ProtoEnumRemoved(next(i for i in before if i.name.identifier == name))
+                ProtoEnumRemoved(
+                    parent, next(i for i in before if i.name.identifier == name)
+                )
             )
         for name in after_names - before_names:
             diffs.append(
-                ProtoEnumAdded(next(i for i in after if i.name.identifier == name))
+                ProtoEnumAdded(
+                    parent, next(i for i in after if i.name.identifier == name)
+                )
             )
         for name in before_names & after_names:
             before_enum = next(i for i in before if i.name.identifier == name)
             after_enum = next(i for i in after if i.name.identifier == name)
-            diffs.extend(ProtoEnum.diff(before_enum, after_enum))
+            diffs.extend(ProtoEnum.diff(parent, before_enum, after_enum))
 
         return diffs
 
 
 class ProtoEnumDiff(ProtoNodeDiff):
-    def __init__(self, enum: ProtoEnum):
+    def __init__(self, parent: ProtoNode, enum: ProtoEnum):
+        self.parent = parent
         self.enum = enum
 
     def __eq__(self, other: object) -> bool:
-        return isinstance(other, ProtoEnumDiff) and self.enum == other.enum
+        return (
+            isinstance(other, ProtoEnumDiff)
+            and self.parent == other.parent
+            and self.enum == other.enum
+        )
 
     def __str__(self) -> str:
-        return f"<{self.__class__.__name__} enum={self.enum}>"
+        return f"<{self.__class__.__name__} enum={self.enum} parent={self.parent}>"
 
 
 class ProtoEnumAdded(ProtoEnumDiff):
@@ -382,9 +395,9 @@ class ProtoEnumRemoved(ProtoEnumDiff):
     pass
 
 
-class ProtoEnumValueDiff(ProtoEnumDiff):
+class ProtoEnumValueDiff(ProtoNodeDiff):
     def __init__(self, enum: "ProtoEnum", enum_value: "ProtoEnumValue"):
-        super().__init__(enum)
+        self.enum = enum
         self.enum_value = enum_value
 
     def __eq__(self, other: object) -> bool:

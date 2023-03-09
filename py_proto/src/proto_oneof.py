@@ -10,7 +10,7 @@ from src.proto_comment import (
 from src.proto_identifier import ProtoIdentifier
 from src.proto_map import ProtoMap
 from src.proto_message_field import ParsedProtoMessageFieldNode, ProtoMessageField
-from src.proto_node import ParsedProtoNode, ProtoNode
+from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
 from src.proto_option import ParsedProtoOptionNode, ProtoOption
 
 ProtoOneOfNodeTypes = (
@@ -151,6 +151,10 @@ class ProtoOneOf(ProtoNode):
     def options(self) -> list[ProtoOption]:
         return [node for node in self.nodes if isinstance(node, ProtoOption)]
 
+    @property
+    def message_fields(self) -> list[ProtoMessageField]:
+        return [node for node in self.nodes if isinstance(node, ProtoMessageField)]
+
     def serialize(self) -> str:
         serialize_parts = (
             [f"oneof {self.name.serialize()} {{"]
@@ -158,3 +162,80 @@ class ProtoOneOf(ProtoNode):
             + ["}"]
         )
         return "\n".join(serialize_parts)
+
+    @staticmethod
+    def diff(
+        parent: ProtoNode, before: "ProtoOneOf", after: "ProtoOneOf"
+    ) -> Sequence["ProtoNodeDiff"]:
+        if before is None and after is not None:
+            return [ProtoOneOfAdded(parent, after)]
+        elif before is not None and after is None:
+            return [ProtoOneOfRemoved(parent, before)]
+        elif before is None and after is None:
+            return []
+        elif before.name != after.name:
+            return []
+        elif before == after:
+            return []
+        diffs: list[ProtoNodeDiff] = []
+        diffs.extend(ProtoOption.diff_sets(before, before.options, after.options))
+        diffs.extend(
+            ProtoMessageField.diff_sets(
+                before, before.message_fields, after.message_fields
+            )
+        )
+        return diffs
+
+    @staticmethod
+    def diff_sets(
+        parent: ProtoNode,
+        before: list["ProtoOneOf"],
+        after: list["ProtoOneOf"],
+    ) -> Sequence["ProtoNodeDiff"]:
+        diffs: list[ProtoNodeDiff] = []
+        before_names = set(o.name.identifier for o in before)
+        after_names = set(o.name.identifier for o in after)
+        for name in before_names - after_names:
+            diffs.append(
+                ProtoOneOfRemoved(
+                    parent, next(i for i in before if i.name.identifier == name)
+                )
+            )
+        for name in after_names - before_names:
+            diffs.append(
+                ProtoOneOfAdded(
+                    parent, next(i for i in after if i.name.identifier == name)
+                )
+            )
+        for name in before_names & after_names:
+            before_oneof = next(i for i in before if i.name.identifier == name)
+            after_oneof = next(i for i in after if i.name.identifier == name)
+            diffs.extend(ProtoOneOf.diff(parent, before_oneof, after_oneof))
+
+        return diffs
+
+
+class ProtoOneOfDiff(ProtoNodeDiff):
+    def __init__(self, parent: ProtoNode, oneof: ProtoOneOf):
+        self.parent = parent
+        self.oneof = oneof
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, ProtoOneOfDiff)
+            and self.oneof == other.oneof
+            and self.parent == other.parent
+        )
+
+    def __str__(self) -> str:
+        return f"<{self.__class__.__name__} oneof={self.oneof} parent={self.parent}>"
+
+
+class ProtoOneOfAdded(ProtoOneOfDiff):
+    def __eq__(self, other: object) -> bool:
+        return super().__eq__(other) and isinstance(other, ProtoOneOfAdded)
+
+
+class ProtoOneOfRemoved(ProtoOneOfDiff):
+    def __eq__(self, other: object) -> bool:
+        return super().__eq__(other) and isinstance(other, ProtoOneOfRemoved)

@@ -151,7 +151,7 @@ class ProtoFile(ProtoNode):
         diffs.extend(ProtoSyntax.diff(self.syntax, other.syntax))
         diffs.extend(ProtoImport.diff_sets(self.imports, other.imports))
         diffs.extend(ProtoPackage.diff(self.package, other.package))
-        diffs.extend(ProtoEnum.diff_sets(self.enums, other.enums))
-        diffs.extend(ProtoMessage.diff_sets(self.messages, other.messages))
+        diffs.extend(ProtoEnum.diff_sets(self, self.enums, other.enums))
+        diffs.extend(ProtoMessage.diff_sets(self, self.messages, other.messages))
 
         return [d for d in diffs if d is not None]

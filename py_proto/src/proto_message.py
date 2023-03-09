@@ -165,6 +165,10 @@ class ProtoMessage(ProtoNode):
     def message_fields(self) -> list[ProtoMessageField]:
         return [node for node in self.nodes if isinstance(node, ProtoMessageField)]
 
+    @property
+    def oneofs(self) -> list[ProtoOneOf]:
+        return [node for node in self.nodes if isinstance(node, ProtoOneOf)]
+
     def serialize(self) -> str:
         serialize_parts = (
             [f"message {self.name.serialize()} {{"]
@@ -175,12 +179,14 @@ class ProtoMessage(ProtoNode):
 
     @staticmethod
     def diff(
-        before: "ProtoMessage", after: "ProtoMessage"
+        parent: ProtoNode,
+        before: "ProtoMessage",
+        after: "ProtoMessage",
     ) -> Sequence["ProtoNodeDiff"]:
         if before is None and after is not None:
-            return [ProtoMessageAdded(after)]
+            return [ProtoMessageAdded(parent, after)]
         elif before is not None and after is None:
-            return [ProtoMessageRemoved(before)]
+            return [ProtoMessageRemoved(parent, before)]
         elif before is None and after is None:
             return []
         elif before.name != after.name:
@@ -188,8 +194,15 @@ class ProtoMessage(ProtoNode):
         elif before == after:
             return []
         diffs: list[ProtoNodeDiff] = []
-        diffs.extend(ProtoOption.diff_sets(before.options, after.options))
-        # diffs.extend(ProtoOneOf.diff_sets(before, before.oneofs, after.oneofs))
+
+        # TODO:
+        # ProtoEnum,
+        # ProtoExtend,
+        # ProtoExtensions,
+        # ProtoMessage,
+        # ProtoReserved,
+        diffs.extend(ProtoOption.diff_sets(before, before.options, after.options))
+        diffs.extend(ProtoOneOf.diff_sets(before, before.oneofs, after.oneofs))
         diffs.extend(ProtoMap.diff_sets(before, before.maps, after.maps))
         diffs.extend(
             ProtoMessageField.diff_sets(
@@ -200,7 +213,9 @@ class ProtoMessage(ProtoNode):
 
     @staticmethod
     def diff_sets(
-        before: list["ProtoMessage"], after: list["ProtoMessage"]
+        parent: ProtoNode,
+        before: list["ProtoMessage"],
+        after: list["ProtoMessage"],
     ) -> Sequence["ProtoNodeDiff"]:
         diffs: list[ProtoNodeDiff] = []
         before_names = set(o.name.identifier for o in before)
@@ -208,30 +223,40 @@ class ProtoMessage(ProtoNode):
         for name in before_names - after_names:
             diffs.append(
                 ProtoMessageRemoved(
-                    next(i for i in before if i.name.identifier == name)
+                    parent,
+                    next(i for i in before if i.name.identifier == name),
                 )
             )
         for name in after_names - before_names:
             diffs.append(
-                ProtoMessageAdded(next(i for i in after if i.name.identifier == name))
+                ProtoMessageAdded(
+                    parent, next(i for i in after if i.name.identifier == name)
+                )
             )
         for name in before_names & after_names:
-            before_enum = next(i for i in before if i.name.identifier == name)
-            after_enum = next(i for i in after if i.name.identifier == name)
-            diffs.extend(ProtoMessage.diff(before_enum, after_enum))
+            before_message = next(i for i in before if i.name.identifier == name)
+            after_message = next(i for i in after if i.name.identifier == name)
+            diffs.extend(ProtoMessage.diff(parent, before_message, after_message))
 
         return diffs
 
 
 class ProtoMessageDiff(ProtoNodeDiff):
-    def __init__(self, message: ProtoMessage):
+    def __init__(self, parent: ProtoNode, message: ProtoMessage):
+        self.parent = parent
         self.message = message
 
     def __eq__(self, other: object) -> bool:
-        return isinstance(other, ProtoMessageDiff) and self.message == other.message
+        return (
+            isinstance(other, ProtoMessageDiff)
+            and self.message == other.message
+            and self.parent == other.parent
+        )
 
     def __str__(self) -> str:
-        return f"<{self.__class__.__name__} message={self.message}>"
+        return (
+            f"<{self.__class__.__name__} message={self.message} parent={self.parent}>"
+        )
 
 
 class ProtoMessageAdded(ProtoMessageDiff):

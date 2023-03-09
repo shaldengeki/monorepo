@@ -7,16 +7,24 @@ from src.proto_identifier import ProtoFullIdentifier, ProtoIdentifier
 from src.proto_int import ProtoInt, ProtoIntSign
 from src.proto_message_field import (
     ProtoMessageField,
+    ProtoMessageFieldAdded,
+    ProtoMessageFieldNameChanged,
     ProtoMessageFieldOption,
+    ProtoMessageFieldRemoved,
     ProtoMessageFieldTypesEnum,
 )
-from src.proto_oneof import ProtoOneOf
+from src.proto_oneof import ProtoOneOf, ProtoOneOfAdded, ProtoOneOfRemoved
 from src.proto_option import ProtoOption
 from src.proto_string_literal import ProtoStringLiteral
 
 
 class OneOfTest(unittest.TestCase):
     maxDiff = None
+
+    DEFAULT_PARENT = ProtoOneOf(
+        ProtoIdentifier("default_parent"),
+        [],
+    )
 
     def test_oneof_empty(self):
         parsed_oneof_empty = ProtoOneOf.match(dedent("oneof one_of_field {}".strip()))
@@ -196,6 +204,255 @@ class OneOfTest(unittest.TestCase):
                 ),
             ],
         )
+
+    def test_diff_same_oneof_returns_empty(self):
+        po1 = ProtoOneOf(
+            ProtoIdentifier("my_one_of"),
+            [],
+        )
+        po2 = ProtoOneOf(
+            ProtoIdentifier("my_one_of"),
+            [],
+        )
+        self.assertEqual(ProtoOneOf.diff(self.DEFAULT_PARENT, po1, po2), [])
+
+    def test_diff_different_oneof_name_returns_empty(self):
+        po1 = ProtoOneOf(
+            ProtoIdentifier("my_one_of"),
+            [],
+        )
+        po2 = ProtoOneOf(
+            ProtoIdentifier("other_one_of"),
+            [],
+        )
+        self.assertEqual(ProtoOneOf.diff(self.DEFAULT_PARENT, po1, po2), [])
+
+    def test_diff_oneof_added(self):
+        po1 = None
+        po2 = ProtoOneOf(ProtoIdentifier("my_one_of"), [])
+        self.assertEqual(
+            ProtoOneOf.diff(self.DEFAULT_PARENT, po1, po2),
+            [
+                ProtoOneOfAdded(
+                    self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("my_one_of"), [])
+                ),
+            ],
+        )
+
+    def test_diff_oneof_removed(self):
+        po1 = ProtoOneOf(ProtoIdentifier("my_one_of"), [])
+        po2 = None
+        self.assertEqual(
+            [
+                ProtoOneOfRemoved(
+                    self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("my_one_of"), [])
+                ),
+            ],
+            ProtoOneOf.diff(self.DEFAULT_PARENT, po1, po2),
+        )
+
+    def test_diff_member_added(self):
+        po1 = ProtoOneOf(ProtoIdentifier("my_one_of"), [])
+        mf = ProtoMessageField(
+            ProtoMessageFieldTypesEnum.BOOL,
+            ProtoIdentifier("new_member"),
+            ProtoInt(1, ProtoIntSign.POSITIVE),
+        )
+        po2 = ProtoOneOf(ProtoIdentifier("my_one_of"), [mf])
+        self.assertEqual(
+            [ProtoMessageFieldAdded(po1, mf)],
+            ProtoOneOf.diff(self.DEFAULT_PARENT, po1, po2),
+        )
+
+    def test_diff_member_removed(self):
+        mf = ProtoMessageField(
+            ProtoMessageFieldTypesEnum.BOOL,
+            ProtoIdentifier("new_member"),
+            ProtoInt(1, ProtoIntSign.POSITIVE),
+        )
+        po1 = ProtoOneOf(ProtoIdentifier("my_one_of"), [mf])
+        po2 = ProtoOneOf(ProtoIdentifier("my_one_of"), [])
+        self.assertEqual(
+            [ProtoMessageFieldRemoved(po1, mf)],
+            ProtoOneOf.diff(self.DEFAULT_PARENT, po1, po2),
+        )
+
+    def test_diff_member_changed(self):
+        mf1 = ProtoMessageField(
+            ProtoMessageFieldTypesEnum.BOOL,
+            ProtoIdentifier("new_member"),
+            ProtoInt(1, ProtoIntSign.POSITIVE),
+        )
+        po1 = ProtoOneOf(ProtoIdentifier("my_one_of"), [mf1])
+        mf2 = ProtoMessageField(
+            ProtoMessageFieldTypesEnum.BOOL,
+            ProtoIdentifier("new_member_changed"),
+            ProtoInt(1, ProtoIntSign.POSITIVE),
+        )
+        po2 = ProtoOneOf(ProtoIdentifier("my_one_of"), [mf2])
+        self.assertEqual(
+            [ProtoMessageFieldNameChanged(po1, mf1, mf2.name)],
+            ProtoOneOf.diff(self.DEFAULT_PARENT, po1, po2),
+        )
+
+    def test_diff_sets_empty_returns_empty(self):
+        set1 = []
+        set2 = []
+        self.assertEqual(ProtoOneOf.diff_sets(self.DEFAULT_PARENT, set1, set2), [])
+
+    def test_diff_sets_no_change_returns_empty(self):
+        set1 = [
+            ProtoOneOf(ProtoIdentifier("foo_one_of"), []),
+            ProtoOneOf(ProtoIdentifier("bar_one_of"), []),
+            ProtoOneOf(ProtoIdentifier("baz_one_of"), []),
+        ]
+        self.assertEqual(ProtoOneOf.diff_sets(self.DEFAULT_PARENT, set1, set1), [])
+
+    def test_diff_sets_all_removed(self):
+        set1 = [
+            ProtoOneOf(ProtoIdentifier("foo_one_of"), []),
+            ProtoOneOf(ProtoIdentifier("bar_one_of"), []),
+            ProtoOneOf(ProtoIdentifier("baz_one_of"), []),
+        ]
+        set2 = []
+        diff = ProtoOneOf.diff_sets(self.DEFAULT_PARENT, set1, set2)
+        self.assertIn(
+            ProtoOneOfRemoved(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("foo_one_of"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfRemoved(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("bar_one_of"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfRemoved(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("baz_one_of"), [])
+            ),
+            diff,
+        )
+        self.assertEqual(3, len(diff))
+
+    def test_diff_sets_all_added(self):
+        set1 = []
+        set2 = [
+            ProtoOneOf(ProtoIdentifier("foo_one_of"), []),
+            ProtoOneOf(ProtoIdentifier("bar_one_of"), []),
+            ProtoOneOf(ProtoIdentifier("baz_one_of"), []),
+        ]
+
+        diff = ProtoOneOf.diff_sets(self.DEFAULT_PARENT, set1, set2)
+        self.assertIn(
+            ProtoOneOfAdded(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("foo_one_of"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfAdded(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("bar_one_of"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfAdded(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("baz_one_of"), [])
+            ),
+            diff,
+        )
+        self.assertEqual(3, len(diff))
+
+    def test_diff_sets_mutually_exclusive(self):
+        set1 = [
+            ProtoOneOf(ProtoIdentifier("foo_one_of"), []),
+            ProtoOneOf(ProtoIdentifier("bar_one_of"), []),
+            ProtoOneOf(ProtoIdentifier("baz_one_of"), []),
+        ]
+        set2 = [
+            ProtoOneOf(ProtoIdentifier("foo_one_of2"), []),
+            ProtoOneOf(ProtoIdentifier("bar_one_of2"), []),
+            ProtoOneOf(ProtoIdentifier("baz_one_of2"), []),
+        ]
+        diff = ProtoOneOf.diff_sets(self.DEFAULT_PARENT, set1, set2)
+        self.assertIn(
+            ProtoOneOfAdded(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("foo_one_of2"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfAdded(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("bar_one_of2"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfAdded(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("baz_one_of2"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfRemoved(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("foo_one_of"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfRemoved(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("bar_one_of"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfRemoved(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("baz_one_of"), [])
+            ),
+            diff,
+        )
+        self.assertEqual(6, len(diff))
+
+    def test_diff_sets_overlap(self):
+
+        set1 = [
+            ProtoOneOf(ProtoIdentifier("foo_one_of"), []),
+            ProtoOneOf(ProtoIdentifier("bar_one_of"), []),
+            ProtoOneOf(ProtoIdentifier("baz_one_of"), []),
+        ]
+        set2 = [
+            ProtoOneOf(ProtoIdentifier("foo_one_of2"), []),
+            ProtoOneOf(ProtoIdentifier("bar_one_of"), []),
+            ProtoOneOf(ProtoIdentifier("baz_one_of2"), []),
+        ]
+        diff = ProtoOneOf.diff_sets(self.DEFAULT_PARENT, set1, set2)
+        self.assertIn(
+            ProtoOneOfAdded(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("foo_one_of2"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfAdded(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("baz_one_of2"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfRemoved(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("foo_one_of"), [])
+            ),
+            diff,
+        )
+        self.assertIn(
+            ProtoOneOfRemoved(
+                self.DEFAULT_PARENT, ProtoOneOf(ProtoIdentifier("baz_one_of"), [])
+            ),
+            diff,
+        )
+        self.assertEqual(4, len(diff))
 
 
 if __name__ == "__main__":

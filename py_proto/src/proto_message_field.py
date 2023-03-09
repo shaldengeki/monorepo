@@ -264,7 +264,7 @@ class ProtoMessageField(ProtoNode):
                     f"Don't know how to handle diff between message fields whose names are identical: {before}, {after}"
                 )
             diffs.extend(
-                ProtoMessageFieldOption.diff_sets(before.options, after.options)
+                ProtoMessageFieldOption.diff_sets(before, before.options, after.options)
             )
         return diffs
 

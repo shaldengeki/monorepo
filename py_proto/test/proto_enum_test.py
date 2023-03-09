@@ -24,6 +24,7 @@ from src.proto_string_literal import ProtoStringLiteral
 
 class EnumTest(unittest.TestCase):
     maxDiff = None
+    DEFAULT_PARENT = ProtoEnum(ProtoIdentifier("DefaultParent"), [])
 
     def test_enum_all_features(self):
         parsed_enum_multiple_values = ProtoEnum.match(
@@ -333,7 +334,7 @@ class EnumTest(unittest.TestCase):
             ProtoIdentifier("MyEnum"),
             [],
         )
-        self.assertEqual(ProtoEnum.diff(pe1, pe2), [])
+        self.assertEqual(ProtoEnum.diff(self.DEFAULT_PARENT, pe1, pe2), [])
 
     def test_diff_different_enum_name_returns_empty(self):
         pe1 = ProtoEnum(
@@ -344,7 +345,7 @@ class EnumTest(unittest.TestCase):
             ProtoIdentifier("OtherEnum"),
             [],
         )
-        self.assertEqual(ProtoEnum.diff(pe1, pe2), [])
+        self.assertEqual(ProtoEnum.diff(self.DEFAULT_PARENT, pe1, pe2), [])
 
     def test_diff_different_enum_value_name_returns_enum_diff(self):
         pe1 = ProtoEnum(
@@ -373,7 +374,7 @@ class EnumTest(unittest.TestCase):
                     ProtoIdentifier("ME_KNOWN"),
                 )
             ],
-            ProtoEnum.diff(pe1, pe2),
+            ProtoEnum.diff(self.DEFAULT_PARENT, pe1, pe2),
         )
 
     def test_diff_different_enum_value_value_returns_enum_diff(self):
@@ -396,7 +397,7 @@ class EnumTest(unittest.TestCase):
             ],
         )
 
-        diff = ProtoEnum.diff(pe1, pe2)
+        diff = ProtoEnum.diff(self.DEFAULT_PARENT, pe1, pe2)
 
         self.assertIn(
             ProtoEnumValueRemoved(
@@ -426,9 +427,10 @@ class EnumTest(unittest.TestCase):
             ],
         )
         self.assertEqual(
-            ProtoEnum.diff(pe1, pe2),
+            ProtoEnum.diff(self.DEFAULT_PARENT, pe1, pe2),
             [
                 ProtoEnumAdded(
+                    self.DEFAULT_PARENT,
                     ProtoEnum(
                         ProtoIdentifier("MyEnum"),
                         [
@@ -437,7 +439,7 @@ class EnumTest(unittest.TestCase):
                                 ProtoInt(0, ProtoIntSign.POSITIVE),
                             )
                         ],
-                    )
+                    ),
                 ),
             ],
         )
@@ -454,9 +456,10 @@ class EnumTest(unittest.TestCase):
         )
         pe2 = None
         self.assertEqual(
-            ProtoEnum.diff(pe1, pe2),
+            ProtoEnum.diff(self.DEFAULT_PARENT, pe1, pe2),
             [
                 ProtoEnumRemoved(
+                    self.DEFAULT_PARENT,
                     ProtoEnum(
                         ProtoIdentifier("MyEnum"),
                         [
@@ -465,7 +468,7 @@ class EnumTest(unittest.TestCase):
                                 ProtoInt(0, ProtoIntSign.POSITIVE),
                             )
                         ],
-                    )
+                    ),
                 ),
             ],
         )
@@ -473,7 +476,7 @@ class EnumTest(unittest.TestCase):
     def test_diff_sets_empty_returns_empty(self):
         set1 = []
         set2 = []
-        self.assertEqual(ProtoEnum.diff_sets(set1, set2), [])
+        self.assertEqual(ProtoEnum.diff_sets(self.DEFAULT_PARENT, set1, set2), [])
 
     def test_diff_sets_no_change(self):
         set1 = [
@@ -505,7 +508,7 @@ class EnumTest(unittest.TestCase):
                 ],
             ),
         ]
-        self.assertEqual(ProtoEnum.diff_sets(set1, set1), [])
+        self.assertEqual(ProtoEnum.diff_sets(self.DEFAULT_PARENT, set1, set1), [])
 
     def test_diff_sets_all_removed(self):
         set1 = []
@@ -538,10 +541,11 @@ class EnumTest(unittest.TestCase):
                 ],
             ),
         ]
-        diff = ProtoEnum.diff_sets(set1, set2)
+        diff = ProtoEnum.diff_sets(self.DEFAULT_PARENT, set1, set2)
 
         self.assertIn(
             ProtoEnumRemoved(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("FooEnum"),
                     [
@@ -556,6 +560,7 @@ class EnumTest(unittest.TestCase):
         )
         self.assertIn(
             ProtoEnumRemoved(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("BarEnum"),
                     [
@@ -570,6 +575,7 @@ class EnumTest(unittest.TestCase):
         )
         self.assertIn(
             ProtoEnumRemoved(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("TagEnum"),
                     [
@@ -615,10 +621,11 @@ class EnumTest(unittest.TestCase):
             ),
         ]
         set2 = []
-        diff = ProtoEnum.diff_sets(set1, set2)
+        diff = ProtoEnum.diff_sets(self.DEFAULT_PARENT, set1, set2)
 
         self.assertIn(
             ProtoEnumAdded(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("FooEnum"),
                     [
@@ -633,6 +640,7 @@ class EnumTest(unittest.TestCase):
         )
         self.assertIn(
             ProtoEnumAdded(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("BarEnum"),
                     [
@@ -647,6 +655,7 @@ class EnumTest(unittest.TestCase):
         )
         self.assertIn(
             ProtoEnumAdded(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("TagEnum"),
                     [
@@ -721,10 +730,11 @@ class EnumTest(unittest.TestCase):
             ),
         ]
 
-        diff = ProtoEnum.diff_sets(set1, set2)
+        diff = ProtoEnum.diff_sets(self.DEFAULT_PARENT, set1, set2)
 
         self.assertIn(
             ProtoEnumAdded(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("FooEnum"),
                     [
@@ -739,6 +749,7 @@ class EnumTest(unittest.TestCase):
         )
         self.assertIn(
             ProtoEnumAdded(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("BarEnum"),
                     [
@@ -754,6 +765,7 @@ class EnumTest(unittest.TestCase):
 
         self.assertIn(
             ProtoEnumAdded(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("TagEnum"),
                     [
@@ -769,6 +781,7 @@ class EnumTest(unittest.TestCase):
 
         self.assertIn(
             ProtoEnumRemoved(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("FooEnum2"),
                     [
@@ -784,6 +797,7 @@ class EnumTest(unittest.TestCase):
 
         self.assertIn(
             ProtoEnumRemoved(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("BarEnum2"),
                     [
@@ -799,6 +813,7 @@ class EnumTest(unittest.TestCase):
 
         self.assertIn(
             ProtoEnumRemoved(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("TagEnum2"),
                     [
@@ -874,10 +889,11 @@ class EnumTest(unittest.TestCase):
             ),
         ]
 
-        diff = ProtoEnum.diff_sets(set1, set2)
+        diff = ProtoEnum.diff_sets(self.DEFAULT_PARENT, set1, set2)
 
         self.assertIn(
             ProtoEnumRemoved(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("FooEnum"),
                     [
@@ -893,6 +909,7 @@ class EnumTest(unittest.TestCase):
 
         self.assertIn(
             ProtoEnumRemoved(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("TagEnum"),
                     [
@@ -907,6 +924,7 @@ class EnumTest(unittest.TestCase):
         )
         self.assertIn(
             ProtoEnumAdded(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("FooEnum2"),
                     [
@@ -921,6 +939,7 @@ class EnumTest(unittest.TestCase):
         )
         self.assertIn(
             ProtoEnumAdded(
+                self.DEFAULT_PARENT,
                 ProtoEnum(
                     ProtoIdentifier("TagEnum2"),
                     [

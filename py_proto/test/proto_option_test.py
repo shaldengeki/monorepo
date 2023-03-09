@@ -17,6 +17,10 @@ from src.proto_string_literal import ProtoStringLiteral
 class OptionTest(unittest.TestCase):
 
     maxDiff = None
+    DEFAULT_PARENT = ProtoOption(
+        ProtoIdentifier("default.parent"),
+        ProtoConstant(ProtoInt(1, ProtoIntSign.POSITIVE)),
+    )
 
     def test_string_option(self):
         string_option = ProtoOption.match("option foo = 'test value';")
@@ -215,7 +219,7 @@ class OptionTest(unittest.TestCase):
             ProtoIdentifier("some.custom.option"),
             ProtoConstant(ProtoStringLiteral("some value")),
         )
-        self.assertEqual(ProtoOption.diff(po1, po2), [])
+        self.assertEqual(ProtoOption.diff(self.DEFAULT_PARENT, po1, po2), [])
 
     def test_diff_different_option_name_returns_empty(self):
         po1 = ProtoOption(
@@ -226,7 +230,7 @@ class OptionTest(unittest.TestCase):
             ProtoIdentifier("other.option"),
             ProtoConstant(ProtoStringLiteral("some value")),
         )
-        self.assertEqual(ProtoOption.diff(po1, po2), [])
+        self.assertEqual(ProtoOption.diff(self.DEFAULT_PARENT, po1, po2), [])
 
     def test_diff_different_option_value_returns_option_diff(self):
         po1 = ProtoOption(
@@ -238,9 +242,10 @@ class OptionTest(unittest.TestCase):
             ProtoConstant(ProtoStringLiteral("other value")),
         )
         self.assertEqual(
-            ProtoOption.diff(po1, po2),
+            ProtoOption.diff(self.DEFAULT_PARENT, po1, po2),
             [
                 ProtoOptionValueChanged(
+                    self.DEFAULT_PARENT,
                     ProtoIdentifier("some.custom.option"),
                     ProtoConstant(ProtoStringLiteral("some value")),
                     ProtoConstant(ProtoStringLiteral("other value")),
@@ -255,13 +260,14 @@ class OptionTest(unittest.TestCase):
             ProtoConstant(ProtoStringLiteral("some value")),
         )
         self.assertEqual(
-            ProtoOption.diff(po1, po2),
+            ProtoOption.diff(self.DEFAULT_PARENT, po1, po2),
             [
                 ProtoOptionAdded(
+                    self.DEFAULT_PARENT,
                     ProtoOption(
                         ProtoIdentifier("some.custom.option"),
                         ProtoConstant(ProtoStringLiteral("some value")),
-                    )
+                    ),
                 ),
             ],
         )
@@ -273,13 +279,14 @@ class OptionTest(unittest.TestCase):
         )
         po2 = None
         self.assertEqual(
-            ProtoOption.diff(po1, po2),
+            ProtoOption.diff(self.DEFAULT_PARENT, po1, po2),
             [
                 ProtoOptionRemoved(
+                    self.DEFAULT_PARENT,
                     ProtoOption(
                         ProtoIdentifier("some.custom.option"),
                         ProtoConstant(ProtoStringLiteral("some value")),
-                    )
+                    ),
                 ),
             ],
         )
@@ -287,7 +294,7 @@ class OptionTest(unittest.TestCase):
     def test_diff_sets_empty_returns_empty(self):
         set1 = []
         set2 = []
-        self.assertEqual(ProtoOption.diff_sets(set1, set2), [])
+        self.assertEqual(ProtoOption.diff_sets(self.DEFAULT_PARENT, set1, set2), [])
 
     def test_diff_sets_no_change(self):
         set1 = [
@@ -304,7 +311,7 @@ class OptionTest(unittest.TestCase):
                 ProtoConstant(ProtoInt(100, ProtoIntSign.POSITIVE)),
             ),
         ]
-        self.assertEqual(ProtoOption.diff_sets(set1, set1), [])
+        self.assertEqual(ProtoOption.diff_sets(self.DEFAULT_PARENT, set1, set1), [])
 
     def test_diff_sets_all_removed(self):
         set1 = [
@@ -322,32 +329,35 @@ class OptionTest(unittest.TestCase):
             ),
         ]
         set2 = []
-        diff = ProtoOption.diff_sets(set1, set2)
+        diff = ProtoOption.diff_sets(self.DEFAULT_PARENT, set1, set2)
 
         self.assertIn(
             ProtoOptionRemoved(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("some.custom.option"),
                     ProtoConstant(ProtoStringLiteral("some value")),
-                )
+                ),
             ),
             diff,
         )
         self.assertIn(
             ProtoOptionRemoved(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("java_package"),
                     ProtoConstant(ProtoStringLiteral("foo.bar.baz")),
-                )
+                ),
             ),
             diff,
         )
         self.assertIn(
             ProtoOptionRemoved(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("other.option"),
                     ProtoConstant(ProtoInt(100, ProtoIntSign.POSITIVE)),
-                )
+                ),
             ),
             diff,
         )
@@ -369,32 +379,35 @@ class OptionTest(unittest.TestCase):
                 ProtoConstant(ProtoInt(100, ProtoIntSign.POSITIVE)),
             ),
         ]
-        diff = ProtoOption.diff_sets(set1, set2)
+        diff = ProtoOption.diff_sets(self.DEFAULT_PARENT, set1, set2)
 
         self.assertIn(
             ProtoOptionAdded(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("some.custom.option"),
                     ProtoConstant(ProtoStringLiteral("some value")),
-                )
+                ),
             ),
             diff,
         )
         self.assertIn(
             ProtoOptionAdded(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("java_package"),
                     ProtoConstant(ProtoStringLiteral("foo.bar.baz")),
-                )
+                ),
             ),
             diff,
         )
         self.assertIn(
             ProtoOptionAdded(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("other.option"),
                     ProtoConstant(ProtoInt(100, ProtoIntSign.POSITIVE)),
-                )
+                ),
             ),
             diff,
         )
@@ -430,63 +443,69 @@ class OptionTest(unittest.TestCase):
             ),
         ]
 
-        diff = ProtoOption.diff_sets(set1, set2)
+        diff = ProtoOption.diff_sets(self.DEFAULT_PARENT, set1, set2)
 
         self.assertIn(
             ProtoOptionAdded(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("some.custom.option.but.not.prior"),
                     ProtoConstant(ProtoStringLiteral("some value")),
-                )
+                ),
             ),
             diff,
         )
         self.assertIn(
             ProtoOptionAdded(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("other.option.but.stil.not.prior"),
                     ProtoConstant(ProtoInt(100, ProtoIntSign.POSITIVE)),
-                )
+                ),
             ),
             diff,
         )
 
         self.assertIn(
             ProtoOptionAdded(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("ruby_package"),
                     ProtoConstant(ProtoStringLiteral("foo.bar.baz")),
-                )
+                ),
             ),
             diff,
         )
 
         self.assertIn(
             ProtoOptionRemoved(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("other.option"),
                     ProtoConstant(ProtoInt(100, ProtoIntSign.POSITIVE)),
-                )
+                ),
             ),
             diff,
         )
 
         self.assertIn(
             ProtoOptionRemoved(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("some.custom.option"),
                     ProtoConstant(ProtoStringLiteral("some value")),
-                )
+                ),
             ),
             diff,
         )
 
         self.assertIn(
             ProtoOptionRemoved(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("java_package"),
                     ProtoConstant(ProtoStringLiteral("foo.bar.baz")),
-                )
+                ),
             ),
             diff,
         )
@@ -523,47 +542,52 @@ class OptionTest(unittest.TestCase):
             ),
         ]
 
-        diff = ProtoOption.diff_sets(set1, set2)
+        diff = ProtoOption.diff_sets(self.DEFAULT_PARENT, set1, set2)
 
         self.assertIn(
             ProtoOptionRemoved(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("some.custom.option"),
                     ProtoConstant(ProtoStringLiteral("some value")),
-                )
+                ),
             ),
             diff,
         )
 
         self.assertIn(
             ProtoOptionRemoved(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("other.option"),
                     ProtoConstant(ProtoInt(100, ProtoIntSign.POSITIVE)),
-                )
+                ),
             ),
             diff,
         )
         self.assertIn(
             ProtoOptionAdded(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("some.custom.option.but.not.prior"),
                     ProtoConstant(ProtoStringLiteral("some value")),
-                )
+                ),
             ),
             diff,
         )
         self.assertIn(
             ProtoOptionAdded(
+                self.DEFAULT_PARENT,
                 ProtoOption(
                     ProtoIdentifier("other.option.but.stil.not.prior"),
                     ProtoConstant(ProtoInt(100, ProtoIntSign.POSITIVE)),
-                )
+                ),
             ),
             diff,
         )
         self.assertIn(
             ProtoOptionValueChanged(
+                self.DEFAULT_PARENT,
                 ProtoIdentifier("java_package"),
                 ProtoConstant(ProtoStringLiteral("foo.bar.baz")),
                 ProtoConstant(ProtoStringLiteral("foo.bar.bat")),

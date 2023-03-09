@@ -30,6 +30,8 @@ from src.proto_string_literal import ProtoStringLiteral
 class MessageTest(unittest.TestCase):
     maxDiff = None
 
+    DEFAULT_PARENT = ProtoMessage(ProtoIdentifier("DefaultParent"), [])
+
     def test_message_all_features(self):
         parsed_message_multiple_fields = ProtoMessage.match(
             dedent(
@@ -518,7 +520,7 @@ class MessageTest(unittest.TestCase):
             ProtoIdentifier("MyMessage"),
             [],
         )
-        self.assertEqual(ProtoMessage.diff(pm1, pm2), [])
+        self.assertEqual(ProtoMessage.diff(self.DEFAULT_PARENT, pm1, pm2), [])
 
     def test_diff_different_message_name_returns_empty(self):
         pm1 = ProtoMessage(
@@ -529,15 +531,17 @@ class MessageTest(unittest.TestCase):
             ProtoIdentifier("OtherMessage"),
             [],
         )
-        self.assertEqual(ProtoMessage.diff(pm1, pm2), [])
+        self.assertEqual(ProtoMessage.diff(self.DEFAULT_PARENT, pm1, pm2), [])
 
-    def test_diff_enum_added(self):
+    def test_diff_message_added(self):
         pm1 = None
         pm2 = ProtoMessage(ProtoIdentifier("MyMessage"), [])
         self.assertEqual(
-            ProtoMessage.diff(pm1, pm2),
+            ProtoMessage.diff(self.DEFAULT_PARENT, pm1, pm2),
             [
-                ProtoMessageAdded(ProtoMessage(ProtoIdentifier("MyMessage"), [])),
+                ProtoMessageAdded(
+                    self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("MyMessage"), [])
+                ),
             ],
         )
 
@@ -545,16 +549,18 @@ class MessageTest(unittest.TestCase):
         pm1 = ProtoMessage(ProtoIdentifier("MyMessage"), [])
         pm2 = None
         self.assertEqual(
-            ProtoMessage.diff(pm1, pm2),
+            ProtoMessage.diff(self.DEFAULT_PARENT, pm1, pm2),
             [
-                ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("MyMessage"), [])),
+                ProtoMessageRemoved(
+                    self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("MyMessage"), [])
+                ),
             ],
         )
 
     def test_diff_sets_empty_returns_empty(self):
         set1 = []
         set2 = []
-        self.assertEqual(ProtoMessage.diff_sets(set1, set2), [])
+        self.assertEqual(ProtoMessage.diff_sets(self.DEFAULT_PARENT, set1, set2), [])
 
     def test_diff_sets_no_change_returns_empty(self):
         set1 = [
@@ -562,7 +568,7 @@ class MessageTest(unittest.TestCase):
             ProtoMessage(ProtoIdentifier("BarMessage"), []),
             ProtoMessage(ProtoIdentifier("BazMessage"), []),
         ]
-        self.assertEqual(ProtoMessage.diff_sets(set1, set1), [])
+        self.assertEqual(ProtoMessage.diff_sets(self.DEFAULT_PARENT, set1, set1), [])
 
     def test_diff_sets_all_removed(self):
         set1 = [
@@ -571,17 +577,23 @@ class MessageTest(unittest.TestCase):
             ProtoMessage(ProtoIdentifier("BazMessage"), []),
         ]
         set2 = []
-        diff = ProtoMessage.diff_sets(set1, set2)
+        diff = ProtoMessage.diff_sets(self.DEFAULT_PARENT, set1, set2)
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("FooMessage"), [])),
+            ProtoMessageRemoved(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("FooMessage"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("BarMessage"), [])),
+            ProtoMessageRemoved(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("BarMessage"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("BazMessage"), [])),
+            ProtoMessageRemoved(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("BazMessage"), [])
+            ),
             diff,
         )
         self.assertEqual(3, len(diff))
@@ -594,17 +606,23 @@ class MessageTest(unittest.TestCase):
             ProtoMessage(ProtoIdentifier("BazMessage"), []),
         ]
 
-        diff = ProtoMessage.diff_sets(set1, set2)
+        diff = ProtoMessage.diff_sets(self.DEFAULT_PARENT, set1, set2)
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("FooMessage"), [])),
+            ProtoMessageAdded(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("FooMessage"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("BarMessage"), [])),
+            ProtoMessageAdded(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("BarMessage"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("BazMessage"), [])),
+            ProtoMessageAdded(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("BazMessage"), [])
+            ),
             diff,
         )
         self.assertEqual(3, len(diff))
@@ -620,29 +638,41 @@ class MessageTest(unittest.TestCase):
             ProtoMessage(ProtoIdentifier("BarMessage2"), []),
             ProtoMessage(ProtoIdentifier("BazMessage2"), []),
         ]
-        diff = ProtoMessage.diff_sets(set1, set2)
+        diff = ProtoMessage.diff_sets(self.DEFAULT_PARENT, set1, set2)
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("FooMessage2"), [])),
+            ProtoMessageAdded(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("FooMessage2"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("BarMessage2"), [])),
+            ProtoMessageAdded(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("BarMessage2"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("BazMessage2"), [])),
+            ProtoMessageAdded(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("BazMessage2"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("FooMessage"), [])),
+            ProtoMessageRemoved(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("FooMessage"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("BarMessage"), [])),
+            ProtoMessageRemoved(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("BarMessage"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("BazMessage"), [])),
+            ProtoMessageRemoved(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("BazMessage"), [])
+            ),
             diff,
         )
         self.assertEqual(6, len(diff))
@@ -659,21 +689,29 @@ class MessageTest(unittest.TestCase):
             ProtoMessage(ProtoIdentifier("BarMessage"), []),
             ProtoMessage(ProtoIdentifier("BazMessage2"), []),
         ]
-        diff = ProtoMessage.diff_sets(set1, set2)
+        diff = ProtoMessage.diff_sets(self.DEFAULT_PARENT, set1, set2)
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("FooMessage2"), [])),
+            ProtoMessageAdded(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("FooMessage2"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageAdded(ProtoMessage(ProtoIdentifier("BazMessage2"), [])),
+            ProtoMessageAdded(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("BazMessage2"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("FooMessage"), [])),
+            ProtoMessageRemoved(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("FooMessage"), [])
+            ),
             diff,
         )
         self.assertIn(
-            ProtoMessageRemoved(ProtoMessage(ProtoIdentifier("BazMessage"), [])),
+            ProtoMessageRemoved(
+                self.DEFAULT_PARENT, ProtoMessage(ProtoIdentifier("BazMessage"), [])
+            ),
             diff,
         )
         self.assertEqual(4, len(diff))
