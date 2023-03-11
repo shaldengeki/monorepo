@@ -9,7 +9,7 @@ from src.proto_enum import ProtoEnum
 from src.proto_extend import ProtoExtend
 from src.proto_import import ProtoImport
 from src.proto_message import ProtoMessage
-from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
+from src.proto_node import ParsedProtoNode, ProtoContainerNode, ProtoNode, ProtoNodeDiff
 from src.proto_option import ProtoOption
 from src.proto_package import ProtoPackage
 from src.proto_service import ProtoService
@@ -21,13 +21,40 @@ class ParsedProtoFileNode(ParsedProtoNode):
     remaining_source: str
 
 
-class ProtoFile(ProtoNode):
-    def __init__(self, syntax: ProtoSyntax, nodes: list[ProtoNode], *args, **kwargs):
+class ProtoFileHeaderNode(ProtoNode):
+    def __init__(
+        self, header_nodes: list[ProtoNode], syntax: ProtoSyntax, *args, **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+        self.header_nodes = header_nodes
+        self.syntax = syntax
+
+    @classmethod
+    def match(
+        cls,
+        proto_source: str,
+        parent: Optional["ProtoNode"] = None,
+    ) -> Optional["ParsedProtoNode"]:
+        pass
+
+    def serialize(self) -> str:
+        raise NotImplementedError
+
+    def normalize(self) -> Optional["ProtoNode"]:
+        raise NotImplementedError
+
+
+class ParsedProtoFileHeaderNode(ParsedProtoNode):
+    node: "ProtoFileHeaderNode"
+    remaining_source: str
+
+
+class ProtoFile(ProtoContainerNode):
+    def __init__(self, syntax: ProtoSyntax, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.syntax = syntax
-        self.nodes = nodes
 
-        if len([node for node in nodes if isinstance(node, ProtoPackage)]) > 1:
+        if len([node for node in self.nodes if isinstance(node, ProtoPackage)]) > 1:
             raise ValueError(f"Proto can't have more than one package statement")
 
     @property
@@ -53,9 +80,34 @@ class ProtoFile(ProtoNode):
     def messages(self) -> list[ProtoMessage]:
         return [node for node in self.nodes if isinstance(node, ProtoMessage)]
 
-    @staticmethod
-    def parse_partial_content(partial_proto_content: str) -> ParsedProtoNode:
-        node_types: list[type[ProtoNode]] = [
+    @classmethod
+    def match_header(
+        cls,
+        proto_source: str,
+        parent: Optional["ProtoNode"] = None,
+    ) -> Optional["ParsedProtoNode"]:
+        syntax, parsed_tree, remaining_source = cls.parse_syntax_and_preceding_comments(
+            proto_source.strip()
+        )
+        return ParsedProtoFileHeaderNode(
+            ProtoFileHeaderNode(list(parsed_tree), syntax, parent=parent),
+            remaining_source.strip(),
+        )
+
+    @classmethod
+    def match_footer(
+        cls,
+        proto_source: str,
+        parent: Optional[ProtoNode] = None,
+    ) -> Optional[str]:
+        trimmed_source = proto_source.strip()
+        if trimmed_source == "":
+            return ""
+        return None
+
+    @classmethod
+    def container_types(cls) -> list[type[ProtoNode]]:
+        return [
             ProtoImport,
             ProtoMessage,
             ProtoPackage,
@@ -66,16 +118,20 @@ class ProtoFile(ProtoNode):
             ProtoSingleLineComment,
             ProtoMultiLineComment,
         ]
-        for node_type in node_types:
-            try:
-                match_result = node_type.match(partial_proto_content)
-            except (ValueError, IndexError, TypeError):
-                raise ValueError(
-                    f"Could not parse proto content:\n{partial_proto_content}"
-                )
-            if match_result is not None:
-                return match_result
-        raise ValueError(f"Could not parse proto content:\n{partial_proto_content}")
+
+    @classmethod
+    def construct(
+        cls,
+        header_match: "ParsedProtoNode",
+        contained_nodes: list[ProtoNode],
+        footer_match: str,
+        parent: Optional[ProtoNode] = None,
+    ) -> ProtoNode:
+        assert isinstance(header_match, ParsedProtoFileHeaderNode)
+        return cls(
+            header_match.node.syntax,
+            header_match.node.header_nodes + contained_nodes,
+        )
 
     @staticmethod
     def parse_syntax_and_preceding_comments(
@@ -107,25 +163,6 @@ class ProtoFile(ProtoNode):
         proto_content = syntax_match.remaining_source.strip()
 
         return syntax, parsed_tree, proto_content
-
-    @classmethod
-    def match(
-        cls, proto_content: str, parent: Optional["ProtoNode"] = None
-    ) -> Optional[ParsedProtoFileNode]:
-        syntax, parsed_tree, proto_content = cls.parse_syntax_and_preceding_comments(
-            proto_content
-        )
-        new_tree: list[ProtoNode] = list(parsed_tree)
-        while proto_content:
-            # Remove empty statements.
-            if proto_content.startswith(";"):
-                proto_content = proto_content[1:].strip()
-                continue
-            match_result = cls.parse_partial_content(proto_content)
-            new_tree.append(match_result.node)
-            proto_content = match_result.remaining_source.strip()
-
-        return ParsedProtoFileNode(cls(syntax, new_tree), proto_content)
 
     def normalize(self) -> Optional["ProtoNode"]:
         normalized_nodes = [n.normalize() for n in self.nodes]

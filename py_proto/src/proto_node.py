@@ -98,6 +98,7 @@ class ProtoContainerNode(ProtoNode):
 
         proto_source = header_match.remaining_source.strip()
         nodes = []
+        footer_match: Optional[str] = None
         while proto_source:
             # Remove empty statements.
             if proto_source.startswith(";"):
@@ -114,9 +115,11 @@ class ProtoContainerNode(ProtoNode):
             proto_source = match_result.remaining_source.strip()
 
         if footer_match is None:
-            raise ValueError(
-                f"Footer was not found when matching container node {cls} for remaining proto source {proto_source}"
-            )
+            footer_match = cls.match_footer(proto_source, parent)
+            if footer_match is None:
+                raise ValueError(
+                    f"Footer was not found when matching container node {cls} for remaining proto source {proto_source}"
+                )
 
         return ParsedProtoNode(
             cls.construct(header_match, nodes, footer_match, parent=parent),

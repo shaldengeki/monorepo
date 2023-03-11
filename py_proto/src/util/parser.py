@@ -13,12 +13,11 @@ class Parser:
         try:
             parsed_file = ProtoFile.match(proto_content, None)
         except ValueError as e:
-            raise ParseError(
-                f"Proto doesn't have parseable syntax:\n{proto_content}\n{e}"
-            )
+            raise ParseError(f"Proto doesn't have parseable syntax:\n{e}")
         if parsed_file is None:
             raise ParseError(f"Proto doesn't have parseable syntax:\n{proto_content}")
 
+        assert isinstance(parsed_file.node, ProtoFile)
         return parsed_file.node
 
 
