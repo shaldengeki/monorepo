@@ -8,32 +8,28 @@ from src.proto_comment import (
 from src.proto_enum import ProtoEnum
 from src.proto_extend import ProtoExtend
 from src.proto_extensions import ProtoExtensions
-from src.proto_identifier import ProtoIdentifier
+from src.proto_identifier import ParsedProtoIdentifierNode, ProtoIdentifier
 from src.proto_map import ProtoMap
 from src.proto_message_field import ProtoMessageField
-from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
+from src.proto_node import ParsedProtoNode, ProtoContainerNode, ProtoNode, ProtoNodeDiff
 from src.proto_oneof import ProtoOneOf
 from src.proto_option import ProtoOption
 from src.proto_reserved import ProtoReserved
 
 
-class ProtoMessage(ProtoNode):
+class ProtoMessage(ProtoContainerNode):
     def __init__(
         self,
         name: ProtoIdentifier,
-        nodes: Sequence[ProtoNode],
         *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.name = name
         self.name.parent = self
-        self.nodes = nodes
-        for node in self.nodes:
-            node.parent = self
 
     def __eq__(self, other) -> bool:
-        return self.name == other.name and self.nodes == other.nodes
+        return super().__eq__(other) and self.name == other.name
 
     def __str__(self) -> str:
         return f"<ProtoMessage name={self.name}, nodes={self.nodes}>"
@@ -85,38 +81,12 @@ class ProtoMessage(ProtoNode):
             parent=self.parent,
         )
 
-    @staticmethod
-    def parse_partial_content(partial_message_content: str) -> ParsedProtoNode:
-        supported_types: list[type[ProtoNode]] = [
-            ProtoSingleLineComment,
-            ProtoMultiLineComment,
-            ProtoEnum,
-            ProtoExtend,
-            ProtoExtensions,
-            ProtoOption,
-            ProtoMessage,
-            ProtoReserved,
-            ProtoMessageField,
-            ProtoOneOf,
-            ProtoMap,
-        ]
-        for node_type in supported_types:
-            try:
-                match_result = node_type.match(partial_message_content)
-            except (ValueError, IndexError, TypeError):
-                raise ValueError(
-                    f"Could not parse partial message content:\n{partial_message_content}"
-                )
-            if match_result is not None:
-                return match_result
-        raise ValueError(
-            f"Could not parse partial message content:\n{partial_message_content}"
-        )
-
     @classmethod
-    def match(
-        cls, proto_source: str, parent: Optional[ProtoNode] = None
-    ) -> Optional["ParsedProtoNode"]:
+    def match_header(
+        cls,
+        proto_source: str,
+        parent: Optional["ProtoNode"] = None,
+    ) -> Optional["ParsedProtoIdentifierNode"]:
         if not proto_source.startswith("message "):
             return None
 
@@ -133,24 +103,35 @@ class ProtoMessage(ProtoNode):
                 f"Proto message has invalid syntax, expecting opening curly brace: {proto_source}"
             )
 
-        proto_source = proto_source[1:].strip()
-        parsed_tree = []
-        while proto_source:
-            # Remove empty statements.
-            if proto_source.startswith(";"):
-                proto_source = proto_source[1:].strip()
-                continue
+        return ParsedProtoIdentifierNode(enum_name, proto_source[1:].strip())
 
-            if proto_source.startswith("}"):
-                proto_source = proto_source[1:].strip()
-                break
+    @classmethod
+    def container_types(cls) -> list[type[ProtoNode]]:
+        return [
+            ProtoSingleLineComment,
+            ProtoMultiLineComment,
+            ProtoEnum,
+            ProtoExtend,
+            ProtoExtensions,
+            ProtoOption,
+            ProtoMessage,
+            ProtoReserved,
+            ProtoMessageField,
+            ProtoOneOf,
+            ProtoMap,
+        ]
 
-            match_result = ProtoMessage.parse_partial_content(proto_source)
-            parsed_tree.append(match_result.node)
-            proto_source = match_result.remaining_source.strip()
-
-        return ParsedProtoNode(
-            ProtoMessage(name=enum_name, nodes=parsed_tree, parent=parent), proto_source
+    @classmethod
+    def construct(
+        cls,
+        header_match: ParsedProtoNode,
+        contained_nodes: list[ProtoNode],
+        footer_match: str,
+        parent: Optional[ProtoNode] = None,
+    ) -> ProtoNode:
+        assert isinstance(header_match, ParsedProtoIdentifierNode)
+        return ProtoMessage(
+            name=header_match.node, nodes=contained_nodes, parent=parent
         )
 
     @property

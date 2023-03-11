@@ -7,10 +7,10 @@ from src.proto_comment import (
     ProtoMultiLineComment,
     ProtoSingleLineComment,
 )
-from src.proto_identifier import ProtoIdentifier
+from src.proto_identifier import ParsedProtoIdentifierNode, ProtoIdentifier
 from src.proto_map import ProtoMap
 from src.proto_message_field import ParsedProtoMessageFieldNode, ProtoMessageField
-from src.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
+from src.proto_node import ParsedProtoNode, ProtoContainerNode, ProtoNode, ProtoNodeDiff
 from src.proto_option import ParsedProtoOptionNode, ProtoOption
 
 ProtoOneOfNodeTypes = (
@@ -29,23 +29,19 @@ class ParsedProtoOneOfNode(ParsedProtoNode):
     remaining_source: str
 
 
-class ProtoOneOf(ProtoNode):
+class ProtoOneOf(ProtoContainerNode):
     def __init__(
         self,
         name: ProtoIdentifier,
-        nodes: Sequence[ProtoOneOfNodeTypes],
         *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.name = name
         self.name.parent = self
-        self.nodes = nodes
-        for node in self.nodes:
-            node.parent = self
 
     def __eq__(self, other) -> bool:
-        return self.name == other.name and self.nodes == other.nodes
+        return super().__eq__(other) and self.name == other.name
 
     def __str__(self) -> str:
         return f"<{self.__class__.__name__} name={self.name}, nodes={self.nodes}>"
@@ -58,56 +54,39 @@ class ProtoOneOf(ProtoNode):
             lambda n: not isinstance(n, ProtoComment), self.nodes
         )
         options = []
-        fields = []
+        fields: list[ProtoMessageField | ProtoMap] = []
+        oneofs: list[ProtoOneOf] = []
         for node in non_comment_nodes:
             if isinstance(node, ProtoOption):
                 options.append(node.normalize())
-            elif (
-                isinstance(node, ProtoMessageField)
-                or isinstance(node, ProtoOneOf)
-                or isinstance(node, ProtoMap)
-            ):
+            elif isinstance(node, ProtoMessageField) or isinstance(node, ProtoMap):
                 fields.append(node.normalize())
+            elif isinstance(node, ProtoOneOf):
+                oneofs.append(node.normalize())
             else:
                 raise ValueError(
                     f"Can't sort message {self} node for normalizing: {node}"
                 )
 
-        sorted_nodes_for_normalizing = sorted(
-            options, key=lambda o: str(o.normalize())
-        ) + sorted(fields, key=lambda f: int(f.number))
+        sorted_options = sorted(options, key=lambda o: str(o.normalize()))
+        sorted_fields = sorted(fields, key=lambda f: int(f.number))
+        sorted_oneofs = sorted(
+            oneofs,
+            key=lambda x: min(int(f.number) for f in x.message_fields),
+        )
 
         return ProtoOneOf(
             name=self.name,
-            nodes=sorted_nodes_for_normalizing,
+            nodes=(sorted_options + sorted_fields + sorted_oneofs),
             parent=self.parent,
         )
 
-    @staticmethod
-    def parse_partial_content(partial_oneof_content: str) -> ProtoParsedOneOfNodeTypes:
-        supported_types: list[type[ProtoOneOfNodeTypes]] = [
-            ProtoMessageField,
-            ProtoOption,
-            ProtoSingleLineComment,
-            ProtoMultiLineComment,
-        ]
-        for node_type in supported_types:
-            try:
-                match_result = node_type.match(partial_oneof_content)
-            except (ValueError, IndexError, TypeError):
-                raise ValueError(
-                    f"Could not parse partial oneof content:\n{partial_oneof_content}"
-                )
-            if match_result is not None:
-                return match_result
-        raise ValueError(
-            f"Could not parse partial oneof content:\n{partial_oneof_content}"
-        )
-
     @classmethod
-    def match(
-        cls, proto_source: str, parent: Optional[ProtoNode] = None
-    ) -> Optional["ParsedProtoOneOfNode"]:
+    def match_header(
+        cls,
+        proto_source: str,
+        parent: Optional["ProtoNode"] = None,
+    ) -> Optional["ParsedProtoIdentifierNode"]:
         if not proto_source.startswith("oneof "):
             return None
 
@@ -127,25 +106,27 @@ class ProtoOneOf(ProtoNode):
                 f"Proto has invalid syntax, expecting opening curly brace: {proto_source}"
             )
 
-        proto_source = proto_source[1:].strip()
-        parsed_tree = []
-        while proto_source:
-            # Remove empty statements.
-            if proto_source.startswith(";"):
-                proto_source = proto_source[1:].strip()
-                continue
+        return ParsedProtoIdentifierNode(oneof_name, proto_source[1:].strip())
 
-            if proto_source.startswith("}"):
-                proto_source = proto_source[1:].strip()
-                break
+    @classmethod
+    def container_types(cls) -> list[type[ProtoNode]]:
+        return [
+            ProtoMessageField,
+            ProtoOption,
+            ProtoSingleLineComment,
+            ProtoMultiLineComment,
+        ]
 
-            match_result = ProtoOneOf.parse_partial_content(proto_source)
-            parsed_tree.append(match_result.node)
-            proto_source = match_result.remaining_source.strip()
-
-        return ParsedProtoOneOfNode(
-            ProtoOneOf(name=oneof_name, nodes=parsed_tree, parent=parent), proto_source
-        )
+    @classmethod
+    def construct(
+        cls,
+        header_match: ParsedProtoNode,
+        contained_nodes: list[ProtoNode],
+        footer_match: str,
+        parent: Optional[ProtoNode] = None,
+    ) -> ProtoNode:
+        assert isinstance(header_match, ParsedProtoIdentifierNode)
+        return ProtoOneOf(name=header_match.node, nodes=contained_nodes, parent=parent)
 
     @property
     def options(self) -> list[ProtoOption]:
