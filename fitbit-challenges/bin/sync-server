@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+SYNC_HOST=${SYNC_HOST:-t530}
+SYNC_USERNAME=${SYNC_USERNAME:-shaldengeki}
+SYNC_PATH=${SYNC_PATH:-/home/$SYNC_USERNAME/fitbit-challenges}
+
+inotifywait -r -m -e close_write --format '%w%f' frontend api | while read MODFILE; do
+	echo syncing $MODFILE;
+	rsync $MODFILE $SYNC_USERNAME@$SYNC_HOST:$SYNC_PATH/$MODFILE;
+done
