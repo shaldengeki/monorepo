@@ -5,15 +5,12 @@ import {
   Route
 } from "react-router-dom";
 
-import TransactionDisplay from './components/TransactionDisplay';
-
 function App() {
   return (
     <Router>
         <Switch>
           <Route path="/">
             <div className="text-center">
-              <TransactionDisplay />
             </div>
           </Route>
         </Switch>

@@ -5,7 +5,6 @@ def Schema(models):
     return GraphQLSchema(
         query=GraphQLObjectType(
             name="RootQueryType",
-            fields={
-            },
+            fields={},
         )
     )

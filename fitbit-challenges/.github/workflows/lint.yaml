@@ -2,19 +2,23 @@ name: Lint
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: eslint
-        uses: hallee/eslint-action@1.0.3
+      - uses: actions/checkout@v3
+      - name: Set up node
+        uses: actions/setup-node@v3
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          source-root: frontend
+          node-version: 18
       - name: black
-        uses: lgeiger/black-action@master
+        uses: psf/black@stable
         with:
-          args: "api --check"
+          options: "--check --verbose"
+          src: "./api"
+      - run: npm ci
+        working-directory: ./frontend
+      - run: npm test
+        working-directory: ./frontend
