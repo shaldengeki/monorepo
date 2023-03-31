@@ -1,9 +1,11 @@
-Flask
-Flask-Migrate
+Flask>=2.2
+Flask-Migrate>=4.0.4
 psycopg2
+pylint
 sqlalchemy
-Flask-SQLAlchemy
-graphql-core==2.2
-flask_graphql
+Flask-SQLAlchemy>=3.0.3
+graphql-core
+git+https://github.com/graphql-python/graphql-server@8b9639e1575a20c7322fb8f19459d743d7201410#egg=graphql-server[flask]
 flask-cors
+pre-commit
 black

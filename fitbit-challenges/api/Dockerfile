@@ -3,7 +3,7 @@ FROM python:3-alpine
 EXPOSE 5000/tcp
 
 RUN apk update && \
-    apk add --virtual build-deps gcc python3-dev musl-dev && \
+    apk add --virtual build-deps gcc git python3-dev musl-dev && \
     apk add postgresql-dev
 
 WORKDIR /usr/src/app

@@ -16,7 +16,7 @@ services:
       - DB_USERNAME=admin
       - DB_PASSWORD=development
       - DATABASE_NAME=api_development
-      - FRONTEND_HOST=192.168.1.5
+      - FRONTEND_HOST=localhost
       - FRONTEND_PORT=5001
   migration:
     build:
@@ -56,5 +56,5 @@ services:
       - ./frontend/src:/usr/src/app/src
     environment:
       - PORT=5001
-      - REACT_APP_API_HOST=192.168.1.5
+      - REACT_APP_API_HOST=127.0.0.1
       - REACT_APP_API_PORT=5000
