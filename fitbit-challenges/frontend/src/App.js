@@ -1,19 +1,22 @@
 import React from 'react';
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route
 } from "react-router-dom";
+
+function MyComponent() {
+  return (
+    <div>Hello world!</div>
+  )
+}
 
 function App() {
   return (
     <Router>
-        <Switch>
-          <Route path="/">
-            <div className="text-center">
-            </div>
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/" element={<MyComponent />} />
+        </Routes>
     </Router>
   );
 }
