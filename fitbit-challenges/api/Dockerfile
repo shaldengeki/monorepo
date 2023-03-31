@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 ENV FLASK_APP=app.py
 ENV PORT=5000
 ENV FRONTEND_PROTOCOL=http
-ENV FRONTEND_HOST=home_frontend
+ENV FRONTEND_HOST=frontend
 ENV FRONTEND_PORT=5001
 
 COPY requirements.txt ./
