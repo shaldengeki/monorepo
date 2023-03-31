@@ -58,3 +58,4 @@ services:
       - PORT=5001
       - REACT_APP_API_HOST=127.0.0.1
       - REACT_APP_API_PORT=5000
+      - REACT_APP_API_PROTOCOL=http
