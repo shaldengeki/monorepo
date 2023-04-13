@@ -1,8 +1,11 @@
 import * as React from 'react';
 
-const ProgressBar = (props) => {
-    const {value, maximum} = props;
+type ProgressBarProps = {
+    value: number;
+    maximum: number;
+}
 
+const ProgressBar = ({ value, maximum }: ProgressBarProps) => {
     const inversePercent = 100 - (100 * value / maximum);
     const barStyles = {
         "width": `${inversePercent}%`
