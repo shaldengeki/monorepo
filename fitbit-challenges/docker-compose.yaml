@@ -37,8 +37,6 @@ services:
   pg:
     image: postgres:alpine
     restart: always
-    ports:
-        - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=development
       - POSTGRES_USER=admin
