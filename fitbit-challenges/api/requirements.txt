@@ -9,3 +9,4 @@ git+https://github.com/graphql-python/graphql-server@8b9639e1575a20c7322fb8f1945
 flask-cors
 pre-commit
 black
+pytest
