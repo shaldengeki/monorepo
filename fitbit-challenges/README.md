@@ -27,3 +27,9 @@ Navigate in a browser to:
 - [The frontend](http://localhost:5001)
 
 You should be able to make changes to frontend files and see them show up ~immediately!
+
+### Run tests
+
+To run tests once, run `bin/test`, which will run Python and JS tests. The command will error out if any tests failed.
+
+If you're doing JS development, you might find it helpful to set up the test watcher. In a terminal, do `cd frontend && npm test`. This will run an ongoing process to watch for changes to files & re-run tests as needed.
