@@ -1,11 +1,12 @@
-name: Lint
+name: Test
 
 on:
   pull_request:
+  push:
     branches: [ main ]
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -13,11 +14,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: black
-        uses: psf/black@stable
-        with:
-          options: "--check --verbose"
-          src: "./api"
       - run: npm ci
         working-directory: ./frontend
       - run: npm test

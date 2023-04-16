@@ -12,16 +12,16 @@ repos:
         hooks:
             -   id: black
     -   repo: https://github.com/pre-commit/mirrors-eslint
-        rev: 'v7.15.0'  # Use the sha / tag you want to point at
+        rev: 'v8.38.0'  # Use the sha / tag you want to point at
         hooks:
             -   id: eslint
                 files: \.[jt]sx?$  # *.js, *.jsx, *.ts and *.tsx
                 types: [file]
                 args: ["--fix"]
                 additional_dependencies:
-                    -   eslint@7.15.0
-                    -   eslint-config-standard@16.0.2
-                    -   eslint-plugin-import@2.22.1
+                    -   eslint@8.38.0
+                    -   eslint-config-standard@17.0.0
+                    -   eslint-plugin-import@2.27.5
                     -   eslint-plugin-node@11.1.0
-                    -   eslint-plugin-promise@4.2.1
-                    -   eslint-plugin-react@7.21.5
+                    -   eslint-plugin-promise@6.1.1
+                    -   eslint-plugin-react@7.32.2
