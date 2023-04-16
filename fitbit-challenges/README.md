@@ -8,7 +8,7 @@
 
 This will set up some hooks that will fix e.g. trailing whitespace or formatting issues when you `git commit`:
 ```
-pip install -r requirements.txt
+pip install pre-commit
 pre-commit install
 pre-commit run --all-files
 ```
