@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 import { MockedProvider } from '@apollo/react-testing';
+import React from 'react';
 
 it('should render loading state initially', () => {
   render(

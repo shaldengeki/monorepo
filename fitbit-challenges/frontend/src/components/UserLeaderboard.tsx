@@ -1,5 +1,5 @@
 import React from 'react';
-import ProgressBar from './ProgressBar.tsx';
+import ProgressBar from './ProgressBar';
 // import { useQuery, gql } from '@apollo/client';
 
 type UserLeaderboardHeaderProps = {

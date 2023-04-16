@@ -5,7 +5,7 @@ import {
   Route
 } from "react-router-dom";
 
-import MainView from './views/MainView.tsx';
+import MainView from './views/MainView';
 
 function App() {
   return (
