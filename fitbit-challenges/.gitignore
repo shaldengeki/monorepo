@@ -130,3 +130,6 @@ dmypy.json
 
 # Data volume for postgres
 postgres-data
+
+# Production configuration.
+docker-compose.prod.yaml

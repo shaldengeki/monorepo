@@ -5,55 +5,47 @@ services:
       context: ./api
       dockerfile: Dockerfile
     image: api
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./api:/usr/src/app
     environment:
-      - PORT=5000
-      - FLASK_ENV=development
-      - DB_HOST=pg
-      - DB_USERNAME=admin
-      - DB_PASSWORD=development
-      - DATABASE_NAME=api_development
-      - FRONTEND_HOST=localhost
-      - FRONTEND_PORT=5001
+      - PORT
+      - FLASK_ENV
+      - DB_HOST
+      - DB_USERNAME
+      - DB_PASSWORD
+      - DATABASE_NAME
+      - FRONTEND_HOST
+      - FRONTEND_PORT
   migration:
     build:
       context: ./api
       dockerfile: Dockerfile
     image: api
-    volumes:
-      - ./api:/usr/src/app
     command: ["flask", "db", "upgrade"]
     environment:
-      - FLASK_ENV=development
-      - DB_HOST=pg
-      - DB_USERNAME=admin
-      - DB_PASSWORD=development
-      - DATABASE_NAME=api_development
+      - FLASK_ENV
+      - DB_HOST
+      - DB_USERNAME
+      - DB_PASSWORD
+      - DATABASE_NAME
     depends_on:
       - pg
   pg:
     image: postgres:alpine
     restart: always
     environment:
-      - POSTGRES_PASSWORD=development
-      - POSTGRES_USER=admin
-      - POSTGRES_DB=api_development
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_DB
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - fitbit-challenges-pg:/var/lib/postgresql/data
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     image: frontend
-    ports:
-      - "5001:5001"
-    volumes:
-      - ./frontend/src:/usr/src/app/src
     environment:
       - PORT=5001
-      - REACT_APP_API_HOST=localhost
-      - REACT_APP_API_PORT=5000
-      - REACT_APP_API_PROTOCOL=http
+      - REACT_APP_API_HOST
+      - REACT_APP_API_PORT
+      - REACT_APP_API_PROTOCOL
+volumes:
+  fitbit-challenges-pg:
