@@ -36,7 +36,7 @@ const UserLeaderboardListing = () => {
     ];
 
     const maxSteps = Math.max.apply(null, users.map((user, _) => user['steps']))
-    const entries = users.map((user, _) => <UserLeaderboardListingEntry user={user} maxSteps={maxSteps} />);
+    const entries = users.map((user, _) => <UserLeaderboardListingEntry key={user.name} user={user} maxSteps={maxSteps} />);
 
     return (
         <div>
