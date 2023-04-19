@@ -21,5 +21,5 @@ it('should render loading state initially', async () => {
     </MockedProvider>,
   );
   expect(await screen.findByText("Loading...")).toBeInTheDocument();
-  expect(await screen.findByText("hello world!")).toBeInTheDocument()
+  expect(await screen.findByText("hello world!")).toBeInTheDocument();
 });
