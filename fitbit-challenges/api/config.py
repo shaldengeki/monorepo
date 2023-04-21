@@ -9,10 +9,10 @@ app = Flask(__name__)
 app.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = "postgresql://{user}:{password}@{host}/{db}".format(
-    user=os.getenv("DB_USER", "admin"),
-    password=os.getenv("DB_PASS", "development"),
+    user=os.getenv("DB_USERNAME", "admin"),
+    password=os.getenv("DB_PASSWORD", "development"),
     host=os.getenv("DB_HOST", "pg"),
-    db=os.getenv("DB_NAME", "api_development"),
+    db=os.getenv("DATABASE_NAME", "api_development"),
 )
 
 cors_origin_parts = [
