@@ -1,6 +1,5 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
-import WorkweekHustle from '../components/WorkweekHustle';
 
 export const TEST_QUERY = gql`
   query Test {

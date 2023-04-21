@@ -32,9 +32,6 @@ function formatDateDifference(seconds: number): string {
 }
 
 const UserLeaderboardHeader = ({ title, id, startAt, endAt }: UserLeaderboardHeaderProps) => {
-    console.log("current time: " + getCurrentUnixTime());
-    console.log("start at: " + startAt);
-
     let timingCopy = "";
     if (getCurrentUnixTime() > endAt) {
         timingCopy = "Ended " + formatDateDifference(getCurrentUnixTime() - endAt) + " ago";
