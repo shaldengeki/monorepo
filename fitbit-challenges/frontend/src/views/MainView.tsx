@@ -17,7 +17,6 @@ const MainView = () => {
 
   return (
     <div className="container mx-auto">
-        <WorkweekHustle />
         <div>{data.test}</div>
     </div>
   )
