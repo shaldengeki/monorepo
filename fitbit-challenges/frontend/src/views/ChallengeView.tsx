@@ -28,17 +28,23 @@ const ChallengeView = () => {
       {variables: { id }},
    );
 
-  if (loading) return <p>Loading...</p>;
-
-  if (error) return <p>Error : {error.message}</p>;
-
-  const challenge = data.challenges[0];
-  const users = challenge.users.split(",");
+  let innerContent = <p></p>;
+  if (loading) innerContent = <p>Loading...</p>;
+  else if (error) innerContent = <p>Error : {error.message}</p>;
+  else if (data.challenges.length < 1) {
+    innerContent = <p>Error: challenge could not be found!</p>;
+  } else if (data.challenges.length > 1) {
+    innerContent = <p>Error: multiple challenges with that ID were found!</p>
+  } else {
+    const challenge = data.challenges[0];
+    const users = challenge.users.split(",");
+    innerContent = <WorkweekHustle id={id} users={users} createdAt={challenge.createdAt} startAt={challenge.startAt} endAt={challenge.endAt} />;
+  }
 
     return (
-      <div className="dark:bg-neutral-600 h-screen">
+      <div className="dark:bg-neutral-600 dark:text-slate-400 h-screen">
         <div className="container mx-auto">
-            <WorkweekHustle id={id} users={users} createdAt={challenge.createdAt} startAt={challenge.startAt} endAt={challenge.endAt} />
+          {innerContent}
         </div>
       </div>
   )
