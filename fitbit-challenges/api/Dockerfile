@@ -4,7 +4,7 @@ EXPOSE 5000/tcp
 
 RUN apk update && \
     apk add --virtual build-deps gcc git python3-dev musl-dev && \
-    apk add postgresql-dev
+    apk add postgresql-dev postgresql-client
 
 WORKDIR /usr/src/app
 
@@ -20,4 +20,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD flask run --host 0.0.0.0 --port $PORT
+CMD ./scripts/wait-for-postgres.sh -- flask run --host 0.0.0.0 --port $PORT

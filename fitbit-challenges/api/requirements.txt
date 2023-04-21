@@ -10,3 +10,6 @@ psycopg2
 pylint
 pytest
 sqlalchemy
+sqlalchemy-stubs
+types-Flask-Cors
+types-Flask-Migrate
