@@ -1,11 +1,11 @@
 import React from 'react';
 import ProgressBar from './ProgressBar';
 
-type UserLeaderboardHeaderProps = {
-    title: string;
-    id: number;
-    startAt: number;
-    endAt: number;
+
+export type UserData = {
+    name: string;
+    value: number;
+    unit: string;
 }
 
 function getCurrentUnixTime(): number {
@@ -46,6 +46,13 @@ export function formatDateDifference(seconds: number): string {
     return quantity + " " + unit;
 }
 
+type UserLeaderboardHeaderProps = {
+    title: string;
+    id: number;
+    startAt: number;
+    endAt: number;
+}
+
 const UserLeaderboardHeader = ({ title, id, startAt, endAt }: UserLeaderboardHeaderProps) => {
     let timingCopy = "";
     if (getCurrentUnixTime() > endAt) {
@@ -63,37 +70,37 @@ const UserLeaderboardHeader = ({ title, id, startAt, endAt }: UserLeaderboardHea
     );
 };
 
-type User = {
-    name: string;
-    steps: number;
-}
-
 type UserLeaderboardListingEntryProps = {
-    user: User;
-    maxSteps: number;
+    user: UserData;
+    maximum: number;
 }
 
-export const UserLeaderboardListingEntry = ({ user, maxSteps }: UserLeaderboardListingEntryProps) => {
+export const UserLeaderboardListingEntry = ({ user, maximum }: UserLeaderboardListingEntryProps) => {
     return (
         <div className="grid grid-cols-3 gap-0">
             <div className="col-span-2">{user.name}</div>
-            <ProgressBar value={user.steps} maximum={maxSteps} />
+            <ProgressBar value={user.value} maximum={maximum} />
         </div>
     );
 };
 
 type UserLeaderboardListingProps = {
     users: string[];
+    userData: UserData[];
+    unit: string;
 }
 
-const UserLeaderboardListing = ({ users }: UserLeaderboardListingProps) => {
-    const MAX_STEPS = 17284;
-    const fakeStepData = users.map(
-        (user, _) => { return {"name": user, "steps": Math.floor(Math.random() * MAX_STEPS)}; }
-    ).sort((a, b) => b['steps'] - a['steps'])
-
-    const maxSteps = Math.max.apply(null, fakeStepData.map((user, _) => user['steps']))
-    const entries = fakeStepData.map((user, _) => <UserLeaderboardListingEntry key={user.name} user={user} maxSteps={maxSteps} />);
+const UserLeaderboardListing = ({ users, userData, unit }: UserLeaderboardListingProps) => {
+    // Compute the totals per user.
+    const userTotals = users.map((user, _) => {
+        return {
+            'name': user,
+            'value': userData.filter(ud => ud.name === user).reduce((acc, curr) => acc + curr.value, 0),
+             unit,
+        };
+    }).sort((a, b) => b.value - a.value);
+    const maxValue = Math.max.apply(null, userTotals.map((ud, _) => ud.value));
+    const entries = userTotals.map((ud, _) => <UserLeaderboardListingEntry key={ud.name} user={ud} maximum={maxValue} />);
 
     return (
         <div>
@@ -106,16 +113,18 @@ type UserLeaderboardProps = {
     challengeName: string;
     id: number;
     users: string[];
+    userData: UserData[];
     createdAt: number;
     startAt: number;
     endAt: number;
+    unit: string;
 }
 
-const UserLeaderboard = ({ challengeName, id, users, createdAt, startAt, endAt }: UserLeaderboardProps) => {
+const UserLeaderboard = ({ challengeName, id, users, userData, createdAt, startAt, endAt, unit }: UserLeaderboardProps) => {
   return (
-    <div className="bg-blue-200 p-2">
+    <div className="bg-blue-200 dark:bg-indigo-950 dark:text-slate-400 p-2">
         <UserLeaderboardHeader title={challengeName} id={id} startAt={startAt} endAt={endAt} />
-        <UserLeaderboardListing users={users} />
+        <UserLeaderboardListing users={users} userData={userData} unit={unit} />
     </div>
   )
 }

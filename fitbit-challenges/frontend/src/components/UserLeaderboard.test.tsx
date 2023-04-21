@@ -6,12 +6,13 @@ import React from 'react';
 it('should have the username and steps in the entry', async () => {
   const user = {
     "name": "test-username",
-    "steps": 5728,
+    "value": 5728,
+    "unit": "steps",
   }
   const maxSteps = 6173;
   render(
     <MockedProvider mocks={[]}>
-      <UserLeaderboardListingEntry key={"key"} user={user} maxSteps={maxSteps} />
+      <UserLeaderboardListingEntry key={"key"} user={user} maximum={maxSteps} />
     </MockedProvider>,
   );
   expect(await screen.findByText("test-username")).toBeInTheDocument();

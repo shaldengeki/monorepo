@@ -15,8 +15,10 @@ const MainView = () => {
   if (error) return <p>Error : {error.message}</p>;
 
   return (
-    <div className="container mx-auto">
-        <div>{data.test}</div>
+    <div className="dark:bg-neutral-600 h-screen">
+      <div className="container mx-auto dark:bg-neutral-600">
+          <div>{data.test}</div>
+      </div>
     </div>
   )
 }
