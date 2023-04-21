@@ -13,22 +13,37 @@ function getCurrentUnixTime(): number {
     return Math.round(currentTime / 1000);
 }
 
-function formatDateDifference(seconds: number): string {
+export function formatDateDifference(seconds: number): string {
+    let unit = "";
+    let quantity = 0;
     if (seconds < 60) {
-        return seconds + " seconds";
+        unit = "second";
+        quantity = seconds;
     } else if (seconds < 3600) {
-        return Math.floor(seconds / 60) + " minutes";
+        quantity = Math.floor(seconds / 60);
+        unit = "minute";
     } else if (seconds < 86400) {
-        return Math.floor(seconds / 3600) + " hours";
+        quantity = Math.floor(seconds / 3600);
+        unit = "hour";
     } else if (seconds < 604800) {
-        return Math.floor(seconds / 86400) + " days";
+        quantity = Math.floor(seconds / 86400);
+        unit = "day";
     } else if (seconds < 2592000) {
-        return Math.floor(seconds / 604800) + " weeks";
+        quantity = Math.floor(seconds / 604800);
+        unit = "week";
     } else if (seconds < 31536000) {
-        return Math.floor(seconds / 2592000) + " months";
+        quantity = Math.floor(seconds / 2592000);
+        unit = "month";
     } else {
-        return Math.floor(seconds / 31536000) + " years";
+        quantity = Math.floor(seconds / 31536000);
+        unit = "year";
     }
+
+    if (quantity > 1) {
+        unit = unit + "s";
+    }
+
+    return quantity + " " + unit;
 }
 
 const UserLeaderboardHeader = ({ title, id, startAt, endAt }: UserLeaderboardHeaderProps) => {
