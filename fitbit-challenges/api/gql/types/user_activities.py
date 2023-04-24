@@ -3,6 +3,7 @@ from graphql import (
     GraphQLArgument,
     GraphQLObjectType,
     GraphQLField,
+    GraphQLFloat,
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
@@ -38,7 +39,9 @@ def user_activity_fields() -> dict[str, GraphQLField]:
         "recordDate": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The day that the activity log was recorded for, in unix epoch time.",
-            resolve=lambda ua, info, **args: int(ua.record_date.timestamp()),
+            resolve=lambda ua, info, **args: int(
+                datetime.datetime.fromordinal(ua.record_date.toordinal()).timestamp()
+            ),
         ),
         "steps": GraphQLField(
             GraphQLNonNull(GraphQLInt),
@@ -70,7 +73,7 @@ def fetch_user_activities(
 ):
     query_obj = user_activity_model.query
     if params.get("users", []):
-        query_obj = query_obj.filter(user_activity_model.user in params["users"])
+        query_obj = query_obj.filter(user_activity_model.user.in_(params["users"]))
     if params.get("recordedAfter", []):
         query_obj = query_obj.filter(
             user_activity_model.record_date
@@ -105,6 +108,56 @@ def activities_field(user_activity_model: Type[UserActivity]) -> GraphQLField:
         GraphQLList(user_activity_type),
         args=user_activities_filters,
         resolve=lambda root, info, **args: fetch_user_activities(
+            user_activity_model, args
+        ),
+    )
+
+
+def create_user_activity(
+    user_activity_model: Type[UserActivity], args: dict[str, Any]
+) -> UserActivity:
+    user_activity = user_activity_model(
+        record_date=datetime.date.fromtimestamp(int(args["recordDate"])),
+        user=args["user"],
+        steps=int(args["steps"]),
+        active_minutes=int(args["activeMinutes"]),
+        distance_km=int(args["distanceKm"]),
+    )
+    db.session.add(user_activity)
+
+    db.session.commit()
+    return user_activity
+
+
+def create_user_activity_field(
+    user_activity_model: Type[UserActivity],
+) -> GraphQLField:
+    return GraphQLField(
+        user_activity_type,
+        description="Creates a new user activity.",
+        args={
+            "recordDate": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="Date on which the activity was performed.",
+            ),
+            "user": GraphQLArgument(
+                GraphQLNonNull(GraphQLString),
+                description="User for whom the record is being created.",
+            ),
+            "steps": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="Number of steps.",
+            ),
+            "activeMinutes": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="Number of steps.",
+            ),
+            "distanceKm": GraphQLArgument(
+                GraphQLNonNull(GraphQLFloat),
+                description="Distance, in kilometers.",
+            ),
+        },
+        resolve=lambda root, info, **args: create_user_activity(
             user_activity_model, args
         ),
     )

@@ -1,7 +1,7 @@
 from graphql import GraphQLObjectType, GraphQLSchema, GraphQLField, GraphQLString
 
 from .types.workweek_hustle import challenges_field, create_workweek_hustle_field
-from .types.user_activities import activities_field
+from .types.user_activities import activities_field, create_user_activity_field
 
 
 def get_test_field(*args, **kwargs) -> str:
@@ -29,6 +29,7 @@ def Schema(models):
                 "createWorkweekHustle": create_workweek_hustle_field(
                     models.WorkweekHustle
                 ),
+                "createUserActivity": create_user_activity_field(models.UserActivity),
             },
         ),
     )
