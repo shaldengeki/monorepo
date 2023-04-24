@@ -10,6 +10,7 @@ from graphql import (
     GraphQLString,
 )
 from sqlalchemy import desc
+from sqlalchemy.sql.functions import now
 from typing import Any, Type
 
 from ...config import db
@@ -158,6 +159,76 @@ def create_user_activity_field(
             ),
         },
         resolve=lambda root, info, **args: create_user_activity(
+            user_activity_model, args
+        ),
+    )
+
+
+def update_user_activity(
+    user_activity_model: Type[UserActivity], args: dict[str, Any]
+) -> UserActivity:
+    user_activity = user_activity_model.query.filter(
+        user_activity_model.id == int(args["id"])
+    ).first()
+    if user_activity is None:
+        raise ValueError(
+            f"User activity with id {args['id']} doesn't exist, and can't be updated."
+        )
+
+    if "recordDate" in args:
+        user_activity.record_date = datetime.date.fromtimestamp(int(args["recordDate"]))
+
+    if "user" in args:
+        user_activity.user = args.get("user")
+
+    if "steps" in args:
+        user_activity.steps = int(args.get("steps"))
+
+    if "activeMinutes" in args:
+        user_activity.active_minutes = int(args.get("activeMinutes"))
+
+    if "distanceKm" in args:
+        user_activity.distance_km = float(args.get("distanceKm"))
+
+    user_activity.updated_at = now()
+
+    db.session.add(user_activity)
+    db.session.commit()
+    return user_activity
+
+
+def update_user_activity_field(
+    user_activity_model: Type[UserActivity],
+) -> GraphQLField:
+    return GraphQLField(
+        user_activity_type,
+        description="Updates an existing user activity.",
+        args={
+            "id": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt), description="ID of the user activity."
+            ),
+            "recordDate": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="Date on which the activity was performed.",
+            ),
+            "user": GraphQLArgument(
+                GraphQLNonNull(GraphQLString),
+                description="User for whom the record is being updated.",
+            ),
+            "steps": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="Number of steps.",
+            ),
+            "activeMinutes": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="Number of steps.",
+            ),
+            "distanceKm": GraphQLArgument(
+                GraphQLNonNull(GraphQLFloat),
+                description="Distance, in kilometers.",
+            ),
+        },
+        resolve=lambda root, info, **args: update_user_activity(
             user_activity_model, args
         ),
     )
