@@ -1,49 +1,12 @@
 import React from 'react';
 import ProgressBar from './ProgressBar';
-
+import ActivityDataPoint from '../types/ActivityDataPoint';
+import {getCurrentUnixTime, formatDateDifference} from '../DateUtils';
 
 export type UserData = {
     name: string;
     value: number;
     unit: string;
-}
-
-function getCurrentUnixTime(): number {
-    const currentTime = Date.now();
-    return Math.round(currentTime / 1000);
-}
-
-export function formatDateDifference(seconds: number): string {
-    let unit = "";
-    let quantity = 0;
-    if (seconds < 60) {
-        unit = "second";
-        quantity = seconds;
-    } else if (seconds < 3600) {
-        quantity = Math.floor(seconds / 60);
-        unit = "minute";
-    } else if (seconds < 86400) {
-        quantity = Math.floor(seconds / 3600);
-        unit = "hour";
-    } else if (seconds < 604800) {
-        quantity = Math.floor(seconds / 86400);
-        unit = "day";
-    } else if (seconds < 2592000) {
-        quantity = Math.floor(seconds / 604800);
-        unit = "week";
-    } else if (seconds < 31536000) {
-        quantity = Math.floor(seconds / 2592000);
-        unit = "month";
-    } else {
-        quantity = Math.floor(seconds / 31536000);
-        unit = "year";
-    }
-
-    if (quantity > 1) {
-        unit = unit + "s";
-    }
-
-    return quantity + " " + unit;
 }
 
 type UserLeaderboardHeaderProps = {
@@ -71,36 +34,36 @@ const UserLeaderboardHeader = ({ title, id, startAt, endAt }: UserLeaderboardHea
 };
 
 type UserLeaderboardListingEntryProps = {
-    user: UserData;
+    activityDataPoint: ActivityDataPoint;
     maximum: number;
 }
 
-export const UserLeaderboardListingEntry = ({ user, maximum }: UserLeaderboardListingEntryProps) => {
+export const UserLeaderboardListingEntry = ({ activityDataPoint, maximum }: UserLeaderboardListingEntryProps) => {
     return (
         <div className="grid grid-cols-3 gap-0">
-            <div className="col-span-2">{user.name}</div>
-            <ProgressBar value={user.value} maximum={maximum} />
+            <div className="col-span-2">{activityDataPoint.name}</div>
+            <ProgressBar value={activityDataPoint.value} maximum={maximum} />
         </div>
     );
 };
 
 type UserLeaderboardListingProps = {
     users: string[];
-    userData: UserData[];
+    activityData: ActivityDataPoint[];
     unit: string;
 }
 
-const UserLeaderboardListing = ({ users, userData, unit }: UserLeaderboardListingProps) => {
+const UserLeaderboardListing = ({ users, activityData, unit }: UserLeaderboardListingProps) => {
     // Compute the totals per user.
     const userTotals = users.map((user, _) => {
         return {
             'name': user,
-            'value': userData.filter(ud => ud.name === user).reduce((acc, curr) => acc + curr.value, 0),
+            'value': activityData.filter(adp => adp.name === user).reduce((acc, curr) => acc + curr.value, 0),
              unit,
         };
     }).sort((a, b) => b.value - a.value);
-    const maxValue = Math.max.apply(null, userTotals.map((ud, _) => ud.value));
-    const entries = userTotals.map((ud, _) => <UserLeaderboardListingEntry key={ud.name} user={ud} maximum={maxValue} />);
+    const maxValue = Math.max.apply(null, userTotals.map((adp, _) => adp.value));
+    const entries = userTotals.map((adp, _) => <UserLeaderboardListingEntry key={adp.name} activityDataPoint={adp} maximum={maxValue} />);
 
     return (
         <div>
@@ -113,18 +76,18 @@ type UserLeaderboardProps = {
     challengeName: string;
     id: number;
     users: string[];
-    userData: UserData[];
+    activityData: ActivityDataPoint[];
     createdAt: number;
     startAt: number;
     endAt: number;
     unit: string;
 }
 
-const UserLeaderboard = ({ challengeName, id, users, userData, createdAt, startAt, endAt, unit }: UserLeaderboardProps) => {
+const UserLeaderboard = ({ challengeName, id, users, activityData, createdAt, startAt, endAt, unit }: UserLeaderboardProps) => {
   return (
-    <div className="bg-blue-200 dark:bg-indigo-950 dark:text-slate-400 p-2">
+    <div>
         <UserLeaderboardHeader title={challengeName} id={id} startAt={startAt} endAt={endAt} />
-        <UserLeaderboardListing users={users} userData={userData} unit={unit} />
+        <UserLeaderboardListing users={users} activityData={activityData} unit={unit} />
     </div>
   )
 }
