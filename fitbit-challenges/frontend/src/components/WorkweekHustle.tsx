@@ -6,6 +6,7 @@ import Activity from '../types/Activity';
 import UserLeaderboard from './UserLeaderboard';
 import UserActivityLog from './UserActivityLog';
 import ActivityDataPoint from '../types/ActivityDataPoint';
+import UserActivityForm from './UserActivityForm';
 
 export const FETCH_ACTIVITIES_QUERY = gql`
     query FetchActivities($users: [String]!, $recordedAfter: Int!, $recordedBefore: Int!) {
@@ -118,18 +119,23 @@ const WorkweekHustle = ({id, users, createdAt, startAt, endAt}: WorkweekHustlePr
     const activityLogData: Activity[] = getActivityLogs(activities);
 
     return (
-        <div className="bg-blue-200 dark:bg-indigo-950 dark:text-slate-400 p-2">
-            <UserLeaderboard
-                challengeName={"Workweek Hustle"}
-                id={id}
-                users={users}
-                activityData={leaderboardData}
-                createdAt={createdAt}
-                startAt={startAt}
-                endAt={endAt}
-                unit={"steps"}
-            />
+        <div className="bg-blue-200 dark:bg-indigo-950 dark:text-slate-400 p-2 h-screen flex flex-col">
+            <div className="border-b-2 border-slate-50 dark:border-neutral-600 mb-8 pb-4">
+                <UserLeaderboard
+                    challengeName={"Workweek Hustle"}
+                    id={id}
+                    users={users}
+                    activityData={leaderboardData}
+                    createdAt={createdAt}
+                    startAt={startAt}
+                    endAt={endAt}
+                    unit={"steps"}
+                />
+            </div>
             <UserActivityLog data={activityLogData} />
+            <div className="border-t-2 border-slate-50 dark:border-neutral-600 mt-8 pt-4">
+                <UserActivityForm users={users} startAt={startAt} endAt={endAt} />
+            </div>
         </div>
     );
 };

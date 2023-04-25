@@ -26,7 +26,7 @@ const UserLeaderboardHeader = ({ title, id, startAt, endAt }: UserLeaderboardHea
         timingCopy = "Will start in " + formatDateDifference(startAt - getCurrentUnixTime());
     }
     return (
-        <div>
+        <div className="border-b-2 border-slate-50 dark:border-neutral-600 mb-8 pb-4">
             <div className='col-span-3 text-center text-2xl'>{title}</div>
             <div className='col-span-3 text-center'>{timingCopy}</div>
         </div>

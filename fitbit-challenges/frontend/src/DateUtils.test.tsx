@@ -8,6 +8,10 @@ it ('should pluralize multiple seconds', async() => {
     expect(formatDateDifference(23)).toBe("23 seconds");
 })
 
+it ('should pluralize zero seconds', async() => {
+    expect(formatDateDifference(0)).toBe("0 seconds");
+})
+
 it ('should convert to minutes', async() => {
     expect(formatDateDifference(60)).toBe("1 minute");
 })

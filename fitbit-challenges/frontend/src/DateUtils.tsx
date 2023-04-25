@@ -6,7 +6,10 @@ export function getCurrentUnixTime(): number {
 export function formatDateDifference(seconds: number): string {
     let unit = "";
     let quantity = 0;
-    if (seconds < 60) {
+    if (seconds == 0) {
+        unit = "seconds";
+        quantity = seconds;
+    } else if (seconds < 60) {
         unit = "second";
         quantity = seconds;
     } else if (seconds < 3600) {

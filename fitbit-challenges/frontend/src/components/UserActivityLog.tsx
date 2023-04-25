@@ -40,7 +40,7 @@ const UserActivityLog = ({ data }: UserActivityLogProps) => {
         }
     )
     return (
-        <div>
+        <div className="grow">
             {entries}
         </div>
     )
