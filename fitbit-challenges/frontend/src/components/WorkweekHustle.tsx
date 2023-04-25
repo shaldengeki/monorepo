@@ -51,7 +51,7 @@ export function getActivityLogs(activities: Activity[]): Activity[] {
             .map((activity: Activity, _: number, allActivities: Activity[]) => {
             // Fetch the prior activity recording for this date.
             const priorActivities = allActivities.filter((priorActivity: Activity): boolean => {
-                return (activity.recordDate == priorActivity.recordDate && activity.user == priorActivity.user && activity.createdAt > priorActivity.createdAt);
+                return (activity.recordDate === priorActivity.recordDate && activity.user === priorActivity.user && activity.createdAt > priorActivity.createdAt);
             }).sort((a: Activity, b: Activity): number => {
                 return a.createdAt > b.createdAt ? -1 : 0;
             });
