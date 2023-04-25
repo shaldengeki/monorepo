@@ -155,5 +155,120 @@ describe('getActivityLogs', () => {
             },
         ]);
     });
-    }
-);
+    it ('should correctly identify the prior activity to compare against', () => {
+        expect(getActivityLogs([
+            {
+                id: 1,
+                user: 'foo',
+                createdAt: 0,
+                recordDate: 0,
+                steps: 1,
+                activeMinutes: 1,
+                distanceKm: 1
+            },
+            {
+                id: 2,
+                user: 'foo',
+                createdAt: 1,
+                recordDate: 0,
+                steps: 2,
+                activeMinutes: 2,
+                distanceKm: 2
+            },
+            {
+                id: 3,
+                user: 'foo',
+                createdAt: 2,
+                recordDate: 0,
+                steps: 3,
+                activeMinutes: 3,
+                distanceKm: 3
+            },
+        ])).toEqual([
+            {
+                id: 1,
+                user: 'foo',
+                createdAt: 0,
+                recordDate: 0,
+                steps: 1,
+                activeMinutes: 1,
+                distanceKm: 1
+            },
+            {
+                id: 2,
+                user: 'foo',
+                createdAt: 1,
+                recordDate: 0,
+                steps: 1,
+                activeMinutes: 1,
+                distanceKm: 1
+            },
+            {
+                id: 3,
+                user: 'foo',
+                createdAt: 2,
+                recordDate: 0,
+                steps: 1,
+                activeMinutes: 1,
+                distanceKm: 1
+            },
+        ]);
+        expect(getActivityLogs([
+            {
+                id: 2,
+                user: 'foo',
+                createdAt: 1,
+                recordDate: 0,
+                steps: 2,
+                activeMinutes: 2,
+                distanceKm: 2
+            },
+            {
+                id: 1,
+                user: 'foo',
+                createdAt: 0,
+                recordDate: 0,
+                steps: 1,
+                activeMinutes: 1,
+                distanceKm: 1
+            },
+            {
+                id: 3,
+                user: 'foo',
+                createdAt: 2,
+                recordDate: 0,
+                steps: 3,
+                activeMinutes: 3,
+                distanceKm: 3
+            },
+        ])).toEqual([
+            {
+                id: 1,
+                user: 'foo',
+                createdAt: 0,
+                recordDate: 0,
+                steps: 1,
+                activeMinutes: 1,
+                distanceKm: 1
+            },
+            {
+                id: 2,
+                user: 'foo',
+                createdAt: 1,
+                recordDate: 0,
+                steps: 1,
+                activeMinutes: 1,
+                distanceKm: 1
+            },
+            {
+                id: 3,
+                user: 'foo',
+                createdAt: 2,
+                recordDate: 0,
+                steps: 1,
+                activeMinutes: 1,
+                distanceKm: 1
+            },
+        ]);
+    });
+});

@@ -53,7 +53,7 @@ export function getActivityLogs(activities: Activity[]): Activity[] {
             const priorActivities = allActivities.filter((priorActivity: Activity): boolean => {
                 return (activity.recordDate == priorActivity.recordDate && activity.user == priorActivity.user && activity.createdAt > priorActivity.createdAt);
             }).sort((a: Activity, b: Activity): number => {
-                return a.createdAt > b.createdAt ? 1 : 0;
+                return a.createdAt > b.createdAt ? -1 : 0;
             });
             if (priorActivities.length < 1) {
                 // This is the first activity for the day.
