@@ -40,7 +40,7 @@ const UserActivityLog = ({ data }: UserActivityLogProps) => {
         }
     )
     return (
-        <div className="grow">
+        <div className="grow overflow-y-auto">
             {entries}
         </div>
     )

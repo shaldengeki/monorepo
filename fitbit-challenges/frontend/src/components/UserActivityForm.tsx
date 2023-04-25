@@ -115,11 +115,11 @@ const UserActivityForm = ({ users, startAt, endAt }: UserActivityFormProps) => {
             </select>
             <input
                 type='number'
-                className="rounded p-0.5"
+                className="rounded p-0.5 w-40"
                 ref={node => {
                     steps = node;
                 }}
-                placeholder="Today's total step count"
+                placeholder="Today's total steps"
             />
             <button
                 className="p-0.5 rounded bg-teal-400 dark:bg-pink-900 dark:text-slate-400"
