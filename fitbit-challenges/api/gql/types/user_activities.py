@@ -38,11 +38,9 @@ def user_activity_fields() -> dict[str, GraphQLField]:
             resolve=lambda ua, info, **args: int(ua.updated_at.timestamp()),
         ),
         "recordDate": GraphQLField(
-            GraphQLNonNull(GraphQLInt),
+            GraphQLNonNull(GraphQLString),
             description="The day that the activity log was recorded for, in unix epoch time.",
-            resolve=lambda ua, info, **args: int(
-                datetime.datetime.fromordinal(ua.record_date.toordinal()).timestamp()
-            ),
+            resolve=lambda ua, info, **args: ua.record_date.strftime("%Y-%m-%d"),
         ),
         "steps": GraphQLField(
             GraphQLNonNull(GraphQLInt),
@@ -118,7 +116,9 @@ def create_user_activity(
     user_activity_model: Type[UserActivity], args: dict[str, Any]
 ) -> UserActivity:
     user_activity = user_activity_model(
-        record_date=datetime.date.fromtimestamp(int(args["recordDate"])),
+        record_date=datetime.datetime.fromtimestamp(
+            int(args["recordDate"]), tz=datetime.timezone.utc
+        ),
         user=args["user"],
         steps=int(args["steps"]),
         active_minutes=int(args["activeMinutes"]),

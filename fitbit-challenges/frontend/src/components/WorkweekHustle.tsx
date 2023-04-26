@@ -2,11 +2,10 @@ import * as React from 'react';
 import _ from 'lodash'
 import { useQuery, gql } from '@apollo/client';
 
-import Activity from '../types/Activity';
+import Activity, {ActivityDelta} from '../types/Activity';
 import UserLeaderboard from './UserLeaderboard';
 import UserActivityLog from './UserActivityLog';
 import ActivityDataPoint from '../types/ActivityDataPoint';
-import UserActivityForm from './UserActivityForm';
 
 export const FETCH_ACTIVITIES_QUERY = gql`
     query FetchActivities($users: [String]!, $recordedAfter: Int!, $recordedBefore: Int!) {
@@ -26,7 +25,7 @@ export function getLatestActivityPerUserPerDay(activities: Activity[]): Activity
     return _.chain(activities)
         .groupBy(
             (activity: Activity) : string => {
-                return activity.user + "|" + activity.recordDate.toString();
+                return activity.user + "|" + activity.recordDate;
             }
         )
         .values()
@@ -35,7 +34,7 @@ export function getLatestActivityPerUserPerDay(activities: Activity[]): Activity
                 'id': 0,
                 'user': 'unknown',
                 'createdAt': 0,
-                'recordDate': 0,
+                'recordDate': '',
                 'steps': 0,
                 'activeMinutes': 0,
                 'distanceKm': 0,
@@ -44,7 +43,7 @@ export function getLatestActivityPerUserPerDay(activities: Activity[]): Activity
         .value();
 }
 
-export function getActivityLogs(activities: Activity[]): Activity[] {
+export function getActivityLogs(activities: Activity[]): ActivityDelta[] {
     // Given a list of activity logs,
     // compute the deltas and return them as a list of new activities.
     return _.sortBy(
@@ -58,23 +57,25 @@ export function getActivityLogs(activities: Activity[]): Activity[] {
             });
             if (priorActivities.length < 1) {
                 // This is the first activity for the day.
-                return activity;
+                return {
+                    ...activity,
+                    stepsDelta: activity.steps,
+                    activeMinutesDelta: activity.activeMinutes,
+                    distanceKmDelta: activity.distanceKm
+                };
             } else {
                 // There's a prior activity for the day.
                 const priorActivity = priorActivities[0];
                 return  {
-                    id: activity.id,
-                    user: activity.user,
-                    createdAt: activity.createdAt,
-                    recordDate: activity.recordDate,
-                    steps: (activity.steps - priorActivity.steps),
-                    activeMinutes: (activity.activeMinutes - priorActivity.activeMinutes),
-                    distanceKm: (activity.distanceKm - priorActivity.distanceKm)
+                    ...activity,
+                    stepsDelta: (activity.steps - priorActivity.steps),
+                    activeMinutesDelta: (activity.activeMinutes - priorActivity.activeMinutes),
+                    distanceKmDelta: (activity.distanceKm - priorActivity.distanceKm)
                 }
             }
-        }).filter((activity: Activity): boolean => {
+        }).filter((delta: ActivityDelta): boolean => {
             // Filter out any activities with no delta.
-            return activity.steps > 0;
+            return delta.stepsDelta !== 0;
         }),
         'createdAt'
     );
@@ -116,7 +117,7 @@ const WorkweekHustle = ({id, users, createdAt, startAt, endAt}: WorkweekHustlePr
             }
         });
 
-    const activityLogData: Activity[] = getActivityLogs(activities);
+    const activityLogData: ActivityDelta[] = getActivityLogs(activities);
 
     return (
         <div className="bg-blue-200 dark:bg-indigo-950 dark:text-slate-400 p-2 h-screen flex flex-col">
@@ -132,10 +133,7 @@ const WorkweekHustle = ({id, users, createdAt, startAt, endAt}: WorkweekHustlePr
                     unit={"steps"}
                 />
             </div>
-            <UserActivityLog data={activityLogData} />
-            <div className="border-t-2 border-slate-50 dark:border-neutral-600 mt-8 pt-4">
-                <UserActivityForm users={users} startAt={startAt} endAt={endAt} />
-            </div>
+            <UserActivityLog users={users} deltas={activityLogData} startAt={startAt} endAt={endAt} />
         </div>
     );
 };
