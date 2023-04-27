@@ -9,7 +9,7 @@ it('should render loading state initially', async () => {
     request: {
       query: FETCH_WORKWEEK_HUSTLE_QUERY,
       variables: {
-          "id": 0
+          id: 0
       },
     },
     result: {
@@ -31,7 +31,7 @@ it('should handle when the challenge does not exist', async () => {
       request: {
         query: FETCH_WORKWEEK_HUSTLE_QUERY,
         variables: {
-            "id": 0
+            id: 0
         },
       },
       result: {
@@ -51,17 +51,21 @@ it('should handle when the challenge does not exist', async () => {
 
 it('should handle when multiple challenges are found', async () => {
     const testChallenge = {
-        "id": 1,
-        "users": "a,b,c",
-        "createdAt": 1,
-        "startAt": 1,
-        "endAt": 1
+        id: 1,
+        users: "a,b,c",
+        createdAt: 1,
+        startAt: 1,
+        endAt: 1,
+        ended: false,
+        sealAt: 0,
+        sealed: false,
+        activities: []
     }
     const testFetchWorkweekHustleQueryMock =   {
       request: {
         query: FETCH_WORKWEEK_HUSTLE_QUERY,
         variables: {
-            "id": 0
+            id: 0
         },
       },
       result: {

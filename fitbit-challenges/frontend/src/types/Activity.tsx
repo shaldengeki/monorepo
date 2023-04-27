@@ -31,4 +31,10 @@ export type ActivityDelta = {
     distanceKmDelta: number;
 }
 
+export type ActivityTotal = {
+    name: string;
+    value: number;
+    unit: string;
+}
+
 export default Activity;

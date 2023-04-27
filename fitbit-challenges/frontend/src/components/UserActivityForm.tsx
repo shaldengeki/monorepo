@@ -1,7 +1,7 @@
 import React from 'react';
 import Confetti from './Confetti';
 import { useMutation, gql } from '@apollo/client';
-import {FETCH_ACTIVITIES_QUERY} from './WorkweekHustle';
+import {FETCH_WORKWEEK_HUSTLE_QUERY} from '../views/ChallengeView';
 import {getCurrentUnixTime} from '../DateUtils';
 import Activity, {EmptyActivity} from '../types/Activity';
 
@@ -120,6 +120,7 @@ const MutationSuccessDialog = ({ reset }: MutationSuccessDialogProps) => {
 }
 
 type UserActivityFormProps = {
+    challengeId: number
     users: string[]
     startAt: number
     endAt: number
@@ -127,7 +128,7 @@ type UserActivityFormProps = {
     editActivityHook: Function
 }
 
-const UserActivityForm = ({ users, startAt, endAt, editedActivity, editActivityHook }: UserActivityFormProps) => {
+const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, editActivityHook }: UserActivityFormProps) => {
     const [
         createUserActivity,
         {
@@ -141,11 +142,9 @@ const UserActivityForm = ({ users, startAt, endAt, editedActivity, editActivityH
         {
             refetchQueries: [
                 {
-                    query: FETCH_ACTIVITIES_QUERY,
+                    query: FETCH_WORKWEEK_HUSTLE_QUERY,
                     variables: {
-                        users,
-                        recordedAfter: startAt,
-                        recordedBefore: endAt,
+                        id: challengeId,
                     }
                 },
                 'FetchActivities'
@@ -165,11 +164,9 @@ const UserActivityForm = ({ users, startAt, endAt, editedActivity, editActivityH
         {
             refetchQueries: [
                 {
-                    query: FETCH_ACTIVITIES_QUERY,
+                    query: FETCH_WORKWEEK_HUSTLE_QUERY,
                     variables: {
-                        users,
-                        recordedAfter: startAt,
-                        recordedBefore: endAt,
+                        id: challengeId,
                     }
                 },
                 'FetchActivities'
@@ -184,7 +181,7 @@ const UserActivityForm = ({ users, startAt, endAt, editedActivity, editActivityH
     const maxDate = endAt > getCurrentUnixTime() ? getCurrentUnixTime() : endAt;
 
     const id = (editedActivity.id === 0) ? 0 : editedActivity.id;
-    const date = (editedActivity.recordDate === "") ? getDate() : editedActivity.recordDate;
+    const date = (editedActivity.recordDate === "") ? getDate(maxDate) : editedActivity.recordDate;
     const selectedUser = (editedActivity.user === "") ? users[0] : editedActivity.user;
     const userElements = users.map((user) => {
         if (user === selectedUser) {

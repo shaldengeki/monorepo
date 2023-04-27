@@ -1,27 +1,14 @@
 import * as React from 'react';
 import _ from 'lodash'
-import { useQuery, gql } from '@apollo/client';
 
 import Activity, {ActivityDelta} from '../types/Activity';
 import UserLeaderboard from './UserLeaderboard';
 import UserActivityLog from './UserActivityLog';
-import ActivityDataPoint from '../types/ActivityDataPoint';
-
-export const FETCH_ACTIVITIES_QUERY = gql`
-    query FetchActivities($users: [String]!, $recordedAfter: Int!, $recordedBefore: Int!) {
-        activities(users: $users, recordedBefore: $recordedBefore, recordedAfter: $recordedAfter) {
-            id
-            user
-            createdAt
-            recordDate
-            steps
-            activeMinutes
-            distanceKm
-        }
-    }
-`;
+import {ActivityTotal, EmptyActivity} from '../types/Activity';
 
 export function getLatestActivityPerUserPerDay(activities: Activity[]): Activity[] {
+    // There might be many logs for a single date.
+    // Retrieve just the latest log for a given date.
     return _.chain(activities)
         .groupBy(
             (activity: Activity) : string => {
@@ -30,15 +17,7 @@ export function getLatestActivityPerUserPerDay(activities: Activity[]): Activity
         )
         .values()
         .map((activities: Activity[]): Activity => {
-            return _.maxBy(activities, 'createdAt') || {
-                'id': 0,
-                'user': 'unknown',
-                'createdAt': 0,
-                'recordDate': '',
-                'steps': 0,
-                'activeMinutes': 0,
-                'distanceKm': 0,
-            }
+            return _.maxBy(activities, 'createdAt') || EmptyActivity;
         })
         .value();
 }
@@ -87,28 +66,15 @@ type WorkweekHustleProps = {
     createdAt: number;
     startAt: number;
     endAt: number;
+    ended: boolean;
+    sealAt: number;
+    sealed: boolean;
+    activities: Activity[];
 }
 
-const WorkweekHustle = ({id, users, createdAt, startAt, endAt}: WorkweekHustleProps) => {
-   const fetchActivities = useQuery(
-        FETCH_ACTIVITIES_QUERY,
-        {
-            variables: {
-                users,
-                "recordedAfter": startAt,
-                "recordedBefore": endAt,
-            }
-        }
-   )
-
-    if (fetchActivities.loading) return <p>Loading...</p>;
-
-    if (fetchActivities.error) return <p>Error : {fetchActivities.error.message}</p>;
-
-    // There might be many logs for a single date.
-    // Retrieve just the latest log for a given date.
-    const activities: Activity[] = fetchActivities.data.activities;
-    const leaderboardData: ActivityDataPoint[] = getLatestActivityPerUserPerDay(activities)
+const WorkweekHustle = ({id, users, createdAt, startAt, endAt, ended, sealAt, sealed, activities}: WorkweekHustleProps) => {
+    // Compute the totals per user.
+    const totalData: ActivityTotal[] = getLatestActivityPerUserPerDay(activities)
         .map((activity: Activity) => {
             return {
                 "name": activity.user,
@@ -116,6 +82,14 @@ const WorkweekHustle = ({id, users, createdAt, startAt, endAt}: WorkweekHustlePr
                 "unit": "steps",
             }
         });
+
+    const activityTotals = users.map((user, _) => {
+        return {
+            name: user,
+            value: totalData.filter(at => at.name === user).reduce((acc, curr) => acc + curr.value, 0),
+            unit: "steps",
+        };
+    }).sort((a, b) => b.value - a.value);
 
     const activityLogData: ActivityDelta[] = getActivityLogs(activities);
 
@@ -126,14 +100,16 @@ const WorkweekHustle = ({id, users, createdAt, startAt, endAt}: WorkweekHustlePr
                     challengeName={"Workweek Hustle"}
                     id={id}
                     users={users}
-                    activityData={leaderboardData}
-                    createdAt={createdAt}
+                    activityTotals={activityTotals}
                     startAt={startAt}
                     endAt={endAt}
+                    ended={ended}
+                    sealAt={sealAt}
+                    sealed={sealed}
                     unit={"steps"}
                 />
             </div>
-            <UserActivityLog users={users} deltas={activityLogData} startAt={startAt} endAt={endAt} />
+            <UserActivityLog challengeId={id} users={users} deltas={activityLogData} totals={activityTotals} startAt={startAt} endAt={endAt} sealed={sealed} />
         </div>
     );
 };

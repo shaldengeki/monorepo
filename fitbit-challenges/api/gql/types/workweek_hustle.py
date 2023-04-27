@@ -1,6 +1,7 @@
 import datetime
 from graphql import (
     GraphQLArgument,
+    GraphQLBoolean,
     GraphQLObjectType,
     GraphQLField,
     GraphQLInt,
@@ -12,7 +13,19 @@ from sqlalchemy import desc
 from typing import Any, Type
 
 from ...config import db
-from ...models import WorkweekHustle
+from ...models import WorkweekHustle, UserActivity
+from .user_activities import user_activity_type
+
+
+def activities_resolver(hustle: WorkweekHustle, info, **args) -> list[UserActivity]:
+    return (
+        UserActivity.query.filter(UserActivity.user.in_(hustle.users.split(",")))
+        .filter(UserActivity.record_date >= hustle.start_at)
+        .filter(UserActivity.record_date < hustle.end_at)
+        .filter(UserActivity.created_at < hustle.seal_at)
+        .order_by(desc(UserActivity.created_at))
+        .all()
+    )
 
 
 def workweek_hustle_fields() -> dict[str, GraphQLField]:
@@ -28,17 +41,37 @@ def workweek_hustle_fields() -> dict[str, GraphQLField]:
         "createdAt": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The date that the Workweek Hustle was created, in unix epoch time.",
-            resolve=lambda server, info, **args: int(server.created_at.timestamp()),
+            resolve=lambda hustle, info, **args: int(hustle.created_at.timestamp()),
         ),
         "startAt": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The start datetime of the challenge, in unix epoch time.",
-            resolve=lambda server, info, **args: int(server.start_at.timestamp()),
+            resolve=lambda hustle, info, **args: int(hustle.start_at.timestamp()),
         ),
         "endAt": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The end datetime of the challenge, in unix epoch time.",
-            resolve=lambda server, info, **args: int(server.end_at.timestamp()),
+            resolve=lambda hustle, info, **args: int(hustle.end_at.timestamp()),
+        ),
+        "ended": GraphQLField(
+            GraphQLNonNull(GraphQLBoolean),
+            description="Whether the challenge is ended.",
+            resolve=lambda hustle, info, **args: bool(hustle.ended),
+        ),
+        "sealAt": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The datetime that the challenge refuses additional data, in unix epoch time.",
+            resolve=lambda hustle, info, **args: int(hustle.seal_at.timestamp()),
+        ),
+        "sealed": GraphQLField(
+            GraphQLNonNull(GraphQLBoolean),
+            description="Whether the challenge is sealed.",
+            resolve=lambda hustle, info, **args: bool(hustle.sealed),
+        ),
+        "activities": GraphQLField(
+            GraphQLNonNull(GraphQLList(user_activity_type)),
+            description="The activities recorded as part of this challenge.",
+            resolve=activities_resolver,
         ),
     }
 

@@ -1,5 +1,6 @@
 from ..config import db
 import datetime
+from datetime import timezone
 
 
 class WorkweekHustle(db.Model):  # type: ignore
@@ -14,3 +15,15 @@ class WorkweekHustle(db.Model):  # type: ignore
 
     def __repr__(self) -> str:
         return "<WorkweekHustle {id}>".format(id=self.id)
+
+    @property
+    def ended(self) -> bool:
+        return datetime.datetime.now() >= self.end_at
+
+    @property
+    def seal_at(self) -> datetime.datetime:
+        return self.end_at + datetime.timedelta(hours=24)
+
+    @property
+    def sealed(self) -> bool:
+        return datetime.datetime.now() >= self.seal_at
