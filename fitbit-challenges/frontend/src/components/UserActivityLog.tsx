@@ -1,17 +1,7 @@
 import React, {useState} from 'react';
-import Activity, {ActivityDelta, EmptyActivity, ActivityTotal} from '../types/Activity';
+import Activity, {ActivityDelta, EmptyActivity, ActivityTotal, formatActivityDate} from '../types/Activity';
 import {formatDateDifference, getCurrentUnixTime} from '../DateUtils';
 import UserActivityForm from './UserActivityForm';
-
-function formatActivityDate(recordDate: string): string {
-    const dateObj = new Date(recordDate + "T00:00:00");
-    return dateObj.toLocaleDateString(
-        undefined,
-        {
-            weekday: 'long',
-        }
-    )
-}
 
 type PlacementResultEntryProps = {
     totals: ActivityTotal[]

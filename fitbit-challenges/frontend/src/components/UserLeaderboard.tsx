@@ -2,7 +2,7 @@ import React from 'react';
 import ProgressBar from './ProgressBar';
 import {ActivityTotal} from '../types/Activity';
 import {getCurrentUnixTime, formatDateDifference} from '../DateUtils';
-import { Link } from "react-router-dom";
+import PageTitle from "../components/PageTitle";
 
 export type UserData = {
     name: string;
@@ -33,8 +33,10 @@ const UserLeaderboardHeader = ({ title, id, startAt, endAt, ended, sealAt, seale
         timingCopy = "Will start in " + formatDateDifference(startAt - getCurrentUnixTime());
     }
     return (
-        <div className="border-b-2 border-slate-50 dark:border-neutral-600 mb-8 pb-4">
-            <div className='col-span-3 text-center text-2xl'><a href={`/challenges/${id}`}>{title}</a></div>
+        <div>
+            <PageTitle className="col-span-3 text-center">
+                <a href={`/challenges/${id}`}>{title}</a>
+            </PageTitle>
             <div className='col-span-3 text-center'>{timingCopy}</div>
         </div>
     );

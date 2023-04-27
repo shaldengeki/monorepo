@@ -35,8 +35,9 @@ def workweek_hustle_fields() -> dict[str, GraphQLField]:
             description="The id of the Workweek Hustle challenge.",
         ),
         "users": GraphQLField(
-            GraphQLNonNull(GraphQLString),
+            GraphQLNonNull(GraphQLList(GraphQLString)),
             description="The users participating in the challenge, as a comma-separated string.",
+            resolve=lambda hustle, info, **args: hustle.users.split(","),
         ),
         "createdAt": GraphQLField(
             GraphQLNonNull(GraphQLInt),

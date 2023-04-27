@@ -1,8 +1,10 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { useParams } from 'react-router-dom';
+import PageContainer from '../components/PageContainer';
 import WorkweekHustle from '../components/WorkweekHustle';
 import Activity from '../types/Activity';
+import Challenge from '../types/Challenge';
 
 export const FETCH_WORKWEEK_HUSTLE_QUERY = gql`
     query FetchChallenge($id: Int!) {
@@ -43,14 +45,15 @@ const ChallengeView = () => {
 
     let innerContent = <p></p>;
     if (loading) innerContent = <p>Loading...</p>;
-    else if (error) innerContent = <p>Error : {error.message}</p>;
+    else if (error) innerContent = <p>Error: {error.message}</p>;
     else if (data.challenges.length < 1) {
         innerContent = <p>Error: challenge could not be found!</p>;
     } else if (data.challenges.length > 1) {
         innerContent = <p>Error: multiple challenges with that ID were found!</p>
     } else {
-        const challenge = data.challenges[0];
-        const users = challenge.users.split(",");
+        const challenges: Challenge[] = data.challenges;
+        const challenge = challenges[0];
+        const users = challenge.users;
         const activities: Activity[] = challenge.activities;
         innerContent = <WorkweekHustle
                             id={id}
@@ -66,11 +69,9 @@ const ChallengeView = () => {
     }
 
     return (
-        <div className="dark:bg-neutral-600 dark:text-slate-400 h-screen">
-            <div className="container mx-auto">
-                {innerContent}
-            </div>
-        </div>
+        <PageContainer>
+            {innerContent}
+        </PageContainer>
     )
 }
 

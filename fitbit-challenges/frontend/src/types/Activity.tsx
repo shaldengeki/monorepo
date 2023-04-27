@@ -37,4 +37,14 @@ export type ActivityTotal = {
     unit: string;
 }
 
+export function formatActivityDate(recordDate: string): string {
+    const dateObj = new Date(recordDate + "T00:00:00");
+    return dateObj.toLocaleDateString(
+        undefined,
+        {
+            weekday: 'long',
+        }
+    )
+}
+
 export default Activity;

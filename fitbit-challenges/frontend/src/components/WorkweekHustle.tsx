@@ -94,7 +94,7 @@ const WorkweekHustle = ({id, users, createdAt, startAt, endAt, ended, sealAt, se
     const activityLogData: ActivityDelta[] = getActivityLogs(activities);
 
     return (
-        <div className="bg-blue-200 dark:bg-indigo-950 dark:text-slate-400 p-2 h-screen flex flex-col">
+        <>
             <div className="border-b-2 border-slate-50 dark:border-neutral-600 mb-8 pb-4">
                 <UserLeaderboard
                     challengeName={"Workweek Hustle"}
@@ -110,7 +110,7 @@ const WorkweekHustle = ({id, users, createdAt, startAt, endAt, ended, sealAt, se
                 />
             </div>
             <UserActivityLog challengeId={id} users={users} deltas={activityLogData} totals={activityTotals} startAt={startAt} endAt={endAt} sealed={sealed} />
-        </div>
+        </>
     );
 };
 
