@@ -4,6 +4,7 @@ import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import Challenge from "../types/Challenge";
 import {formatDateDifference, getCurrentUnixTime} from '../DateUtils';
+import { Link } from 'react-router-dom';
 
 
 export const FETCH_CHALLENGES_QUERY = gql`
@@ -33,7 +34,7 @@ const ChallengesListingTableEntry = ({ challenge }: ChallengesListingTableEntryP
     return (
         <div className="col-span-2 grid grid-cols-3 gap-4 bg-slate-200 px-2 py-4 rounded">
             <div className="col-span-1 text-2xl text-indigo-700">
-                <a href={`/challenges/${challenge.id}`}>Workweek Hustle</a>
+                <Link to={`/challenges/${challenge.id}`}>Workweek Hustle</Link>
             </div>
             <div className="col-span-2">
                 <p>with {users}</p>
@@ -69,14 +70,16 @@ const ChallengesListingView = () => {
     else if (data.challenges.length < 1) {
         innerContent = <p>No challenges found!</p>;
     } else {
+        const challenges: Challenge[] = data.challenges;
+        const sortedChallenges = challenges.sort((a, b) => b.endAt - a.endAt);
         innerContent = (
-            <ChallengesListingTable challenges={data.challenges} />
+            <ChallengesListingTable challenges={sortedChallenges} />
         )
     }
 
     return (
         <PageContainer>
-            <PageTitle>Challenges</PageTitle>
+            <PageTitle><Link to={'/challenges'}>Challenges</Link></PageTitle>
             { innerContent }
         </PageContainer>
     )
