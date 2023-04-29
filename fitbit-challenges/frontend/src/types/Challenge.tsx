@@ -12,7 +12,7 @@ type Challenge = {
     activities: Activity[]
 }
 
-export const EmptyChallenge: Challenge = {
+export const emptyChallenge: Challenge = {
     id: 0,
     users: [],
     createdAt: 0,

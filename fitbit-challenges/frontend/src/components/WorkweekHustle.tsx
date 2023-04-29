@@ -4,7 +4,7 @@ import _ from 'lodash'
 import Activity, {ActivityDelta} from '../types/Activity';
 import UserLeaderboard from './UserLeaderboard';
 import UserActivityLog from './UserActivityLog';
-import {ActivityTotal, EmptyActivity} from '../types/Activity';
+import {ActivityTotal, emptyActivity} from '../types/Activity';
 
 export function getLatestActivityPerUserPerDay(activities: Activity[]): Activity[] {
     // There might be many logs for a single date.
@@ -17,7 +17,7 @@ export function getLatestActivityPerUserPerDay(activities: Activity[]): Activity
         )
         .values()
         .map((activities: Activity[]): Activity => {
-            return _.maxBy(activities, 'createdAt') || EmptyActivity;
+            return _.maxBy(activities, 'createdAt') || emptyActivity;
         })
         .value();
 }

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Activity, {ActivityDelta, EmptyActivity, ActivityTotal, formatActivityDate} from '../types/Activity';
+import Activity, {ActivityDelta, emptyActivity, ActivityTotal, formatActivityDate} from '../types/Activity';
 import {formatDateDifference, getCurrentUnixTime} from '../DateUtils';
 import UserActivityForm from './UserActivityForm';
 
@@ -33,8 +33,8 @@ type UserActivityLogEntryProps = {
 
 const UserActivityLogEntry = ( {delta, editHook, sealed}: UserActivityLogEntryProps) => {
     return (
-        <div className="grid grid-cols-3 gap-0">
-            <div className="col-span-2">
+        <div className="grid grid-cols-2 gap-0">
+            <div className="col-span-1">
                 {delta.user} took {delta.stepsDelta.toLocaleString()} steps on {formatActivityDate(delta.recordDate)}
             </div>
             <div className="col-span-1 text-right italic text-sm">
@@ -58,7 +58,7 @@ type UserActivityLogProps = {
 }
 
 const UserActivityLog = ({ challengeId, users, deltas, totals, startAt, endAt, sealed }: UserActivityLogProps) => {
-    const [editedActivity, setEditedActivity] = useState(EmptyActivity);
+    const [editedActivity, setEditedActivity] = useState(emptyActivity);
     const entries = deltas.map(
         (delta: ActivityDelta) => {
             return <UserActivityLogEntry key={delta.id} delta={delta} editHook={setEditedActivity} sealed={sealed} />;

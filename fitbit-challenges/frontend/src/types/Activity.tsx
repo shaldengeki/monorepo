@@ -8,7 +8,7 @@ type Activity = {
     distanceKm: number;
 }
 
-export const EmptyActivity: Activity = {
+export const emptyActivity: Activity = {
     id: 0,
     user: '',
     createdAt: 0,

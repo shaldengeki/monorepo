@@ -3,7 +3,8 @@ import Confetti from './Confetti';
 import { useMutation, gql } from '@apollo/client';
 import {FETCH_WORKWEEK_HUSTLE_QUERY} from '../views/ChallengeView';
 import {getCurrentUnixTime} from '../DateUtils';
-import Activity, {EmptyActivity} from '../types/Activity';
+import Activity, {emptyActivity} from '../types/Activity';
+import {CancelButton, SubmitButton} from '../components/FormButton';
 
 const CREATE_USER_ACTIVITY_MUTATION = gql`
     mutation CreateUserActivity(
@@ -84,14 +85,9 @@ const MutationErrorDialog = ({ error, reset }: MutationErrorDialogProps) => {
         <dialog className="absolute inset-0" open>
             <p className="text-lg font-bold">Error recording your steps:</p>
             <p>{error.networkError?.message}</p>
-            <button
-                className="p-0.5 rounded bg-teal-400 dark:bg-pink-900 dark:text-slate-400"
-                value="cancel"
-                formMethod="dialog"
-                onClick={() => reset()}
-            >
+            <CancelButton hook={reset}>
                 Close
-            </button>
+            </CancelButton>
         </dialog>
     );
 }
@@ -105,14 +101,9 @@ const MutationSuccessDialog = ({ reset }: MutationSuccessDialogProps) => {
         <>
             <dialog className="absolute inset-0" open>
                 <p className="text-lg font-bold">🎉Activity logged!🎉</p>
-                <button
-                    className="p-0.5 rounded bg-teal-400 dark:bg-pink-900 dark:text-slate-400"
-                    value="cancel"
-                    formMethod="dialog"
-                    onClick={() => reset()}
-                >
+                <CancelButton hook={reset}>
                     Close
-                </button>
+                </CancelButton>
             </dialog>
             <Confetti />
         </>
@@ -266,18 +257,12 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
                 value={steps}
                 placeholder="Today's total steps"
             />
-            <button
-                className="p-0.5 rounded bg-teal-400 dark:bg-pink-900 dark:text-slate-400"
-                type="submit"
-            >
+            <SubmitButton>
                 {(id === 0) ? "Log activity" : "Update"}
-            </button>
-            <button
-                className="p-0.5 rounded bg-slate-200 dark:bg-pink-900 dark:text-slate-400"
-                onClick={(e) => {e.preventDefault(); editActivityHook(EmptyActivity)}}
-            >
+            </SubmitButton>
+            <CancelButton hook={(e: any) => {e.preventDefault(); editActivityHook(emptyActivity)}}>
                 Cancel
-            </button>
+            </CancelButton>
         </form>
         {
             createUserActivityError &&

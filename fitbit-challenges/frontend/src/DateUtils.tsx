@@ -38,3 +38,13 @@ export function formatDateDifference(seconds: number): string {
 
     return quantity + " " + unit;
 }
+
+export function nextMonday(): number {
+    let d = new Date();
+    d.setDate(d.getDate() + (1 + 7 - d.getDay()) % 7);
+    d.setHours(0);
+    d.setMinutes(0);
+    d.setSeconds(0);
+    d.setMilliseconds(0);
+    return d.getTime() / 1000;
+}
