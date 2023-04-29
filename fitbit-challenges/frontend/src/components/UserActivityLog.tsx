@@ -64,13 +64,14 @@ const UserActivityLog = ({ challengeId, users, deltas, totals, startAt, endAt, s
             return <UserActivityLogEntry key={delta.id} delta={delta} editHook={setEditedActivity} sealed={sealed} />;
         }
     )
+    const started = startAt <= getCurrentUnixTime();
     return (
         <>
             <div className="grow overflow-y-auto">
                 { sealed && <PlacementResultEntry totals={totals} /> }
                 {entries}
             </div>
-            { !sealed && <div className="border-t-2 border-slate-50 dark:border-neutral-600 mt-8 pt-4">
+            { !sealed && started && <div className="border-t-2 border-slate-50 dark:border-neutral-600 mt-8 pt-4">
                 <UserActivityForm challengeId={challengeId} users={users} startAt={startAt} endAt={endAt} editedActivity={editedActivity} editActivityHook={setEditedActivity} />
             </div>}
         </>
