@@ -17,5 +17,6 @@ it('should have the username and steps in the entry', async () => {
     </MockedProvider>,
   );
   expect(await screen.findByText("test-username")).toBeInTheDocument();
-  expect(await screen.findByText("5728")).toBeInTheDocument();
+  expect(await screen.findByText("5,728")).toBeInTheDocument();
+
 });

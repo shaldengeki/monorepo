@@ -32,11 +32,11 @@ const ChallengesListingTableEntry = ({ challenge }: ChallengesListingTableEntryP
     const statusText = (challenge.ended || challenge.sealed) ? `ended ${formatDateDifference( getCurrentUnixTime() - challenge.endAt)} ago` : `ends in ${formatDateDifference(challenge.endAt - getCurrentUnixTime())}`
 
     return (
-        <div className="col-span-2 grid grid-cols-3 gap-4 bg-slate-200 px-2 py-4 rounded">
-            <div className="col-span-1 text-2xl text-indigo-700">
+        <div className="col-span-2 grid grid-cols-3 gap-4 px-2 py-4 rounded bg-slate-200 dark:bg-slate-700">
+            <div className="col-span-1 text-2xl text-indigo-700 dark:text-indigo-300">
                 <Link to={`/challenges/${challenge.id}`}>Workweek Hustle</Link>
             </div>
-            <div className="col-span-2">
+            <div className="col-span-2 dark:text-slate-300">
                 <p>with {users}</p>
                 <p>{statusText}</p>
             </div>

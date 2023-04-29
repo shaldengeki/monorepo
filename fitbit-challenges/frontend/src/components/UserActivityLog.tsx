@@ -8,17 +8,17 @@ type PlacementResultEntryProps = {
 }
 
 const PlacementResultEntry = ({ totals }: PlacementResultEntryProps) => {
-    let entryText = `${totals[0].name} won the week with ${totals[0].value} ${totals[0].unit}!`;
+    let entryText = `${totals[0].name} won the week with ${totals[0].value.toLocaleString()} ${totals[0].unit}!`;
     if (totals.length > 1) {
-        entryText += ` ${totals[1].name} took second with ${totals[1].value} ${totals[1].unit}.`;
+        entryText += ` ${totals[1].name} took second with ${totals[1].value.toLocaleString()} ${totals[1].unit}.`;
     }
     if (totals.length > 2) {
-        entryText += ` ${totals[2].name} came in third with ${totals[2].value} ${totals[2].unit}.`;
+        entryText += ` ${totals[2].name} came in third with ${totals[2].value.toLocaleString()} ${totals[2].unit}.`;
     }
 
     return (
         <div className="grid grid-cols-3 gap-0 mb-7">
-            <div className="col-span-3 text-center text-lg">
+            <div className="col-span-3 text-center text-lg dark:text-slate-300">
                 {entryText}
             </div>
         </div>
@@ -35,7 +35,7 @@ const UserActivityLogEntry = ( {delta, editHook, sealed}: UserActivityLogEntryPr
     return (
         <div className="grid grid-cols-3 gap-0">
             <div className="col-span-2">
-                {delta.user} took {delta.stepsDelta} steps on {formatActivityDate(delta.recordDate)}
+                {delta.user} took {delta.stepsDelta.toLocaleString()} steps on {formatActivityDate(delta.recordDate)}
             </div>
             <div className="col-span-1 text-right italic text-sm">
                 <span>

@@ -99,7 +99,6 @@ const WorkweekHustle = ({id, users, createdAt, startAt, endAt, ended, sealAt, se
                 <UserLeaderboard
                     challengeName={"Workweek Hustle"}
                     id={id}
-                    users={users}
                     activityTotals={activityTotals}
                     startAt={startAt}
                     endAt={endAt}

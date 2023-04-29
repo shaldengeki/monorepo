@@ -37,7 +37,7 @@ const UserLeaderboardHeader = ({ title, id, startAt, endAt, ended, sealAt, seale
             <PageTitle className="col-span-3 text-center">
                 <a href={`/challenges/${id}`}>{title}</a>
             </PageTitle>
-            <div className='col-span-3 text-center'>{timingCopy}</div>
+            <div className='col-span-3 text-center text-xl dark:text-slate-300'>{timingCopy}</div>
         </div>
     );
 };
@@ -88,7 +88,6 @@ const UserLeaderboardListing = ({ activityTotals, unit, sealed }: UserLeaderboar
 type UserLeaderboardProps = {
     challengeName: string;
     id: number;
-    users: string[];
     activityTotals: ActivityTotal[];
     startAt: number;
     endAt: number;
@@ -98,7 +97,7 @@ type UserLeaderboardProps = {
     unit: string;
 }
 
-const UserLeaderboard = ({ challengeName, id, users, activityTotals, startAt, endAt, ended, sealAt, sealed, unit }: UserLeaderboardProps) => {
+const UserLeaderboard = ({ challengeName, id, activityTotals, startAt, endAt, ended, sealAt, sealed, unit }: UserLeaderboardProps) => {
   return (
     <div>
         <UserLeaderboardHeader title={challengeName} id={id} startAt={startAt} endAt={endAt} ended={ended} sealAt={sealAt} sealed={sealed} />

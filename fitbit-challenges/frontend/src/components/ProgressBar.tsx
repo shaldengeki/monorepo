@@ -11,9 +11,12 @@ const ProgressBar = ({ value, maximum }: ProgressBarProps) => {
         "width": `${inversePercent}%`
     };
     return (
-        <div className="mb-6 h-7 w-full bg-teal-400 dark:bg-pink-900 text-right">
-            <div className="h-7 bg-neutral-200 dark:bg-neutral-600 dark:text-slate-400" style={barStyles}>
-                &nbsp;{value}&nbsp;
+        <div className="mb-6 h-7 w-full text-right bg-gradient-to-r bg-teal-400 dark:from-indigo-500 dark:via-purple-500 dark:to-pink-500">
+            <div
+                className="h-7 bg-neutral-200 dark:bg-neutral-800 dark:text-slate-200"
+                style={barStyles}
+            >
+                &nbsp;{value.toLocaleString()}&nbsp;
             </div>
         </div>
     );
