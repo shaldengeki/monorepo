@@ -28,9 +28,10 @@ const PlacementResultEntry = ({ totals }: PlacementResultEntryProps) => {
 type UserActivityLogEntryProps = {
     delta: ActivityDelta
     editHook: Function
+    sealed: boolean
 }
 
-const UserActivityLogEntry = ( {delta, editHook}: UserActivityLogEntryProps) => {
+const UserActivityLogEntry = ( {delta, editHook, sealed}: UserActivityLogEntryProps) => {
     return (
         <div className="grid grid-cols-3 gap-0">
             <div className="col-span-2">
@@ -39,7 +40,7 @@ const UserActivityLogEntry = ( {delta, editHook}: UserActivityLogEntryProps) => 
             <div className="col-span-1 text-right italic text-sm">
                 <span>
                     {formatDateDifference(getCurrentUnixTime() - delta.createdAt)} ago
-                    <button className="text-xs" onClick={() => editHook(delta as Activity)}>✏️</button>
+                    {!sealed && <button className="text-xs" onClick={() => editHook(delta as Activity)}>✏️</button>}
                 </span>
             </div>
         </div>
@@ -60,7 +61,7 @@ const UserActivityLog = ({ challengeId, users, deltas, totals, startAt, endAt, s
     const [editedActivity, setEditedActivity] = useState(EmptyActivity);
     const entries = deltas.map(
         (delta: ActivityDelta) => {
-            return <UserActivityLogEntry key={delta.id} delta={delta} editHook={setEditedActivity} />;
+            return <UserActivityLogEntry key={delta.id} delta={delta} editHook={setEditedActivity} sealed={sealed} />;
         }
     )
     return (
