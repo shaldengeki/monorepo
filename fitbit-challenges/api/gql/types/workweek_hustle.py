@@ -114,13 +114,18 @@ def challenges_field(workweek_hustle_model: Type[WorkweekHustle]) -> GraphQLFiel
 def create_workweek_hustle(
     workweek_hustle_model: Type[WorkweekHustle], args: dict[str, Any]
 ) -> WorkweekHustle:
+    # Round to nearest hour.
+    startAt = int(int(args["startAt"]) / 3600) * 3600
+
+    # Five days after starting.
+    endAt = startAt + 5 * 24 * 60 * 60
+
     challenge = workweek_hustle_model(
-        users=args["users"],
-        start_at=datetime.datetime.utcfromtimestamp(int(args["startAt"])),
-        end_at=datetime.datetime.utcfromtimestamp(int(args["endAt"])),
+        users=",".join(args["users"]),
+        start_at=datetime.datetime.utcfromtimestamp(startAt),
+        end_at=datetime.datetime.utcfromtimestamp(endAt),
     )
     db.session.add(challenge)
-
     db.session.commit()
     return challenge
 
@@ -133,16 +138,12 @@ def create_workweek_hustle_field(
         description="Create a Workweek Hustle challenge.",
         args={
             "users": GraphQLArgument(
-                GraphQLNonNull(GraphQLString),
-                description="Comma-separated list of usernames participating in the challenge.",
+                GraphQLList(GraphQLString),
+                description="List of usernames participating in the challenge.",
             ),
             "startAt": GraphQLArgument(
                 GraphQLNonNull(GraphQLInt),
                 description="Time the challenge should start, in unix epoch time.",
-            ),
-            "endAt": GraphQLArgument(
-                GraphQLNonNull(GraphQLInt),
-                description="Time the challenge should end, in unix epoch time.",
             ),
         },
         resolve=lambda root, info, **args: create_workweek_hustle(
