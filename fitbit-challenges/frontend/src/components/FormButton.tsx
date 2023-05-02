@@ -6,10 +6,10 @@ type FormButtonProps = {
 }
 
 const FormButton = (props: PropsWithChildren<FormButtonProps>) => {
-    const baseClasses = "p-0.5 mx-0.5 rounded dark:text-slate-400"
+    const baseClasses = "py-0.5 px-1 mx-0.5 rounded dark:text-slate-200"
     let actualClasses = baseClasses
     if (props.className) {
-        actualClasses += props.className;
+        actualClasses += " " + props.className;
     }
 
     return (
@@ -33,7 +33,7 @@ type CancelButtonProps = {
 
 export const CancelButton = (props: PropsWithChildren<CancelButtonProps>) => {
     return (
-        <FormButton hook={props.hook} className={"bg-teal-400 dark:bg-slate-600 dark:text-slate-400"}>
+        <FormButton hook={props.hook} className={"bg-slate-400 dark:bg-slate-600"}>
             {props.children}
         </FormButton>
     );
@@ -45,7 +45,7 @@ type SubmitButtonProps = {
 
 export const SubmitButton = (props: PropsWithChildren<SubmitButtonProps>) => {
     return (
-        <FormButton hook={props.hook} className={"bg-teal-400 dark:bg-pink-900 dark:text-slate-400"}>
+        <FormButton hook={props.hook} className={"bg-teal-400 dark:bg-pink-900"}>
             {props.children}
         </FormButton>
     );

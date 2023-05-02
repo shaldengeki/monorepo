@@ -47,15 +47,15 @@ const ChallengesListingTableEntry = ({ challenge }: ChallengesListingTableEntryP
     const statusText = (challenge.ended || challenge.sealed) ? `ended ${formatDateDifference( getCurrentUnixTime() - challenge.endAt)} ago` : `ends in ${formatDateDifference(challenge.endAt - getCurrentUnixTime())}`
 
     return (
-        <div className="col-span-3 grid grid-cols-4 gap-4 px-2 py-4 rounded bg-slate-200 dark:bg-slate-700">
-            <div className="col-span-1 text-2xl text-indigo-700 dark:text-indigo-300">
-                <Link to={`/challenges/${challenge.id}`}>Workweek Hustle</Link>
+        <Link to={`/challenges/${challenge.id}`} className="col-span-2 grid grid-cols-4 gap-4 px-2 py-4 rounded bg-slate-200 dark:bg-slate-700">
+            <div className="col-span-2 text-2xl text-indigo-700 dark:text-indigo-300">
+                Workweek Hustle
             </div>
-            <div className="col-span-3 dark:text-slate-300">
+            <div className="col-span-2 dark:text-slate-300">
                 <p>with {users}</p>
                 <p>{statusText}</p>
             </div>
-        </div>
+        </Link>
     )
 }
 
@@ -68,7 +68,7 @@ const ChallengesListingTable = ({ challenges }: ChallengesListingTableProps) => 
         return <ChallengesListingTableEntry challenge={challenge} />;
     });
     return (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
             {entries}
         </div>
     )
@@ -167,17 +167,15 @@ const ChallengesListingView = () => {
     return (
         <PageContainer>
             <PageTitle><Link to={'/challenges'}>Challenges</Link></PageTitle>
-            <div className="grid grid-cols-8">
-                { loading && <p>Loading...</p> }
-                { error && <p>Error: {error.message}</p> }
-                <div className="col-span-7">
-                    { data && data.challenges && data.challenges.length < 1 && <p>No challenges found!</p> }
-                    { data && data.challenges && <ChallengesListingTable challenges={challenges} /> }
-                </div>
-                <div className="col-span-1 py-2">
+            <div className="py-2">
                     { !editFormShowing && <CreateChallengeLink hook={setEditFormShowing} /> }
                     { editFormShowing && <CreateChallengeForm challenge={editedChallenge} editHook={setEditedChallenge} formHook={setEditFormShowing} /> }
-                </div>
+            </div>
+            <div>
+                { loading && <p>Loading...</p> }
+                { error && <p>Error: {error.message}</p> }
+                { data && data.challenges && data.challenges.length < 1 && <p>No challenges found!</p> }
+                { data && data.challenges && <ChallengesListingTable challenges={challenges} /> }
             </div>
         </PageContainer>
     )
