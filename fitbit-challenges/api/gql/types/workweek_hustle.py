@@ -10,6 +10,7 @@ from graphql import (
     GraphQLString,
 )
 from sqlalchemy import desc
+from sqlalchemy.sql import func
 from typing import Any, Type
 
 from ...config import db
@@ -20,7 +21,10 @@ from .user_activities import user_activity_type
 def activities_resolver(hustle: WorkweekHustle, info, **args) -> list[UserActivity]:
     return (
         UserActivity.query.filter(UserActivity.user.in_(hustle.users.split(",")))
-        .filter(UserActivity.record_date >= hustle.start_at)
+        .filter(
+            func.to_char(UserActivity.record_date, "%Y-%m-%d")
+            >= func.to_char(hustle.start_at, "%Y-%m-%d")
+        )
         .filter(UserActivity.record_date < hustle.end_at)
         .filter(UserActivity.created_at < hustle.seal_at)
         .order_by(desc(UserActivity.created_at))

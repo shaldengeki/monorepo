@@ -186,27 +186,6 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
     return <>
         <form
             className="space-x-1"
-            onSubmit={e => {
-                e.preventDefault();
-                if (id !== 0) {
-                    updateUserActivity({
-                        variables: {
-                            id: id,
-                            recordDate: convertDateStringToEpochTime(date),
-                            user: selectedUser,
-                            steps: steps
-                        }
-                    })
-                } else {
-                    createUserActivity({
-                        variables: {
-                            recordDate: convertDateStringToEpochTime(date),
-                            user: selectedUser,
-                            steps: steps
-                        }
-                    })
-                }
-            }}
         >
             <input
                 name="id"
@@ -257,7 +236,31 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
                 value={steps}
                 placeholder="Today's total steps"
             />
-            <SubmitButton>
+            <SubmitButton
+                hook={(e: any) => {
+                    e.preventDefault();
+                    if (id !== 0) {
+                        console.log("yay", id)
+                        updateUserActivity({
+                            variables: {
+                                id: id,
+                                recordDate: convertDateStringToEpochTime(date),
+                                user: selectedUser,
+                                steps: steps
+                            }
+                        })
+                    } else {
+                        console.log("createUserActivity", date, selectedUser, steps);
+                        createUserActivity({
+                            variables: {
+                                recordDate: convertDateStringToEpochTime(date),
+                                user: selectedUser,
+                                steps: steps
+                            }
+                        })
+                    }
+                }}
+            >
                 {(id === 0) ? "Log activity" : "Update"}
             </SubmitButton>
             <CancelButton hook={(e: any) => {e.preventDefault(); editActivityHook(emptyActivity)}}>
