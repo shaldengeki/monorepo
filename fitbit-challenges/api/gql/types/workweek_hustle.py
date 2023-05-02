@@ -22,8 +22,8 @@ def activities_resolver(hustle: WorkweekHustle, info, **args) -> list[UserActivi
     return (
         UserActivity.query.filter(UserActivity.user.in_(hustle.users.split(",")))
         .filter(
-            func.to_char(UserActivity.record_date, "%Y-%m-%d")
-            >= func.to_char(hustle.start_at, "%Y-%m-%d")
+            func.date_trunc("day", UserActivity.record_date)
+            >= func.date_trunc("day", hustle.start_at)
         )
         .filter(UserActivity.record_date < hustle.end_at)
         .filter(UserActivity.created_at < hustle.seal_at)
