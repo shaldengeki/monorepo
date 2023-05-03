@@ -32,10 +32,29 @@ type UserActivityLogEntryProps = {
 }
 
 const UserActivityLogEntry = ( {delta, editHook, sealed}: UserActivityLogEntryProps) => {
+    let entryTextParts = [
+        delta.user,
+        "took",
+        delta.stepsDelta.toLocaleString(),
+    ];
+    if (delta.steps !== delta.stepsDelta) {
+        entryTextParts.push("more")
+    }
+    if (delta.stepsDelta === 1) {
+        entryTextParts.push("step")
+    } else {
+        entryTextParts.push("steps")
+    }
+
+    entryTextParts = entryTextParts.concat([
+        "on",
+        formatActivityDate(delta.recordDate),
+    ])
+
     return (
         <div className="grid grid-cols-2 gap-0">
             <div className="col-span-1">
-                {delta.user} took {delta.stepsDelta.toLocaleString()} steps on {formatActivityDate(delta.recordDate)}
+                {entryTextParts.join(" ")}
             </div>
             <div className="col-span-1 text-right italic text-sm">
                 <span>
