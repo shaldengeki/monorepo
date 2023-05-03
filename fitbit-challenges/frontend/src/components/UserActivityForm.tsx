@@ -238,9 +238,7 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
             />
             <SubmitButton
                 hook={(e: any) => {
-                    e.preventDefault();
                     if (id !== 0) {
-                        console.log("yay", id)
                         updateUserActivity({
                             variables: {
                                 id: id,
@@ -250,7 +248,6 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
                             }
                         })
                     } else {
-                        console.log("createUserActivity", date, selectedUser, steps);
                         createUserActivity({
                             variables: {
                                 recordDate: convertDateStringToEpochTime(date),
@@ -263,7 +260,7 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
             >
                 {(id === 0) ? "Log activity" : "Update"}
             </SubmitButton>
-            <CancelButton hook={(e: any) => {e.preventDefault(); editActivityHook(emptyActivity)}}>
+            <CancelButton hook={(e: any) => {editActivityHook(emptyActivity)}}>
                 Cancel
             </CancelButton>
         </form>
