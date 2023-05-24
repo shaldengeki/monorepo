@@ -3,7 +3,7 @@ import { useMutation, useQuery, gql } from '@apollo/client';
 import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import Challenge, {ChallengeType, emptyChallenge} from "../types/Challenge";
-import {formatDateDifference, getCurrentUnixTime, nextMonday} from '../DateUtils';
+import {formatDateDifference, getCurrentUnixTime, nextMonday, nextSaturday} from '../DateUtils';
 import { Link } from 'react-router-dom';
 import {CancelButton, SubmitButton} from '../components/FormButton';
 
@@ -27,10 +27,12 @@ export const FETCH_CHALLENGES_QUERY = gql`
 const CREATE_CHALLENGE_MUTATION = gql`
     mutation CreateChallenge(
         $users:[String]!,
+        $challengeType:Int!,
         $startAt:Int!,
     ) {
-        createWorkweekHustle(
+        createChallenge(
             users:$users,
+            challengeType:$challengeType,
             startAt:$startAt,
         ) {
             id
@@ -113,18 +115,30 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
     const joinedUsers = challenge.users.join(",")
     const challengeHook = (e: any) => {
         e.preventDefault();
+        let startAt = 0;
+        if (challenge.challengeType === ChallengeType.WeekendWarrior) {
+            startAt = nextSaturday();
+        } else if (challenge.challengeType === ChallengeType.WorkweekHustle) {
+            startAt = nextMonday();
+        }
+        // We don't guard against wrong challenge types, because the API should handle this for us.
         createChallenge({
             variables: {
                 users: challenge.users,
-                startAt: challenge.startAt,
+                challengeType: challenge.challengeType,
+                startAt: startAt,
             }
         })
     }
     const cancelHook = (e: any) => {
         e.preventDefault();
-        editHook({ ...emptyChallenge, startAt: nextMonday() });
+        editHook(emptyChallenge);
         formHook(false);
     }
+    const challengeElements = [
+        <option key={0} value={0}>Workweek Hustle</option>,
+        <option key={1} value={1}>Weekend Warrior</option>
+    ]
 
     return (
         <div>
@@ -144,6 +158,19 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
                     }}
                     placeholder="Comma-separated users"
                 />
+                <select
+                    className="rounded p-0.5"
+                    name="challengeType"
+                    value={challenge.challengeType}
+                    onChange={(e) => {
+                        editHook({
+                            ...challenge,
+                            challengeType: parseInt(e.target.value),
+                        })
+                    }}
+                >
+                    {challengeElements}
+                </select>
                 <SubmitButton hook={challengeHook}>
                     Submit
                 </SubmitButton>

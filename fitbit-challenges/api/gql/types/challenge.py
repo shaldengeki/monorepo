@@ -122,3 +122,53 @@ def challenges_field(challenge_model: Type[Challenge]) -> GraphQLField:
 class ChallengeType(Enum):
     WORKWEEK_HUSTLE = 0
     WEEKEND_WARRIOR = 1
+
+
+def create_challenge(
+    challenge_model: Type[Challenge], args: dict[str, Any]
+) -> Challenge:
+    # Round to nearest hour.
+    startAt = int(int(args["startAt"]) / 3600) * 3600
+
+    challenge_type = int(args["challengeType"])
+    if ChallengeType.WORKWEEK_HUSTLE.value == challenge_type:
+        # Five days after starting.
+        endAt = startAt + 5 * 24 * 60 * 60
+    elif ChallengeType.WEEKEND_WARRIOR.value == challenge_type:
+        # Two days after starting.
+        endAt = startAt + 2 * 24 * 60 * 60
+    else:
+        raise ValueError(f"Invalid challenge type!")
+
+    challenge = challenge_model(
+        challenge_type=challenge_type,
+        users=",".join(args["users"]),
+        start_at=datetime.datetime.utcfromtimestamp(startAt),
+        end_at=datetime.datetime.utcfromtimestamp(endAt),
+    )
+    db.session.add(challenge)
+    db.session.commit()
+    return challenge
+
+
+def create_challenge_field(
+    challenge_model: Type[Challenge],
+) -> GraphQLField:
+    return GraphQLField(
+        challenge_type,
+        description="Create a challenge.",
+        args={
+            "users": GraphQLArgument(
+                GraphQLList(GraphQLString),
+                description="List of usernames participating in the challenge.",
+            ),
+            "challengeType": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt), description="Type of challenge to create."
+            ),
+            "startAt": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="Time the challenge should start, in unix epoch time.",
+            ),
+        },
+        resolve=lambda root, info, **args: create_challenge(challenge_model, args),
+    )

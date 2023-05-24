@@ -1,8 +1,6 @@
-from graphql import GraphQLObjectType, GraphQLSchema, GraphQLField, GraphQLString
+from graphql import GraphQLObjectType, GraphQLSchema
 
-from .types.challenge import challenges_field
-from .types.workweek_hustle import create_workweek_hustle_field
-from .types.weekend_warrior import create_weekend_warrior_field
+from .types.challenge import challenges_field, create_challenge_field
 from .types.user_activities import (
     activities_field,
     create_user_activity_field,
@@ -22,8 +20,7 @@ def Schema(models):
         mutation=GraphQLObjectType(
             name="Mutation",
             fields={
-                "createWeekendWarrior": create_weekend_warrior_field(models.Challenge),
-                "createWorkweekHustle": create_workweek_hustle_field(models.Challenge),
+                "createChallenge": create_challenge_field(models.Challenge),
                 "createUserActivity": create_user_activity_field(models.UserActivity),
                 "updateUserActivity": update_user_activity_field(models.UserActivity),
             },

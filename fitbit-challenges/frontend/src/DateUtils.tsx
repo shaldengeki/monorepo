@@ -48,3 +48,13 @@ export function nextMonday(): number {
     d.setMilliseconds(0);
     return d.getTime() / 1000;
 }
+
+export function nextSaturday(): number {
+    let d = new Date();
+    d.setDate(d.getDate() + (6 + 7 - d.getDay()) % 7);
+    d.setHours(0);
+    d.setMinutes(0);
+    d.setSeconds(0);
+    d.setMilliseconds(0);
+    return d.getTime() / 1000;
+}
