@@ -3,8 +3,9 @@ import { useQuery, gql } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import WorkweekHustle from '../components/WorkweekHustle';
+import WeekendWarrior from '../components/WeekendWarrior';
 import Activity from '../types/Activity';
-import Challenge from '../types/Challenge';
+import Challenge, {ChallengeType} from '../types/Challenge';
 
 export const FETCH_WORKWEEK_HUSTLE_QUERY = gql`
     query FetchChallenge($id: Int!) {
@@ -55,17 +56,29 @@ const ChallengeView = () => {
         const challenge = challenges[0];
         const users = challenge.users;
         const activities: Activity[] = challenge.activities;
-        innerContent = <WorkweekHustle
-                            id={id}
-                            users={users}
-                            createdAt={challenge.createdAt}
-                            startAt={challenge.startAt}
-                            endAt={challenge.endAt}
-                            ended={challenge.ended}
-                            sealAt={challenge.sealAt}
-                            sealed={challenge.sealed}
-                            activities={activities}
-                        />;
+        if (challenge.challengeType === ChallengeType.WeekendWarrior) {
+            innerContent = <WeekendWarrior
+                id={id}
+                users={users}
+                startAt={challenge.startAt}
+                endAt={challenge.endAt}
+                ended={challenge.ended}
+                sealAt={challenge.sealAt}
+                sealed={challenge.sealed}
+                activities={activities}
+            />;
+        } else {
+            innerContent = <WorkweekHustle
+                id={id}
+                users={users}
+                startAt={challenge.startAt}
+                endAt={challenge.endAt}
+                ended={challenge.ended}
+                sealAt={challenge.sealAt}
+                sealed={challenge.sealed}
+                activities={activities}
+            />;
+        }
     }
 
     return (

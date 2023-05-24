@@ -1,5 +1,10 @@
 import Activity from "./Activity";
 
+export enum ChallengeType {
+    WorkweekHustle = 0,
+    WeekendWarrior = 1,
+}
+
 type Challenge = {
     id: number
     users: string[]
@@ -10,6 +15,7 @@ type Challenge = {
     sealAt: number
     sealed: boolean
     activities: Activity[]
+    challengeType: ChallengeType
 }
 
 export const emptyChallenge: Challenge = {
@@ -22,6 +28,7 @@ export const emptyChallenge: Challenge = {
     sealAt: 0,
     sealed: false,
     activities: [],
+    challengeType: ChallengeType.WorkweekHustle,
 }
 
 export default Challenge;

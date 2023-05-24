@@ -3,7 +3,7 @@ import * as React from 'react';
 import Activity from '../types/Activity';
 import StepChallenge from './StepChallenge';
 
-type WorkweekHustleProps = {
+type WeekendWarriorProps = {
     id: number;
     users: string[];
     startAt: number;
@@ -14,10 +14,10 @@ type WorkweekHustleProps = {
     activities: Activity[];
 }
 
-const WorkweekHustle = ({id, users, startAt, endAt, ended, sealAt, sealed, activities}: WorkweekHustleProps) => {
+const WeekendWarrior = ({id, users, startAt, endAt, ended, sealAt, sealed, activities}: WeekendWarriorProps) => {
     return (
         <StepChallenge
-            challengeName={"Workweek Hustle"}
+            challengeName={"Weekend Warrior"}
             id={id}
             users={users}
             startAt={startAt}
@@ -30,4 +30,4 @@ const WorkweekHustle = ({id, users, startAt, endAt, ended, sealAt, sealed, activ
     );
 };
 
-export default WorkweekHustle;
+export default WeekendWarrior;

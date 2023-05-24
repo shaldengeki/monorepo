@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import WorkweekHustle from './WorkweekHustle';
+import WeekendWarrior from './WeekendWarrior';
 import { MockedProvider } from '@apollo/react-testing';
 import React from 'react';
 
@@ -7,7 +7,7 @@ import React from 'react';
 it('should render when no activities exist', async () => {
     render(
         <MockedProvider mocks={[]}>
-            <WorkweekHustle
+            <WeekendWarrior
                 id={1}
                 users={['foo', 'bar']}
                 startAt={0}
@@ -19,7 +19,7 @@ it('should render when no activities exist', async () => {
             />
         </MockedProvider>,
     );
-    expect(await screen.findByText("Workweek Hustle")).toBeInTheDocument();
+    expect(await screen.findByText("Weekend Warrior")).toBeInTheDocument();
   });
 
 it('should select just the latest activity per day', async () => {
@@ -30,7 +30,7 @@ it('should select just the latest activity per day', async () => {
     ];
     render(
         <MockedProvider mocks={[]}>
-        <WorkweekHustle
+        <WeekendWarrior
             id={1}
             users={['foo', 'bar']}
             startAt={0}
