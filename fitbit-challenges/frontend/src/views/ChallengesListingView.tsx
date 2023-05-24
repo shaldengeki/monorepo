@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { useMutation, useQuery, gql } from '@apollo/client';
 import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
-import Challenge, {emptyChallenge} from "../types/Challenge";
+import Challenge, {ChallengeType, emptyChallenge} from "../types/Challenge";
 import {formatDateDifference, getCurrentUnixTime, nextMonday} from '../DateUtils';
 import { Link } from 'react-router-dom';
 import {CancelButton, SubmitButton} from '../components/FormButton';
@@ -12,6 +12,7 @@ export const FETCH_CHALLENGES_QUERY = gql`
     query FetchChallenges {
           challenges {
               id
+              challengeType
               users
               createdAt
               startAt
@@ -45,11 +46,15 @@ const ChallengesListingTableEntry = ({ challenge }: ChallengesListingTableEntryP
     const users = challenge.users.join(", ")
 
     const statusText = (challenge.ended || challenge.sealed) ? `ended ${formatDateDifference( getCurrentUnixTime() - challenge.endAt)} ago` : `ends in ${formatDateDifference(challenge.endAt - getCurrentUnixTime())}`
+    let challengeName = "Workweek Hustle"
+    if (challenge.challengeType === ChallengeType.WeekendWarrior) {
+        challengeName = "Weekend Warrior"
+    }
 
     return (
         <Link to={`/challenges/${challenge.id}`} className="col-span-2 grid grid-cols-4 gap-4 px-2 py-4 rounded bg-slate-200 dark:bg-slate-700">
             <div className="col-span-2 text-2xl text-indigo-700 dark:text-indigo-300">
-                Workweek Hustle
+                {challengeName}
             </div>
             <div className="col-span-2 dark:text-slate-300">
                 <p>with {users}</p>

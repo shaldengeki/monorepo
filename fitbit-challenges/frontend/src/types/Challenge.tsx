@@ -7,6 +7,7 @@ export enum ChallengeType {
 
 type Challenge = {
     id: number
+    challengeType: ChallengeType
     users: string[]
     createdAt: number
     startAt: number
@@ -15,11 +16,11 @@ type Challenge = {
     sealAt: number
     sealed: boolean
     activities: Activity[]
-    challengeType: ChallengeType
 }
 
 export const emptyChallenge: Challenge = {
     id: 0,
+    challengeType: ChallengeType.WorkweekHustle,
     users: [],
     createdAt: 0,
     startAt: 0,
@@ -28,7 +29,6 @@ export const emptyChallenge: Challenge = {
     sealAt: 0,
     sealed: false,
     activities: [],
-    challengeType: ChallengeType.WorkweekHustle,
 }
 
 export default Challenge;

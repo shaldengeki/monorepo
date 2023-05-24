@@ -8,7 +8,7 @@ type PlacementResultEntryProps = {
 }
 
 const PlacementResultEntry = ({ totals }: PlacementResultEntryProps) => {
-    let entryText = `${totals[0].name} won the week with ${totals[0].value.toLocaleString()} ${totals[0].unit}!`;
+    let entryText = `${totals[0].name} won with ${totals[0].value.toLocaleString()} ${totals[0].unit}!`;
     if (totals.length > 1) {
         entryText += ` ${totals[1].name} took second with ${totals[1].value.toLocaleString()} ${totals[1].unit}.`;
     }
