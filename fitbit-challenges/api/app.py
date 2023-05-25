@@ -41,4 +41,4 @@ def fitbit_notifications():
         )
         db.session.add(subscription_notification)
     db.session.commit()
-    return "success", 200
+    return "", 204
