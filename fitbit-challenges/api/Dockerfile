@@ -9,6 +9,7 @@ RUN apk update && \
 WORKDIR /usr/src/app
 
 ENV FLASK_APP=app.py
+ENV FLASK_DEBUG=True
 ENV PORT=5000
 ENV FRONTEND_PROTOCOL=http
 ENV FRONTEND_HOST=frontend

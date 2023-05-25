@@ -7,7 +7,7 @@ services:
     image: api
     environment:
       - PORT
-      - FLASK_ENV
+      - FLASK_DEBUG
       - DB_HOST
       - DB_USERNAME
       - DB_PASSWORD
@@ -24,7 +24,7 @@ services:
     image: api
     command: ["./scripts/wait-for-postgres.sh", "flask", "db", "upgrade"]
     environment:
-      - FLASK_ENV
+      - FLASK_DEBUG
       - DB_HOST
       - DB_USERNAME
       - DB_PASSWORD

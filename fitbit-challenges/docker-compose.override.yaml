@@ -7,7 +7,7 @@ services:
       - ./api:/usr/src/app
     environment:
       - PORT=5000
-      - FLASK_ENV=development
+      - FLASK_DEBUG=True
       - DB_HOST=pg
       - DB_USERNAME=admin
       - DB_PASSWORD=development
@@ -20,7 +20,7 @@ services:
     volumes:
       - ./api:/usr/src/app
     environment:
-      - FLASK_ENV=development
+      - FLASK_DEBUG=True
       - DB_HOST=pg
       - DB_USERNAME=admin
       - DB_PASSWORD=development
