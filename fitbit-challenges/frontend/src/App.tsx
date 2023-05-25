@@ -8,6 +8,7 @@ import {
 
 import ChallengesListingView from './views/ChallengesListingView';
 import ChallengeView from './views/ChallengeView';
+import AuthView from './views/AuthView';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Navigate to="/challenges" replace />} />
           <Route path="challenges" element={<ChallengesListingView />} />
           <Route path="challenges/:challengeId" element={<ChallengeView />} />
+          <Route path="auth" element={<AuthView />} />
         </Routes>
     </Router>
   );

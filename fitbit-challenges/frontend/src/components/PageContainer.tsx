@@ -1,4 +1,5 @@
 import React, {PropsWithChildren} from 'react';
+import NavBar from './NavBar';
 
 type PageContainerProps = {
     outerClassName?: string;
@@ -14,6 +15,7 @@ const PageContainer = (props: PropsWithChildren<PageContainerProps>) => {
 
     return (
         <div className={actualOuterClasses}>
+            <NavBar />
             <div className={actualInnerClasses}>
                 {props.children}
             </div>

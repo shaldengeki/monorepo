@@ -14,8 +14,10 @@ services:
       - DATABASE_NAME
       - FRONTEND_HOST
       - FRONTEND_PORT
+      - FITBIT_CLIENT_ID
       - FITBIT_CLIENT_SECRET
       - FITBIT_VERIFICATION_CODE
+      - FLASK_SECRET_KEY
     restart: always
   migration:
     build:

@@ -2,14 +2,16 @@ import datetime
 from datetime import timezone
 from flask import abort, request
 from graphql_server.flask import GraphQLView
+
 from .config import app, db, verify_fitbit_signature, verify_fitbit_verification
 from . import models
-
 from . import gql
 
 app.add_url_rule(
     "/graphql",
-    view_func=GraphQLView.as_view("graphql", schema=gql.Schema(models), graphiql=True),
+    view_func=GraphQLView.as_view(
+        "graphql", schema=gql.Schema(models, app), graphiql=True
+    ),
 )
 
 

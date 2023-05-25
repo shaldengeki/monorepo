@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import ChallengeView from './ChallengeView';
 import { FETCH_WORKWEEK_HUSTLE_QUERY } from './ChallengeView';
 import { MockedProvider } from '@apollo/react-testing';
+import {BrowserRouter} from 'react-router-dom'
 import React from 'react';
 
 it('should render loading state initially', async () => {
@@ -22,6 +23,7 @@ it('should render loading state initially', async () => {
     <MockedProvider mocks={[testFetchWorkweekHustleQueryMock]}>
       <ChallengeView />
     </MockedProvider>,
+    {wrapper: BrowserRouter},
   );
   expect(await screen.findByText("Loading...")).toBeInTheDocument();
 });
@@ -44,6 +46,7 @@ it('should handle when the challenge does not exist', async () => {
       <MockedProvider mocks={[testFetchWorkweekHustleQueryMock]}>
         <ChallengeView />
       </MockedProvider>,
+      {wrapper: BrowserRouter},
     );
     expect(await screen.findByText("Error: challenge could not be found!")).toBeInTheDocument();
   });
@@ -79,6 +82,7 @@ it('should handle when multiple challenges are found', async () => {
       <MockedProvider mocks={[testFetchWorkweekHustleQueryMock]}>
         <ChallengeView />
       </MockedProvider>,
+      {wrapper: BrowserRouter},
     );
     expect(await screen.findByText("Error: multiple challenges with that ID were found!")).toBeInTheDocument();
   });

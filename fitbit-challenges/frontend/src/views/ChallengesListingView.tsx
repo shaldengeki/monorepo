@@ -7,7 +7,6 @@ import {formatDateDifference, getCurrentUnixTime, nextMonday, nextSaturday} from
 import { Link } from 'react-router-dom';
 import {CancelButton, SubmitButton} from '../components/FormButton';
 
-
 export const FETCH_CHALLENGES_QUERY = gql`
     query FetchChallenges {
           challenges {

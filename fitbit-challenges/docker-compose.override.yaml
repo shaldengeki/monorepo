@@ -14,8 +14,10 @@ services:
       - DATABASE_NAME=api_development
       - FRONTEND_HOST=localhost
       - FRONTEND_PORT=5001
+      - FITBIT_CLIENT_ID=testing
       - FITBIT_CLIENT_SECRET=testing
       - FITBIT_VERIFICATION_CODE=testing
+      - FLASK_SECRET_KEY=testing
   migration:
     volumes:
       - ./api:/usr/src/app

@@ -1,4 +1,4 @@
-from graphql import GraphQLObjectType, GraphQLSchema
+from graphql import GraphQLField, GraphQLObjectType, GraphQLSchema
 
 from .types.challenge import challenges_field, create_challenge_field
 from .types.user_activities import (
@@ -6,9 +6,10 @@ from .types.user_activities import (
     create_user_activity_field,
     update_user_activity_field,
 )
+from .types.fitbit_authorization import authorize_with_fitbit_field
 
 
-def Schema(models):
+def Schema(models, app):
     return GraphQLSchema(
         query=GraphQLObjectType(
             name="Query",
@@ -22,6 +23,7 @@ def Schema(models):
             fields={
                 "createChallenge": create_challenge_field(models.Challenge),
                 "createUserActivity": create_user_activity_field(models.UserActivity),
+                "authWithFitbit": authorize_with_fitbit_field(app),
                 "updateUserActivity": update_user_activity_field(models.UserActivity),
             },
         ),

@@ -8,6 +8,12 @@ RUN apk update && \
 
 WORKDIR /usr/src/app
 
+COPY requirements.txt ./
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
 ENV FLASK_APP=app.py
 ENV FLASK_DEBUG=True
 ENV PORT=5000
@@ -18,13 +24,9 @@ ENV DB_HOST=pg
 ENV DB_USERNAME=admin
 ENV DB_PASSWORD=development
 ENV DATABASE_NAME=api_development
+ENV FITBIT_CLIENT_ID=testing
 ENV FITBIT_CLIENT_SECRET=testing
 ENV FITBIT_VERIFICATION_CODE=testing
-
-COPY requirements.txt ./
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
+ENV FLASK_SECRET_KEY=testing
 
 CMD ./scripts/wait-for-postgres.sh -- flask run --host 0.0.0.0 --port $PORT
