@@ -1,6 +1,5 @@
 from ..config import db
 import datetime
-from datetime import timezone
 
 
 class Challenge(db.Model):  # type: ignore
