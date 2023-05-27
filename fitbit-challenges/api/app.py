@@ -63,10 +63,10 @@ def fitbit_authorize():
 
     # Attempt to exchange the auth code for the access & refresh tokens.
     encoded_client_and_secret = b64encode(
-        f"{app.config['FITBIT_CLIENT_ID']}:{app.config['FITBIT_SIGNING_KEY']}".encode(
+        f"{app.config['FITBIT_CLIENT_ID']}:{app.config['FITBIT_CLIENT_SECRET']}".encode(
             "utf-8"
         )
-    )
+    ).decode("utf-8")
 
     url_parameters = urlencode(
         {
@@ -79,15 +79,21 @@ def fitbit_authorize():
 
     auth_request = requests.post(
         url="https://api.fitbit.com/oauth2/token?" + url_parameters,
-        headers={"Authorization": f"Basic {encoded_client_and_secret}"},
+        headers={
+            "Authorization": f"Basic {encoded_client_and_secret}",
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
         data=url_parameters,
     )
+
+    if auth_request.status_code != 200:
+        abort(400)
 
     response = auth_request.json()
 
     # Create or update a user object with the new tokens.
     insert_user = (
-        insert(models.User.__tablename__)
+        insert(models.User.__table__)
         .values(
             fitbit_user_id=response["user_id"],
             fitbit_access_token=response["access_token"],

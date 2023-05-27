@@ -22,6 +22,7 @@ frontend_url = "".join(frontend_url_parts)
 
 app.config.update(
     FITBIT_CLIENT_ID=os.getenv("FITBIT_CLIENT_ID", "testing"),
+    FITBIT_CLIENT_SECRET=os.getenv("FITBIT_CLIENT_SECRET", "testing"),
     FITBIT_SIGNING_KEY=os.getenv("FITBIT_CLIENT_SECRET", "testing") + "&",
     FRONTEND_URL=frontend_url,
     SECRET_KEY=os.getenv("FLASK_SECRET_KEY", "testing"),
