@@ -9,6 +9,7 @@ pre-commit
 psycopg2
 pylint
 pytest
+requests
 sqlalchemy
 sqlalchemy-stubs
 types-Flask-Cors
