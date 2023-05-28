@@ -2,7 +2,7 @@ import Activity from "./Activity";
 
 type User = {
     fitbitUserId: string;
-    displayName?: string;
+    displayName: string;
     createdAt: number;
     activities: Activity[];
 }

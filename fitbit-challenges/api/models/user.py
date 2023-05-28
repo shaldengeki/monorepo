@@ -5,7 +5,7 @@ import datetime
 class User(db.Model):  # type: ignore
     __tablename__ = "users"
     fitbit_user_id = db.Column(db.Unicode(100), primary_key=True)
-    display_name = db.Column(db.Unicode(100), nullable=True)
+    display_name = db.Column(db.Unicode(100), nullable=False)
     created_at = db.Column(
         db.TIMESTAMP(timezone=True), default=datetime.datetime.utcnow, nullable=False
     )

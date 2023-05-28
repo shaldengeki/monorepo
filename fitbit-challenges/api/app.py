@@ -91,17 +91,28 @@ def fitbit_authorize():
 
     response = auth_request.json()
 
+    # Fetch the user's display name.
+    profile_request = requests.get(
+        f"https://api.fitbit.com/1/user/{response['user_id']}/profile.json",
+        headers={
+            "Authorization": f"Bearer {response['access_token']}",
+        },
+    )
+    display_name = profile_request.json()["user"]["displayName"]
+
     # Create or update a user object with the new tokens.
     insert_user = (
         insert(models.User.__table__)
         .values(
             fitbit_user_id=response["user_id"],
+            display_name=display_name,
             fitbit_access_token=response["access_token"],
             fitbit_refresh_token=response["refresh_token"],
         )
         .on_conflict_do_update(
             constraint="users_pkey",
             set_={
+                "display_name": display_name,
                 "fitbit_access_token": response["access_token"],
                 "fitbit_refresh_token": response["refresh_token"],
             },
