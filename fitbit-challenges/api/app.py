@@ -100,14 +100,15 @@ def fitbit_authorize():
             fitbit_refresh_token=response["refresh_token"],
         )
         .on_conflict_do_update(
+            constraint="users_pkey",
             set_={
                 "fitbit_access_token": response["access_token"],
                 "fitbit_refresh_token": response["refresh_token"],
-            }
+            },
         )
     )
     db.session.execute(insert_user)
     db.session.commit()
 
     session["fitbit_user_id"] = response["user_id"]
-    redirect(app.config["FRONTEND_URL"])
+    return redirect(app.config["FRONTEND_URL"])

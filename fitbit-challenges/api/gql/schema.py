@@ -1,6 +1,7 @@
 from graphql import GraphQLField, GraphQLObjectType, GraphQLSchema
 
 from .types.challenge import challenges_field, create_challenge_field
+from .types.user import current_user_field
 from .types.user_activities import (
     activities_field,
     create_user_activity_field,
@@ -16,6 +17,7 @@ def Schema(models, app):
             fields={
                 "challenges": challenges_field(models.Challenge),
                 "activities": activities_field(models.UserActivity),
+                "currentUser": current_user_field(models.User),
             },
         ),
         mutation=GraphQLObjectType(

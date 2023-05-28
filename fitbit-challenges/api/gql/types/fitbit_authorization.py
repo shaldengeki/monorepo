@@ -10,6 +10,7 @@ from graphql import (
     GraphQLString,
 )
 from urllib.parse import urlencode
+from ...config import app
 
 
 def fitbit_authorization_fields() -> dict[str, GraphQLField]:
@@ -34,8 +35,9 @@ class FitbitAuthorization:
 
 
 def authorize_with_fitbit(fitbit_client_id: str):
-    code_verifier = secrets.token_hex()
-    session["fitbit_code_verifier"] = code_verifier
+    if "fitbit_code_verifier" not in session:
+        code_verifier = secrets.token_hex()
+        session["fitbit_code_verifier"] = code_verifier
     code_challenge = (
         b64encode(sha256(code_verifier.encode("utf-8")).digest())
         .decode("utf-8")

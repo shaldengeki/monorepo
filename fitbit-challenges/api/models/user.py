@@ -9,7 +9,7 @@ class User(db.Model):  # type: ignore
     created_at = db.Column(
         db.TIMESTAMP(timezone=True), default=datetime.datetime.utcnow, nullable=False
     )
-    fitbit_access_token = db.Column(db.Unicode(100), nullable=False)
+    fitbit_access_token = db.Column(db.Unicode(500), nullable=False)
     fitbit_refresh_token = db.Column(db.Unicode(100), nullable=False)
     synced_at = db.Column(db.TIMESTAMP(timezone=True), nullable=True)
 

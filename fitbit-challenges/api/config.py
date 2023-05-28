@@ -54,6 +54,7 @@ CORS(
             "origins": [frontend_url],
         }
     },
+    supports_credentials=True,
 )
 
 db = SQLAlchemy(app)

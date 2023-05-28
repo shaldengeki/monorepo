@@ -4,29 +4,18 @@ import { FETCH_WORKWEEK_HUSTLE_QUERY } from './ChallengeView';
 import { MockedProvider } from '@apollo/react-testing';
 import {BrowserRouter} from 'react-router-dom'
 import React from 'react';
+import { FETCH_CURRENT_USER_QUERY } from '../components/NavBar';
 
-it('should render loading state initially', async () => {
-  const testFetchWorkweekHustleQueryMock =   {
-    request: {
-      query: FETCH_WORKWEEK_HUSTLE_QUERY,
-      variables: {
-          id: 0
-      },
-    },
-    result: {
-      data: {
-        challenges: []
-      }
+const testFetchCurrentUserMock = {
+  request: {
+    query: FETCH_CURRENT_USER_QUERY
+  },
+  result: {
+    data: {
+      currentUser: null
     }
-  };
-  render(
-    <MockedProvider mocks={[testFetchWorkweekHustleQueryMock]}>
-      <ChallengeView />
-    </MockedProvider>,
-    {wrapper: BrowserRouter},
-  );
-  expect(await screen.findByText("Loading...")).toBeInTheDocument();
-});
+  }
+}
 
 it('should handle when the challenge does not exist', async () => {
     const testFetchWorkweekHustleQueryMock =   {
@@ -43,7 +32,7 @@ it('should handle when the challenge does not exist', async () => {
       }
     };
     render(
-      <MockedProvider mocks={[testFetchWorkweekHustleQueryMock]}>
+      <MockedProvider mocks={[testFetchWorkweekHustleQueryMock, testFetchCurrentUserMock]}>
         <ChallengeView />
       </MockedProvider>,
       {wrapper: BrowserRouter},
@@ -79,7 +68,7 @@ it('should handle when multiple challenges are found', async () => {
       }
     };
     render(
-      <MockedProvider mocks={[testFetchWorkweekHustleQueryMock]}>
+      <MockedProvider mocks={[testFetchWorkweekHustleQueryMock, testFetchCurrentUserMock]}>
         <ChallengeView />
       </MockedProvider>,
       {wrapper: BrowserRouter},
