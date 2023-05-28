@@ -4,7 +4,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./api:/usr/src/app
+      - ./src/python/api:/usr/src/app
     environment:
       - PORT=5000
       - FLASK_DEBUG=True
@@ -20,7 +20,7 @@ services:
       - FLASK_SECRET_KEY=testing
   migration:
     volumes:
-      - ./api:/usr/src/app
+      - ./src/python/api:/usr/src/app
     environment:
       - FLASK_DEBUG=True
       - DB_HOST=pg
@@ -37,7 +37,7 @@ services:
     ports:
       - "5001:5001"
     volumes:
-      - ./frontend/src:/usr/src/app/src
+      - ./src/javascript/frontend/src:/usr/src/app/src
     environment:
       - PORT=5001
       - REACT_APP_API_HOST=localhost

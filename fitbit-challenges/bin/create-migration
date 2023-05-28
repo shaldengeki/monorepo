@@ -2,5 +2,5 @@
 
 set -ex
 
-cd api/migrations
+cd src/python/api/migrations
 alembic revision -m "$1"

@@ -3,4 +3,4 @@
 set -ex
 
 pytest
-cd frontend && CI=true npm test --all
+cd src/javascript/frontend && CI=true npm test --all

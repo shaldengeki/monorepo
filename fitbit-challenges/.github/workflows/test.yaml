@@ -15,9 +15,9 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
-        working-directory: ./frontend
+        working-directory: ./src/javascript/frontend
       - run: npm test
-        working-directory: ./frontend
+        working-directory: ./src/javascript/frontend
   test-py:
     runs-on: ubuntu-latest
     steps:
@@ -31,6 +31,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        working-directory: ./api
+        working-directory: ./src/python/api
       - run: pytest
-        working-directory: ./api
+        working-directory: ./src/python/api
