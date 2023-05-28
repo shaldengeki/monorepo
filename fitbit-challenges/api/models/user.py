@@ -12,6 +12,7 @@ class User(db.Model):  # type: ignore
     fitbit_access_token = db.Column(db.Unicode(500), nullable=False)
     fitbit_refresh_token = db.Column(db.Unicode(100), nullable=False)
     synced_at = db.Column(db.TIMESTAMP(timezone=True), nullable=True)
+    fitbit_subscription_id = db.Column(db.Identity(), nullable=False)
 
     def __repr__(self) -> str:
         return "<User {fitbit_user_id}>".format(fitbit_user_id=self.fitbit_user_id)
