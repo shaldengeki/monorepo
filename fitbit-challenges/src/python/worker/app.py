@@ -146,12 +146,27 @@ def process_subscription_notifications(client_id: str, client_secret: str) -> No
             active_minutes=active_minutes,
             distance_km=distance_km,
         )
-        user.synced_at = datetime.datetime.now().astimezone(timezone.utc)
+        last_activity = (
+            UserActivity.query.filter(
+                UserActivity.record_date == notification.date.date()
+            )
+            .filter(UserActivity.user == notification.fitbit_user_id)
+            .order_by(desc(UserActivity.created_at))
+            .first()
+        )
+        if not last_activity or (
+            last_activity.steps != new_activity.steps
+            or last_activity.active_minutes != new_activity.active_minutes
+            or last_activity.distance_km != new_activity.distance_km
+        ):
+            user.synced_at = datetime.datetime.now().astimezone(timezone.utc)
 
-        print(f"Recording new activity.")
-        db.session.add(new_activity)
-        db.session.add(user)
-        db.session.commit()
+            print(f"Recording new activity.")
+            db.session.add(new_activity)
+            db.session.add(user)
+            db.session.commit()
+        else:
+            print(f"No new activity logged, skipping.")
     except:
         notification.processed_at = None
         db.session.add(notification)
