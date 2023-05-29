@@ -13,8 +13,8 @@ from sqlalchemy import desc
 from sqlalchemy.sql.functions import now
 from typing import Any, Type
 
-from ...config import db
-from ...models import UserActivity
+from ....config import db
+from ....models import UserActivity
 
 
 def user_activity_fields() -> dict[str, GraphQLField]:

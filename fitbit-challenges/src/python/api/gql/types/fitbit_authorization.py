@@ -10,7 +10,6 @@ from graphql import (
     GraphQLString,
 )
 from urllib.parse import urlencode
-from ...config import app
 
 
 def fitbit_authorization_fields() -> dict[str, GraphQLField]:

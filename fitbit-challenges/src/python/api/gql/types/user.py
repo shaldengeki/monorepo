@@ -10,7 +10,7 @@ from graphql import (
 from sqlalchemy import desc
 from typing import Any, Type, Optional
 
-from ...models import User, UserActivity
+from ....models import User, UserActivity
 from .user_activities import user_activity_type
 
 

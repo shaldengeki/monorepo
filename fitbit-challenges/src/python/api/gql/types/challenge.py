@@ -14,8 +14,8 @@ from sqlalchemy import desc
 from sqlalchemy.sql import func
 from typing import Any, Type
 
-from ...config import db
-from ...models import Challenge, UserActivity
+from ....config import db
+from ....models import Challenge, UserActivity
 from .user_activities import user_activity_type
 
 

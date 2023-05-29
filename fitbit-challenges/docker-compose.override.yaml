@@ -1,10 +1,10 @@
 version: '3'
 services:
-  api:
+  api: &api
     ports:
       - "5000:5000"
     volumes:
-      - ./src/python/api:/usr/src/app
+      - ./src/python:/usr/src/app
     environment:
       - PORT=5000
       - FLASK_DEBUG=True
@@ -19,14 +19,17 @@ services:
       - FITBIT_VERIFICATION_CODE=testing
       - FLASK_SECRET_KEY=testing
   migration:
-    volumes:
-      - ./src/python/api:/usr/src/app
+    <<: *api
+    ports: []
     environment:
       - FLASK_DEBUG=True
       - DB_HOST=pg
       - DB_USERNAME=admin
       - DB_PASSWORD=development
       - DATABASE_NAME=api_development
+  worker:
+    <<: *api
+    ports: []
   pg:
     environment:
       - POSTGRES_PASSWORD=development
