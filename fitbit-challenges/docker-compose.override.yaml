@@ -21,12 +21,6 @@ services:
   migration:
     <<: *api
     ports: []
-    environment:
-      - FLASK_DEBUG=True
-      - DB_HOST=pg
-      - DB_USERNAME=admin
-      - DB_PASSWORD=development
-      - DATABASE_NAME=api_development
   worker:
     <<: *api
     ports: []
