@@ -105,7 +105,6 @@ def fetch_user_activity_for_notification(
 def process_subscription_notifications(client_id: str, client_secret: str) -> None:
     notification = maybe_fetch_subscription_notification()
     if notification is None:
-        print("No subscription notifications to process, skipping.")
         return
 
     try:
@@ -153,7 +152,7 @@ def process_subscription_notifications(client_id: str, client_secret: str) -> No
         if not last_activity or (
             last_activity.steps != new_activity.steps
             or last_activity.active_minutes != new_activity.active_minutes
-            or last_activity.distance_km != new_activity.distance_km
+            or abs(last_activity.distance_km - new_activity.distance_km) < 0.01
         ):
             user.synced_at = datetime.datetime.now().astimezone(timezone.utc)
 
@@ -161,8 +160,6 @@ def process_subscription_notifications(client_id: str, client_secret: str) -> No
             db.session.add(new_activity)
             db.session.add(user)
             db.session.commit()
-        else:
-            print(f"No new activity logged, skipping.")
     except:
         notification.processed_at = None
         db.session.add(notification)
@@ -193,7 +190,6 @@ def main() -> int:
             process_subscription_notifications(client_id, client_secret)
             delay = (start + max_delay) - time.time()
             if delay > 0:
-                print(f"Sleeping for {round(delay)} seconds")
                 time.sleep(delay)
 
 
