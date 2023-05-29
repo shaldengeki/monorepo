@@ -172,6 +172,7 @@ def process_subscription_notifications(client_id: str, client_secret: str) -> No
         .where(SubscriptionNotification.fitbit_user_id == notification.fitbit_user_id)
         .where(SubscriptionNotification.date == notification.date)
         .where(SubscriptionNotification.created_at <= notification.created_at)
+        .where(SubscriptionNotification.processed_at == None)
         .values(processed_at=datetime.datetime.now().astimezone(timezone.utc))
     )
     db.session.execute(update_older_notifications)
