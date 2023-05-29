@@ -47,6 +47,7 @@ def request_indicates_expired_token(response: dict) -> bool:
 
 
 def refresh_tokens_for_user(user: User, client_id: str, client_secret: str) -> User:
+    print(f"Refreshing expired token for {user}.")
     encoded_client_and_secret = b64encode(
         f"{client_id}:{client_secret}".encode("utf-8")
     ).decode("utf-8")
@@ -93,15 +94,10 @@ def fetch_user_activity_for_notification(
     ).json()
 
     if request_indicates_expired_token(data):
-        print(f"Refreshing expired token.")
         user = refresh_tokens_for_user(user, client_id, client_secret)
-        print(
-            f"Fetching {notification.fitbit_user_id}'s activity for {formatted_date}."
+        return fetch_user_activity_for_notification(
+            notification, user, client_id, client_secret
         )
-        data = requests.get(
-            f"https://api.fitbit.com/1/user/{notification.fitbit_user_id}/activities/date/{formatted_date}.json",
-            headers={"Authorization": f"Bearer {user.fitbit_access_token}"},
-        ).json()
 
     return data
 
