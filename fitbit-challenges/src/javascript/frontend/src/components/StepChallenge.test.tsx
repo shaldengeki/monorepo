@@ -1,6 +1,11 @@
 import { getActivityLogs } from './StepChallenge';
 import React from 'react';
 
+const users = [
+    {'fitbitUserId': 'foo', 'displayName': 'foo', 'createdAt': 0, 'activities': []},
+    {'fitbitUserId': 'bar', 'displayName': 'bar', 'createdAt': 0, 'activities': []},
+];
+
 describe('getActivityLogs', () => {
     it ('should order results in chronological order', () => {
         expect(getActivityLogs([
@@ -22,7 +27,7 @@ describe('getActivityLogs', () => {
                 activeMinutes: 1,
                 distanceKm: 1
             },
-        ])).toEqual([
+        ], users)).toEqual([
             {
                 id: 2,
                 user: 'foo',
@@ -69,7 +74,7 @@ describe('getActivityLogs', () => {
                 activeMinutes: 1,
                 distanceKm: 1
             },
-        ])).toEqual([
+        ], users)).toEqual([
             {
                 id: 2,
                 user: 'foo',
@@ -113,7 +118,7 @@ describe('getActivityLogs', () => {
                 activeMinutes: 3,
                 distanceKm: 3
             },
-        ])).toEqual([
+        ], users)).toEqual([
             {
                 id: 1,
                 user: 'foo',
@@ -179,7 +184,7 @@ describe('getActivityLogs', () => {
                 activeMinutes: 3,
                 distanceKm: 3
             },
-        ])).toEqual([
+        ], users)).toEqual([
             {
                 id: 1,
                 user: 'foo',

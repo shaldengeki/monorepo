@@ -12,7 +12,10 @@ export const FETCH_WORKWEEK_HUSTLE_QUERY = gql`
           challenges(id: $id) {
               id
               challengeType
-              users
+              users {
+                fitbitUserId
+                displayName
+              }
               createdAt
               startAt
               endAt
@@ -55,12 +58,11 @@ const ChallengeView = () => {
     } else {
         const challenges: Challenge[] = data.challenges;
         const challenge = challenges[0];
-        const users = challenge.users;
         const activities: Activity[] = challenge.activities;
         if (challenge.challengeType === ChallengeType.WeekendWarrior) {
             innerContent = <WeekendWarrior
                 id={id}
-                users={users}
+                users={challenge.users}
                 startAt={challenge.startAt}
                 endAt={challenge.endAt}
                 ended={challenge.ended}
@@ -71,7 +73,7 @@ const ChallengeView = () => {
         } else {
             innerContent = <WorkweekHustle
                 id={id}
-                users={users}
+                users={challenge.users}
                 startAt={challenge.startAt}
                 endAt={challenge.endAt}
                 ended={challenge.ended}

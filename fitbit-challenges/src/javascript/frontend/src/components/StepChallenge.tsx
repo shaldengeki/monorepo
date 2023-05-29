@@ -2,6 +2,7 @@ import * as React from 'react';
 import _ from 'lodash'
 
 import Activity, {ActivityDelta} from '../types/Activity';
+import User from '../types/User';
 import UserLeaderboard from './UserLeaderboard';
 import UserActivityLog from './UserActivityLog';
 import {ActivityTotal, emptyActivity} from '../types/Activity';
@@ -22,7 +23,7 @@ export function getLatestActivityPerUserPerDay(activities: Activity[]): Activity
         .value();
 }
 
-export function getActivityLogs(activities: Activity[]): ActivityDelta[] {
+export function getActivityLogs(activities: Activity[], users: User[]): ActivityDelta[] {
     // Given a list of activity logs,
     // compute the deltas and return them as a list of new activities.
     return _.sortBy(
@@ -34,13 +35,15 @@ export function getActivityLogs(activities: Activity[]): ActivityDelta[] {
             }).sort((a: Activity, b: Activity): number => {
                 return a.createdAt > b.createdAt ? -1 : 0;
             });
+            const selectedUser = users.filter((user) => { return user.fitbitUserId === activity.user })[0];
             if (priorActivities.length < 1) {
                 // This is the first activity for the day.
                 return {
                     ...activity,
                     stepsDelta: activity.steps,
                     activeMinutesDelta: activity.activeMinutes,
-                    distanceKmDelta: activity.distanceKm
+                    distanceKmDelta: activity.distanceKm,
+                    user: selectedUser.displayName,
                 };
             } else {
                 // There's a prior activity for the day.
@@ -49,7 +52,8 @@ export function getActivityLogs(activities: Activity[]): ActivityDelta[] {
                     ...activity,
                     stepsDelta: (activity.steps - priorActivity.steps),
                     activeMinutesDelta: (activity.activeMinutes - priorActivity.activeMinutes),
-                    distanceKmDelta: (activity.distanceKm - priorActivity.distanceKm)
+                    distanceKmDelta: (activity.distanceKm - priorActivity.distanceKm),
+                    user: selectedUser.displayName,
                 }
             }
         }).filter((delta: ActivityDelta): boolean => {
@@ -63,7 +67,7 @@ export function getActivityLogs(activities: Activity[]): ActivityDelta[] {
 type StepChallengeProps = {
     challengeName: string;
     id: number;
-    users: string[];
+    users: User[];
     startAt: number;
     endAt: number;
     ended: boolean;
@@ -76,8 +80,9 @@ const StepChallenge = ({challengeName, id, users, startAt, endAt, ended, sealAt,
     // Compute the totals per user.
     const totalData: ActivityTotal[] = getLatestActivityPerUserPerDay(activities)
         .map((activity: Activity) => {
+            const selectedUser = users.filter((user) => { return user.fitbitUserId === activity.user; })[0];
             return {
-                "name": activity.user,
+                "name": selectedUser.displayName,
                 "value": activity.steps,
                 "unit": "steps",
             }
@@ -85,13 +90,13 @@ const StepChallenge = ({challengeName, id, users, startAt, endAt, ended, sealAt,
 
     const activityTotals = users.map((user, _) => {
         return {
-            name: user,
-            value: totalData.filter(at => at.name === user).reduce((acc, curr) => acc + curr.value, 0),
+            name: user.displayName,
+            value: totalData.filter(at => at.name === user.displayName).reduce((acc, curr) => acc + curr.value, 0),
             unit: "steps",
         };
     }).sort((a, b) => b.value - a.value);
 
-    const activityLogData: ActivityDelta[] = getActivityLogs(activities);
+    const activityLogData: ActivityDelta[] = getActivityLogs(activities, users);
 
     return (
         <>

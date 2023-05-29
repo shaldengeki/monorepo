@@ -12,7 +12,10 @@ export const FETCH_CHALLENGES_QUERY = gql`
           challenges {
               id
               challengeType
-              users
+              users {
+                fitbitUserId
+                displayName
+              }
               createdAt
               startAt
               endAt
@@ -44,7 +47,7 @@ type ChallengesListingTableEntryProps = {
 }
 
 const ChallengesListingTableEntry = ({ challenge }: ChallengesListingTableEntryProps) => {
-    const users = challenge.users.join(", ")
+    const users = challenge.users.map((user) => { return user.displayName; }).join(", ")
 
     const statusText = (challenge.ended || challenge.sealed) ? `ended ${formatDateDifference( getCurrentUnixTime() - challenge.endAt)} ago` : `ends in ${formatDateDifference(challenge.endAt - getCurrentUnixTime())}`
     let challengeName = "Workweek Hustle"
@@ -111,7 +114,7 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
         }
     )
 
-    const joinedUsers = challenge.users.join(",")
+    const joinedUsers = challenge.users.map((user) => { return user.displayName; }).join(", ")
     const challengeHook = (e: any) => {
         e.preventDefault();
         let startAt = 0;

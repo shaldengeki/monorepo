@@ -1,11 +1,12 @@
 import * as React from 'react';
 
 import Activity from '../types/Activity';
+import User from '../types/User';
 import StepChallenge from './StepChallenge';
 
 type WeekendWarriorProps = {
     id: number;
-    users: string[];
+    users: User[];
     startAt: number;
     endAt: number;
     ended: boolean;

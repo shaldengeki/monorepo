@@ -5,6 +5,7 @@ import {FETCH_WORKWEEK_HUSTLE_QUERY} from '../views/ChallengeView';
 import {getCurrentUnixTime} from '../DateUtils';
 import Activity, {emptyActivity} from '../types/Activity';
 import {CancelButton, SubmitButton} from '../components/FormButton';
+import User from '../types/User';
 
 const CREATE_USER_ACTIVITY_MUTATION = gql`
     mutation CreateUserActivity(
@@ -112,7 +113,7 @@ const MutationSuccessDialog = ({ reset }: MutationSuccessDialogProps) => {
 
 type UserActivityFormProps = {
     challengeId: number
-    users: string[]
+    users: User[]
     startAt: number
     endAt: number
     editedActivity: Activity
@@ -173,12 +174,12 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
 
     const id = (editedActivity.id === 0) ? 0 : editedActivity.id;
     const date = (editedActivity.recordDate === "") ? getDate(maxDate) : editedActivity.recordDate;
-    const selectedUser = (editedActivity.user === "") ? users[0] : editedActivity.user;
+    const selectedUser = (editedActivity.user === "") ? users[0].fitbitUserId : editedActivity.user;
     const userElements = users.map((user) => {
-        if (user === selectedUser) {
-            return <option key={user} value={user}>{user}</option>
+        if (user.fitbitUserId === selectedUser) {
+            return <option key={user.fitbitUserId} value={user.fitbitUserId}>{user.displayName}</option>
         } else {
-            return <option key={user} value={user}>{user}</option>
+            return <option key={user.fitbitUserId} value={user.fitbitUserId}>{user.displayName}</option>
         }
     });
     const steps = (editedActivity.steps === 0) ? 0 : editedActivity.steps;

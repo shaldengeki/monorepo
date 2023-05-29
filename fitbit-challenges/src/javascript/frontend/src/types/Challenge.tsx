@@ -1,4 +1,5 @@
 import Activity from "./Activity";
+import User from "./User";
 
 export enum ChallengeType {
     WorkweekHustle = 0,
@@ -8,7 +9,7 @@ export enum ChallengeType {
 type Challenge = {
     id: number
     challengeType: ChallengeType
-    users: string[]
+    users: User[]
     createdAt: number
     startAt: number
     endAt: number

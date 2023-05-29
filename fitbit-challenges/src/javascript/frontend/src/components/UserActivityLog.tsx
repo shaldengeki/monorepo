@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Activity, {ActivityDelta, emptyActivity, ActivityTotal, formatActivityDate} from '../types/Activity';
 import {formatDateDifference, getCurrentUnixTime} from '../DateUtils';
 import UserActivityForm from './UserActivityForm';
+import User from '../types/User';
 
 type PlacementResultEntryProps = {
     totals: ActivityTotal[]
@@ -68,7 +69,7 @@ const UserActivityLogEntry = ( {delta, editHook, sealed}: UserActivityLogEntryPr
 
 type UserActivityLogProps = {
     challengeId: number
-    users: string[]
+    users: User[]
     deltas: ActivityDelta[]
     totals: ActivityTotal[]
     startAt: number

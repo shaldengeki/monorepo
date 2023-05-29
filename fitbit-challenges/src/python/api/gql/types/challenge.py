@@ -15,8 +15,9 @@ from sqlalchemy.sql import func
 from typing import Any, Type
 
 from ....config import db
-from ....models import Challenge, UserActivity
+from ....models import Challenge, UserActivity, User
 from .user_activities import user_activity_type
+from .user import user_type
 
 
 def activities_resolver(challenge: Challenge, info, **args) -> list[UserActivity]:
@@ -33,6 +34,15 @@ def activities_resolver(challenge: Challenge, info, **args) -> list[UserActivity
     )
 
 
+def users_resolver(challenge: Challenge) -> list[User]:
+    user_ids = challenge.users.split(",")
+    return (
+        User.query.filter(User.fitbit_user_id.in_(user_ids))
+        .order_by(User.display_name)
+        .all()
+    )
+
+
 def challenge_fields() -> dict[str, GraphQLField]:
     return {
         "id": GraphQLField(
@@ -45,9 +55,9 @@ def challenge_fields() -> dict[str, GraphQLField]:
             resolve=lambda challenge, info, **args: challenge.challenge_type,
         ),
         "users": GraphQLField(
-            GraphQLNonNull(GraphQLList(GraphQLString)),
-            description="The users participating in the challenge, as a comma-separated string.",
-            resolve=lambda challenge, info, **args: challenge.users.split(","),
+            GraphQLNonNull(GraphQLList(user_type)),
+            description="The users participating in the challenge.",
+            resolve=lambda challenge, info, **args: users_resolver(challenge),
         ),
         "createdAt": GraphQLField(
             GraphQLNonNull(GraphQLInt),

@@ -12,7 +12,7 @@ class UserActivity(db.Model):  # type: ignore
         db.TIMESTAMP(timezone=True), default=datetime.datetime.utcnow, nullable=False
     )
     record_date = db.Column(db.DATE, default=datetime.date.today, nullable=False)
-    user = db.Column(db.Unicode(500), nullable=False)
+    user = db.Column(db.Unicode(100), nullable=False)
     steps = db.Column(db.Integer, nullable=False)
     active_minutes = db.Column(db.Integer, nullable=False)
     distance_km = db.Column(db.DECIMAL(5, 2), nullable=False)
