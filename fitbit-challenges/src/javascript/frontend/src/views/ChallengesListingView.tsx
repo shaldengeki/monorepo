@@ -126,7 +126,6 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
 
     const { data: fetchUsersData, loading: fetchUsersLoading, error: fetchUsersError } = useQuery(FETCH_USERS_QUERY);
 
-    const joinedUsers = challenge.users.map((user) => { return user.displayName; }).join(", ")
     const challengeHook = (e: any) => {
         e.preventDefault();
         let startAt = 0;

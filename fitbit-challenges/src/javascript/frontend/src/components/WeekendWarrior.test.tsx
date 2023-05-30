@@ -2,7 +2,18 @@ import { render, screen } from '@testing-library/react';
 import WeekendWarrior from './WeekendWarrior';
 import { MockedProvider } from '@apollo/react-testing';
 import React from 'react';
+import { FETCH_CURRENT_USER_QUERY } from './UserActivityForm';
 
+const testFetchCurrentUserMock = {
+    request: {
+      query: FETCH_CURRENT_USER_QUERY
+    },
+    result: {
+      data: {
+        currentUser: null
+      }
+    }
+  }
 
 it('should render when no activities exist', async () => {
     const users = [
@@ -10,7 +21,7 @@ it('should render when no activities exist', async () => {
         {'fitbitUserId': 'b', 'displayName': 'B', 'createdAt': 0, 'activities': []},
     ]
     render(
-        <MockedProvider mocks={[]}>
+        <MockedProvider mocks={[testFetchCurrentUserMock]}>
             <WeekendWarrior
                 id={1}
                 users={users}
@@ -37,7 +48,7 @@ it('should select just the latest activity per day', async () => {
         {'id': 2, 'user': users[0].fitbitUserId, 'createdAt': 1, 'recordDate': '1000-11-11', 'steps': 2, 'activeMinutes': 2, 'distanceKm': 2},
     ];
     render(
-        <MockedProvider mocks={[]}>
+        <MockedProvider mocks={[testFetchCurrentUserMock]}>
         <WeekendWarrior
             id={1}
             users={users}
