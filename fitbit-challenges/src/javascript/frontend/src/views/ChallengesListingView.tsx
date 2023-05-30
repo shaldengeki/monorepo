@@ -6,6 +6,7 @@ import Challenge, {ChallengeType, emptyChallenge} from "../types/Challenge";
 import {formatDateDifference, getCurrentUnixTime, nextMonday, nextSaturday} from '../DateUtils';
 import { Link } from 'react-router-dom';
 import {CancelButton, SubmitButton} from '../components/FormButton';
+import User from '../types/User';
 
 export const FETCH_CHALLENGES_QUERY = gql`
     query FetchChallenges {
@@ -23,6 +24,15 @@ export const FETCH_CHALLENGES_QUERY = gql`
               sealAt
               sealed
           }
+      }
+`;
+
+export const FETCH_USERS_QUERY = gql`
+      query FetchUsers {
+        users {
+            displayName
+            fitbitUserId
+        }
       }
 `;
 
@@ -102,7 +112,7 @@ type CreateChallengeFormProps = {
 }
 
 const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeFormProps) => {
-    const [createChallenge, { data, loading, error }] = useMutation(
+    const [createChallenge, { data: createChallengeData, loading: createChallengeLoading, error: createChallengeError }] = useMutation(
         CREATE_CHALLENGE_MUTATION,
         {
             refetchQueries: [
@@ -113,6 +123,8 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
             ]
         }
     )
+
+    const { data: fetchUsersData, loading: fetchUsersLoading, error: fetchUsersError } = useQuery(FETCH_USERS_QUERY);
 
     const joinedUsers = challenge.users.map((user) => { return user.displayName; }).join(", ")
     const challengeHook = (e: any) => {
@@ -141,25 +153,40 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
         <option key={0} value={0}>Workweek Hustle</option>,
         <option key={1} value={1}>Weekend Warrior</option>
     ]
+    let userElements: JSX.Element[] = [];
+    if (fetchUsersData) {
+        userElements = fetchUsersData.users.map((user: User) => {
+            return <option key={user.fitbitUserId} value={user.fitbitUserId}>{user.displayName}</option>
+        })
+    }
 
     return (
         <div>
-            { error && <p>Error creating challenge!</p> }
-            { loading && <p>Creating challenge...</p> }
-            { !data &&
+            { createChallengeError && <p>Error creating challenge!</p> }
+            { createChallengeLoading && <p>Creating challenge...</p> }
+            { !createChallengeData &&
             <form>
-                <input
-                    name="users"
-                    className="text-slate-800"
-                    value={joinedUsers}
-                    onChange={(e) => {
-                        editHook({
-                            ...challenge,
-                            users: e.target.value.trim().split(",").map((s) => s.trim()),
-                        })
-                    }}
-                    placeholder="Comma-separated users"
-                />
+                { fetchUsersLoading && <span>Loading users...</span>}
+                { fetchUsersError && <span>Error loading users!</span>}
+                { fetchUsersData &&
+                    <select
+                        className="rounded p-0.5"
+                        name="users"
+                        multiple
+                        onChange={(e) => {
+                            let users = [];
+                            for (let i = 0; i < e.target.selectedOptions.length; i++) {
+                                users.push(e.target.selectedOptions[i].value);
+                            }
+                            editHook({
+                                ...challenge,
+                                users
+                            })
+                        }}
+                    >
+                        {userElements}
+                    </select>
+                }
                 <select
                     className="rounded p-0.5"
                     name="challengeType"

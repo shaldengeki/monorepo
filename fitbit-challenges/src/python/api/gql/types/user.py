@@ -54,6 +54,17 @@ user_type = GraphQLObjectType(
 )
 
 
+def fetch_users(user_model: Type[User]) -> list[User]:
+    return user_model.query.all()
+
+
+def users_field(user_model: Type[User]) -> GraphQLField:
+    return GraphQLField(
+        GraphQLList(user_type),
+        resolve=lambda root, info, **args: fetch_users(user_model),
+    )
+
+
 def fetch_current_user(user_model: Type[User]) -> Optional[User]:
     if "fitbit_user_id" not in session:
         return None
