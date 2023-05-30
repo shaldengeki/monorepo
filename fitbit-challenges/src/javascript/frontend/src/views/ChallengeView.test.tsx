@@ -45,7 +45,11 @@ it('should handle when multiple challenges are found', async () => {
     const testChallenge = {
         id: 1,
         challengeType: 0,
-        users: "a,b,c",
+        users: [
+          {fitbitUserId: 'a', displayName: 'A'},
+          {fitbitUserId: 'b', displayName: 'B'},
+          {fitbitUserId: 'c', displayName: 'C'},
+        ],
         createdAt: 1,
         startAt: 1,
         endAt: 1,
