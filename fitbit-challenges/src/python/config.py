@@ -1,12 +1,11 @@
-import base64
-import hmac
-import hashlib
 import os
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
+
+from .fitbit_client import FitbitClient
 
 app = Flask(__name__)
 
@@ -21,9 +20,11 @@ if os.getenv("FRONTEND_PORT", None):
 frontend_url = "".join(frontend_url_parts)
 
 app.config.update(
-    FITBIT_CLIENT_ID=os.getenv("FITBIT_CLIENT_ID", "testing"),
-    FITBIT_CLIENT_SECRET=os.getenv("FITBIT_CLIENT_SECRET", "testing"),
-    FITBIT_SIGNING_KEY=os.getenv("FITBIT_CLIENT_SECRET", "testing") + "&",
+    FITBIT_CLIENT=FitbitClient(
+        logger=app.logger,
+        client_id=os.getenv("FITBIT_CLIENT_ID", "testing"),
+        client_secret=os.getenv("FITBIT_CLIENT_SECRET", "testing"),
+    ),
     FRONTEND_URL=frontend_url,
     SECRET_KEY=os.getenv("FLASK_SECRET_KEY", "testing"),
     SQLALCHEMY_DATABASE_URI="postgresql://{user}:{password}@{host}/{db}".format(
@@ -33,14 +34,6 @@ app.config.update(
         db=os.getenv("DATABASE_NAME", "api_development"),
     ),
 )
-
-
-def verify_fitbit_signature(header_signature: str, json_body: bytes) -> bool:
-    digest = hmac.digest(
-        app.config["FITBIT_SIGNING_KEY"].encode("utf-8"), json_body, hashlib.sha1
-    )
-    b64_encoded = base64.b64encode(digest)
-    return header_signature.encode("utf-8") == b64_encoded
 
 
 def verify_fitbit_verification(request_code: str) -> bool:

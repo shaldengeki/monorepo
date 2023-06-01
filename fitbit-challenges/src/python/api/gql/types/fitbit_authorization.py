@@ -1,7 +1,5 @@
-from base64 import b64encode
 import dataclasses
 from flask import session
-from hashlib import sha256
 import secrets
 from graphql import (
     GraphQLObjectType,
@@ -9,7 +7,8 @@ from graphql import (
     GraphQLNonNull,
     GraphQLString,
 )
-from urllib.parse import urlencode
+
+from ....fitbit_client import FitbitClient
 
 
 def fitbit_authorization_fields() -> dict[str, GraphQLField]:
@@ -33,37 +32,20 @@ class FitbitAuthorization:
     url: str
 
 
-def authorize_with_fitbit(fitbit_client_id: str):
+def authorize_with_fitbit(fitbit_client: FitbitClient):
     if "fitbit_code_verifier" not in session:
         code_verifier = secrets.token_hex()
         session["fitbit_code_verifier"] = code_verifier
     else:
         code_verifier = session["fitbit_code_verifier"]
 
-    code_challenge = (
-        b64encode(sha256(code_verifier.encode("utf-8")).digest())
-        .decode("utf-8")
-        .rstrip("=")
-        .replace("+", "-")
-        .replace("/", "_")
-    )
-    collections = ["activity", "heartrate", "profile", "social"]
-
-    url_parameters = {
-        "client_id": fitbit_client_id,
-        "response_type": "code",
-        "code_challenge": code_challenge,
-        "code_challenge_method": "S256",
-        "scope": " ".join(collections),
-    }
-    url = "https:///www.fitbit.com/oauth2/authorize?" + urlencode(url_parameters)
-    return FitbitAuthorization(url=url)
+    return FitbitAuthorization(url=fitbit_client.authorization_url(code_verifier))
 
 
 def authorize_with_fitbit_field(app) -> GraphQLField:
     return GraphQLField(
         fitbit_authorization_type,
         resolve=lambda root, info, **args: authorize_with_fitbit(
-            app.config["FITBIT_CLIENT_ID"]
+            app.config["FITBIT_CLIENT"]
         ),
     )
