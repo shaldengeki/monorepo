@@ -85,7 +85,7 @@ class FitbitClient:
             "code_challenge_method": "S256",
             "scope": " ".join(self.collections),
         }
-        return "https:///www.fitbit.com/oauth2/authorize?" + urlencode(url_parameters)
+        return "https://www.fitbit.com/oauth2/authorize?" + urlencode(url_parameters)
 
     def get_user_daily_activity_summary(
         self, user_id: str, access_token: str, date: datetime.datetime
