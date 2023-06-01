@@ -88,7 +88,7 @@ class FitbitClient:
         return "https:///www.fitbit.com/oauth2/authorize?" + urlencode(url_parameters)
 
     def get_user_daily_activity_summary(
-        user_id: str, access_token: str, date: datetime.datetime
+        self, user_id: str, access_token: str, date: datetime.datetime
     ) -> dict:
         formatted_date: str = date.date().strftime("%Y-%m-%d")
         return requests.get(

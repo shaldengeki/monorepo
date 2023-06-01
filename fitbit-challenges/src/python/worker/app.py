@@ -57,7 +57,7 @@ def fetch_user_activity_for_notification(
     client: FitbitClient,
 ) -> dict:
     data = client.get_user_daily_activity_summary(
-        user.fitbit_access_token, notification.date
+        user.fitbit_user_id, user.fitbit_access_token, notification.date
     )
     if client.request_indicates_expired_token(data):
         user = refresh_tokens_for_user(user, client)
