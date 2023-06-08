@@ -105,9 +105,10 @@ const MutationErrorDialog = ({ error, reset }: MutationErrorDialogProps) => {
 
 type MutationSuccessDialogProps = {
     reset: Function
+    user?: string
 }
 
-const MutationSuccessDialog = ({ reset }: MutationSuccessDialogProps) => {
+const MutationSuccessDialog = ({ reset, user }: MutationSuccessDialogProps) => {
     return (
         <>
             <dialog className="absolute inset-0" open>
@@ -116,7 +117,7 @@ const MutationSuccessDialog = ({ reset }: MutationSuccessDialogProps) => {
                     Close
                 </CancelButton>
             </dialog>
-            <Confetti />
+            { user !== '76TSHW' && <Confetti /> }
         </>
     );
 }
@@ -309,12 +310,14 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
             createUserActivityData &&
                 <MutationSuccessDialog
                     reset={createUserActivityReset}
+                    user={createUserActivityData.user}
                 />
         }
         {
             updateUserActivityData &&
                 <MutationSuccessDialog
                     reset={updateUserActivityReset}
+                    user={updateUserActivityData.user}
                 />
         }
     </>;

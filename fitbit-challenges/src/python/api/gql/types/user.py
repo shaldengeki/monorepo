@@ -1,4 +1,4 @@
-from flask import session
+from flask import Flask, session
 from graphql import (
     GraphQLObjectType,
     GraphQLField,
@@ -65,7 +65,11 @@ def users_field(user_model: Type[User]) -> GraphQLField:
     )
 
 
-def fetch_current_user(user_model: Type[User]) -> Optional[User]:
+def fetch_current_user(app: Flask, user_model: Type[User]) -> Optional[User]:
+    if app.config["DEBUG"]:
+        # In development, user is logged in.
+        return user_model.query.first()
+
     if "fitbit_user_id" not in session:
         return None
     user = user_model.query.filter(
@@ -77,8 +81,8 @@ def fetch_current_user(user_model: Type[User]) -> Optional[User]:
     return user
 
 
-def current_user_field(user_model: Type[User]) -> GraphQLField:
+def current_user_field(app: Flask, user_model: Type[User]) -> GraphQLField:
     return GraphQLField(
         user_type,
-        resolve=lambda root, info, **args: fetch_current_user(user_model),
+        resolve=lambda root, info, **args: fetch_current_user(app, user_model),
     )

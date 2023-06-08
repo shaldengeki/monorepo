@@ -17,7 +17,7 @@ def Schema(models, app):
             fields={
                 "challenges": challenges_field(models.Challenge),
                 "activities": activities_field(models.UserActivity),
-                "currentUser": current_user_field(models.User),
+                "currentUser": current_user_field(app, models.User),
                 "users": users_field(models.User),
             },
         ),
