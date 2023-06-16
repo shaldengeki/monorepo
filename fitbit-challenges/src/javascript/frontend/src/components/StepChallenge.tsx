@@ -5,7 +5,7 @@ import Activity, {ActivityDelta} from '../types/Activity';
 import User from '../types/User';
 import UserLeaderboard from './UserLeaderboard';
 import UserActivityLog from './UserActivityLog';
-import {ActivityTotal, emptyActivity} from '../types/Activity';
+import {ActivityTotal, emptyActivity, emptyActivityDelta} from '../types/Activity';
 
 export function getLatestActivityPerUserPerDay(activities: Activity[]): Activity[] {
     // There might be many logs for a single date.
@@ -62,6 +62,60 @@ export function getActivityLogs(activities: Activity[], users: User[]): Activity
         }),
         'createdAt'
     );
+}
+
+export function groupActivityLogs(deltas: ActivityDelta[], users: User[]): ActivityDelta[] {
+    let lastRecordPerUser = _.fromPairs(
+        users.map((user) => {
+            let initialDelta = {
+                ...emptyActivityDelta,
+                user: user.displayName,
+            }
+            return [user.displayName, initialDelta];
+        })
+    );
+    let resultDeltas: ActivityDelta[] = [];
+    deltas.forEach((delta) => {
+        let lastRecord = lastRecordPerUser[delta.user];
+        if (delta.recordDate !== lastRecord.recordDate && lastRecord.id !== 0) {
+            resultDeltas.push(lastRecord);
+            lastRecordPerUser[delta.user] = {
+                ...emptyActivityDelta,
+                user: delta.user,
+            };
+        } else {
+            lastRecordPerUser[delta.user] = {
+                ...lastRecordPerUser[delta.user],
+                id: delta.id,
+                createdAt: delta.createdAt,
+                recordDate: delta.recordDate,
+                steps: delta.steps,
+                stepsDelta: delta.stepsDelta + lastRecord.stepsDelta,
+                activeMinutes: delta.activeMinutes,
+                activeMinutesDelta: delta.activeMinutesDelta + lastRecord.activeMinutesDelta,
+                distanceKm: delta.distanceKm,
+                distanceKmDelta: delta.distanceKmDelta + lastRecord.distanceKmDelta,
+            }
+            lastRecord = lastRecordPerUser[delta.user];
+
+            if (lastRecord.stepsDelta >= 1000) {
+                resultDeltas.push(lastRecord);
+                lastRecordPerUser[delta.user] = {
+                    ...emptyActivityDelta,
+                    user: delta.user,
+                };
+            }
+        }
+    })
+
+    _.sortBy(
+        Object.values(lastRecordPerUser).filter(record => record.id !== 0),
+        'createdAt'
+    ).forEach((record) => {
+        resultDeltas.push(record)
+    })
+
+    return resultDeltas;
 }
 
 type StepChallengeProps = {

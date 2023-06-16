@@ -1,4 +1,4 @@
-import { getActivityLogs } from './StepChallenge';
+import { getActivityLogs, groupActivityLogs } from './StepChallenge';
 import React from 'react';
 
 const users = [
@@ -223,4 +223,69 @@ describe('getActivityLogs', () => {
             },
         ]);
     });
+    it ('should group together activities up to the 1k step limit', () => {
+        expect(groupActivityLogs([
+            {
+                id: 1,
+                user: 'foo',
+                recordDate: '',
+                createdAt: 0,
+                steps: 999,
+                stepsDelta: 999,
+                activeMinutes: 1,
+                activeMinutesDelta: 1,
+                distanceKm: 1,
+                distanceKmDelta: 1,
+            },
+            {
+                id: 2,
+                user: 'foo',
+                recordDate: '',
+                createdAt: 1,
+                steps: 1000,
+                stepsDelta: 1,
+                activeMinutes: 1,
+                activeMinutesDelta: 0,
+                distanceKm: 1,
+                distanceKmDelta: 0,
+            },
+            {
+                id: 3,
+                user: 'foo',
+                recordDate: '',
+                createdAt: 2,
+                steps: 1001,
+                stepsDelta: 1,
+                activeMinutes: 1,
+                activeMinutesDelta: 0,
+                distanceKm: 1,
+                distanceKmDelta: 0,
+            },
+        ], users)).toEqual([
+            {
+                id: 2,
+                user: 'foo',
+                recordDate: '',
+                createdAt: 1,
+                steps: 1000,
+                stepsDelta: 1000,
+                activeMinutes: 1,
+                activeMinutesDelta: 1,
+                distanceKm: 1,
+                distanceKmDelta: 1
+            },
+            {
+                id: 3,
+                user: 'foo',
+                recordDate: '',
+                createdAt: 2,
+                steps: 1001,
+                stepsDelta: 1,
+                activeMinutes: 1,
+                activeMinutesDelta: 0,
+                distanceKm: 1,
+                distanceKmDelta: 0
+            },
+        ])
+    })
 });

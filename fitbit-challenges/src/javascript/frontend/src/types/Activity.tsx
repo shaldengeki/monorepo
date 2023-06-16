@@ -31,6 +31,19 @@ export type ActivityDelta = {
     distanceKmDelta: number;
 }
 
+export const emptyActivityDelta: ActivityDelta = {
+    id: 0,
+    user: '',
+    createdAt: 0,
+    recordDate: '',
+    steps: 0,
+    stepsDelta: 0,
+    activeMinutes: 0,
+    activeMinutesDelta: 0,
+    distanceKm: 0,
+    distanceKmDelta: 0,
+}
+
 export type ActivityTotal = {
     name: string;
     value: number;
