@@ -60,7 +60,7 @@ class FitbitClient:
         )
 
         if auth_request.status_code != 200:
-            self.logger.warn(
+            self.logger.warning(
                 f"Could not fetch token data. url={auth_request.url}, headers={auth_request.headers}, body={auth_request.text}"
             )
             return None
