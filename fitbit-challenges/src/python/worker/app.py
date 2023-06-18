@@ -34,12 +34,6 @@ def maybe_fetch_subscription_notification() -> Optional[SubscriptionNotification
     return notification
 
 
-def fetch_user_for_notification(
-    notification: SubscriptionNotification,
-) -> Optional[User]:
-    return User.query.filter(User.fitbit_user_id == notification.fitbit_user_id).first()
-
-
 def refresh_tokens_for_user(user: User, client: FitbitClient) -> User:
     data = client.refresh_user_tokens(user.fitbit_refresh_token)
     user.fitbit_access_token = data["access_token"]
@@ -53,15 +47,16 @@ def refresh_tokens_for_user(user: User, client: FitbitClient) -> User:
 
 def fetch_user_activity_for_notification(
     notification: SubscriptionNotification,
-    user: User,
     client: FitbitClient,
 ) -> dict:
     data = client.get_user_daily_activity_summary(
-        user.fitbit_user_id, user.fitbit_access_token, notification.date
+        notification.user.fitbit_user_id,
+        notification.user.fitbit_access_token,
+        notification.date,
     )
     if client.request_indicates_expired_token(data):
-        user = refresh_tokens_for_user(user, client)
-        return fetch_user_activity_for_notification(notification, user, client)
+        notification.user = refresh_tokens_for_user(notification.user, client)
+        return fetch_user_activity_for_notification(notification, client)
 
     return data
 
@@ -73,17 +68,7 @@ def process_subscription_notifications(client: FitbitClient) -> None:
 
     try:
         # Fetch the user's activity for this date.
-        user = fetch_user_for_notification(notification)
-        if user is None:
-            print(
-                f"No user found for notification {notification}, marking as done and skipping."
-            )
-            notification.processed_at = datetime.datetime.now().astimezone(timezone.utc)
-            db.session.add(notification)
-            db.session.commit()
-            return None
-
-        activity = fetch_user_activity_for_notification(notification, user, client)
+        activity = fetch_user_activity_for_notification(notification, client)
         active_minutes: int = (
             activity["summary"]["veryActiveMinutes"]
             + activity["summary"]["fairlyActiveMinutes"]
@@ -118,12 +103,14 @@ def process_subscription_notifications(client: FitbitClient) -> None:
             or abs(float(last_activity.distance_km) - float(new_activity.distance_km))
             >= 0.01
         ):
-            user.synced_at = datetime.datetime.now().astimezone(timezone.utc)
+            notification.user.synced_at = datetime.datetime.now().astimezone(
+                timezone.utc
+            )
 
             db.session.add(new_activity)
-            db.session.add(user)
+            db.session.add(notification.user)
             db.session.commit()
-            print(f"Recorded new activity for {user.fitbit_user_id}.")
+            print(f"Recorded new activity for {notification.user.fitbit_user_id}.")
     except:
         notification.processed_at = None
         db.session.add(notification)
