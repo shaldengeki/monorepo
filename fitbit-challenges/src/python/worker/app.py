@@ -15,23 +15,28 @@ from ..models import SubscriptionNotification, User, UserActivity
 
 def maybe_fetch_subscription_notification() -> Optional[SubscriptionNotification]:
     # Lock a job, if it exists.
-    notification = (
-        SubscriptionNotification.query.filter(
-            SubscriptionNotification.processed_at == None
+    notification_row = db.session.execute(
+        update(SubscriptionNotification)
+        .where(
+            SubscriptionNotification.id.in_(
+                SubscriptionNotification.query.with_entities(
+                    SubscriptionNotification.id
+                )
+                .filter(SubscriptionNotification.processed_at == None)
+                .order_by(desc(SubscriptionNotification.created_at))
+                .limit(1)
+            )
         )
-        .order_by(desc(SubscriptionNotification.created_at))
-        .first()
-    )
+        .values(processed_at=now())
+        .returning(SubscriptionNotification)
+    ).first()
 
-    if not notification:
+    if notification_row is None:
         return None
 
-    notification.processed_at = datetime.datetime.now().astimezone(timezone.utc)
-    db.session.add(notification)
-    db.session.commit()
-    print(f"Subscription notification locked for processing: {notification.id}")
+    print(f"Subscription notification locked for processing: {notification_row[0].id}")
 
-    return notification
+    return notification_row[0]
 
 
 def refresh_tokens_for_user(user: User, client: FitbitClient) -> User:
