@@ -18,7 +18,8 @@ class Challenge(db.Model):  # type: ignore
     challenge_type: Mapped[int]
     users: Mapped[str]
     created_at: Mapped[datetime.datetime] = mapped_column(
-        db.TIMESTAMP(timezone=True), default=datetime.datetime.utcnow
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
     )
     start_at: Mapped[datetime.datetime] = mapped_column(db.TIMESTAMP(timezone=True))
     end_at: Mapped[datetime.datetime] = mapped_column(db.TIMESTAMP(timezone=True))
@@ -56,7 +57,8 @@ class SubscriptionNotification(db.Model):  # type: ignore
 
     id: Mapped[int] = mapped_column(primary_key=True)
     created_at: Mapped[datetime.datetime] = mapped_column(
-        db.TIMESTAMP(timezone=True), default=datetime.datetime.utcnow
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
     )
     processed_at: Mapped[Optional[datetime.datetime]] = mapped_column(
         db.TIMESTAMP(timezone=True)
@@ -77,7 +79,8 @@ class User(db.Model):  # type: ignore
     fitbit_user_id: Mapped[str] = mapped_column(db.Unicode(100), primary_key=True)
     display_name: Mapped[str]
     created_at: Mapped[datetime.datetime] = mapped_column(
-        db.TIMESTAMP(timezone=True), default=datetime.datetime.utcnow
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
     )
     fitbit_access_token: Mapped[str]
     fitbit_refresh_token: Mapped[str]
@@ -164,10 +167,12 @@ class UserActivity(db.Model):  # type: ignore
     __tablename__ = "user_activities"
     id: Mapped[int] = mapped_column(primary_key=True)
     created_at: Mapped[datetime.datetime] = mapped_column(
-        db.TIMESTAMP(timezone=True), default=datetime.datetime.utcnow
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
     )
     updated_at: Mapped[datetime.datetime] = mapped_column(
-        db.TIMESTAMP(timezone=True), default=datetime.datetime.utcnow
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
     )
     record_date: Mapped[datetime.date] = mapped_column(
         db.DATE, default=datetime.date.today
