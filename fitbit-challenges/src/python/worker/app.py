@@ -115,7 +115,8 @@ def process_subscription_notifications(client: FitbitClient) -> None:
         if not last_activity or (
             last_activity.steps != new_activity.steps
             or last_activity.active_minutes != new_activity.active_minutes
-            or abs(float(last_activity.distance_km) - new_activity.distance_km) >= 0.01
+            or abs(float(last_activity.distance_km) - float(new_activity.distance_km))
+            >= 0.01
         ):
             user.synced_at = datetime.datetime.now().astimezone(timezone.utc)
 

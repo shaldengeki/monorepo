@@ -25,7 +25,7 @@ def upgrade():
     op.alter_column(
         "challenges",
         "challenge_type",
-        existing_server_default=0,
+        existing_server_default=0,  # type: ignore
         server_default=None,
         existing_type=sa.Integer,
         existing_nullable=True,

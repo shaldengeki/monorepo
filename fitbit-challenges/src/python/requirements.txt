@@ -4,13 +4,13 @@ flask-cors
 Flask-Migrate>=4.0.4
 Flask-SQLAlchemy>=3.0.3
 graphql-core
-git+https://github.com/graphql-python/graphql-server@8b9639e1575a20c7322fb8f19459d743d7201410#egg=graphql-server[flask]
+graphql-server[flask]==3.0.0b6
 pre-commit
 psycopg2
 pylint
 pytest
 requests
-sqlalchemy
-sqlalchemy-stubs
+SQLAlchemy>=2.0.16
+SQLAlchemy[mypy]>=2.0.16
 types-Flask-Cors
-types-Flask-Migrate
+types-requests

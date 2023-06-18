@@ -182,13 +182,13 @@ def update_user_activity(
         user_activity.user = args.get("user")
 
     if "steps" in args:
-        user_activity.steps = int(args.get("steps"))
+        user_activity.steps = int(args["steps"])
 
     if "activeMinutes" in args:
-        user_activity.active_minutes = int(args.get("activeMinutes"))
+        user_activity.active_minutes = int(args["activeMinutes"])
 
     if "distanceKm" in args:
-        user_activity.distance_km = float(args.get("distanceKm"))
+        user_activity.distance_km = float(args["distanceKm"])
 
     user_activity.updated_at = now()
 

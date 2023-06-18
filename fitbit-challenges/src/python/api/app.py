@@ -1,13 +1,9 @@
 import datetime
-import requests
 
-from base64 import b64encode
 from datetime import timezone
 from flask import abort, redirect, request, session
-from graphql_server.flask import GraphQLView
-from sqlalchemy.dialects.postgresql import insert
+from graphql_server.flask import GraphQLView  # type: ignore
 from typing import Optional
-from urllib.parse import urlencode
 
 from ..config import app, db, verify_fitbit_verification
 from .. import models
@@ -37,6 +33,9 @@ def fitbit_notifications():
     if not app.config["FITBIT_CLIENT"].verify_signature(
         request.headers.get("X-Fitbit-Signature", ""), request.get_data()
     ):
+        abort(400)
+
+    if not isinstance(request.json, list):
         abort(400)
 
     for notification_data in request.json:
@@ -80,8 +79,12 @@ def fitbit_authorize():
     user: models.User = models.User.query.filter(
         models.User.fitbit_user_id == token_data["user_id"]
     ).first()
-    user.create_subscription()
+    subscription: Optional[models.FitbitSubscription] = user.create_subscription(
+        app.config["FITBIT_CLIENT"]
+    )
     db.session.add(user)
+    if subscription is not None:
+        db.session.add(subscription)
     db.session.commit()
 
     session["fitbit_user_id"] = token_data["user_id"]

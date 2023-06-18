@@ -4,9 +4,11 @@ import requests
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import mapped_column
 from typing import Optional
 
-from ..config import db
+from .config import db
+from .fitbit_client import FitbitClient
 
 
 class Challenge(db.Model):  # type: ignore
@@ -26,7 +28,7 @@ class Challenge(db.Model):  # type: ignore
 
     @property
     def ended(self) -> bool:
-        return datetime.datetime.now() >= self.end_at
+        return datetime.datetime.now(tz=datetime.timezone.utc) >= self.end_at
 
     @property
     def seal_at(self) -> datetime.datetime:
@@ -34,7 +36,19 @@ class Challenge(db.Model):  # type: ignore
 
     @property
     def sealed(self) -> bool:
-        return datetime.datetime.now() >= self.seal_at
+        return datetime.datetime.now(tz=datetime.timezone.utc) >= self.seal_at
+
+
+class FitbitSubscription(db.Model):  # type: ignore
+    __tablename__ = "fitbit_subscriptions"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    fitbit_user_id: Mapped[str] = mapped_column(ForeignKey("users.fitbit_user_id"))
+    user: Mapped["User"] = relationship(back_populates="fitbit_subscription")
+
+    def __repr__(self) -> str:
+        return "<FitbitSubscription {fitbit_user_id}>".format(
+            fitbit_user_id=self.fitbit_user_id
+        )
 
 
 class SubscriptionNotification(db.Model):  # type: ignore
@@ -44,7 +58,9 @@ class SubscriptionNotification(db.Model):  # type: ignore
     created_at: Mapped[datetime.datetime] = mapped_column(
         db.TIMESTAMP(timezone=True), default=datetime.datetime.utcnow
     )
-    processed_at: Mapped[datetime.datetime] = mapped_column(db.TIMESTAMP(timezone=True))
+    processed_at: Mapped[Optional[datetime.datetime]] = mapped_column(
+        db.TIMESTAMP(timezone=True)
+    )
     collection_type: Mapped[str]
     date: Mapped[datetime.datetime] = mapped_column(db.TIMESTAMP(timezone=True))
     fitbit_user_id: Mapped[str] = mapped_column(ForeignKey("users.fitbit_user_id"))
@@ -68,8 +84,10 @@ class User(db.Model):  # type: ignore
     synced_at: Mapped[Optional[datetime.datetime]] = mapped_column(
         db.TIMESTAMP(timezone=True), nullable=True
     )
-    fitbit_subscription_id: Mapped[int] = mapped_column(db.Identity())
 
+    fitbit_subscription: Mapped["FitbitSubscription"] = relationship(
+        back_populates="user"
+    )
     subscription_notifications: Mapped[list["SubscriptionNotification"]] = relationship(
         back_populates="user"
     )
@@ -122,19 +140,24 @@ class User(db.Model):  # type: ignore
             )
         )
 
-    def create_subscription(self) -> requests.Response:
-        sub_request = requests.post(
-            f"https://api.fitbit.com/1/user/{self.fitbit_user_id}/activities/apiSubscriptions/{self.fitbit_subscription_id}.json",
-            headers={
-                "Authorization": f"Bearer {self.fitbit_access_token}",
-                "Accept": "application/json",
-            },
-            json={},
-        )
+    def create_subscription(
+        self, client: FitbitClient
+    ) -> Optional["FitbitSubscription"]:
+        if self.fitbit_subscription is not None:
+            return self.fitbit_subscription
 
-        if sub_request.status_code not in (200, 201):
-            actual_subscription_id = sub_request.json()["subscriptionId"]
-            self.fitbit_subscription_id = actual_subscription_id
+        new_subscription = FitbitSubscription(fitbit_user_id=self.fitbit_user_id)
+        db.session.add(new_subscription)
+        db.session.commit()
+
+        if not client.create_subscription(
+            self.fitbit_user_id, new_subscription.id, self.fitbit_access_token
+        ):
+            db.session.delete(new_subscription)
+            db.session.commit()
+            return None
+
+        return new_subscription
 
 
 class UserActivity(db.Model):  # type: ignore

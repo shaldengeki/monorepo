@@ -34,3 +34,5 @@ jobs:
         working-directory: ./src/python
       - run: pytest
         working-directory: ./src/python
+      - run: mypy .
+        working-directory: ./src/python

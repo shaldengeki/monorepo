@@ -34,7 +34,7 @@ class FitbitAuthorization:
 
 def authorize_with_fitbit(fitbit_client: FitbitClient):
     if "fitbit_code_verifier" not in session:
-        code_verifier = secrets.token_hex()
+        code_verifier = fitbit_client.create_code_verifier()
         session["fitbit_code_verifier"] = code_verifier
     else:
         code_verifier = session["fitbit_code_verifier"]

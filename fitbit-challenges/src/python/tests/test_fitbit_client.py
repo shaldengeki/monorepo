@@ -7,7 +7,7 @@ from typing import Optional
 
 
 @pytest.fixture
-def default_client():
+def default_client() -> FitbitClient:
     return FitbitClient(
         logger=logging.Logger("test-fitbit-client"),
         client_id="test-client-id",
@@ -31,11 +31,11 @@ class MockPost:
         self.headers = headers
         self.text = str(self.response)
 
-    def json(self):
+    def json(self) -> dict[str, str]:
         return self.response
 
 
-def test_signing_key(default_client) -> None:
+def test_signing_key(default_client: FitbitClient) -> None:
     assert "test-client-secret&" == default_client.signing_key
 
 
@@ -154,15 +154,13 @@ def test_get_token_data_with_successful_request(
 def test_get_token_data_with_failed_request(
     default_client: FitbitClient, monkeypatch
 ) -> None:
-    response = None
+    response = {"error": "some-error"}
 
     def mock_post(*args, **kwargs) -> MockPost:
         return MockPost(response, 400)
 
     monkeypatch.setattr(requests, "post", mock_post)
-    assert response == default_client.get_token_data(
-        "test-auth-code", "test-code-verifier"
-    )
+    assert default_client.get_token_data("test-auth-code", "test-code-verifier") is None
 
 
 def test_get_user_daily_activity_summary_with_successful_request(
@@ -182,7 +180,7 @@ def test_get_user_daily_activity_summary_with_successful_request(
 def test_get_user_daily_activity_summary_with_failed_request(
     default_client: FitbitClient, monkeypatch
 ) -> None:
-    response = {"errors": ["some errors"]}
+    response = {"error": "some-error"}
 
     def mock_get(*args, **kwargs) -> MockPost:
         return MockPost(response, 400)
@@ -208,7 +206,7 @@ def test_refresh_user_tokens_with_successful_request(
 def test_refresh_user_tokens_with_failed_request(
     default_client: FitbitClient, monkeypatch
 ) -> None:
-    response = None
+    response = {"error": "some-error"}
 
     def mock_post(*args, **kwargs) -> MockPost:
         return MockPost(response, 400)
@@ -216,3 +214,29 @@ def test_refresh_user_tokens_with_failed_request(
     monkeypatch.setattr(requests, "post", mock_post)
     with pytest.raises(ValueError):
         default_client.refresh_user_tokens("test-refresh-token")
+
+
+def test_create_subscription_with_successful_request(
+    default_client: FitbitClient, monkeypatch
+) -> None:
+    response = {"expected_field": "expected_value"}
+
+    def mock_post(*args, **kwargs) -> MockPost:
+        return MockPost(response, 200)
+
+    monkeypatch.setattr(requests, "post", mock_post)
+    assert default_client.create_subscription("test-user-id", 42, "test-access-token")
+
+
+def test_create_subscription_with_failed_request(
+    default_client: FitbitClient, monkeypatch
+) -> None:
+    response = {"error": "some-error"}
+
+    def mock_post(*args, **kwargs) -> MockPost:
+        return MockPost(response, 400)
+
+    monkeypatch.setattr(requests, "post", mock_post)
+    assert not default_client.create_subscription(
+        "test-user-id", 42, "test-access-token"
+    )
