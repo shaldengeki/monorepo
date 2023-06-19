@@ -206,7 +206,10 @@ class BingoCard(db.Model):  # type: ignore
 
     user: Mapped["User"] = relationship(back_populates="bingo_cards")
     challenge: Mapped["Challenge"] = relationship(back_populates="bingo_card")
-    bingo_tiles: Mapped[list["BingoTile"]] = relationship(back_populates="bingo_card")
+    bingo_tiles: Mapped[list["BingoTile"]] = relationship(
+        back_populates="bingo_card",
+        order_by="(BingoTile.coordinate_y, BingoTile.coordinate_x)",
+    )
 
     def __repr__(self) -> str:
         return "<BingoCard {id}>".format(id=self.id)
