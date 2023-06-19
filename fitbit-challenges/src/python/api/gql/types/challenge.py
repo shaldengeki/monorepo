@@ -33,7 +33,7 @@ def challenge_fields() -> dict[str, GraphQLField]:
         "users": GraphQLField(
             GraphQLNonNull(GraphQLList(user_type)),
             description="The users participating in the challenge.",
-            resolve=lambda challenge, info, **args: challenge.users_list(),
+            resolve=lambda challenge, info, **args: challenge.users_list,
         ),
         "createdAt": GraphQLField(
             GraphQLNonNull(GraphQLInt),
