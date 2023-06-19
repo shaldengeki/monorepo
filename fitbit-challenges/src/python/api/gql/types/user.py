@@ -7,22 +7,15 @@ from graphql import (
     GraphQLNonNull,
     GraphQLString,
 )
-from sqlalchemy import desc
 from typing import Type, Optional
 
-from ....models import User, UserActivity
+from ....models import User
 from .user_activities import user_activity_type
 
 
-def activities_resolver(user: User, info, **args) -> list[UserActivity]:
-    return (
-        UserActivity.query.filter(UserActivity.user == user.fitbit_user_id)
-        .order_by(desc(UserActivity.created_at))
-        .all()
-    )
-
-
 def user_fields() -> dict[str, GraphQLField]:
+    from .challenge import challenge_type
+
     return {
         "fitbitUserId": GraphQLField(
             GraphQLNonNull(GraphQLString),
@@ -42,7 +35,30 @@ def user_fields() -> dict[str, GraphQLField]:
         "activities": GraphQLField(
             GraphQLNonNull(GraphQLList(user_activity_type)),
             description="The activities recorded by this user.",
-            resolve=activities_resolver,
+            resolve=lambda user, *args, **kwargs: sorted(
+                user.activities, key=lambda a: a.created_at, reverse=True
+            ),
+        ),
+        "challenges": GraphQLField(
+            GraphQLNonNull(GraphQLList(challenge_type)),
+            description="The list of challenges this user has ever participated in.",
+            resolve=lambda user, *args, **kwargs: sorted(
+                user.challenges(), key=lambda c: c.created_at, reverse=True
+            ),
+        ),
+        "activeChallenges": GraphQLField(
+            GraphQLNonNull(GraphQLList(challenge_type)),
+            description="The list of challenges this user is currently participating in.",
+            resolve=lambda user, *args, **kwargs: sorted(
+                user.active_challenges(), key=lambda c: c.created_at, reverse=True
+            ),
+        ),
+        "pastChallenges": GraphQLField(
+            GraphQLNonNull(GraphQLList(challenge_type)),
+            description="The list of past challenges this user has participated in.",
+            resolve=lambda user, *args, **kwargs: sorted(
+                user.past_challenges(), key=lambda c: c.created_at, reverse=True
+            ),
         ),
     }
 

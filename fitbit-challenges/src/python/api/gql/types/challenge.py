@@ -11,36 +11,12 @@ from graphql import (
     GraphQLString,
 )
 from sqlalchemy import desc
-from sqlalchemy.sql import func
 from typing import Any, Type
 
 from ....config import db
-from ....models import Challenge, UserActivity, User
+from ....models import Challenge
 from .user_activities import user_activity_type
 from .user import user_type
-
-
-def activities_resolver(challenge: Challenge, info, **args) -> list[UserActivity]:
-    return (
-        UserActivity.query.filter(UserActivity.user.in_(challenge.users.split(",")))
-        .filter(
-            func.date_trunc("day", UserActivity.record_date)
-            >= func.date_trunc("day", challenge.start_at)
-        )
-        .filter(UserActivity.record_date < challenge.end_at)
-        .filter(UserActivity.created_at < challenge.seal_at)
-        .order_by(desc(UserActivity.created_at))
-        .all()
-    )
-
-
-def users_resolver(challenge: Challenge) -> list[User]:
-    user_ids = challenge.users.split(",")
-    return (
-        User.query.filter(User.fitbit_user_id.in_(user_ids))
-        .order_by(User.display_name)
-        .all()
-    )
 
 
 def challenge_fields() -> dict[str, GraphQLField]:
@@ -57,7 +33,7 @@ def challenge_fields() -> dict[str, GraphQLField]:
         "users": GraphQLField(
             GraphQLNonNull(GraphQLList(user_type)),
             description="The users participating in the challenge.",
-            resolve=lambda challenge, info, **args: users_resolver(challenge),
+            resolve=lambda challenge, info, **args: challenge.users_list(),
         ),
         "createdAt": GraphQLField(
             GraphQLNonNull(GraphQLInt),
@@ -94,7 +70,7 @@ def challenge_fields() -> dict[str, GraphQLField]:
         "activities": GraphQLField(
             GraphQLNonNull(GraphQLList(user_activity_type)),
             description="The activities recorded as part of this challenge.",
-            resolve=activities_resolver,
+            resolve=lambda challenge, *args, **kwargs: challenge.activities(),
         ),
     }
 

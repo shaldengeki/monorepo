@@ -1,10 +1,12 @@
 import datetime
 import decimal
 import requests
-from sqlalchemy import ForeignKey
+from sqlalchemy import desc, ForeignKey
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.sql import func
+from sqlalchemy.sql.functions import now
 from typing import Generator, Optional
 
 from .config import db
@@ -40,6 +42,28 @@ class Challenge(db.Model):  # type: ignore
     @property
     def sealed(self) -> bool:
         return datetime.datetime.now(tz=datetime.timezone.utc) >= self.seal_at
+
+    @property
+    def users_list(self) -> list["User"]:
+        user_ids = self.users.split(",")
+        return (
+            User.query.filter(User.fitbit_user_id.in_(user_ids))
+            .order_by(User.display_name)
+            .all()
+        )
+
+    def activities(self) -> list["UserActivity"]:
+        return (
+            UserActivity.query.filter(UserActivity.user.in_(self.users.split(",")))
+            .filter(
+                func.date_trunc("day", UserActivity.record_date)
+                >= func.date_trunc("day", self.start_at)
+            )
+            .filter(UserActivity.record_date < self.end_at)
+            .filter(UserActivity.created_at < self.seal_at)
+            .order_by(desc(UserActivity.created_at))
+            .all()
+        )
 
 
 class FitbitSubscription(db.Model):  # type: ignore
@@ -164,6 +188,18 @@ class User(db.Model):  # type: ignore
             return None
 
         return new_subscription
+
+    def challenges_query(self):
+        return Challenge.query.filter(Challenge.users.contains(self.fitbit_user_id))
+
+    def challenges(self) -> list["Challenge"]:
+        return self.challenges_query().all()
+
+    def past_challenges(self) -> list["Challenge"]:
+        return self.challenges_query().filter(Challenge.end_at < now()).all()
+
+    def active_challenges(self) -> list["Challenge"]:
+        return self.challenges_query().filter(Challenge.end_at >= now()).all()
 
 
 class UserActivity(db.Model):  # type: ignore
