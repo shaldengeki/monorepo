@@ -24,6 +24,8 @@ class Challenge(db.Model):  # type: ignore
     start_at: Mapped[datetime.datetime] = mapped_column(db.TIMESTAMP(timezone=True))
     end_at: Mapped[datetime.datetime] = mapped_column(db.TIMESTAMP(timezone=True))
 
+    bingo_card: Mapped["BingoCard"] = relationship(back_populates="challenge")
+
     def __repr__(self) -> str:
         return "<Challenge {id}>".format(id=self.id)
 
@@ -97,6 +99,7 @@ class User(db.Model):  # type: ignore
     activities: Mapped[list["UserActivity"]] = relationship(
         back_populates="fitbit_user"
     )
+    bingo_cards: Mapped[list["BingoCard"]] = relationship(back_populates="user")
 
     def __repr__(self) -> str:
         return "<User {fitbit_user_id}>".format(fitbit_user_id=self.fitbit_user_id)
@@ -186,3 +189,23 @@ class UserActivity(db.Model):  # type: ignore
 
     def __repr__(self) -> str:
         return "<UserActivity {id}>".format(id=self.id)
+
+
+class BingoCard(db.Model):  # type: ignore
+    __tablename__ = "bingo_cards"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    fitbit_user_id: Mapped[str] = mapped_column(ForeignKey("users.fitbit_user_id"))
+    challenge_id: Mapped[int] = mapped_column(ForeignKey("challenges.id"))
+    rows: Mapped[int]
+    columns: Mapped[int]
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
+    )
+
+    user: Mapped["User"] = relationship(back_populates="bingo_cards")
+    challenge: Mapped["Challenge"] = relationship(back_populates="bingo_card")
+
+    def __repr__(self) -> str:
+        return "<BingoCard {id}>".format(id=self.id)
