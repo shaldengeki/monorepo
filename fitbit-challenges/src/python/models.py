@@ -270,3 +270,11 @@ class BingoTile(db.Model):  # type: ignore
 
     def __repr__(self) -> str:
         return "<BingoTile {id}>".format(id=self.id)
+
+    def flip(self) -> bool:
+        self.flipped = not self.flipped
+        if self.flipped:
+            self.flipped_at = datetime.datetime.now(tz=datetime.timezone.utc)
+        else:
+            self.flipped_at = None
+        return self.flipped
