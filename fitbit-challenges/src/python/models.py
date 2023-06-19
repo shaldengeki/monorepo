@@ -206,6 +206,35 @@ class BingoCard(db.Model):  # type: ignore
 
     user: Mapped["User"] = relationship(back_populates="bingo_cards")
     challenge: Mapped["Challenge"] = relationship(back_populates="bingo_card")
+    bingo_tiles: Mapped[list["BingoTile"]] = relationship(back_populates="bingo_card")
 
     def __repr__(self) -> str:
         return "<BingoCard {id}>".format(id=self.id)
+
+
+class BingoTile(db.Model):  # type: ignore
+    __tablename__ = "bingo_tiles"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    bingo_card_id: Mapped[str] = mapped_column(ForeignKey("bingo_cards.id"))
+    steps: Mapped[Optional[int]]
+    active_minutes: Mapped[Optional[int]]
+    distance_km: Mapped[Optional[decimal.Decimal]]
+    coordinate_x: Mapped[int]
+    coordinate_y: Mapped[int]
+    bonus_type: Mapped[Optional[int]]
+    bonus_amount: Mapped[Optional[int]]
+    flipped: Mapped[bool] = mapped_column(default=False)
+    flipped_at: Mapped[Optional[datetime.datetime]] = mapped_column(
+        db.TIMESTAMP(timezone=True)
+    )
+    required_for_win: Mapped[bool] = mapped_column(default=False)
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
+    )
+
+    bingo_card: Mapped["BingoCard"] = relationship(back_populates="bingo_tiles")
+
+    def __repr__(self) -> str:
+        return "<BingoTile {id}>".format(id=self.id)
