@@ -201,6 +201,18 @@ class User(db.Model):  # type: ignore
     def active_challenges(self) -> list["Challenge"]:
         return self.challenges_query().filter(Challenge.end_at >= now()).all()
 
+    def activities_within_timespan(
+        self, start: datetime.datetime, end: datetime.datetime
+    ) -> list["UserActivity"]:
+        return (
+            UserActivity.query.filter(
+                UserActivity.fitbit_user_id == self.fitbit_user_id
+            )
+            .filter(UserActivity.created_at >= start)
+            .filter(UserActivity.created_at < end)
+            .all()
+        )
+
 
 class UserActivity(db.Model):  # type: ignore
     __tablename__ = "user_activities"
