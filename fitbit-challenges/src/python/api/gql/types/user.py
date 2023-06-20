@@ -13,6 +13,13 @@ from ....models import User
 from .user_activities import user_activity_type
 
 
+def synced_at_resolver(user: User) -> Optional[int]:
+    if user.synced_at is None:
+        return None
+
+    return int(user.synced_at.timestamp())
+
+
 def user_fields() -> dict[str, GraphQLField]:
     from .challenge import challenge_type
 
@@ -31,6 +38,11 @@ def user_fields() -> dict[str, GraphQLField]:
             GraphQLNonNull(GraphQLInt),
             description="The date that the user was created, in unix epoch time.",
             resolve=lambda user, info, **args: int(user.created_at.timestamp()),
+        ),
+        "syncedAt": GraphQLField(
+            GraphQLInt,
+            description="The date that the user's data was last synced, in unix epoch time.",
+            resolve=lambda user, *args, **kwargs: synced_at_resolver(user),
         ),
         "activities": GraphQLField(
             GraphQLNonNull(GraphQLList(user_activity_type)),
