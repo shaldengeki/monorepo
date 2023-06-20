@@ -4,7 +4,7 @@ EXPOSE 5000/tcp
 
 RUN apk update && \
     apk add --virtual build-deps gcc git python3-dev musl-dev && \
-    apk add postgresql-dev postgresql-client
+    apk add postgresql-dev postgresql-client postgresql15-client
 
 WORKDIR /usr/src/app
 

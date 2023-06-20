@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Production hostname to SSH into.
+PROD_HOST=$1
+
+# Path on the production host where the application is installed.
+PROD_PATH=$2
+
+PROD_DB_PASSWORD=$3
+
+# Optional arguments.
+PROD_DATABASE_NAME=${PROD_DATABASE_NAME:-api_development}
+PROD_DATABASE_HOST=${PROD_DATABASE_HOST:-pg}
+PROD_DB_USERNAME=${PROD_DB_USERNAME:-admin}
+LOCAL_DATABASE_NAME=${LOCAL_DATABASE_NAME:-api_development}
+LOCAL_DATABASE_HOST=${LOCAL_DATABASE_HOST:-pg}
+LOCAL_DB_USERNAME=${LOCAL_DB_USERNAME:-admin}
+
+# First, bring everything down.
+docker compose down
+
+# In an API container with a local mount, run pg_dump.
+ssh $PROD_HOST "
+    docker exec \
+        -t \
+        --env PGPASSFILE=/tmp/.pgpass \
+        fitbit-challenges-api-1 \
+        /bin/sh -c \"
+            echo \\\"*:*:*:$PROD_DB_USERNAME:$PROD_DB_PASSWORD\\\" > /tmp/.pgpass ;
+            chmod 0600 /tmp/.pgpass ;
+            pg_dump \
+            --clean \
+            --no-owner \
+            --no-privileges \
+            --host $PROD_DATABASE_HOST \
+            --username $PROD_DB_USERNAME \
+            --dbname $PROD_DATABASE_NAME ;
+        \" \
+" > pg_dump.sql
+
+# Import the pg_dump output.
+docker compose up -d pg
+sleep 5
+cat pg_dump.sql | docker exec \
+    -i \
+    fitbit-challenges-pg-1 \
+    psql \
+    --username $LOCAL_DB_USERNAME \
+    --dbname $LOCAL_DATABASE_NAME
+
+
+# Bring everything back up.
+docker compose up -d

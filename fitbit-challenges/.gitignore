@@ -131,5 +131,6 @@ dmypy.json
 # Production configuration.
 docker-compose.prod.yaml
 
-/# Database data.
+# Database data.
 postgres-data
+pg_dump.sql
