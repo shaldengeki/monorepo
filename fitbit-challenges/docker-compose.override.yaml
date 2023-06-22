@@ -24,6 +24,8 @@ services:
   worker:
     <<: *api
     ports: []
+    deploy:
+      replicas: 0
   pg:
     environment:
       - POSTGRES_PASSWORD=development
