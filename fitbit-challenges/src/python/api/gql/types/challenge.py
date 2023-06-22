@@ -14,7 +14,7 @@ from sqlalchemy import desc
 from typing import Any, Type
 
 from ....config import db
-from ....models import Challenge
+from ....models import Challenge, BingoCard, User
 from .user_activities import user_activity_type
 from .user import user_type
 
@@ -108,6 +108,7 @@ def challenges_field(challenge_model: Type[Challenge]) -> GraphQLField:
 class ChallengeType(Enum):
     WORKWEEK_HUSTLE = 0
     WEEKEND_WARRIOR = 1
+    BINGO = 2
 
 
 def create_challenge(
@@ -123,6 +124,9 @@ def create_challenge(
     elif ChallengeType.WEEKEND_WARRIOR.value == challenge_type:
         # Two days after starting.
         endAt = startAt + 2 * 24 * 60 * 60
+    elif ChallengeType.BINGO.value == challenge_type:
+        # Round end time to the nearest hour.
+        endAt = int(int(args["endAt"]) / 3600) * 3600
     else:
         raise ValueError(f"Invalid challenge type!")
 
@@ -134,6 +138,23 @@ def create_challenge(
     )
     db.session.add(challenge)
     db.session.commit()
+
+    if ChallengeType.BINGO.value == challenge_type:
+        users = User.query.filter(User.fitbit_user_id.in_(args["users"])).all()
+        for user in users:
+            card = BingoCard()
+            card.create_for_user_and_challenge(
+                user=user,
+                challenge=challenge,
+                start=datetime.datetime.fromtimestamp(
+                    startAt, tz=datetime.timezone.utc
+                ),
+                end=datetime.datetime.fromtimestamp(endAt, tz=datetime.timezone.utc),
+            )
+            db.session.add(card)
+
+    db.session.commit()
+
     return challenge
 
 
@@ -154,6 +175,10 @@ def create_challenge_field(
             "startAt": GraphQLArgument(
                 GraphQLNonNull(GraphQLInt),
                 description="Time the challenge should start, in unix epoch time.",
+            ),
+            "endAt": GraphQLArgument(
+                GraphQLInt,
+                description="Time the challenge should end, in unix epoch time.",
             ),
         },
         resolve=lambda root, info, **args: create_challenge(challenge_model, args),

@@ -28,7 +28,7 @@ class Challenge(db.Model):  # type: ignore
     start_at: Mapped[datetime.datetime] = mapped_column(db.TIMESTAMP(timezone=True))
     end_at: Mapped[datetime.datetime] = mapped_column(db.TIMESTAMP(timezone=True))
 
-    bingo_card: Mapped["BingoCard"] = relationship(back_populates="challenge")
+    bingo_cards: Mapped[list["BingoCard"]] = relationship(back_populates="challenge")
 
     def __repr__(self) -> str:
         return "<Challenge {id}>".format(id=self.id)
@@ -57,6 +57,19 @@ class Challenge(db.Model):  # type: ignore
     def activities(self) -> list["UserActivity"]:
         return (
             UserActivity.query.filter(UserActivity.user.in_(self.users.split(",")))
+            .filter(
+                func.date_trunc("day", UserActivity.record_date)
+                >= func.date_trunc("day", self.start_at)
+            )
+            .filter(UserActivity.record_date < self.end_at)
+            .filter(UserActivity.created_at < self.seal_at)
+            .order_by(desc(UserActivity.created_at))
+            .all()
+        )
+
+    def activities_for_user(self, user: "User") -> list["UserActivity"]:
+        return (
+            UserActivity.query.filter(UserActivity.user == user.fitbit_user_id)
             .filter(
                 func.date_trunc("day", UserActivity.record_date)
                 >= func.date_trunc("day", self.start_at)
@@ -207,9 +220,7 @@ class User(db.Model):  # type: ignore
         self, start: datetime.datetime, end: datetime.datetime
     ) -> list["UserActivity"]:
         return (
-            UserActivity.query.filter(
-                UserActivity.fitbit_user_id == self.fitbit_user_id
-            )
+            UserActivity.query.filter(UserActivity.user == self.fitbit_user_id)
             .filter(UserActivity.created_at >= start)
             .filter(UserActivity.created_at < end)
             .all()
@@ -315,7 +326,7 @@ class BingoCard(db.Model):  # type: ignore
     )
 
     user: Mapped["User"] = relationship(back_populates="bingo_cards")
-    challenge: Mapped["Challenge"] = relationship(back_populates="bingo_card")
+    challenge: Mapped["Challenge"] = relationship(back_populates="bingo_cards")
     bingo_tiles: Mapped[list["BingoTile"]] = relationship(
         back_populates="bingo_card",
         order_by="(BingoTile.coordinate_y, BingoTile.coordinate_x)",
@@ -370,6 +381,10 @@ class BingoCard(db.Model):  # type: ignore
         self.user = user
         self.challenge = challenge
 
+        # Hard code the rows & cols.
+        self.rows = 5
+        self.columns = 5
+
         # Pick one of a set of victory patterns.
         pattern = random.choice(BingoCard.PATTERNS)
 
@@ -382,12 +397,13 @@ class BingoCard(db.Model):  # type: ignore
         total_active_minutes = 0
         total_distance_km: decimal.Decimal = decimal.Decimal(0)
 
-        for activity in user.activities_within_timespan(
-            start=window_start, end=window_end
-        ):
-            total_steps += activity.steps
-            total_active_minutes += activity.active_minutes
-            total_distance_km += activity.distance_km
+        with db.session.no_autoflush:
+            for activity in user.activities_within_timespan(
+                start=window_start, end=window_end
+            ):
+                total_steps += activity.steps
+                total_active_minutes += activity.active_minutes
+                total_distance_km += activity.distance_km
 
         total_steps = apply_fuzz_factor_to_int(total_steps, 20)
         total_active_minutes = apply_fuzz_factor_to_int(total_active_minutes, 20)
@@ -465,8 +481,6 @@ class BingoCard(db.Model):  # type: ignore
 
         # Persist everything.
         self.bingo_tiles = step_tiles + active_minutes_tiles + distance_km_tiles
-        db.session.add(self)
-        db.session.commit()
 
         return self
 
