@@ -258,10 +258,6 @@ def apply_fuzz_factor_to_decimal(
 
 class BingoCardPattern:
     @property
-    def id(self) -> int:
-        raise NotImplementedError
-
-    @property
     def pattern(self) -> list[list[int]]:
         raise NotImplementedError
 
@@ -271,10 +267,6 @@ class BingoCardPattern:
 
 class TenBingoCardPattern(BingoCardPattern):
     @property
-    def id(self) -> int:
-        return 1
-
-    @property
     def pattern(self) -> list[list[int]]:
         return [
             [1, 0, 1, 1, 1],
@@ -282,6 +274,30 @@ class TenBingoCardPattern(BingoCardPattern):
             [1, 0, 1, 0, 1],
             [1, 0, 1, 0, 1],
             [1, 0, 1, 1, 1],
+        ]
+
+
+class SailboatBingoCardPattern(BingoCardPattern):
+    @property
+    def pattern(self) -> list[list[int]]:
+        return [
+            [0, 0, 1, 0, 0],
+            [0, 1, 1, 0, 0],
+            [0, 0, 1, 0, 0],
+            [1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 0],
+        ]
+
+
+class HouseBingoCardPattern(BingoCardPattern):
+    @property
+    def pattern(self) -> list[list[int]]:
+        return [
+            [0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1],
+            [0, 1, 0, 1, 0],
+            [0, 1, 0, 1, 0],
         ]
 
 
@@ -306,6 +322,8 @@ class BingoCard(db.Model):  # type: ignore
     )
 
     PATTERNS: list[BingoCardPattern] = [
+        HouseBingoCardPattern(),
+        SailboatBingoCardPattern(),
         TenBingoCardPattern(),
     ]
 
