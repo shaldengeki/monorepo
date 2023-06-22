@@ -1,5 +1,7 @@
 import datetime
 import decimal
+import itertools
+import random
 import requests
 from sqlalchemy import desc, ForeignKey
 from sqlalchemy.dialects.postgresql import insert
@@ -239,6 +241,50 @@ class UserActivity(db.Model):  # type: ignore
         return "<UserActivity {id}>".format(id=self.id)
 
 
+def apply_fuzz_factor_to_int(amount: int, percentage: int) -> int:
+    return int(
+        amount * (1 + float(random.randint(-1 * percentage, percentage)) / percentage)
+    )
+
+
+def apply_fuzz_factor_to_decimal(
+    amount: decimal.Decimal, percentage: int
+) -> decimal.Decimal:
+    return decimal.Decimal(
+        float(amount)
+        * (1 + float(random.randint(-1 * percentage, percentage)) / percentage)
+    )
+
+
+class BingoCardPattern:
+    @property
+    def id(self) -> int:
+        raise NotImplementedError
+
+    @property
+    def pattern(self) -> list[list[int]]:
+        raise NotImplementedError
+
+    def required_coordinate(self, x: int, y: int) -> bool:
+        return bool(self.pattern[y][x] == 1)
+
+
+class TenBingoCardPattern(BingoCardPattern):
+    @property
+    def id(self) -> int:
+        return 1
+
+    @property
+    def pattern(self) -> list[list[int]]:
+        return [
+            [1, 0, 1, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 0, 1, 0, 1],
+            [1, 0, 1, 0, 1],
+            [1, 0, 1, 1, 1],
+        ]
+
+
 class BingoCard(db.Model):  # type: ignore
     __tablename__ = "bingo_cards"
 
@@ -258,6 +304,10 @@ class BingoCard(db.Model):  # type: ignore
         back_populates="bingo_card",
         order_by="(BingoTile.coordinate_y, BingoTile.coordinate_x)",
     )
+
+    PATTERNS: list[BingoCardPattern] = [
+        TenBingoCardPattern(),
+    ]
 
     def __repr__(self) -> str:
         return "<BingoCard {id}>".format(id=self.id)
@@ -290,6 +340,117 @@ class BingoCard(db.Model):  # type: ignore
                 if tile.distance_km is not None
             )
         )
+
+    def create_for_user_and_challenge(
+        self,
+        user: "User",
+        challenge: "Challenge",
+        start: datetime.datetime,
+        end: datetime.datetime,
+    ) -> "BingoCard":
+        # Assign this card to the user and challenge.
+        self.user = user
+        self.challenge = challenge
+
+        # Pick one of a set of victory patterns.
+        pattern = random.choice(BingoCard.PATTERNS)
+
+        # Compute the total amounts for each resource.
+        duration = end - start
+        window_end = datetime.datetime.now(tz=datetime.timezone.utc)
+        window_start = window_end - duration
+
+        total_steps = 0
+        total_active_minutes = 0
+        total_distance_km: decimal.Decimal = decimal.Decimal(0)
+
+        for activity in user.activities_within_timespan(
+            start=window_start, end=window_end
+        ):
+            total_steps += activity.steps
+            total_active_minutes += activity.active_minutes
+            total_distance_km += activity.distance_km
+
+        total_steps = apply_fuzz_factor_to_int(total_steps, 20)
+        total_active_minutes = apply_fuzz_factor_to_int(total_active_minutes, 20)
+        total_distance_km = apply_fuzz_factor_to_decimal(total_distance_km, 20)
+
+        # Create 25=5x5 tiles.
+        step_tiles = [BingoTile(bingo_card=self) for _ in range(random.randint(7, 9))]
+        active_minutes_tiles = [
+            BingoTile(bingo_card=self) for _ in range(random.randint(7, 9))
+        ]
+        distance_km_tiles = [
+            BingoTile(bingo_card=self)
+            for _ in range(25 - len(step_tiles) - len(active_minutes_tiles))
+        ]
+
+        # Create a random ordering of tile coordinates.
+        coordinates = list(
+            itertools.product(
+                list(range(5)),
+                list(range(5)),
+            )
+        )
+        random.shuffle(coordinates)
+
+        for step_tile in step_tiles:
+            # Assign ~1/8 or ~1/9 of the total resource amount
+            step_tile.steps = apply_fuzz_factor_to_int(
+                int(total_steps / len(step_tiles)), 20
+            )
+
+            # Assign a coordinate
+            (step_tile.coordinate_x, step_tile.coordinate_y) = coordinates.pop()
+
+            # Set whether or not it's required for a win.
+            step_tile.required_for_win = pattern.required_coordinate(
+                x=step_tile.coordinate_x, y=step_tile.coordinate_y
+            )
+            db.session.add(step_tile)
+
+        for active_minutes_tile in active_minutes_tiles:
+            # Assign ~1/8 or ~1/9 of the total resource amount
+            active_minutes_tile.active_minutes = apply_fuzz_factor_to_int(
+                int(total_active_minutes / len(active_minutes_tiles)), 20
+            )
+
+            # Assign a coordinate
+            (
+                active_minutes_tile.coordinate_x,
+                active_minutes_tile.coordinate_y,
+            ) = coordinates.pop()
+
+            # Set whether or not it's required for a win.
+            active_minutes_tile.required_for_win = pattern.required_coordinate(
+                x=active_minutes_tile.coordinate_x, y=active_minutes_tile.coordinate_y
+            )
+            db.session.add(active_minutes_tile)
+
+        for distance_km_tile in distance_km_tiles:
+            # Assign ~1/8 or ~1/9 of the total resource amount
+            distance_km_tile.distance_km = apply_fuzz_factor_to_decimal(
+                total_distance_km / len(distance_km_tiles), 20
+            )
+
+            # Assign a coordinate
+            (
+                distance_km_tile.coordinate_x,
+                distance_km_tile.coordinate_y,
+            ) = coordinates.pop()
+
+            # Set whether or not it's required for a win.
+            distance_km_tile.required_for_win = pattern.required_coordinate(
+                x=distance_km_tile.coordinate_x, y=distance_km_tile.coordinate_y
+            )
+            db.session.add(distance_km_tile)
+
+        # Persist everything.
+        self.bingo_tiles = step_tiles + active_minutes_tiles + distance_km_tiles
+        db.session.add(self)
+        db.session.commit()
+
+        return self
 
 
 class BingoTile(db.Model):  # type: ignore
