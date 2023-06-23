@@ -3,7 +3,7 @@ import { useMutation, useQuery, gql } from '@apollo/client';
 import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import Challenge, {ChallengeType, emptyChallenge} from "../types/Challenge";
-import {formatDateDifference, getCurrentUnixTime, nextMonday, nextSaturday} from '../DateUtils';
+import {formatDateDifference, getCurrentUnixTime, getDate, nextMonday, nextSaturday, today} from '../DateUtils';
 import { Link } from 'react-router-dom';
 import {CancelButton, SubmitButton} from '../components/FormButton';
 import User from '../types/User';
@@ -57,11 +57,13 @@ const CREATE_CHALLENGE_MUTATION = gql`
         $users:[String]!,
         $challengeType:Int!,
         $startAt:Int!,
+        $endAt:Int,
     ) {
         createChallenge(
             users:$users,
             challengeType:$challengeType,
             startAt:$startAt,
+            endAt:$endAt,
         ) {
             id
         }
@@ -79,6 +81,8 @@ const ChallengesListingTableEntry = ({ challenge }: ChallengesListingTableEntryP
     let challengeName = "Workweek Hustle"
     if (challenge.challengeType === ChallengeType.WeekendWarrior) {
         challengeName = "Weekend Warrior"
+    } else if (challenge.challengeType === ChallengeType.Bingo) {
+        challengeName = "Bingo"
     }
 
     return (
@@ -149,13 +153,22 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
             startAt = nextSaturday();
         } else if (challenge.challengeType === ChallengeType.WorkweekHustle) {
             startAt = nextMonday();
+        } else if (challenge.challengeType === ChallengeType.Bingo) {
+            startAt = challenge.startAt;
         }
+        let endAt = null;
+        console.log("challenge", challenge);
+        if (challenge.challengeType === ChallengeType.Bingo) {
+            endAt = challenge.endAt;
+        }
+        console.log("endAt", endAt)
         // We don't guard against wrong challenge types, because the API should handle this for us.
         createChallenge({
             variables: {
                 users: challenge.users,
                 challengeType: challenge.challengeType,
                 startAt: startAt,
+                endAt: endAt,
             }
         })
     }
@@ -166,7 +179,8 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
     }
     const challengeElements = [
         <option key={0} value={0}>Workweek Hustle</option>,
-        <option key={1} value={1}>Weekend Warrior</option>
+        <option key={1} value={1}>Weekend Warrior</option>,
+        <option key={2} value={2}>Bingo</option>
     ]
     let userElements: JSX.Element[] = [];
     if (fetchUsersData) {
@@ -174,6 +188,7 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
             return <option key={user.fitbitUserId} value={user.fitbitUserId}>{user.displayName}</option>
         })
     }
+    const startAt = (challenge.startAt === 0) ? getDate(today()) : getDate(challenge.startAt);
 
     return (
         <div>
@@ -215,6 +230,35 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
                 >
                     {challengeElements}
                 </select>
+                <input
+                    className="rounded p-0.5"
+                    name="startAt"
+                    type="date"
+                    value={startAt}
+                    onChange={(e) => {
+                        editHook({
+                            ...challenge,
+                            startAt: e.target.value,
+                        })
+                    }}
+                    min={startAt}
+                />
+                <input
+                    className="rounded p-0.5"
+                    name="days"
+                    type="number"
+                    onChange={(e) => {
+                        const endAt = challenge.startAt + (24*60*60*parseInt(e.target.value, 10));
+                        console.log("endAt", endAt);
+                        editHook({
+                            ...challenge,
+                            endAt: endAt,
+                        });
+                    }}
+                    min={1}
+                    max={100}
+                    size={3}
+                />
                 <SubmitButton hook={challengeHook}>
                     Submit
                 </SubmitButton>
@@ -247,21 +291,22 @@ const ChallengesListingView = () => {
         <PageContainer>
             <PageTitle><Link to={'/challenges'}>Challenges</Link></PageTitle>
             <div className="py-2">
-                    { !editFormShowing && <CreateChallengeLink hook={setEditFormShowing} /> }
-                    { editFormShowing && <CreateChallengeForm challenge={editedChallenge} editHook={setEditedChallenge} formHook={setEditFormShowing} /> }
+                <h1 className="text-2xl py-2">Start a challenge</h1>
+                { !editFormShowing && <CreateChallengeLink hook={setEditFormShowing} /> }
+                { editFormShowing && <CreateChallengeForm challenge={editedChallenge} editHook={setEditedChallenge} formHook={setEditFormShowing} /> }
             </div>
             <div>
                 { loading && <p>Loading...</p> }
                 { error && <p>Error: {error.message}</p> }
                 <div className="py-4 border-b-2 border-slate-50 dark:border-neutral-600">
-                    <h1 className="text-2xl">Current challenges</h1>
+                    <h1 className="text-2xl py-2">Current challenges</h1>
                     { activeChallenges.length < 1 && <p>No current challenges found!</p> }
                     { activeChallenges.length >= 1 &&
                         <ChallengesListingTable challenges={activeChallenges} />
                     }
                 </div>
                 <div className="py-4">
-                    <h1 className="text-2xl">Past challenges</h1>
+                    <h1 className="text-2xl py-2">Past challenges</h1>
                     { pastChallenges.length < 1 && <p>No prior challenges found!</p> }
                     { pastChallenges.length >= 1 &&
                         <ChallengesListingTable challenges={pastChallenges} />

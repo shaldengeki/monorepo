@@ -2,7 +2,7 @@ import React from 'react';
 import Confetti from './Confetti';
 import { useMutation, gql, useQuery } from '@apollo/client';
 import {FETCH_WORKWEEK_HUSTLE_QUERY} from '../views/ChallengeView';
-import {getCurrentUnixTime} from '../DateUtils';
+import {getCurrentUnixTime, getDate, convertDateStringToEpochTime} from '../DateUtils';
 import Activity, {emptyActivity} from '../types/Activity';
 import {CancelButton, SubmitButton} from '../components/FormButton';
 import User from '../types/User';
@@ -60,30 +60,6 @@ const UPDATE_USER_ACTIVITY_MUTATION = gql`
         }
     }
 `
-
-function padDate(date: number): string {
-    let formattedDate = "" + date;
-    if (date < 10) {
-        formattedDate = "0" + formattedDate;
-    }
-    return formattedDate;
-}
-
-function getDate(time?: number): string {
-    let currTime = new Date();
-    if (time !== undefined) {
-        currTime = new Date(0);
-        currTime.setUTCSeconds(time);
-    }
-    const formattedMonth = padDate(currTime.getMonth() + 1);
-    const formattedDate = padDate(currTime.getDate());
-
-    return currTime.getFullYear() + "-" + (formattedMonth) + "-" + formattedDate;
-}
-
-function convertDateStringToEpochTime(dateString: string): number {
-    return new Date(dateString + "T00:00:00").getTime() / 1000;
-}
 
 
 type MutationErrorDialogProps = {

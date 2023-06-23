@@ -4,6 +4,7 @@ import User from "./User";
 export enum ChallengeType {
     WorkweekHustle = 0,
     WeekendWarrior = 1,
+    Bingo = 2,
 }
 
 type Challenge = {
