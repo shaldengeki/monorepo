@@ -7,6 +7,7 @@ import {formatDateDifference, getCurrentUnixTime, getDate, nextMonday, nextSatur
 import { Link } from 'react-router-dom';
 import {CancelButton, SubmitButton} from '../components/FormButton';
 import User from '../types/User';
+import { convertDateStringToEpochTime } from '../DateUtils';
 
 export const FETCH_CHALLENGES_QUERY = gql`
     query FetchChallenges {
@@ -104,7 +105,7 @@ type ChallengesListingTableProps = {
 
 const ChallengesListingTable = ({ challenges }: ChallengesListingTableProps) => {
     const entries = challenges.map((challenge: Challenge) => {
-        return <ChallengesListingTableEntry challenge={challenge} />;
+        return <ChallengesListingTableEntry key={challenge.id} challenge={challenge} />;
     });
     return (
         <div className="grid grid-cols-2 gap-4">
@@ -238,10 +239,10 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
                     onChange={(e) => {
                         editHook({
                             ...challenge,
-                            startAt: e.target.value,
+                            startAt: convertDateStringToEpochTime(e.target.value)
                         })
                     }}
-                    min={startAt}
+                    min={getDate(today())}
                 />
                 <input
                     className="rounded p-0.5"
