@@ -4,8 +4,10 @@ import { useParams } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import WorkweekHustle from '../components/WorkweekHustle';
 import WeekendWarrior from '../components/WeekendWarrior';
+import BingoChallenge from '../components/BingoChallenge';
 import Activity from '../types/Activity';
 import Challenge, {ChallengeType} from '../types/Challenge';
+import User from '../types/User';
 
 export const FETCH_WORKWEEK_HUSTLE_QUERY = gql`
     query FetchChallenge($id: Int!) {
@@ -31,6 +33,11 @@ export const FETCH_WORKWEEK_HUSTLE_QUERY = gql`
                 activeMinutes
                 distanceKm
               }
+          }
+          currentUser {
+            fitbitUserId
+            displayName
+            createdAt
           }
       }
 `;
@@ -59,6 +66,8 @@ const ChallengeView = () => {
         const challenges: Challenge[] = data.challenges;
         const challenge = challenges[0];
         const activities: Activity[] = challenge.activities;
+        const currentUser: User = data.currentUser;
+
         if (challenge.challengeType === ChallengeType.WeekendWarrior) {
             innerContent = <WeekendWarrior
                 id={id}
@@ -70,7 +79,7 @@ const ChallengeView = () => {
                 sealed={challenge.sealed}
                 activities={activities}
             />;
-        } else {
+        } else if (challenge.challengeType === ChallengeType.WorkweekHustle) {
             innerContent = <WorkweekHustle
                 id={id}
                 users={challenge.users}
@@ -81,6 +90,10 @@ const ChallengeView = () => {
                 sealed={challenge.sealed}
                 activities={activities}
             />;
+        } else if (challenge.challengeType === ChallengeType.Bingo) {
+            innerContent = <BingoChallenge id={id} currentUser={currentUser} />;
+        } else {
+            return <p>Invalid challenge type!</p>
         }
     }
 

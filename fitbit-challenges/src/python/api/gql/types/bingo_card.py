@@ -10,7 +10,8 @@ from graphql import (
     GraphQLList,
     GraphQLNonNull,
 )
-from typing import Any, Optional
+from typing import Any, Optional, Type
+from sqlalchemy import desc
 
 from ....config import app
 from ....models import Challenge, User
@@ -18,8 +19,8 @@ from .user import user_type, fetch_current_user
 from .challenge import (
     challenge_type,
     challenge_fields,
-    fetch_challenges,
     challenges_filters,
+    ChallengeType,
 )
 
 
@@ -75,6 +76,7 @@ def bingo_tile_fields() -> dict[str, GraphQLField]:
         "requiredForWin": GraphQLField(
             GraphQLNonNull(GraphQLBoolean),
             description="Whether the tile is required for a win.",
+            resolve=lambda bt, *args, **kwargs: bt.required_for_win,
         ),
         "createdAt": GraphQLField(
             GraphQLNonNull(GraphQLInt),
@@ -235,9 +237,27 @@ bingo_challenge_type = GraphQLObjectType(
 )
 
 
-def bingo_challenges_field(challenge_model: type[Challenge]) -> GraphQLField:
+def fetch_bingo_challenge(
+    challenge_model: Type[Challenge], params: dict[str, Any]
+) -> Optional[Challenge]:
+    return (
+        challenge_model.query.filter(
+            challenge_model.challenge_type == ChallengeType.BINGO.value
+        ).filter(challenge_model.id == params["id"])
+    ).first()
+
+
+bingo_challenge_filters: dict[str, GraphQLArgument] = {
+    "id": GraphQLArgument(
+        GraphQLNonNull(GraphQLInt),
+        description="ID of the bingo challenge.",
+    ),
+}
+
+
+def bingo_challenge_field(challenge_model: type[Challenge]) -> GraphQLField:
     return GraphQLField(
-        GraphQLList(bingo_challenge_type),
-        args=challenges_filters,
-        resolve=lambda root, info, **args: fetch_challenges(challenge_model, args),
+        bingo_challenge_type,
+        args=bingo_challenge_filters,
+        resolve=lambda root, info, **args: fetch_bingo_challenge(challenge_model, args),
     )

@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import {BrowserRouter} from 'react-router-dom'
 import React from 'react';
 import { FETCH_CURRENT_USER_QUERY } from '../components/NavBar';
+import { emptyUser } from '../types/User';
 
 const testFetchCurrentUserMock = {
   request: {
@@ -27,7 +28,8 @@ it('should handle when the challenge does not exist', async () => {
       },
       result: {
         data: {
-          challenges: []
+          challenges: [],
+          currentUser: emptyUser
         }
       }
     };
@@ -67,7 +69,8 @@ it('should handle when multiple challenges are found', async () => {
       },
       result: {
         data: {
-          challenges: [testChallenge, testChallenge]
+          challenges: [testChallenge, testChallenge],
+          currentUser: emptyUser
         }
       }
     };

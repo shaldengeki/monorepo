@@ -7,4 +7,11 @@ type User = {
     activities: Activity[];
 }
 
+export const emptyUser: User = {
+    fitbitUserId: 'empty-user',
+    displayName: 'emptyUser',
+    createdAt: 0,
+    activities: []
+}
+
 export default User;
