@@ -104,6 +104,9 @@ const BingoChallengeTile = ({tile}: BingoChallengeTileProps) => {
         icon = <DistanceKmIcon />;
         text = `${tile.distanceKm}`;
     }
+    if (text === "0") {
+        console.log("Tile", tile);
+    }
     const className = `flex items-center rounded-full aspect-square font-extrabold text-white dark:text-slate-50 text-xl bg-blue-400 dark:bg-indigo-800`
     return (
         <div className={className}>

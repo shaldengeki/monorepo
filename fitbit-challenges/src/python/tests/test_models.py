@@ -1,8 +1,7 @@
 import datetime
-import pytest
+import decimal
 
-from ..config import app, db
-from ..models import Challenge, User
+from ..models import Challenge, apply_fuzz_factor_to_int, apply_fuzz_factor_to_decimal
 
 
 def create_mock_datetime(returned_date: datetime.datetime) -> object:
@@ -77,3 +76,33 @@ class TestChallenge:
             ),
         )
         assert not challenge.ended
+
+
+def test_apply_fuzz_factor_to_int_minimum():
+    assert 80 == apply_fuzz_factor_to_int(100, 20, -20)
+
+
+def test_apply_fuzz_factor_to_int_midpoint():
+    assert 100 == apply_fuzz_factor_to_int(100, 20, 0)
+
+
+def test_apply_fuzz_factor_to_int_maximum():
+    assert 120 == apply_fuzz_factor_to_int(100, 20, 20)
+
+
+def test_apply_fuzz_factor_to_decimal_minimum():
+    assert decimal.Decimal("0.8") == apply_fuzz_factor_to_decimal(
+        decimal.Decimal("1.0"), 20, -20
+    )
+
+
+def test_apply_fuzz_factor_to_decimal_midpodecimal():
+    assert decimal.Decimal("1.0") == apply_fuzz_factor_to_decimal(
+        decimal.Decimal("1.0"), 20, 0
+    )
+
+
+def test_apply_fuzz_factor_to_decimal_maximum():
+    assert decimal.Decimal("1.2") == apply_fuzz_factor_to_decimal(
+        decimal.Decimal("1.0"), 20, 20
+    )

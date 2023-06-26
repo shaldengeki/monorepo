@@ -252,19 +252,29 @@ class UserActivity(db.Model):  # type: ignore
         return "<UserActivity {id}>".format(id=self.id)
 
 
-def apply_fuzz_factor_to_int(amount: int, percentage: int) -> int:
-    return int(
-        amount * (1 + float(random.randint(-1 * percentage, percentage)) / percentage)
-    )
+def apply_fuzz_factor_to_int(
+    amount: int, percentage: int, random_factor: Optional[int] = None
+) -> int:
+    if random_factor is None:
+        random_factor = random.randint(-100 * percentage, 100 * percentage)
+    else:
+        random_factor *= 100
+
+    fuzz_factor = 1 + (float(random_factor) / (100 * 100))
+    return int(amount * fuzz_factor)
 
 
 def apply_fuzz_factor_to_decimal(
-    amount: decimal.Decimal, percentage: int
+    amount: decimal.Decimal, percentage: int, random_factor: Optional[int] = None
 ) -> decimal.Decimal:
-    return decimal.Decimal(
-        float(amount)
-        * (1 + float(random.randint(-1 * percentage, percentage)) / percentage)
+    if random_factor is None:
+        random_factor = random.randint(-1 * percentage, percentage)
+
+    fuzz_factor = decimal.Decimal(1) + (
+        decimal.Decimal(random_factor) / decimal.Decimal(100)
     )
+
+    return amount * fuzz_factor
 
 
 class BingoCardPattern:
@@ -479,7 +489,6 @@ class BingoCard(db.Model):  # type: ignore
             )
             db.session.add(distance_km_tile)
 
-        # Persist everything.
         self.bingo_tiles = step_tiles + active_minutes_tiles + distance_km_tiles
 
         return self
