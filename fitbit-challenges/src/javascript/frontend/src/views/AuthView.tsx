@@ -11,7 +11,7 @@ export const FITBIT_AUTH_MUTATION = gql`
 `;
 
 const AuthView = () => {
-    const [startFitbitAuth, { data, loading, error, reset }] = useMutation(FITBIT_AUTH_MUTATION);
+    const [startFitbitAuth, { data, loading, error }] = useMutation(FITBIT_AUTH_MUTATION);
 
     let innerContent = <p></p>;
     if (loading) innerContent = <p>Loading...</p>;
