@@ -7,10 +7,10 @@ type PageContainerProps = {
 }
 
 const PageContainer = (props: PropsWithChildren<PageContainerProps>) => {
-    const defaultOuterClasses = "dark:bg-neutral-600 dark:text-slate-400 h-screen";
+    const defaultOuterClasses = "dark:bg-neutral-600 dark:text-slate-400";
     const actualOuterClasses = props.outerClassName ? defaultOuterClasses + " " + props.outerClassName : defaultOuterClasses;
 
-    const defaultInnerClasses = "container mx-auto bg-blue-200 dark:bg-slate-900 dark:text-slate-400 p-2 h-screen flex flex-col overflow-auto";
+    const defaultInnerClasses = "container mx-auto bg-blue-200 dark:bg-slate-900 dark:text-slate-400 p-2 flex flex-col overflow-auto";
     const actualInnerClasses = props.innerClassName ? defaultInnerClasses + " " + props.innerClassName : defaultInnerClasses;
 
     return (
