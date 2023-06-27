@@ -223,8 +223,22 @@ class User(db.Model):  # type: ignore
             UserActivity.query.filter(UserActivity.user == self.fitbit_user_id)
             .filter(UserActivity.created_at >= start)
             .filter(UserActivity.created_at < end)
+            .order_by(UserActivity.record_date, UserActivity.created_at)
             .all()
         )
+
+    def latest_activity_for_days_within_timespan(
+        self, start: datetime.datetime, end: datetime.datetime
+    ) -> Generator["UserActivity", None, None]:
+        prev_activity = None
+        for activity in self.activities_within_timespan(start, end):
+            if prev_activity is None:
+                prev_activity = activity
+            elif activity.record_date > prev_activity.record_date:
+                yield prev_activity
+                prev_activity = activity
+
+        yield activity
 
 
 class UserActivity(db.Model):  # type: ignore
@@ -261,7 +275,7 @@ def apply_fuzz_factor_to_int(
         random_factor *= 100
 
     fuzz_factor = 1 + (float(random_factor) / (100 * 100))
-    return int(amount * fuzz_factor)
+    return int(amount * fuzz_factor) or 1
 
 
 def apply_fuzz_factor_to_decimal(
@@ -274,7 +288,7 @@ def apply_fuzz_factor_to_decimal(
         decimal.Decimal(random_factor) / decimal.Decimal(100)
     )
 
-    return amount * fuzz_factor
+    return amount * fuzz_factor or decimal.Decimal(1)
 
 
 class BingoCardPattern:
@@ -415,16 +429,12 @@ class BingoCard(db.Model):  # type: ignore
         total_distance_km: decimal.Decimal = decimal.Decimal(0)
 
         with db.session.no_autoflush:
-            for activity in user.activities_within_timespan(
+            for activity in user.latest_activity_for_days_within_timespan(
                 start=window_start, end=window_end
             ):
                 total_steps += activity.steps
                 total_active_minutes += activity.active_minutes
                 total_distance_km += activity.distance_km
-
-        total_steps = apply_fuzz_factor_to_int(total_steps, 20)
-        total_active_minutes = apply_fuzz_factor_to_int(total_active_minutes, 20)
-        total_distance_km = apply_fuzz_factor_to_decimal(total_distance_km, 20)
 
         # Create 25=5x5 tiles.
         step_tiles = [BingoTile(bingo_card=self) for _ in range(random.randint(7, 9))]

@@ -301,7 +301,7 @@ const BingoChallengeLeaderboard = ({cards, setUserHook, displayedCard}: BingoCha
             const latestFlippedVictoryTile = _.max(flippedVictoryTiles.map((tile) => tile.flippedAt));
             return [-1 * flippedVictoryTiles.length, latestFlippedVictoryTile];
         }).map((card: BingoCard) => {
-            return <BingoChallengeLeaderboardCard card={card} setUserHook={setUserHook} isDisplayedCard={displayedCard.id === card.id} />
+            return <BingoChallengeLeaderboardCard key={card.id} card={card} setUserHook={setUserHook} isDisplayedCard={displayedCard.id === card.id} />
         })
 
     return (
