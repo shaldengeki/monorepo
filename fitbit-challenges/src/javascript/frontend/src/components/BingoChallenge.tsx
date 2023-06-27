@@ -19,6 +19,7 @@ export const FETCH_BINGO_QUERY = gql`
               endAt
               ended
               bingoCards {
+                id
                 user {
                     fitbitUserId
                     displayName
@@ -119,9 +120,10 @@ const DistanceKmIcon = () => {
 type BingoChallengeTileProps = {
     tile: BingoTile
     challengeId: number
+    isCurrentUser: boolean
 }
 
-const BingoChallengeTile = ({tile, challengeId}: BingoChallengeTileProps) => {
+const BingoChallengeTile = ({tile, challengeId, isCurrentUser}: BingoChallengeTileProps) => {
     const [
         flipTile,
         {
@@ -170,13 +172,13 @@ const BingoChallengeTile = ({tile, challengeId}: BingoChallengeTileProps) => {
         text = `${tile.distanceKm}`;
         backgroundColor = "bg-blue-400 dark:bg-violet-800"
     }
-    if (text === "0") {
-        console.log("Tile", tile);
-    }
     const className = `flex items-center rounded-full aspect-square font-extrabold text-white dark:text-slate-50 text-xl ${backgroundColor}`
     return (
         <div className={className} onClick={(e) => {
             e.preventDefault();
+            if (!isCurrentUser) {
+                return;
+            }
             flipTile({
                 variables: {
                     id: tile.id
@@ -239,7 +241,7 @@ type BingoChallengeCardProps = {
 }
 
 const BingoChallengeCard = ({card, user, currentUser, challengeId}: BingoChallengeCardProps) => {
-    const tiles = card.tiles.map((tile) => <BingoChallengeTile key={tile.id} tile={tile} challengeId={challengeId} />);
+    const tiles = card.tiles.map((tile) => <BingoChallengeTile key={tile.id} tile={tile} challengeId={challengeId} isCurrentUser={currentUser === user} />);
     return (
         <div className="grid grid-cols-5 grid-rows-5 gap-1 text-center">
             {tiles}
@@ -268,12 +270,15 @@ const BingoChallengeLeaderboardTile = ({tile}: BingoChallengeLeaderboardTileProp
 
 type BingoChallengeLeaderboardCardProps = {
     card: BingoCard
+    setUserHook: Function
+    isDisplayedCard: boolean
 }
 
-const BingoChallengeLeaderboardCard = ({card}: BingoChallengeLeaderboardCardProps) => {
+const BingoChallengeLeaderboardCard = ({card, setUserHook, isDisplayedCard}: BingoChallengeLeaderboardCardProps) => {
     const tiles = card.tiles.map((tile) => <BingoChallengeLeaderboardTile key={tile.id} tile={tile} />);
+    const baseClasses = (isDisplayedCard) ? "rounded border border-green-500" : "";
     return (
-        <div className="">
+        <div className={`${baseClasses} p-1`} onClick={(e) => {setUserHook(card.user)}}>
             <div className="grid grid-cols-5 grid-rows-5 gap-1 text-center">
                 {tiles}
             </div>
@@ -284,9 +289,11 @@ const BingoChallengeLeaderboardCard = ({card}: BingoChallengeLeaderboardCardProp
 
 type BingoChallengeLeaderboardProps = {
     cards: BingoCard[]
+    setUserHook: Function
+    displayedCard: BingoCard
 }
 
-const BingoChallengeLeaderboard = ({cards}: BingoChallengeLeaderboardProps) => {
+const BingoChallengeLeaderboard = ({cards, setUserHook, displayedCard}: BingoChallengeLeaderboardProps) => {
     const sortedCards = _.sortBy(
         cards,
         (card) => {
@@ -294,7 +301,7 @@ const BingoChallengeLeaderboard = ({cards}: BingoChallengeLeaderboardProps) => {
             const latestFlippedVictoryTile = _.max(flippedVictoryTiles.map((tile) => tile.flippedAt));
             return [-1 * flippedVictoryTiles.length, latestFlippedVictoryTile];
         }).map((card: BingoCard) => {
-            return <BingoChallengeLeaderboardCard card={card} />
+            return <BingoChallengeLeaderboardCard card={card} setUserHook={setUserHook} isDisplayedCard={displayedCard.id === card.id} />
         })
 
     return (
@@ -349,7 +356,7 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
                     />
                 </div>
                 <div className="col-span-1 px-4">
-                    <BingoChallengeLeaderboard cards={cards} />
+                    <BingoChallengeLeaderboard cards={cards} setUserHook={setDisplayedUser} displayedCard={displayedCard} />
                 </div>
             </div>
         </div>

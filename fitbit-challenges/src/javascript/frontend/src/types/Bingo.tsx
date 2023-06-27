@@ -25,6 +25,7 @@ export const emptyBingoTile: BingoTile = {
 }
 
 type BingoCard = {
+    id: number
     user: User
     rows: number
     columns: number
@@ -32,6 +33,7 @@ type BingoCard = {
 }
 
 export const emptyBingoCard: BingoCard = {
+    id: 0,
     user: emptyUser,
     rows: 0,
     columns: 0,
