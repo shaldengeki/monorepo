@@ -149,6 +149,13 @@ const BingoChallengeTile = ({tile, challengeId}: BingoChallengeTileProps) => {
     let backgroundColor = "";
     if (tile.flipped) {
         icon = <FlippedIcon />
+        if (tile.steps !== null) {
+            text = `${tile.steps} steps`
+        } else if (tile.activeMinutes !== null) {
+            text = `${tile.activeMinutes} minutes`
+        } else if (tile.distanceKm !== null) {
+            text = `${tile.distanceKm} km`
+        }
     } else if (tile.steps !== null) {
         icon = <StepsIcon />
         text = `${tile.steps}`;
