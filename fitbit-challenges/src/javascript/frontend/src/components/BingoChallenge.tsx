@@ -246,6 +246,63 @@ const BingoChallengeCard = ({card, user, currentUser, challengeId}: BingoChallen
     )
 }
 
+type BingoChallengeLeaderboardTileProps = {
+    tile: BingoTile
+}
+
+const BingoChallengeLeaderboardTile = ({tile}: BingoChallengeLeaderboardTileProps) => {
+    let backgroundColor = "bg-slate-400";
+    if (tile.flipped) {
+        if (tile.requiredForWin) {
+            backgroundColor = "bg-green-500";
+        } else {
+            backgroundColor = "bg-yellow-900"
+        }
+    }
+    const className = `flex items-center rounded-full aspect-square font-extrabold text-white dark:text-slate-50 text-xl ${backgroundColor}`
+    return (
+        <div className={className} />
+    );
+}
+
+type BingoChallengeLeaderboardCardProps = {
+    card: BingoCard
+}
+
+const BingoChallengeLeaderboardCard = ({card}: BingoChallengeLeaderboardCardProps) => {
+    const tiles = card.tiles.map((tile) => <BingoChallengeLeaderboardTile key={tile.id} tile={tile} />);
+    return (
+        <div className="">
+            <div className="grid grid-cols-5 grid-rows-5 gap-1 text-center">
+                {tiles}
+            </div>
+            <p className="text-center">{card.user.displayName}</p>
+        </div>
+    )
+}
+
+type BingoChallengeLeaderboardProps = {
+    cards: BingoCard[]
+}
+
+const BingoChallengeLeaderboard = ({cards}: BingoChallengeLeaderboardProps) => {
+    const sortedCards = _.sortBy(
+        cards,
+        (card) => {
+            const flippedTiles = card.tiles.filter((tile) => tile.flipped).length
+            return -1 * flippedTiles;
+        }).map((card: BingoCard) => {
+            return <BingoChallengeLeaderboardCard card={card} />
+        })
+
+    return (
+        <div className="grid grid-cols-1 gap-6 text-center">
+            <h1 className="text-xl">Leaderboard</h1>
+            {sortedCards}
+        </div>
+    )
+}
+
 type BingoChallengeProps = {
     id: number;
     currentUser: User;
@@ -275,17 +332,24 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
     return (
         <div>
             <PageTitle className="text-center">Bingo</PageTitle>
-            <BingoChallengeUnusedAmounts
-                steps={data.bingoChallenge.unusedAmounts.steps}
-                activeMinutes={data.bingoChallenge.unusedAmounts.activeMinutes}
-                distanceKm={data.bingoChallenge.unusedAmounts.distanceKm}
-            />
-            <BingoChallengeCard
-                card={displayedCard}
-                user={displayedUser}
-                currentUser={currentUser}
-                challengeId={id}
-            />
+            <div className="grid grid-cols-4">
+                <div className="col-span-3">
+                    <BingoChallengeUnusedAmounts
+                        steps={data.bingoChallenge.unusedAmounts.steps}
+                        activeMinutes={data.bingoChallenge.unusedAmounts.activeMinutes}
+                        distanceKm={data.bingoChallenge.unusedAmounts.distanceKm}
+                    />
+                    <BingoChallengeCard
+                        card={displayedCard}
+                        user={displayedUser}
+                        currentUser={currentUser}
+                        challengeId={id}
+                    />
+                </div>
+                <div className="col-span-1 px-4">
+                    <BingoChallengeLeaderboard cards={cards} />
+                </div>
+            </div>
         </div>
     )
 };
