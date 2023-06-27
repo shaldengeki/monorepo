@@ -17,11 +17,15 @@ from ....config import app, db
 from ....models import Challenge, User, BingoCard, BingoTile, UnusedAmounts
 from .user import user_type, fetch_current_user
 from .challenge import (
-    challenge_type,
     challenge_fields,
-    challenges_filters,
     ChallengeType,
 )
+
+
+def flipped_at_resolver(tile: BingoTile) -> Optional[int]:
+    if tile.flipped_at is None:
+        return tile.flipped_at
+    return int(tile.flipped_at.timestamp())
 
 
 def bingo_tile_fields() -> dict[str, GraphQLField]:
@@ -71,7 +75,7 @@ def bingo_tile_fields() -> dict[str, GraphQLField]:
         "flippedAt": GraphQLField(
             GraphQLInt,
             description="The datetime that the tile was flipped, in unix epoch time.",
-            resolve=lambda bt, info, **args: int(bt.flipped_at.timestamp()),
+            resolve=lambda bt, info, **args: flipped_at_resolver(bt),
         ),
         "requiredForWin": GraphQLField(
             GraphQLNonNull(GraphQLBoolean),

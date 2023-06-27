@@ -33,6 +33,7 @@ export const FETCH_BINGO_QUERY = gql`
                     coordinateX
                     coordinateY
                     flipped
+                    flippedAt
                     requiredForWin
                 }
               }
@@ -289,8 +290,9 @@ const BingoChallengeLeaderboard = ({cards}: BingoChallengeLeaderboardProps) => {
     const sortedCards = _.sortBy(
         cards,
         (card) => {
-            const flippedTiles = card.tiles.filter((tile) => tile.flipped).length
-            return -1 * flippedTiles;
+            const flippedVictoryTiles = card.tiles.filter((tile) => tile.flipped && tile.requiredForWin);
+            const latestFlippedVictoryTile = _.max(flippedVictoryTiles.map((tile) => tile.flippedAt));
+            return [-1 * flippedVictoryTiles.length, latestFlippedVictoryTile];
         }).map((card: BingoCard) => {
             return <BingoChallengeLeaderboardCard card={card} />
         })

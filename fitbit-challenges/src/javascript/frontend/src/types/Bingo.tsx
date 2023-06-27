@@ -8,6 +8,7 @@ export type BingoTile = {
     coordinateX: number
     coordinateY: number
     flipped: boolean
+    flippedAt: number | null
     requiredForWin: boolean
 }
 
@@ -19,6 +20,7 @@ export const emptyBingoTile: BingoTile = {
     coordinateX: 0,
     coordinateY: 0,
     flipped: false,
+    flippedAt: null,
     requiredForWin: false
 }
 
