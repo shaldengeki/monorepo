@@ -113,18 +113,24 @@ def flip_bingo_tile(bingo_tile_model: Type[BingoTile], *args, **kwargs) -> Bingo
     if tile is None:
         raise ValueError(f"No bingo tile with id {tile_id} found.")
 
-    unused_amounts = tile.bingo_card.unused_amounts()
-    if tile.steps is not None and tile.steps > unused_amounts.steps:
-        raise ValueError(f"You don't have enough unused steps to flip this tile!")
-    if (
-        tile.active_minutes is not None
-        and tile.active_minutes > unused_amounts.activeMinutes
-    ):
-        raise ValueError(
-            f"You don't have enough unused active minutes to flip this tile!"
-        )
-    if tile.distance_km is not None and tile.distance_km > unused_amounts.distanceKm:
-        raise ValueError(f"You don't have enough unused kilometers to flip this tile!")
+    if not tile.flipped:
+        unused_amounts = tile.bingo_card.unused_amounts()
+        if tile.steps is not None and tile.steps > unused_amounts.steps:
+            raise ValueError(f"You don't have enough unused steps to flip this tile!")
+        elif (
+            tile.active_minutes is not None
+            and tile.active_minutes > unused_amounts.activeMinutes
+        ):
+            raise ValueError(
+                f"You don't have enough unused active minutes to flip this tile!"
+            )
+        elif (
+            tile.distance_km is not None
+            and tile.distance_km > unused_amounts.distanceKm
+        ):
+            raise ValueError(
+                f"You don't have enough unused kilometers to flip this tile!"
+            )
 
     tile.flip()
     db.session.add(tile)
