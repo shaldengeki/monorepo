@@ -1,6 +1,6 @@
-from graphql import GraphQLField, GraphQLObjectType, GraphQLSchema
+from graphql import GraphQLObjectType, GraphQLSchema
 
-from .types.bingo_card import bingo_challenge_field
+from .types.bingo_card import bingo_challenge_field, flip_bingo_tile_field
 from .types.challenge import challenges_field, create_challenge_field
 from .types.user import current_user_field, users_field
 from .types.user_activities import (
@@ -30,6 +30,7 @@ def Schema(models, app):
                 "createUserActivity": create_user_activity_field(models.UserActivity),
                 "authWithFitbit": authorize_with_fitbit_field(app),
                 "updateUserActivity": update_user_activity_field(models.UserActivity),
+                "flipBingoTile": flip_bingo_tile_field(models.BingoTile),
             },
         ),
     )

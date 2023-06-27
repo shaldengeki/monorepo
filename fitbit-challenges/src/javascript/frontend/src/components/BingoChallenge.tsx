@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import _ from 'lodash'
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, useMutation } from '@apollo/client';
 
 import PageTitle from './PageTitle';
-import Activity, {ActivityDelta, ActivityTotal, emptyActivity, emptyActivityDelta} from '../types/Activity';
 import User from '../types/User';
 import BingoCard, {BingoTile} from '../types/Bingo';
 
@@ -46,15 +45,35 @@ export const FETCH_BINGO_QUERY = gql`
       }
 `;
 
+export const FLIP_BINGO_TILE_MUTATION = gql`
+    mutation FlipBingoTile($id: Int!) {
+        flipBingoTile(id: $id) {
+            id
+            flipped
+            bingoCard {
+                challenge {
+                    unusedAmounts {
+                        steps
+                        activeMinutes
+                        distanceKm
+                    }
+                }
+            }
+        }
+    }
+`
+
 type IconProps = {
     paths: string[]
     strokeWidth?: number
     viewBox?: string
+    stroke?: string
 }
 
-const Icon = ({paths, strokeWidth, viewBox}: IconProps) => {
+const Icon = ({paths, strokeWidth, viewBox, stroke}: IconProps) => {
     strokeWidth = strokeWidth || 0.1;
     viewBox = viewBox || "0 0 16 16";
+    stroke = stroke || "currentColor";
     const pathElts = paths.map((path, idx) => <path key={idx} strokeLinecap="round" strokeLinejoin="round" d={path} />);
     return (
         <svg
@@ -62,12 +81,22 @@ const Icon = ({paths, strokeWidth, viewBox}: IconProps) => {
             fill="currentColor"
             viewBox={viewBox}
             strokeWidth={strokeWidth}
-            stroke="currentColor"
+            stroke={stroke}
             className="w-1/2 h-1/2 mx-auto"
         >
             {pathElts}
         </svg>
     );
+}
+
+const FlippedIcon = () => {
+    return <Icon
+        stroke="green"
+        paths={[
+            "M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z",
+            "M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z",
+        ]}
+    />
 }
 
 const StepsIcon = () => {
@@ -88,13 +117,39 @@ const DistanceKmIcon = () => {
 
 type BingoChallengeTileProps = {
     tile: BingoTile
+    challengeId: number
 }
 
-const BingoChallengeTile = ({tile}: BingoChallengeTileProps) => {
+const BingoChallengeTile = ({tile, challengeId}: BingoChallengeTileProps) => {
+    const [
+        flipTile,
+        {
+            data,
+            loading,
+            error,
+            reset
+        }
+    ] = useMutation(
+        FLIP_BINGO_TILE_MUTATION,
+        {
+            refetchQueries: [
+                {
+                    query: FETCH_BINGO_QUERY,
+                    variables: {
+                        id: challengeId
+                    }
+                },
+                'FetchBingo'
+            ]
+        }
+    );
+
     let icon = <p />;
     let text = "";
     let backgroundColor = "";
-    if (tile.steps !== null) {
+    if (tile.flipped) {
+        icon = <FlippedIcon />
+    } else if (tile.steps !== null) {
         icon = <StepsIcon />
         text = `${tile.steps}`;
         backgroundColor = "bg-teal-500 dark:bg-teal-800"
@@ -112,7 +167,14 @@ const BingoChallengeTile = ({tile}: BingoChallengeTileProps) => {
     }
     const className = `flex items-center rounded-full aspect-square font-extrabold text-white dark:text-slate-50 text-xl ${backgroundColor}`
     return (
-        <div className={className}>
+        <div className={className} onClick={(e) => {
+            e.preventDefault();
+            flipTile({
+                variables: {
+                    id: tile.id
+                }
+            })
+        }}>
             <span>
                 {icon}
                 <p>{text}</p>
@@ -165,10 +227,11 @@ type BingoChallengeCardProps = {
     card: BingoCard
     user: User
     currentUser: User
+    challengeId: number
 }
 
-const BingoChallengeCard = ({card, user, currentUser}: BingoChallengeCardProps) => {
-    const tiles = card.tiles.map((tile) => <BingoChallengeTile key={tile.id} tile={tile} />);
+const BingoChallengeCard = ({card, user, currentUser, challengeId}: BingoChallengeCardProps) => {
+    const tiles = card.tiles.map((tile) => <BingoChallengeTile key={tile.id} tile={tile} challengeId={challengeId} />);
     return (
         <div className="grid grid-cols-5 grid-rows-5 gap-1 text-center">
             {tiles}
@@ -214,6 +277,7 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
                 card={displayedCard}
                 user={displayedUser}
                 currentUser={currentUser}
+                challengeId={id}
             />
         </div>
     )

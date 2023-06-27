@@ -13,8 +13,8 @@ from graphql import (
 from typing import Any, Optional, Type
 from sqlalchemy import desc
 
-from ....config import app
-from ....models import Challenge, User
+from ....config import app, db
+from ....models import Challenge, User, BingoCard, BingoTile, UnusedAmounts
 from .user import user_type, fetch_current_user
 from .challenge import (
     challenge_type,
@@ -98,6 +98,58 @@ bingo_tile_type = GraphQLObjectType(
 )
 
 
+def flip_bingo_tile(bingo_tile_model: Type[BingoTile], *args, **kwargs) -> BingoTile:
+    tile_id = int(kwargs["id"])
+    current_user = fetch_current_user(app, User)
+    if current_user is None:
+        raise ValueError("You must be signed in to flip a bingo tile.")
+
+    tile = (
+        bingo_tile_model.query.join(bingo_tile_model.bingo_card)
+        .filter(bingo_tile_model.id == tile_id)
+        .filter(BingoCard.user == current_user)
+        .first()
+    )
+    if tile is None:
+        raise ValueError(f"No bingo tile with id {tile_id} found.")
+
+    unused_amounts = tile.bingo_card.unused_amounts()
+    if tile.steps is not None and tile.steps > unused_amounts.steps:
+        raise ValueError(f"You don't have enough unused steps to flip this tile!")
+    if (
+        tile.active_minutes is not None
+        and tile.active_minutes > unused_amounts.activeMinutes
+    ):
+        raise ValueError(
+            f"You don't have enough unused active minutes to flip this tile!"
+        )
+    if tile.distance_km is not None and tile.distance_km > unused_amounts.distanceKm:
+        raise ValueError(f"You don't have enough unused kilometers to flip this tile!")
+
+    tile.flip()
+    db.session.add(tile)
+    db.session.commit()
+    return tile
+
+
+def flip_bingo_tile_field(
+    bingo_tile_model: Type[BingoTile],
+) -> GraphQLField:
+    return GraphQLField(
+        bingo_tile_type,
+        description="Flips a bingo tile.",
+        args={
+            "id": GraphQLArgument(
+                GraphQLNonNull(GraphQLInt),
+                description="ID of the bingo tile to flip.",
+            ),
+        },
+        resolve=lambda *args, **kwargs: flip_bingo_tile(
+            bingo_tile_model, *args, **kwargs
+        ),
+    )
+
+
 def bingo_card_fields() -> dict[str, GraphQLField]:
     return {
         "id": GraphQLField(
@@ -109,7 +161,7 @@ def bingo_card_fields() -> dict[str, GraphQLField]:
             description="The user who is filling this bingo card out.",
         ),
         "challenge": GraphQLField(
-            GraphQLNonNull(challenge_type),
+            GraphQLNonNull(bingo_challenge_type),
             description="The challenge that this bingo card is a part of.",
         ),
         "rows": GraphQLField(
@@ -164,13 +216,6 @@ unused_amounts_type = GraphQLObjectType(
 )
 
 
-@dataclasses.dataclass
-class UnusedAmounts:
-    steps: Optional[int]
-    activeMinutes: Optional[int]
-    distanceKm: Optional[decimal.Decimal]
-
-
 def unused_amounts_resolver(
     app: Flask, challenge: Challenge, user_model: type[User]
 ) -> UnusedAmounts:
@@ -178,35 +223,13 @@ def unused_amounts_resolver(
     if current_user is None:
         return UnusedAmounts(steps=None, activeMinutes=None, distanceKm=None)
 
-    # Sum up the total user's resources.
-    total_steps = 0
-    total_active_minutes = 0
-    total_distance_km = decimal.Decimal(0)
-    for activity in challenge.activities_for_user(current_user):
-        total_steps += activity.steps
-        total_active_minutes += activity.active_minutes
-        total_distance_km += activity.distance_km
-
-    # Subtract out the user's used steps.
     bingo_card = [
         card
         for card in challenge.bingo_cards
         if card.user.fitbit_user_id == current_user.fitbit_user_id
     ][0]
-    flipped_tiles = [tile for tile in bingo_card.bingo_tiles if tile.flipped]
-    for tile in flipped_tiles:
-        if tile.steps is not None:
-            total_steps -= tile.steps
-        if tile.active_minutes is not None:
-            total_active_minutes -= tile.active_minutes
-        if tile.distance_km is not None:
-            total_distance_km -= tile.distance_km
 
-    return UnusedAmounts(
-        steps=total_steps,
-        activeMinutes=total_active_minutes,
-        distanceKm=total_distance_km,
-    )
+    return bingo_card.unused_amounts()
 
 
 def bingo_challenge_fields() -> dict[str, GraphQLField]:
