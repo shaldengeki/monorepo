@@ -348,13 +348,22 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
     }
 
     const cards: Array<BingoCard> = data.bingoChallenge.bingoCards;
-    const sortedCards = _.sortBy(
-        cards,
-        (card) => {
-            const flippedVictoryTiles = card.tiles.filter((tile) => tile.flipped && tile.requiredForWin);
-            const latestFlippedVictoryTile = _.max(flippedVictoryTiles.map((tile) => tile.flippedAt));
-            return [-1 * flippedVictoryTiles.length, latestFlippedVictoryTile];
-        });
+    const sortedCards = _.orderBy(
+        _.map(
+            cards,
+            (card) => {
+                const flippedVictoryTiles = card.tiles.filter((tile) => tile.flipped && tile.requiredForWin);
+                const latestFlippedVictoryTile = _.max(flippedVictoryTiles.map((tile) => tile.flippedAt));
+                return {
+                    card,
+                    flippedVictoryTiles,
+                    latestFlippedVictoryTile
+                }
+            }
+        ),
+        ['flippedVictoryTiles', 'latestFlippedVictoryTile'],
+        ['desc', 'asc'],
+    ).map((cardData) => cardData.card);
 
     const displayedCard = sortedCards.filter(
         (card) => card.user.fitbitUserId === displayedUser.fitbitUserId
