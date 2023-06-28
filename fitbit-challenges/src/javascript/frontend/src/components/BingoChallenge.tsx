@@ -208,8 +208,8 @@ const BingoChallengeUnusedAmounts = ({steps, activeMinutes, distanceKm}: BingoCh
                 <div className="w-1/3 my-auto">
                     <StepsIcon />
                 </div>
-                <div className="w-2/3">
-                    <div>{steps}</div>
+                <div className="w-2/3 my-auto">
+                    <p>{steps}</p>
                     <p>Steps</p>
                 </div>
             </div>
@@ -217,8 +217,8 @@ const BingoChallengeUnusedAmounts = ({steps, activeMinutes, distanceKm}: BingoCh
                 <div className="w-1/3 my-auto">
                     <ActiveMinutesIcon />
                 </div>
-                <div className="w-2/3">
-                    <div>{activeMinutes}</div>
+                <div className="w-2/3 my-auto">
+                    <p>{activeMinutes}</p>
                     <p>Active Minutes</p>
                 </div>
             </div>
@@ -226,8 +226,8 @@ const BingoChallengeUnusedAmounts = ({steps, activeMinutes, distanceKm}: BingoCh
                 <div className="w-1/3 my-auto">
                     <DistanceKmIcon />
                 </div>
-                <div className="w-2/3">
-                    <div>{distanceKm}</div>
+                <div className="w-2/3 my-auto">
+                    <p>{distanceKm}</p>
                     <p>Km</p>
                 </div>
             </div>
@@ -372,8 +372,8 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
     return (
         <div>
             <PageTitle className="text-center">Bingo</PageTitle>
-            <div className="grid grid-cols-4">
-                <div className="col-span-3">
+            <div className="grid grid-cols-4 space-y-6">
+                <div className="col-span-4 md:col-span-3">
                     { currentUserPlace && <p className="text-center text-xl font-bold">🎉Congrats on finishing!🎉 You can keep flipping tiles.</p>}
                     <BingoChallengeUnusedAmounts
                         steps={data.bingoChallenge.unusedAmounts.steps}
@@ -387,7 +387,7 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
                         challengeId={id}
                     />
                 </div>
-                <div className="col-span-1 px-4">
+                <div className="col-span-4 md:col-span-1 px-24 md:px-4">
                     <BingoChallengeLeaderboard cards={sortedCards} setUserHook={setDisplayedUser} displayedCard={displayedCard} />
                 </div>
             </div>
