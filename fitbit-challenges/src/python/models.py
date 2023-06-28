@@ -422,6 +422,7 @@ class BingoCard(db.Model):  # type: ignore
         challenge: "Challenge",
         start: datetime.datetime,
         end: datetime.datetime,
+        pattern: Optional[BingoCardPattern] = None,
     ) -> "BingoCard":
         # Assign this card to the user and challenge.
         self.user = user
@@ -431,8 +432,9 @@ class BingoCard(db.Model):  # type: ignore
         self.rows = 5
         self.columns = 5
 
-        # Pick one of a set of victory patterns.
-        pattern = random.choice(BingoCard.PATTERNS)
+        if pattern is None:
+            # Pick one of a set of victory patterns.
+            pattern = random.choice(BingoCard.PATTERNS)
 
         # Compute the total amounts for each resource.
         duration = end - start

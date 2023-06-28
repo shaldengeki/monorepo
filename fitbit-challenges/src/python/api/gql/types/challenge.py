@@ -10,6 +10,7 @@ from graphql import (
     GraphQLNonNull,
     GraphQLString,
 )
+import random
 from sqlalchemy import desc
 from typing import Any, Type
 
@@ -140,6 +141,7 @@ def create_challenge(
     db.session.commit()
 
     if ChallengeType.BINGO.value == challenge_type:
+        pattern = random.choice(BingoCard.PATTERNS)
         users = User.query.filter(User.fitbit_user_id.in_(args["users"])).all()
         for user in users:
             card = BingoCard()
@@ -150,6 +152,7 @@ def create_challenge(
                     startAt, tz=datetime.timezone.utc
                 ),
                 end=datetime.datetime.fromtimestamp(endAt, tz=datetime.timezone.utc),
+                pattern=pattern,
             )
             db.session.add(card)
 

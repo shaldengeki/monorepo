@@ -1,5 +1,3 @@
-import dataclasses
-import decimal
 from flask import Flask
 from graphql import (
     GraphQLArgument,
@@ -11,7 +9,6 @@ from graphql import (
     GraphQLNonNull,
 )
 from typing import Any, Optional, Type
-from sqlalchemy import desc
 
 from ....config import app, db
 from ....models import Challenge, User, BingoCard, BingoTile, UnusedAmounts
