@@ -178,7 +178,7 @@ const BingoChallengeTile = ({tile, challengeId, isCurrentUser}: BingoChallengeTi
     return (
         <div className={className} onClick={(e) => {
             e.preventDefault();
-            if (!isCurrentUser) {
+            if (!isCurrentUser || tile.flipped) {
                 return;
             }
             flipTile({
