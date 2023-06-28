@@ -382,6 +382,21 @@ class BingoCard(db.Model):  # type: ignore
             if not tile.flipped:
                 yield tile
 
+    def victory_tiles(self) -> Generator["BingoTile", None, None]:
+        for tile in self.bingo_tiles:
+            if tile.required_for_win:
+                yield tile
+
+    def flipped_victory_tiles(self) -> Generator["BingoTile", None, None]:
+        for tile in self.victory_tiles():
+            if tile.flipped:
+                yield tile
+
+    def unflipped_victory_tiles(self) -> Generator["BingoTile", None, None]:
+        for tile in self.victory_tiles():
+            if not tile.flipped:
+                yield tile
+
     def total_cost_steps(self) -> int:
         return sum(tile.steps for tile in self.bingo_tiles if tile.steps is not None)
 
@@ -535,6 +550,35 @@ class BingoCard(db.Model):  # type: ignore
             distanceKm=total_distance_km,
         )
 
+    def unfinished(self) -> bool:
+        return any(t for t in self.unflipped_victory_tiles())
+
+    def finished(self) -> bool:
+        return not any(t for t in self.unflipped_victory_tiles())
+
+    def finished_at(self) -> Optional[datetime.datetime]:
+        max_flipped_at = datetime.datetime(
+            year=1,
+            month=1,
+            day=1,
+            hour=0,
+            minute=0,
+            second=0,
+            tzinfo=datetime.timezone.utc,
+        )
+        victory_tiles = 0
+        for t in self.victory_tiles():
+            victory_tiles += 1
+            if not t.flipped or t.flipped_at is None:
+                return None
+            if t.flipped_at > max_flipped_at:
+                max_flipped_at = t.flipped_at
+
+        if victory_tiles == 0:
+            return None
+
+        return max_flipped_at
+
 
 class BingoTile(db.Model):  # type: ignore
     __tablename__ = "bingo_tiles"
@@ -564,9 +608,9 @@ class BingoTile(db.Model):  # type: ignore
         return "<BingoTile {id}>".format(id=self.id)
 
     def flip(self) -> bool:
-        self.flipped = not self.flipped
         if self.flipped:
-            self.flipped_at = datetime.datetime.now(tz=datetime.timezone.utc)
-        else:
-            self.flipped_at = None
+            return self.flipped
+
+        self.flipped = True
+        self.flipped_at = datetime.datetime.now(tz=datetime.timezone.utc)
         return self.flipped

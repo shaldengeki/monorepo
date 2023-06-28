@@ -37,6 +37,8 @@ export const FETCH_BINGO_QUERY = gql`
                     flippedAt
                     requiredForWin
                 }
+                finished
+                finishedAt
               }
               unusedAmounts {
                 steps
@@ -155,7 +157,7 @@ const BingoChallengeTile = ({tile, challengeId, isCurrentUser}: BingoChallengeTi
         if (tile.steps !== null) {
             text = `${tile.steps} steps`
         } else if (tile.activeMinutes !== null) {
-            text = `${tile.activeMinutes} minutes`
+            text = `${tile.activeMinutes} min`
         } else if (tile.distanceKm !== null) {
             text = `${tile.distanceKm} km`
         }
@@ -172,7 +174,7 @@ const BingoChallengeTile = ({tile, challengeId, isCurrentUser}: BingoChallengeTi
         text = `${tile.distanceKm}`;
         backgroundColor = "bg-blue-400 dark:bg-violet-800"
     }
-    const className = `flex items-center rounded-full aspect-square font-extrabold text-white dark:text-slate-50 text-xl ${backgroundColor}`
+    const className = `flex items-center rounded-full aspect-square font-extrabold text-white dark:text-slate-50 ${backgroundColor}`
     return (
         <div className={className} onClick={(e) => {
             e.preventDefault();
@@ -272,17 +274,30 @@ type BingoChallengeLeaderboardCardProps = {
     card: BingoCard
     setUserHook: Function
     isDisplayedCard: boolean
+    place: number
 }
 
-const BingoChallengeLeaderboardCard = ({card, setUserHook, isDisplayedCard}: BingoChallengeLeaderboardCardProps) => {
+const BingoChallengeLeaderboardCard = ({card, setUserHook, isDisplayedCard, place}: BingoChallengeLeaderboardCardProps) => {
     const tiles = card.tiles.map((tile) => <BingoChallengeLeaderboardTile key={tile.id} tile={tile} />);
     const baseClasses = (isDisplayedCard) ? "rounded border border-green-500" : "";
+    let displayText = "";
+    if (card.finished) {
+        if (place === 1) {
+            displayText = "🥇";
+        } else if (place === 2) {
+            displayText = "🥈";
+        } else if (place === 3) {
+            displayText = "🥉";
+        }
+    }
+    displayText = `${displayText}${card.user.displayName}`
+
     return (
         <div className={`${baseClasses} p-1`} onClick={(e) => {setUserHook(card.user)}}>
             <div className="grid grid-cols-5 grid-rows-5 gap-1 text-center">
                 {tiles}
             </div>
-            <p className="text-center">{card.user.displayName}</p>
+            <p className="text-center">{displayText}</p>
         </div>
     )
 }
@@ -294,14 +309,8 @@ type BingoChallengeLeaderboardProps = {
 }
 
 const BingoChallengeLeaderboard = ({cards, setUserHook, displayedCard}: BingoChallengeLeaderboardProps) => {
-    const sortedCards = _.sortBy(
-        cards,
-        (card) => {
-            const flippedVictoryTiles = card.tiles.filter((tile) => tile.flipped && tile.requiredForWin);
-            const latestFlippedVictoryTile = _.max(flippedVictoryTiles.map((tile) => tile.flippedAt));
-            return [-1 * flippedVictoryTiles.length, latestFlippedVictoryTile];
-        }).map((card: BingoCard) => {
-            return <BingoChallengeLeaderboardCard key={card.id} card={card} setUserHook={setUserHook} isDisplayedCard={displayedCard.id === card.id} />
+    const sortedCards = cards.map((card: BingoCard, idx) => {
+            return <BingoChallengeLeaderboardCard key={card.id} card={card} setUserHook={setUserHook} isDisplayedCard={displayedCard.id === card.id} place={idx+1} />
         })
 
     return (
@@ -315,6 +324,11 @@ const BingoChallengeLeaderboard = ({cards, setUserHook, displayedCard}: BingoCha
 type BingoChallengeProps = {
     id: number;
     currentUser: User;
+}
+
+type CardPlace = {
+    card: BingoCard
+    place: number
 }
 
 const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
@@ -334,15 +348,33 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
     }
 
     const cards: Array<BingoCard> = data.bingoChallenge.bingoCards;
-    const displayedCard = cards.filter(
+    const sortedCards = _.sortBy(
+        cards,
+        (card) => {
+            const flippedVictoryTiles = card.tiles.filter((tile) => tile.flipped && tile.requiredForWin);
+            const latestFlippedVictoryTile = _.max(flippedVictoryTiles.map((tile) => tile.flippedAt));
+            return [-1 * flippedVictoryTiles.length, latestFlippedVictoryTile];
+        });
+
+    const displayedCard = sortedCards.filter(
         (card) => card.user.fitbitUserId === displayedUser.fitbitUserId
     )[0];
+
+    const currentUserPlaces = sortedCards.map(
+        (card, idx) => { return {card, place: idx + 1} }
+    ).filter(
+        (c: CardPlace) => c.card.user.fitbitUserId === currentUser.fitbitUserId
+    ).map(
+        (c: CardPlace) => c.place
+    );
+    const currentUserPlace = currentUserPlaces.length > 0 ? currentUserPlaces[0] : null;
 
     return (
         <div>
             <PageTitle className="text-center">Bingo</PageTitle>
             <div className="grid grid-cols-4">
                 <div className="col-span-3">
+                    { currentUserPlace && <p className="text-center text-xl font-bold">🎉Congrats on finishing!🎉 You can keep flipping tiles.</p>}
                     <BingoChallengeUnusedAmounts
                         steps={data.bingoChallenge.unusedAmounts.steps}
                         activeMinutes={data.bingoChallenge.unusedAmounts.activeMinutes}
@@ -356,7 +388,7 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
                     />
                 </div>
                 <div className="col-span-1 px-4">
-                    <BingoChallengeLeaderboard cards={cards} setUserHook={setDisplayedUser} displayedCard={displayedCard} />
+                    <BingoChallengeLeaderboard cards={sortedCards} setUserHook={setDisplayedUser} displayedCard={displayedCard} />
                 </div>
             </div>
         </div>

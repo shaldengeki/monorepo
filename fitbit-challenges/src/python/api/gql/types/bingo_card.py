@@ -112,29 +112,24 @@ def flip_bingo_tile(bingo_tile_model: Type[BingoTile], *args, **kwargs) -> Bingo
         bingo_tile_model.query.join(bingo_tile_model.bingo_card)
         .filter(bingo_tile_model.id == tile_id)
         .filter(BingoCard.user == current_user)
+        .filter(BingoTile.flipped == False)
         .first()
     )
     if tile is None:
         raise ValueError(f"No bingo tile with id {tile_id} found.")
 
-    if not tile.flipped:
-        unused_amounts = tile.bingo_card.unused_amounts()
-        if tile.steps is not None and tile.steps > unused_amounts.steps:
-            raise ValueError(f"You don't have enough unused steps to flip this tile!")
-        elif (
-            tile.active_minutes is not None
-            and tile.active_minutes > unused_amounts.activeMinutes
-        ):
-            raise ValueError(
-                f"You don't have enough unused active minutes to flip this tile!"
-            )
-        elif (
-            tile.distance_km is not None
-            and tile.distance_km > unused_amounts.distanceKm
-        ):
-            raise ValueError(
-                f"You don't have enough unused kilometers to flip this tile!"
-            )
+    unused_amounts = tile.bingo_card.unused_amounts()
+    if tile.steps is not None and tile.steps > unused_amounts.steps:
+        raise ValueError(f"You don't have enough unused steps to flip this tile!")
+    elif (
+        tile.active_minutes is not None
+        and tile.active_minutes > unused_amounts.activeMinutes
+    ):
+        raise ValueError(
+            f"You don't have enough unused active minutes to flip this tile!"
+        )
+    elif tile.distance_km is not None and tile.distance_km > unused_amounts.distanceKm:
+        raise ValueError(f"You don't have enough unused kilometers to flip this tile!")
 
     tile.flip()
     db.session.add(tile)
@@ -158,6 +153,14 @@ def flip_bingo_tile_field(
             bingo_tile_model, *args, **kwargs
         ),
     )
+
+
+def finished_at_resolver(card: BingoCard) -> Optional[int]:
+    finished_at = card.finished_at()
+    if finished_at is None:
+        return None
+
+    return int(finished_at.timestamp())
 
 
 def bingo_card_fields() -> dict[str, GraphQLField]:
@@ -191,6 +194,16 @@ def bingo_card_fields() -> dict[str, GraphQLField]:
             GraphQLNonNull(GraphQLList(bingo_tile_type)),
             description="The bingo tiles belonging to this card.",
             resolve=lambda card, *args, **kwargs: card.bingo_tiles,
+        ),
+        "finished": GraphQLField(
+            GraphQLNonNull(GraphQLBoolean),
+            description="Whether the bingo card is completed.",
+            resolve=lambda card, *args, **kwargs: card.finished(),
+        ),
+        "finishedAt": GraphQLField(
+            GraphQLInt,
+            description="When the bingo card was completed. Null if it wasn't.",
+            resolve=lambda card, *args, **kwargs: finished_at_resolver(card),
         ),
     }
 

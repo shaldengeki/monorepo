@@ -1,7 +1,13 @@
 import datetime
 import decimal
 
-from ..models import Challenge, apply_fuzz_factor_to_int, apply_fuzz_factor_to_decimal
+from ..models import (
+    BingoCard,
+    BingoTile,
+    Challenge,
+    apply_fuzz_factor_to_int,
+    apply_fuzz_factor_to_decimal,
+)
 
 
 def create_mock_datetime(returned_date: datetime.datetime) -> object:
@@ -106,3 +112,160 @@ def test_apply_fuzz_factor_to_decimal_maximum():
     assert decimal.Decimal("1.2") == apply_fuzz_factor_to_decimal(
         decimal.Decimal("1.0"), 20, 20
     )
+
+
+class TestBingoCard:
+    def test_victory_tiles_returns_empty_when_no_tiles(self):
+        c = BingoCard(bingo_tiles=[])
+        assert 0 == len(list(c.victory_tiles()))
+
+    def test_victory_tiles_returns_empty_when_all_tiles_not_required(self):
+        t = BingoTile(required_for_win=False)
+        c = BingoCard(bingo_tiles=[t])
+        assert 0 == len(list(c.victory_tiles()))
+
+    def test_victory_tiles_returns_tile_when_required(self):
+        t1 = BingoTile(required_for_win=False)
+        t2 = BingoTile(required_for_win=True)
+        c = BingoCard(bingo_tiles=[t2, t1])
+        victory_tiles = list(c.victory_tiles())
+        assert 1 == len(victory_tiles)
+        assert t2 in victory_tiles
+        assert t1 not in victory_tiles
+
+    def test_flipped_victory_tiles_returns_empty_when_no_tiles(self):
+        c = BingoCard(bingo_tiles=[])
+        assert 0 == len(list(c.flipped_victory_tiles()))
+
+    def test_flipped_victory_tiles_returns_empty_when_all_tiles_not_required(self):
+        t = BingoTile(flipped=True, required_for_win=False)
+        c = BingoCard(bingo_tiles=[t])
+        assert 0 == len(list(c.flipped_victory_tiles()))
+
+    def test_flipped_victory_tiles_returns_empty_when_all_tiles_not_flipped(self):
+        t = BingoTile(flipped=False, required_for_win=True)
+        c = BingoCard(bingo_tiles=[t])
+        assert 0 == len(list(c.flipped_victory_tiles()))
+
+    def test_flipped_victory_tiles_returns_tile_when_required(self):
+        t1 = BingoTile(flipped=True, required_for_win=False)
+        t2 = BingoTile(flipped=True, required_for_win=True)
+        c = BingoCard(bingo_tiles=[t2, t1])
+        victory_tiles = list(c.flipped_victory_tiles())
+        assert 1 == len(victory_tiles)
+        assert t2 in victory_tiles
+        assert t1 not in victory_tiles
+
+    def test_flipped_victory_tiles_returns_tile_when_flipped(self):
+        t1 = BingoTile(flipped=False, required_for_win=True)
+        t2 = BingoTile(flipped=True, required_for_win=True)
+        c = BingoCard(bingo_tiles=[t2, t1])
+        victory_tiles = list(c.flipped_victory_tiles())
+        assert 1 == len(victory_tiles)
+        assert t2 in victory_tiles
+        assert t1 not in victory_tiles
+
+    def test_unflipped_victory_tiles_returns_empty_when_no_tiles(self):
+        c = BingoCard(bingo_tiles=[])
+        assert 0 == len(list(c.unflipped_victory_tiles()))
+
+    def test_unflipped_victory_tiles_returns_empty_when_all_tiles_flipped(self):
+        t = BingoTile(flipped=True, required_for_win=True)
+        c = BingoCard(bingo_tiles=[t])
+        assert 0 == len(list(c.unflipped_victory_tiles()))
+
+    def test_unflipped_victory_tiles_returns_tile_when_required(self):
+        t1 = BingoTile(flipped=True, required_for_win=False)
+        t2 = BingoTile(flipped=False, required_for_win=True)
+        c = BingoCard(bingo_tiles=[t2, t1])
+        victory_tiles = list(c.unflipped_victory_tiles())
+        assert 1 == len(victory_tiles)
+        assert t2 in victory_tiles
+        assert t1 not in victory_tiles
+
+    def test_unfinished_returns_false_when_no_tiles(self):
+        c = BingoCard(bingo_tiles=[])
+        assert not c.unfinished()
+
+    def test_unfinished_returns_false_when_all_tiles_flipped(self):
+        t = BingoTile(flipped=True, required_for_win=False)
+        c = BingoCard(bingo_tiles=[t])
+        assert not c.unfinished()
+
+        t = BingoTile(flipped=True, required_for_win=True)
+        c = BingoCard(bingo_tiles=[t])
+        assert not c.unfinished()
+
+    def test_unfinished_returns_true_when_tile_unflipped(self):
+        t = BingoTile(flipped=False, required_for_win=True)
+        c = BingoCard(bingo_tiles=[t])
+        assert c.unfinished()
+
+    def test_finished_returns_true_when_no_tiles(self):
+        c = BingoCard(bingo_tiles=[])
+        assert c.finished()
+
+    def test_finished_returns_true_when_all_tiles_flipped(self):
+        t = BingoTile(flipped=True, required_for_win=False)
+        c = BingoCard(bingo_tiles=[t])
+        assert c.finished()
+
+        t = BingoTile(flipped=True, required_for_win=True)
+        c = BingoCard(bingo_tiles=[t])
+        assert c.finished()
+
+    def test_finished_returns_false_when_tile_unflipped(self):
+        t = BingoTile(flipped=False, required_for_win=True)
+        c = BingoCard(bingo_tiles=[t])
+        assert not c.finished()
+
+    def test_finished_at_returns_none_when_no_tiles(self):
+        c = BingoCard(bingo_tiles=[])
+        assert c.finished_at() is None
+
+    def test_finished_at_returns_none_when_no_victory_tiles(self):
+        t = BingoTile(flipped=True, required_for_win=False)
+        c = BingoCard(bingo_tiles=[t])
+        assert c.finished_at() is None
+
+    def test_finished_at_returns_latest_timestamp_when_all_tiles_flipped(self):
+        dt = datetime.datetime(
+            year=2012,
+            month=10,
+            day=3,
+            hour=11,
+            minute=28,
+            second=11,
+            tzinfo=datetime.timezone.utc,
+        )
+        t = BingoTile(flipped=True, required_for_win=True, flipped_at=dt)
+        c = BingoCard(bingo_tiles=[t])
+        assert dt == c.finished_at() == dt
+
+        dt1 = datetime.datetime(
+            year=2012,
+            month=10,
+            day=3,
+            hour=11,
+            minute=28,
+            second=11,
+            tzinfo=datetime.timezone.utc,
+        )
+        t1 = BingoTile(flipped=True, required_for_win=True, flipped_at=dt1)
+        dt2 = datetime.datetime(
+            year=2013,
+            month=10,
+            day=3,
+            hour=11,
+            minute=28,
+            second=11,
+            tzinfo=datetime.timezone.utc,
+        )
+        t2 = BingoTile(flipped=True, required_for_win=True, flipped_at=dt2)
+        c = BingoCard(bingo_tiles=[t1, t2])
+        assert dt2 == c.finished_at()
+
+    def test_finished_at_returns_none_when_tile_unflipped(self):
+        t = BingoTile(flipped=False, required_for_win=True)
+        c = BingoCard(bingo_tiles=[t])
+        assert c.finished_at() is None

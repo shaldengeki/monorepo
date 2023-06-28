@@ -30,6 +30,8 @@ type BingoCard = {
     rows: number
     columns: number
     tiles: Array<BingoTile>
+    finished: boolean
+    finishedAt: number | null
 }
 
 export const emptyBingoCard: BingoCard = {
@@ -37,7 +39,9 @@ export const emptyBingoCard: BingoCard = {
     user: emptyUser,
     rows: 0,
     columns: 0,
-    tiles: []
+    tiles: [],
+    finished: true,
+    finishedAt: null
 }
 
 export default BingoCard;
