@@ -4,7 +4,7 @@ import { useQuery, gql, useMutation } from '@apollo/client';
 
 import PageTitle from './PageTitle';
 import User from '../types/User';
-import BingoCard, {BingoTile} from '../types/Bingo';
+import BingoCard, {BingoTile, emptyBingoTile} from '../types/Bingo';
 
 export const FETCH_BINGO_QUERY = gql`
     query FetchBingo($id: Int!) {
@@ -321,6 +321,31 @@ const BingoChallengeLeaderboard = ({cards, setUserHook, displayedCard}: BingoCha
     )
 }
 
+type BingoVictoryPatternProps = {
+    card: BingoCard
+}
+
+const BingoVictoryPattern = ({card}: BingoVictoryPatternProps) => {
+    const tiles = card.tiles.map(
+        (tile) => {
+            return {
+                ...emptyBingoTile,
+                coordinateX: tile.coordinateX,
+                coordinateY: tile.coordinateY,
+                requiredForWin: tile.requiredForWin,
+                flipped: tile.requiredForWin
+            }
+        }
+    ).map(
+        (tile) => <BingoChallengeLeaderboardTile key={tile.id} tile={tile} />
+    );
+    return (
+        <div className="grid grid-cols-5 grid-rows-5 gap-1 text-center">
+            {tiles}
+        </div>
+    )
+}
+
 type BingoChallengeProps = {
     id: number;
     currentUser: User;
@@ -352,17 +377,17 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
         _.map(
             cards,
             (card) => {
-                const flippedVictoryTiles = card.tiles.filter((tile) => tile.flipped && tile.requiredForWin);
-                const latestFlippedVictoryTile = _.max(flippedVictoryTiles.map((tile) => tile.flippedAt));
+                const flipped = card.tiles.filter((tile) => tile.flipped && tile.requiredForWin);
                 return {
                     card,
-                    flippedVictoryTiles,
-                    latestFlippedVictoryTile
+                    finished: card.finished,
+                    flipped,
+                    finishedAt: card.finishedAt
                 }
             }
         ),
-        ['flippedVictoryTiles', 'latestFlippedVictoryTile'],
-        ['desc', 'asc'],
+        ['finished', 'flipped', 'finishedAt'],
+        ['desc', 'desc', 'asc'],
     ).map((cardData) => cardData.card);
 
     const displayedCard = sortedCards.filter(
@@ -382,7 +407,7 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
         <div>
             <PageTitle className="text-center">Bingo</PageTitle>
             <div className="grid grid-cols-4 space-y-6">
-                <div className="col-span-4 md:col-span-3">
+                <div className="col-span-4 md:col-span-3 space-y-3">
                     { currentUserPlace && <p className="text-center text-xl font-bold">🎉Congrats on finishing!🎉 You can keep flipping tiles.</p>}
                     <BingoChallengeUnusedAmounts
                         steps={data.bingoChallenge.unusedAmounts.steps}
@@ -395,6 +420,11 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
                         currentUser={currentUser}
                         challengeId={id}
                     />
+                    <div className="grid grid-cols-3">
+                        <div className="col-start-2 col-end-3">
+                            <BingoVictoryPattern card={displayedCard} />
+                        </div>
+                    </div>
                 </div>
                 <div className="col-span-4 md:col-span-1 px-24 md:px-4">
                     <BingoChallengeLeaderboard cards={sortedCards} setUserHook={setDisplayedUser} displayedCard={displayedCard} />
