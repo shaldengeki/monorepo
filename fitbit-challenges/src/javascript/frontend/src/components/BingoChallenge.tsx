@@ -123,9 +123,10 @@ type BingoChallengeTileProps = {
     tile: BingoTile
     challengeId: number
     isCurrentUser: boolean
+    challengeEnded: boolean
 }
 
-const BingoChallengeTile = ({tile, challengeId, isCurrentUser}: BingoChallengeTileProps) => {
+const BingoChallengeTile = ({tile, challengeId, isCurrentUser, challengeEnded}: BingoChallengeTileProps) => {
     const [
         flipTile,
         {
@@ -178,7 +179,7 @@ const BingoChallengeTile = ({tile, challengeId, isCurrentUser}: BingoChallengeTi
     return (
         <div className={className} onClick={(e) => {
             e.preventDefault();
-            if (!isCurrentUser || tile.flipped) {
+            if (!isCurrentUser || tile.flipped || challengeEnded) {
                 return;
             }
             flipTile({
@@ -240,10 +241,19 @@ type BingoChallengeCardProps = {
     user: User
     currentUser: User
     challengeId: number
+    challengeEnded: boolean
 }
 
-const BingoChallengeCard = ({card, user, currentUser, challengeId}: BingoChallengeCardProps) => {
-    const tiles = card.tiles.map((tile) => <BingoChallengeTile key={tile.id} tile={tile} challengeId={challengeId} isCurrentUser={currentUser === user} />);
+const BingoChallengeCard = ({card, user, currentUser, challengeId, challengeEnded}: BingoChallengeCardProps) => {
+    const tiles = card.tiles.map(
+        (tile) => <BingoChallengeTile
+                    key={tile.id}
+                    tile={tile}
+                    challengeId={challengeId}
+                    isCurrentUser={currentUser === user}
+                    challengeEnded={challengeEnded}
+                />
+    );
     return (
         <div className="grid grid-cols-5 grid-rows-5 gap-1 text-center">
             {tiles}
@@ -403,12 +413,23 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
     );
     const currentUserPlace = currentUserPlaces.length > 0 ? currentUserPlaces[0] : null;
 
+    let finishingText = "";
+    if (currentUserPlace) {
+        if (data.bingoChallenge.ended) {
+            finishingText = "🎉Congrats on finishing!🎉 The challenge is now over.";
+        } else {
+            finishingText = "🎉Congrats on finishing!🎉 You can keep flipping tiles.";
+        }
+    } else if (data.bingoChallenge.ended) {
+        finishingText = "This challenge is now over.";
+    }
+
     return (
         <div>
             <PageTitle className="text-center">Bingo</PageTitle>
             <div className="grid grid-cols-4 space-y-6">
                 <div className="col-span-4 md:col-span-3 space-y-3">
-                    { currentUserPlace && <p className="text-center text-xl font-bold">🎉Congrats on finishing!🎉 You can keep flipping tiles.</p>}
+                    { finishingText && <p className="text-center text-xl font-bold">{finishingText}</p>}
                     <BingoChallengeUnusedAmounts
                         steps={data.bingoChallenge.unusedAmounts.steps}
                         activeMinutes={data.bingoChallenge.unusedAmounts.activeMinutes}
@@ -419,6 +440,7 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
                         user={displayedUser}
                         currentUser={currentUser}
                         challengeId={id}
+                        challengeEnded={data.bingoChallenge.ended}
                     />
                     <div className="grid grid-cols-3">
                         <div className="col-start-2 col-end-3">
