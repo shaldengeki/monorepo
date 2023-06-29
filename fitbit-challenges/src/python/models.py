@@ -240,6 +240,16 @@ class User(db.Model):  # type: ignore
 
         yield activity
 
+    @property
+    def last_activity(self) -> Optional["UserActivity"]:
+        return (
+            UserActivity.query.filter(
+                UserActivity.fitbit_user_id == self.fitbit_user_id
+            )
+            .order_by(desc(UserActivity.created_at))
+            .first()
+        )
+
 
 class UserActivity(db.Model):  # type: ignore
     __tablename__ = "user_activities"
@@ -438,7 +448,12 @@ class BingoCard(db.Model):  # type: ignore
 
         # Compute the total amounts for each resource.
         duration = end - start
-        window_end = datetime.datetime.now(tz=datetime.timezone.utc)
+        # Get the user's last activity.
+        last_activity = user.last_activity
+        if last_activity is None:
+            window_end = datetime.datetime.now(tz=datetime.timezone.utc)
+        else:
+            window_end = last_activity.created_at
         window_start = window_end - duration
 
         total_steps = 0
