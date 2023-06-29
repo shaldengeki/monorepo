@@ -243,9 +243,7 @@ class User(db.Model):  # type: ignore
     @property
     def last_activity(self) -> Optional["UserActivity"]:
         return (
-            UserActivity.query.filter(
-                UserActivity.fitbit_user_id == self.fitbit_user_id
-            )
+            UserActivity.query.filter(UserActivity.user == self.fitbit_user_id)
             .order_by(desc(UserActivity.created_at))
             .first()
         )

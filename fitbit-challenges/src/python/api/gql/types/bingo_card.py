@@ -4,6 +4,7 @@ from graphql import (
     GraphQLBoolean,
     GraphQLObjectType,
     GraphQLField,
+    GraphQLFloat,
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
@@ -41,7 +42,7 @@ def bingo_tile_fields() -> dict[str, GraphQLField]:
             resolve=lambda bt, *args, **kwargs: bt.active_minutes,
         ),
         "distanceKm": GraphQLField(
-            GraphQLInt,
+            GraphQLFloat,
             description="The distance, in kilometers, required.",
             resolve=lambda bt, *args, **kwargs: bt.distance_km,
         ),

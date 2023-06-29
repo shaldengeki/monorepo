@@ -407,7 +407,7 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
     const currentUserPlaces = sortedCards.map(
         (card, idx) => { return {card, place: idx + 1} }
     ).filter(
-        (c: CardPlace) => c.card.user.fitbitUserId === currentUser.fitbitUserId
+        (c: CardPlace) => c.card.user.fitbitUserId === currentUser.fitbitUserId && c.card.finished
     ).map(
         (c: CardPlace) => c.place
     );
