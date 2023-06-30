@@ -114,6 +114,28 @@ def test_apply_fuzz_factor_to_decimal_maximum():
     )
 
 
+class TestBingoTile:
+    def test_flip_unflipped_tile(self, monkeypatch):
+        curr_time = datetime.datetime.now(tz=datetime.timezone.utc)
+        monkeypatch.setattr(
+            datetime,
+            "datetime",
+            create_mock_datetime(curr_time),
+        )
+
+        t = BingoTile(flipped=False)
+        t.flip()
+        assert t.flipped
+        assert curr_time == t.flipped_at
+
+    def test_flip_flipped_tile(self):
+        curr_time = datetime.datetime.now(tz=datetime.timezone.utc)
+        t = BingoTile(flipped=True, flipped_at=curr_time)
+        t.flip()
+        assert t.flipped
+        assert curr_time == t.flipped_at
+
+
 class TestBingoCard:
     def test_victory_tiles_returns_empty_when_no_tiles(self):
         c = BingoCard(bingo_tiles=[])
