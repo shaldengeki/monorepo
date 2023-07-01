@@ -21,6 +21,7 @@ export const FETCH_CHALLENGES_QUERY = gql`
                 }
                 createdAt
                 startAt
+                started
                 endAt
                 ended
                 sealAt
@@ -35,6 +36,7 @@ export const FETCH_CHALLENGES_QUERY = gql`
                 }
                 createdAt
                 startAt
+                started
                 endAt
                 ended
                 sealAt
@@ -78,7 +80,15 @@ type ChallengesListingTableEntryProps = {
 const ChallengesListingTableEntry = ({ challenge }: ChallengesListingTableEntryProps) => {
     const users = challenge.users.map((user) => { return user.displayName; }).join(", ")
 
-    const statusText = (challenge.ended || challenge.sealed) ? `ended ${formatDateDifference( getCurrentUnixTime() - challenge.endAt)} ago` : `ends in ${formatDateDifference(challenge.endAt - getCurrentUnixTime())}`
+    let statusText = "";
+
+    if (challenge.ended || challenge.sealed) {
+        statusText = `ended ${formatDateDifference( getCurrentUnixTime() - challenge.endAt)} ago`;
+    } else if (!challenge.started) {
+        statusText = `starts in ${formatDateDifference(challenge.startAt - getCurrentUnixTime())}`
+    } else {
+        statusText = `ends in ${formatDateDifference(challenge.endAt - getCurrentUnixTime())}`
+    }
     let challengeName = "Workweek Hustle"
     if (challenge.challengeType === ChallengeType.WeekendWarrior) {
         challengeName = "Weekend Warrior"

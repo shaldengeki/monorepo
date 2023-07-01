@@ -35,6 +35,10 @@ class Challenge(db.Model):  # type: ignore
         return "<Challenge {id}>".format(id=self.id)
 
     @property
+    def started(self) -> bool:
+        return datetime.datetime.now(tz=datetime.timezone.utc) >= self.start_at
+
+    @property
     def ended(self) -> bool:
         return datetime.datetime.now(tz=datetime.timezone.utc) >= self.end_at
 

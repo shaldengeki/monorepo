@@ -48,6 +48,11 @@ def challenge_fields() -> dict[str, GraphQLField]:
             description="The start datetime of the challenge, in unix epoch time.",
             resolve=lambda challenge, info, **args: int(challenge.start_at.timestamp()),
         ),
+        "started": GraphQLField(
+            GraphQLNonNull(GraphQLBoolean),
+            description="Whether the challenge has started.",
+            resolve=lambda challenge, info, **args: bool(challenge.started),
+        ),
         "endAt": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The end datetime of the challenge, in unix epoch time.",

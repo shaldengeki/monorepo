@@ -13,6 +13,7 @@ type Challenge = {
     users: User[]
     createdAt: number
     startAt: number
+    started: boolean
     endAt: number
     ended: boolean
     sealAt: number
@@ -26,6 +27,7 @@ export const emptyChallenge: Challenge = {
     users: [],
     createdAt: 0,
     startAt: 0,
+    started: false,
     endAt: 0,
     ended: false,
     sealAt: 0,
