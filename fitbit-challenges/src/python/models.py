@@ -84,6 +84,11 @@ class Challenge(db.Model):  # type: ignore
             .all()
         )
 
+    def latest_activities_per_day_for_user(
+        self, user: "User"
+    ) -> Generator["UserActivity", None, None]:
+        return user.latest_activity_for_days_within_timespan(self.start_at, self.end_at)
+
 
 class FitbitSubscription(db.Model):  # type: ignore
     __tablename__ = "fitbit_subscriptions"
@@ -235,6 +240,7 @@ class User(db.Model):  # type: ignore
         self, start: datetime.datetime, end: datetime.datetime
     ) -> Generator["UserActivity", None, None]:
         prev_activity = None
+        activity = None
         for activity in self.activities_within_timespan(start, end):
             if prev_activity is None:
                 prev_activity = activity
@@ -242,7 +248,8 @@ class User(db.Model):  # type: ignore
                 yield prev_activity
                 prev_activity = activity
 
-        yield activity
+        if activity is not None:
+            yield activity
 
     @property
     def last_activity(self) -> Optional["UserActivity"]:
@@ -549,7 +556,7 @@ class BingoCard(db.Model):  # type: ignore
         total_steps = 0
         total_active_minutes = 0
         total_distance_km = decimal.Decimal(0)
-        for activity in self.challenge.activities_for_user(self.user):
+        for activity in self.challenge.latest_activities_per_day_for_user(self.user):
             total_steps += activity.steps
             total_active_minutes += activity.active_minutes
             total_distance_km += activity.distance_km
