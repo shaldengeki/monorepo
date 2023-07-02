@@ -1,12 +1,15 @@
 import datetime
 import decimal
 
+from typing import Generator
+
 from ..models import (
     BingoCard,
     BingoCardPattern,
     BingoTile,
     Challenge,
     User,
+    UserActivity,
     apply_fuzz_factor_to_int,
     apply_fuzz_factor_to_decimal,
 )
@@ -314,3 +317,42 @@ class TestBingoCard:
         t = BingoTile(flipped=False, required_for_win=True)
         c = BingoCard(bingo_tiles=[t])
         assert c.finished_at() is None
+
+    def test_compute_total_amounts_for_resource_assigns_proportional_to_victory_tile_count(
+        self, monkeypatch
+    ):
+        now = datetime.datetime.now(tz=datetime.timezone.utc)
+        u = User()
+        last_activity_dt = now - datetime.timedelta(hours=1)
+        last_activity = UserActivity(
+            created_at=last_activity_dt,
+            steps=42,
+            active_minutes=36,
+            distance_km=decimal.Decimal(1.8),
+        )
+        monkeypatch.setattr(u, "last_activity", lambda: last_activity)
+
+        def mock_latest_activity_for_days_within_timespan(
+            start: datetime.datetime, end: datetime.datetime
+        ) -> Generator[UserActivity, None, None]:
+            yield last_activity
+
+        monkeypatch.setattr(
+            u,
+            "latest_activity_for_days_within_timespan",
+            mock_latest_activity_for_days_within_timespan,
+        )
+
+        card = BingoCard()
+        start = now - datetime.timedelta(hours=2)
+        pattern = SampleBingoCardPattern()
+        totals = card.compute_total_amounts_for_resource(u, start, now, pattern)
+
+        # 42 / (5/9)
+        assert 75 == totals.steps
+
+        # 36 / (5/9)
+        assert 64 == totals.active_minutes
+
+        # 1.8 / (5/9)
+        assert decimal.Decimal("3.24") == totals.distance_km

@@ -251,7 +251,6 @@ class User(db.Model):  # type: ignore
         if activity is not None:
             yield activity
 
-    @property
     def last_activity(self) -> Optional["UserActivity"]:
         return (
             UserActivity.query.filter(UserActivity.user == self.fitbit_user_id)
@@ -322,6 +321,10 @@ class BingoCardPattern:
     def number_of_required_tiles(self) -> int:
         return sum(val for row in self.pattern for val in row)
 
+    @property
+    def number_of_tiles(self) -> int:
+        return sum(len(row) for row in self.pattern)
+
 
 class TenBingoCardPattern(BingoCardPattern):
     @property
@@ -364,6 +367,13 @@ class UnusedAmounts:
     steps: Optional[int]
     activeMinutes: Optional[int]
     distanceKm: Optional[decimal.Decimal]
+
+
+@dataclasses.dataclass
+class TotalAmounts:
+    steps: int
+    active_minutes: int
+    distance_km: decimal.Decimal
 
 
 class BingoCard(db.Model):  # type: ignore
@@ -439,9 +449,52 @@ class BingoCard(db.Model):  # type: ignore
             )
         )
 
+    def compute_total_amounts_for_resource(
+        self,
+        user: User,
+        start: datetime.datetime,
+        end: datetime.datetime,
+        pattern: BingoCardPattern,
+    ) -> TotalAmounts:
+        # Compute the total amounts for each resource.
+        duration = end - start
+        # Get the user's last activity.
+        last_activity = user.last_activity()
+        if last_activity is None:
+            window_end = datetime.datetime.now(tz=datetime.timezone.utc)
+        else:
+            window_end = last_activity.created_at
+        window_start = window_end - duration
+
+        total_steps = 0
+        total_active_minutes = 0
+        total_distance_km: decimal.Decimal = decimal.Decimal(0)
+
+        for activity in user.latest_activity_for_days_within_timespan(
+            start=window_start, end=window_end
+        ):
+            total_steps += activity.steps
+            total_active_minutes += activity.active_minutes
+            total_distance_km += activity.distance_km
+
+        victory_tile_proportion = decimal.Decimal(
+            pattern.number_of_required_tiles
+        ) / decimal.Decimal(pattern.number_of_tiles)
+        total_steps = int(total_steps / victory_tile_proportion)
+        total_active_minutes = int(total_active_minutes / victory_tile_proportion)
+        total_distance_km = decimal.Decimal(
+            round(total_distance_km / victory_tile_proportion, 2)
+        )
+
+        return TotalAmounts(
+            steps=total_steps,
+            active_minutes=total_active_minutes,
+            distance_km=total_distance_km,
+        )
+
     def create_for_user_and_challenge(
         self,
-        user: "User",
+        user: User,
         challenge: "Challenge",
         start: datetime.datetime,
         end: datetime.datetime,
@@ -459,27 +512,10 @@ class BingoCard(db.Model):  # type: ignore
             # Pick one of a set of victory patterns.
             pattern = random.choice(BingoCard.PATTERNS)
 
-        # Compute the total amounts for each resource.
-        duration = end - start
-        # Get the user's last activity.
-        last_activity = user.last_activity
-        if last_activity is None:
-            window_end = datetime.datetime.now(tz=datetime.timezone.utc)
-        else:
-            window_end = last_activity.created_at
-        window_start = window_end - duration
-
-        total_steps = 0
-        total_active_minutes = 0
-        total_distance_km: decimal.Decimal = decimal.Decimal(0)
-
         with db.session.no_autoflush:
-            for activity in user.latest_activity_for_days_within_timespan(
-                start=window_start, end=window_end
-            ):
-                total_steps += activity.steps
-                total_active_minutes += activity.active_minutes
-                total_distance_km += activity.distance_km
+            total_amounts = self.compute_total_amounts_for_resource(
+                user, start, end, pattern
+            )
 
         # Create 25=5x5 tiles.
         step_tiles = [BingoTile(bingo_card=self) for _ in range(random.randint(7, 9))]
@@ -503,7 +539,7 @@ class BingoCard(db.Model):  # type: ignore
         for step_tile in step_tiles:
             # Assign ~1/8 or ~1/9 of the total resource amount
             step_tile.steps = apply_fuzz_factor_to_int(
-                int(total_steps / len(step_tiles)), 20
+                int(total_amounts.steps / len(step_tiles)), 20
             )
 
             # Assign a coordinate
@@ -518,7 +554,7 @@ class BingoCard(db.Model):  # type: ignore
         for active_minutes_tile in active_minutes_tiles:
             # Assign ~1/8 or ~1/9 of the total resource amount
             active_minutes_tile.active_minutes = apply_fuzz_factor_to_int(
-                int(total_active_minutes / len(active_minutes_tiles)), 20
+                int(total_amounts.active_minutes / len(active_minutes_tiles)), 20
             )
 
             # Assign a coordinate
@@ -536,7 +572,7 @@ class BingoCard(db.Model):  # type: ignore
         for distance_km_tile in distance_km_tiles:
             # Assign ~1/8 or ~1/9 of the total resource amount
             distance_km_tile.distance_km = apply_fuzz_factor_to_decimal(
-                total_distance_km / len(distance_km_tiles), 20
+                total_amounts.distance_km / len(distance_km_tiles), 20
             )
 
             # Assign a coordinate
