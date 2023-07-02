@@ -318,6 +318,10 @@ class BingoCardPattern:
     def required_coordinate(self, x: int, y: int) -> bool:
         return bool(self.pattern[y][x] == 1)
 
+    @property
+    def number_of_required_tiles(self) -> int:
+        return sum(val for row in self.pattern for val in row)
+
 
 class TenBingoCardPattern(BingoCardPattern):
     @property

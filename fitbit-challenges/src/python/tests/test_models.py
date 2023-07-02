@@ -3,8 +3,10 @@ import decimal
 
 from ..models import (
     BingoCard,
+    BingoCardPattern,
     BingoTile,
     Challenge,
+    User,
     apply_fuzz_factor_to_int,
     apply_fuzz_factor_to_decimal,
 )
@@ -134,6 +136,27 @@ class TestBingoTile:
         t.flip()
         assert t.flipped
         assert curr_time == t.flipped_at
+
+
+class SampleBingoCardPattern(BingoCardPattern):
+    @property
+    def pattern(self) -> list[list[int]]:
+        return [
+            [1, 0, 1],
+            [0, 1, 0],
+            [1, 0, 1],
+        ]
+
+
+class TestBingoCardPattern:
+    def test_required_coordinate_for_required_tile(self):
+        assert SampleBingoCardPattern().required_coordinate(1, 1)
+
+    def test_required_coordinate_for_non_required_tile(self):
+        assert not SampleBingoCardPattern().required_coordinate(1, 0)
+
+    def test_number_of_required_tiles(self):
+        assert 5 == SampleBingoCardPattern().number_of_required_tiles
 
 
 class TestBingoCard:
