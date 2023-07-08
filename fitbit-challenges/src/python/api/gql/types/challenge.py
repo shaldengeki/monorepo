@@ -158,7 +158,6 @@ def create_challenge(
 
     challenge = challenge_model(
         challenge_type=challenge_type,
-        old_users=",".join(args["users"]),
         start_at=datetime.datetime.utcfromtimestamp(startAt),
         end_at=datetime.datetime.utcfromtimestamp(endAt),
     )

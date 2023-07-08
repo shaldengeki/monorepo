@@ -21,7 +21,6 @@ class Challenge(db.Model):  # type: ignore
 
     id: Mapped[int] = mapped_column(primary_key=True)
     challenge_type: Mapped[int]
-    old_users: Mapped[str] = mapped_column(name="users")
     created_at: Mapped[datetime.datetime] = mapped_column(
         db.TIMESTAMP(timezone=True),
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
@@ -233,7 +232,11 @@ class User(db.Model):  # type: ignore
         return new_subscription
 
     def challenges_query(self):
-        return Challenge.query.filter(Challenge.old_users.contains(self.fitbit_user_id))
+        return Challenge.query.filter(
+            Challenge.id.in_(
+                membership.challenge_id for membership in self.challenge_memberships
+            )
+        )
 
     def past_challenges(self) -> list["Challenge"]:
         return self.challenges_query().filter(Challenge.end_at < now()).all()
