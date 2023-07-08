@@ -21,7 +21,7 @@ class Challenge(db.Model):  # type: ignore
 
     id: Mapped[int] = mapped_column(primary_key=True)
     challenge_type: Mapped[int]
-    users: Mapped[str]
+    old_users: Mapped[str] = mapped_column(name="users")
     created_at: Mapped[datetime.datetime] = mapped_column(
         db.TIMESTAMP(timezone=True),
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
@@ -30,6 +30,14 @@ class Challenge(db.Model):  # type: ignore
     end_at: Mapped[datetime.datetime] = mapped_column(db.TIMESTAMP(timezone=True))
 
     bingo_cards: Mapped[list["BingoCard"]] = relationship(back_populates="challenge")
+
+    users: Mapped[list["User"]] = relationship(
+        secondary="challenge_memberships", back_populates="challenges", viewonly=True
+    )
+
+    user_memberships: Mapped[list["ChallengeMembership"]] = relationship(
+        back_populates="challenge"
+    )
 
     def __repr__(self) -> str:
         return "<Challenge {id}>".format(id=self.id)
@@ -52,7 +60,7 @@ class Challenge(db.Model):  # type: ignore
 
     @property
     def users_list(self) -> list["User"]:
-        user_ids = self.users.split(",")
+        user_ids = [user.fitbit_user_id for user in self.users]
         return (
             User.query.filter(User.fitbit_user_id.in_(user_ids))
             .order_by(User.display_name)
@@ -61,7 +69,11 @@ class Challenge(db.Model):  # type: ignore
 
     def activities(self) -> list["UserActivity"]:
         return (
-            UserActivity.query.filter(UserActivity.user.in_(self.users.split(",")))
+            UserActivity.query.filter(
+                UserActivity.user.in_(
+                    membership.fitbit_user_id for membership in self.user_memberships
+                )
+            )
             .filter(
                 func.date_trunc("day", UserActivity.record_date)
                 >= func.date_trunc("day", self.start_at)
@@ -149,6 +161,13 @@ class User(db.Model):  # type: ignore
     )
     bingo_cards: Mapped[list["BingoCard"]] = relationship(back_populates="user")
 
+    challenges: Mapped[list["Challenge"]] = relationship(
+        secondary="challenge_memberships", back_populates="users", viewonly=True
+    )
+    challenge_memberships: Mapped[list["ChallengeMembership"]] = relationship(
+        back_populates="user"
+    )
+
     def __repr__(self) -> str:
         return "<User {fitbit_user_id}>".format(fitbit_user_id=self.fitbit_user_id)
 
@@ -214,10 +233,7 @@ class User(db.Model):  # type: ignore
         return new_subscription
 
     def challenges_query(self):
-        return Challenge.query.filter(Challenge.users.contains(self.fitbit_user_id))
-
-    def challenges(self) -> list["Challenge"]:
-        return self.challenges_query().all()
+        return Challenge.query.filter(Challenge.old_users.contains(self.fitbit_user_id))
 
     def past_challenges(self) -> list["Challenge"]:
         return self.challenges_query().filter(Challenge.end_at < now()).all()
@@ -257,6 +273,23 @@ class User(db.Model):  # type: ignore
             .order_by(desc(UserActivity.created_at))
             .first()
         )
+
+
+class ChallengeMembership(db.Model):  # type: ignore
+    __tablename__ = "challenge_memberships"
+    fitbit_user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.fitbit_user_id"), primary_key=True
+    )
+    challenge_id: Mapped[int] = mapped_column(
+        ForeignKey("challenges.id"), primary_key=True
+    )
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
+    )
+
+    user: Mapped["User"] = relationship(back_populates="challenge_memberships")
+    challenge: Mapped["Challenge"] = relationship(back_populates="user_memberships")
 
 
 class UserActivity(db.Model):  # type: ignore

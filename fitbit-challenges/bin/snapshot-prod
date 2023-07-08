@@ -21,6 +21,9 @@ LOCAL_DB_USERNAME=${LOCAL_DB_USERNAME:-admin}
 # First, bring everything down.
 docker compose down
 
+# Delete the local postgres mount.
+sudo rm -rf postgres-data
+
 # In an API container with a local mount, run pg_dump.
 ssh $PROD_HOST "
     docker exec \

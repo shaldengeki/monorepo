@@ -26,7 +26,9 @@ def Schema(models, app):
         mutation=GraphQLObjectType(
             name="Mutation",
             fields={
-                "createChallenge": create_challenge_field(models.Challenge),
+                "createChallenge": create_challenge_field(
+                    models.Challenge, models.User, models.ChallengeMembership
+                ),
                 "createUserActivity": create_user_activity_field(models.UserActivity),
                 "authWithFitbit": authorize_with_fitbit_field(app),
                 "updateUserActivity": update_user_activity_field(models.UserActivity),

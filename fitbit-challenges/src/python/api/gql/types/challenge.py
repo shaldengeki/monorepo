@@ -15,7 +15,7 @@ from sqlalchemy import desc
 from typing import Any, Type
 
 from ....config import db
-from ....models import Challenge, BingoCard, User
+from ....models import Challenge, ChallengeMembership, BingoCard, User
 from .user_activities import user_activity_type
 from .user import user_type
 
@@ -118,10 +118,30 @@ class ChallengeType(Enum):
 
 
 def create_challenge(
-    challenge_model: Type[Challenge], args: dict[str, Any]
+    challenge_model: Type[Challenge],
+    user_model: Type[User],
+    challenge_membership_model: Type[ChallengeMembership],
+    args: dict[str, Any],
 ) -> Challenge:
     # Round to nearest hour.
     startAt = int(int(args["startAt"]) / 3600) * 3600
+
+    # Make sure each user exists.
+    users = []
+    not_found_user_ids = []
+    for fitbit_user_id in args["users"]:
+        user = user_model.query.filter(
+            user_model.fitbit_user_id == fitbit_user_id
+        ).first()
+        if user is None:
+            not_found_user_ids.append(fitbit_user_id)
+            continue
+        users.append(user)
+
+    if not_found_user_ids:
+        raise ValueError(
+            f"Could not find users with ids: {', '.join(not_found_user_ids)}"
+        )
 
     challenge_type = int(args["challengeType"])
     if ChallengeType.WORKWEEK_HUSTLE.value == challenge_type:
@@ -138,10 +158,15 @@ def create_challenge(
 
     challenge = challenge_model(
         challenge_type=challenge_type,
-        users=",".join(args["users"]),
+        old_users=",".join(args["users"]),
         start_at=datetime.datetime.utcfromtimestamp(startAt),
         end_at=datetime.datetime.utcfromtimestamp(endAt),
     )
+    for user in users:
+        membership = challenge_membership_model(user=user, challenge=challenge)
+        challenge.user_memberships.append(membership)
+        db.session.add(membership)
+
     db.session.add(challenge)
     db.session.commit()
 
@@ -168,6 +193,8 @@ def create_challenge(
 
 def create_challenge_field(
     challenge_model: Type[Challenge],
+    user_model: Type[User],
+    challenge_membership_model: Type[ChallengeMembership],
 ) -> GraphQLField:
     return GraphQLField(
         challenge_type,
@@ -189,5 +216,7 @@ def create_challenge_field(
                 description="Time the challenge should end, in unix epoch time.",
             ),
         },
-        resolve=lambda root, info, **args: create_challenge(challenge_model, args),
+        resolve=lambda root, info, **args: create_challenge(
+            challenge_model, user_model, challenge_membership_model, args
+        ),
     )

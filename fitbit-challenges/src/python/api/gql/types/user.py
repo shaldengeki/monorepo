@@ -55,7 +55,7 @@ def user_fields() -> dict[str, GraphQLField]:
             GraphQLNonNull(GraphQLList(challenge_type)),
             description="The list of challenges this user has ever participated in.",
             resolve=lambda user, *args, **kwargs: sorted(
-                user.challenges(), key=lambda c: c.created_at, reverse=True
+                user.challenges, key=lambda c: c.created_at, reverse=True
             ),
         ),
         "activeChallenges": GraphQLField(
