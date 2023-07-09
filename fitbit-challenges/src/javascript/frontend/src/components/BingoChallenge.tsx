@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import _ from 'lodash'
 import { useQuery, gql, useMutation } from '@apollo/client';
 
-import PageTitle from './PageTitle';
 import User from '../types/User';
 import BingoCard, {BingoTile, emptyBingoTile} from '../types/Bingo';
 import {UserLeaderboardHeader} from './UserLeaderboard';
@@ -129,13 +128,7 @@ type BingoChallengeTileProps = {
 
 const BingoChallengeTile = ({tile, challengeId, isCurrentUser, challengeEnded}: BingoChallengeTileProps) => {
     const [
-        flipTile,
-        {
-            data,
-            loading,
-            error,
-            reset
-        }
+        flipTile
     ] = useMutation(
         FLIP_BINGO_TILE_MUTATION,
         {
