@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@tsconfig/create-react-app": "^2.0.0",
-    "@types/lodash": "^4.14.194",
+    "@types/lodash": "^4.14.195",
     "tailwindcss": "^3.3.1",
     "react-canvas-confetti": "^1.4.0"
   }
