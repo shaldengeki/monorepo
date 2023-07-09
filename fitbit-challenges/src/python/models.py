@@ -14,6 +14,7 @@ from typing import Generator, Optional
 
 from .config import db
 from .fitbit_client import FitbitClient
+from .bingo_card_pattern import BingoCardPattern, USABLE_PATTERNS
 
 
 class Challenge(db.Model):  # type: ignore
@@ -344,59 +345,6 @@ def apply_fuzz_factor_to_decimal(
     return amount * fuzz_factor or decimal.Decimal(1)
 
 
-class BingoCardPattern:
-    @property
-    def pattern(self) -> list[list[int]]:
-        raise NotImplementedError
-
-    def required_coordinate(self, x: int, y: int) -> bool:
-        return bool(self.pattern[y][x] == 1)
-
-    @property
-    def number_of_required_tiles(self) -> int:
-        return sum(val for row in self.pattern for val in row)
-
-    @property
-    def number_of_tiles(self) -> int:
-        return sum(len(row) for row in self.pattern)
-
-
-class TenBingoCardPattern(BingoCardPattern):
-    @property
-    def pattern(self) -> list[list[int]]:
-        return [
-            [1, 0, 1, 1, 1],
-            [1, 0, 1, 0, 1],
-            [1, 0, 1, 0, 1],
-            [1, 0, 1, 0, 1],
-            [1, 0, 1, 1, 1],
-        ]
-
-
-class SailboatBingoCardPattern(BingoCardPattern):
-    @property
-    def pattern(self) -> list[list[int]]:
-        return [
-            [0, 0, 1, 0, 0],
-            [0, 1, 1, 0, 0],
-            [0, 0, 1, 0, 0],
-            [1, 1, 1, 1, 1],
-            [0, 1, 1, 1, 0],
-        ]
-
-
-class HouseBingoCardPattern(BingoCardPattern):
-    @property
-    def pattern(self) -> list[list[int]]:
-        return [
-            [0, 0, 1, 0, 0],
-            [0, 1, 1, 1, 0],
-            [1, 1, 1, 1, 1],
-            [0, 1, 0, 1, 0],
-            [0, 1, 0, 1, 0],
-        ]
-
-
 @dataclasses.dataclass
 class UnusedAmounts:
     steps: Optional[int]
@@ -432,9 +380,7 @@ class BingoCard(db.Model):  # type: ignore
     )
 
     PATTERNS: list[BingoCardPattern] = [
-        HouseBingoCardPattern(),
-        SailboatBingoCardPattern(),
-        TenBingoCardPattern(),
+        pattern_class() for pattern_class in USABLE_PATTERNS
     ]
 
     def __repr__(self) -> str:
