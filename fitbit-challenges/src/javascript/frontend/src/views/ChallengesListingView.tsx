@@ -97,12 +97,14 @@ const ChallengesListingTableEntry = ({ challenge }: ChallengesListingTableEntryP
     }
 
     return (
-        <Link to={`/challenges/${challenge.id}`} className="col-span-2 grid grid-cols-4 gap-4 px-2 py-4 rounded bg-slate-200 dark:bg-slate-700">
-            <div className="col-span-2 text-2xl text-indigo-700 dark:text-indigo-300">
+        <Link to={`/challenges/${challenge.id}`} className="col-span-1 grid grid-cols-1 gap-4 px-2 py-4 rounded bg-slate-200 dark:bg-slate-700">
+            <div className="col-span-1 text-2xl text-indigo-700 dark:text-indigo-300">
                 {challengeName}
             </div>
-            <div className="col-span-2 dark:text-slate-300">
+            <div className="col-span-1 dark:text-slate-300">
                 <p>with {users}</p>
+            </div>
+            <div className="col-span-1 dark:text-slate-300">
                 <p>{statusText}</p>
             </div>
         </Link>
