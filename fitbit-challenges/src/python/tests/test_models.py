@@ -356,3 +356,111 @@ class TestBingoCard:
 
         # 1.8 / (5/9)
         assert decimal.Decimal("3.24") == totals.distance_km
+
+
+class TestUser:
+    def test_latest_activity_for_days_within_timespan_with_no_activities_returns_empty(
+        self,
+    ):
+        u = User(activities=[])
+        end = datetime.datetime(
+            year=2020, month=12, day=10, tzinfo=datetime.timezone.utc
+        )
+        start = end - datetime.timedelta(hours=1)
+        assert [] == list(
+            u.latest_activity_for_days_within_timespan(start=start, end=end)
+        )
+
+    def test_latest_activity_for_days_within_timespan_filters_out_activities_before_start(
+        self,
+    ):
+        start = datetime.datetime(
+            year=2020, month=12, day=9, tzinfo=datetime.timezone.utc
+        )
+        end = datetime.datetime(
+            year=2020, month=12, day=10, tzinfo=datetime.timezone.utc
+        )
+        activities = [
+            UserActivity(
+                record_date=datetime.date(year=2020, month=10, day=10),
+                created_at=datetime.datetime(
+                    year=2020, month=10, day=10, tzinfo=datetime.timezone.utc
+                ),
+            ),
+            UserActivity(
+                record_date=datetime.date(year=2020, month=12, day=9),
+                created_at=datetime.datetime(
+                    year=2020, month=12, day=9, hour=1, tzinfo=datetime.timezone.utc
+                ),
+            ),
+        ]
+        u = User(activities=activities)
+
+        assert [activities[1]] == list(
+            u.latest_activity_for_days_within_timespan(start=start, end=end)
+        )
+
+    def test_latest_activity_for_days_within_timespan_filters_out_activities_after_end(
+        self,
+    ):
+        start = datetime.datetime(
+            year=2020, month=10, day=9, tzinfo=datetime.timezone.utc
+        )
+        end = datetime.datetime(
+            year=2020, month=10, day=10, hour=2, tzinfo=datetime.timezone.utc
+        )
+        activities = [
+            UserActivity(
+                record_date=datetime.date(year=2020, month=10, day=10),
+                created_at=datetime.datetime(
+                    year=2020, month=10, day=10, tzinfo=datetime.timezone.utc
+                ),
+            ),
+            UserActivity(
+                record_date=datetime.date(year=2020, month=12, day=9),
+                created_at=datetime.datetime(
+                    year=2020, month=12, day=9, hour=1, tzinfo=datetime.timezone.utc
+                ),
+            ),
+        ]
+        u = User(activities=activities)
+
+        assert [activities[0]] == list(
+            u.latest_activity_for_days_within_timespan(start=start, end=end)
+        )
+
+    def test_latest_activity_for_days_within_timespan_filters_out_prior_activities_for_day(
+        self,
+    ):
+        start = datetime.datetime(
+            year=2020, month=10, day=9, tzinfo=datetime.timezone.utc
+        )
+        end = datetime.datetime(
+            year=2020, month=10, day=11, hour=2, tzinfo=datetime.timezone.utc
+        )
+        activities = [
+            UserActivity(
+                record_date=datetime.date(year=2020, month=10, day=10),
+                created_at=datetime.datetime(
+                    year=2020, month=10, day=10, tzinfo=datetime.timezone.utc
+                ),
+            ),
+            UserActivity(
+                record_date=datetime.date(year=2020, month=10, day=10),
+                created_at=datetime.datetime(
+                    year=2020, month=10, day=10, hour=1, tzinfo=datetime.timezone.utc
+                ),
+            ),
+            UserActivity(
+                record_date=datetime.date(year=2020, month=10, day=11),
+                created_at=datetime.datetime(
+                    year=2020, month=10, day=11, hour=1, tzinfo=datetime.timezone.utc
+                ),
+            ),
+        ]
+        u = User(activities=activities)
+
+        assert [
+            activities[1],
+            activities[2],
+        ] == list(u.latest_activity_for_days_within_timespan(start=start, end=end))
