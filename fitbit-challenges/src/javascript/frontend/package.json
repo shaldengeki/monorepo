@@ -23,7 +23,7 @@
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
     "typescript": "^4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^3.3.2"
   },
   "scripts": {
     "tailwind:css": "npx tailwind -i src/App.src.css -o src/App.css",
