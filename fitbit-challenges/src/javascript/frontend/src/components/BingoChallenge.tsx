@@ -5,6 +5,7 @@ import { useQuery, gql, useMutation } from '@apollo/client';
 import PageTitle from './PageTitle';
 import User from '../types/User';
 import BingoCard, {BingoTile, emptyBingoTile} from '../types/Bingo';
+import {UserLeaderboardHeader} from './UserLeaderboard';
 
 export const FETCH_BINGO_QUERY = gql`
     query FetchBingo($id: Int!) {
@@ -426,7 +427,15 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
 
     return (
         <div>
-            <PageTitle className="text-center">Bingo</PageTitle>
+            <UserLeaderboardHeader
+                title="Bingo"
+                id={data.bingoChallenge.id}
+                startAt={data.bingoChallenge.startAt}
+                endAt={data.bingoChallenge.endAt}
+                ended={data.bingoChallenge.ended}
+                sealAt={data.bingoChallenge.sealAt}
+                sealed={data.bingoChallenge.sealed}
+            />
             <div className="grid grid-cols-4 space-y-6">
                 <div className="col-span-4 md:col-span-3 space-y-3">
                     { finishingText && <p className="text-center text-xl font-bold">{finishingText}</p>}

@@ -10,7 +10,7 @@ export type UserData = {
     unit: string;
 }
 
-type UserLeaderboardHeaderProps = {
+export type UserLeaderboardHeaderProps = {
     title: string;
     id: number;
     startAt: number;
@@ -20,7 +20,7 @@ type UserLeaderboardHeaderProps = {
     sealed: boolean;
 }
 
-const UserLeaderboardHeader = ({ title, id, startAt, endAt, ended, sealAt, sealed }: UserLeaderboardHeaderProps) => {
+export const UserLeaderboardHeader = ({ title, id, startAt, endAt, ended, sealAt, sealed }: UserLeaderboardHeaderProps) => {
     let timingCopy = "";
     if (ended) {
         timingCopy = "Ended " + formatDateDifference(getCurrentUnixTime() - endAt) + " ago";
