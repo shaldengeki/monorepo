@@ -318,9 +318,11 @@ const BingoChallengeLeaderboard = ({cards, setUserHook, displayedCard}: BingoCha
         })
 
     return (
-        <div className="grid grid-cols-1 gap-6 text-center">
+        <div className="text-center">
             <h1 className="text-xl">Leaderboard</h1>
-            {sortedCards}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {sortedCards}
+            </div>
         </div>
     )
 }
@@ -430,7 +432,7 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
                 sealed={data.bingoChallenge.sealed}
             />
             <div className="grid grid-cols-4 space-y-6">
-                <div className="col-span-4 md:col-span-3 space-y-3">
+                <div className="col-span-4 md:col-span-2 space-y-3">
                     { finishingText && <p className="text-center text-xl font-bold">{finishingText}</p>}
                     <BingoChallengeUnusedAmounts
                         steps={data.bingoChallenge.unusedAmounts.steps}
@@ -450,7 +452,7 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
                         </div>
                     </div>
                 </div>
-                <div className="col-span-4 md:col-span-1 px-24 md:px-4">
+                <div className="col-span-4 md:col-span-2 px-24 md:px-4">
                     <BingoChallengeLeaderboard cards={sortedCards} setUserHook={setDisplayedUser} displayedCard={displayedCard} />
                 </div>
             </div>
