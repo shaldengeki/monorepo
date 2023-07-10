@@ -17,6 +17,13 @@ from .fitbit_client import FitbitClient
 from .bingo_card_pattern import BingoCardPattern, USABLE_PATTERNS
 
 
+@dataclasses.dataclass
+class TotalAmounts:
+    steps: int
+    active_minutes: int
+    distance_km: decimal.Decimal
+
+
 class Challenge(db.Model):  # type: ignore
     __tablename__ = "challenges"
 
@@ -99,7 +106,27 @@ class Challenge(db.Model):  # type: ignore
     def latest_activities_per_day_for_user(
         self, user: "User"
     ) -> Generator["UserActivity", None, None]:
-        return user.latest_activity_for_days_within_timespan(self.start_at, self.end_at)
+        for activity in user.latest_activity_for_days_within_timespan(
+            self.start_at, self.seal_at
+        ):
+            if activity.record_date > self.end_at.date():
+                continue
+            if activity.record_date < self.start_at.date():
+                continue
+            yield activity
+
+    def total_amounts(self) -> dict["User", "TotalAmounts"]:
+        total_amounts = {}
+        for user in self.users:
+            total_amounts[user] = TotalAmounts(
+                steps=0, active_minutes=0, distance_km=decimal.Decimal(0.0)
+            )
+            for activity in self.latest_activities_per_day_for_user(user):
+                total_amounts[user].steps += activity.steps
+                total_amounts[user].active_minutes += activity.active_minutes
+                total_amounts[user].distance_km += activity.distance_km
+
+        return total_amounts
 
 
 class FitbitSubscription(db.Model):  # type: ignore
@@ -350,13 +377,6 @@ class UnusedAmounts:
     steps: Optional[int]
     activeMinutes: Optional[int]
     distanceKm: Optional[decimal.Decimal]
-
-
-@dataclasses.dataclass
-class TotalAmounts:
-    steps: int
-    active_minutes: int
-    distance_km: decimal.Decimal
 
 
 class BingoCard(db.Model):  # type: ignore

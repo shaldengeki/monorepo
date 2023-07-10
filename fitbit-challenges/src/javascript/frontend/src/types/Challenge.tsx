@@ -19,6 +19,7 @@ type Challenge = {
     sealAt: number
     sealed: boolean
     activities: Activity[]
+    currentUserPlacement?: number
 }
 
 export const emptyChallenge: Challenge = {

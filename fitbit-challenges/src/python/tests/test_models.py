@@ -8,6 +8,7 @@ from ..models import (
     BingoCardPattern,
     BingoTile,
     Challenge,
+    TotalAmounts,
     User,
     UserActivity,
     apply_fuzz_factor_to_int,
@@ -87,6 +88,181 @@ class TestChallenge:
             ),
         )
         assert not challenge.ended
+
+    def test_total_amounts_with_no_users_returns_empty(self):
+        c = Challenge(users=[])
+        assert {} == c.total_amounts()
+
+    def test_total_amounts_with_one_user_returns_total_amount(self):
+        u1 = User(activities=[])
+        c = Challenge(
+            users=[u1],
+            end_at=datetime.datetime.now(tz=datetime.timezone.utc),
+        )
+        assert {
+            u1: TotalAmounts(
+                steps=0, active_minutes=0, distance_km=decimal.Decimal(0.0)
+            )
+        } == c.total_amounts()
+
+    def test_total_amounts_with_one_user_with_activity_returns_total(self):
+        u1 = User(
+            activities=[
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2020, 12, 2, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2020, 12, 2),
+                    steps=12,
+                    active_minutes=23,
+                    distance_km=decimal.Decimal("3.4"),
+                )
+            ]
+        )
+        c = Challenge(
+            users=[u1],
+            start_at=datetime.datetime(2020, 12, 1, tzinfo=datetime.timezone.utc),
+            end_at=datetime.datetime(2020, 12, 3, tzinfo=datetime.timezone.utc),
+        )
+        assert {
+            u1: TotalAmounts(
+                steps=12, active_minutes=23, distance_km=decimal.Decimal("3.4")
+            )
+        } == c.total_amounts()
+
+    def test_total_amounts_with_one_user_with_activities_returns_total(self):
+        u1 = User(
+            activities=[
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2020, 12, 2, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2020, 12, 2),
+                    steps=12,
+                    active_minutes=23,
+                    distance_km=decimal.Decimal("3.4"),
+                ),
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2020, 12, 2, 1, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2020, 12, 2),
+                    steps=13,
+                    active_minutes=24,
+                    distance_km=decimal.Decimal("3.5"),
+                ),
+            ]
+        )
+        c = Challenge(
+            users=[u1],
+            start_at=datetime.datetime(2020, 12, 1, tzinfo=datetime.timezone.utc),
+            end_at=datetime.datetime(2020, 12, 3, tzinfo=datetime.timezone.utc),
+        )
+        assert {
+            u1: TotalAmounts(
+                steps=13, active_minutes=24, distance_km=decimal.Decimal("3.5")
+            )
+        } == c.total_amounts()
+
+    def test_total_amounts_with_one_user_with_multi_day_activities_returns_total(self):
+        u1 = User(
+            activities=[
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2020, 12, 2, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2020, 12, 2),
+                    steps=12,
+                    active_minutes=23,
+                    distance_km=decimal.Decimal("3.4"),
+                ),
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2020, 12, 2, 1, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2020, 12, 2),
+                    steps=13,
+                    active_minutes=24,
+                    distance_km=decimal.Decimal("3.5"),
+                ),
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2020, 12, 3, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2020, 12, 3),
+                    steps=25,
+                    active_minutes=36,
+                    distance_km=decimal.Decimal("4.7"),
+                ),
+            ]
+        )
+        c = Challenge(
+            users=[u1],
+            start_at=datetime.datetime(2020, 12, 1, tzinfo=datetime.timezone.utc),
+            end_at=datetime.datetime(2020, 12, 4, tzinfo=datetime.timezone.utc),
+        )
+        assert {
+            u1: TotalAmounts(
+                steps=38, active_minutes=60, distance_km=decimal.Decimal("8.2")
+            )
+        } == c.total_amounts()
+
+    def test_total_amounts_with_two_users_returns_total_amounts(self):
+        u1 = User(activities=[])
+        u2 = User(activities=[])
+        c = Challenge(
+            users=[u1, u2],
+            end_at=datetime.datetime.now(tz=datetime.timezone.utc),
+        )
+        assert {
+            u1: TotalAmounts(
+                steps=0, active_minutes=0, distance_km=decimal.Decimal(0.0)
+            ),
+            u2: TotalAmounts(
+                steps=0, active_minutes=0, distance_km=decimal.Decimal(0.0)
+            ),
+        } == c.total_amounts()
+
+    def test_total_amounts_with_two_users_with_activity_returns_total(self):
+        u1 = User(
+            activities=[
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2020, 12, 2, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2020, 12, 2),
+                    steps=12,
+                    active_minutes=23,
+                    distance_km=decimal.Decimal("3.4"),
+                )
+            ]
+        )
+        u2 = User(
+            activities=[
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2020, 12, 2, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2020, 12, 2),
+                    steps=24,
+                    active_minutes=35,
+                    distance_km=decimal.Decimal("4.6"),
+                )
+            ]
+        )
+        c = Challenge(
+            users=[u1, u2],
+            start_at=datetime.datetime(2020, 12, 1, tzinfo=datetime.timezone.utc),
+            end_at=datetime.datetime(2020, 12, 3, tzinfo=datetime.timezone.utc),
+        )
+        assert {
+            u1: TotalAmounts(
+                steps=12, active_minutes=23, distance_km=decimal.Decimal("3.4")
+            ),
+            u2: TotalAmounts(
+                steps=24, active_minutes=35, distance_km=decimal.Decimal("4.6")
+            ),
+        } == c.total_amounts()
 
 
 def test_apply_fuzz_factor_to_int_minimum():

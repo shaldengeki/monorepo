@@ -26,6 +26,7 @@ export const FETCH_CHALLENGES_QUERY = gql`
                 ended
                 sealAt
                 sealed
+                currentUserPlacement
             }
             pastChallenges {
                 id
@@ -41,6 +42,7 @@ export const FETCH_CHALLENGES_QUERY = gql`
                 ended
                 sealAt
                 sealed
+                currentUserPlacement
             }
         }
     }
@@ -95,11 +97,21 @@ const ChallengesListingTableEntry = ({ challenge }: ChallengesListingTableEntryP
     } else if (challenge.challengeType === ChallengeType.Bingo) {
         challengeName = "Bingo"
     }
+    let placeEmoji = ""
+    if (challenge.currentUserPlacement) {
+        if (challenge.currentUserPlacement === 1) {
+            placeEmoji = "🥇";
+        } else if (challenge.currentUserPlacement === 2) {
+            placeEmoji = "🥈";
+        } else if (challenge.currentUserPlacement === 3) {
+            placeEmoji = "🥉";
+        }
+    }
 
     return (
         <Link to={`/challenges/${challenge.id}`} className="col-span-1 grid grid-cols-1 gap-4 px-2 py-4 rounded bg-slate-200 dark:bg-slate-700">
             <div className="col-span-1 text-2xl text-indigo-700 dark:text-indigo-300">
-                {challengeName}
+                {challengeName} {placeEmoji}
             </div>
             <div className="col-span-1 dark:text-slate-300">
                 <p>with {users}</p>
