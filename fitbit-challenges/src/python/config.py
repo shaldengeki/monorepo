@@ -1,6 +1,7 @@
+import datetime
 import os
 
-from flask import Flask
+from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -33,7 +34,14 @@ app.config.update(
         host=os.getenv("DB_HOST", "pg"),
         db=os.getenv("DATABASE_NAME", "api_development"),
     ),
+    SESSION_REFRESH_EACH_REQUEST=True,
+    PERMANENT_SESSION_LIFETIME=datetime.timedelta(days=365),
 )
+
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
 
 
 def verify_fitbit_verification(request_code: str) -> bool:
