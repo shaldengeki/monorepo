@@ -1,5 +1,4 @@
 import datetime
-from enum import Enum
 from flask import Flask
 from graphql import (
     GraphQLArgument,
@@ -16,7 +15,7 @@ from sqlalchemy import desc
 from typing import Any, Optional, Type
 
 from ....config import app, db
-from ....models import Challenge, ChallengeMembership, BingoCard, User
+from ....models import Challenge, ChallengeMembership, BingoCard, User, ChallengeType
 from .user_activities import user_activity_type
 from .user import user_type, fetch_current_user
 
@@ -186,12 +185,6 @@ def challenges_field(challenge_model: Type[Challenge]) -> GraphQLField:
         args=challenges_filters,
         resolve=lambda root, info, **args: fetch_challenges(challenge_model, args),
     )
-
-
-class ChallengeType(Enum):
-    WORKWEEK_HUSTLE = 0
-    WEEKEND_WARRIOR = 1
-    BINGO = 2
 
 
 def create_challenge(

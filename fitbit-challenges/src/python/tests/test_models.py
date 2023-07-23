@@ -8,6 +8,7 @@ from ..models import (
     BingoCardPattern,
     BingoTile,
     Challenge,
+    ChallengeType,
     TotalAmounts,
     User,
     UserActivity,
@@ -97,6 +98,7 @@ class TestChallenge:
         u1 = User(activities=[])
         c = Challenge(
             users=[u1],
+            challenge_type=ChallengeType.WORKWEEK_HUSTLE.value,
             end_at=datetime.datetime.now(tz=datetime.timezone.utc),
         )
         assert {
@@ -121,6 +123,7 @@ class TestChallenge:
         )
         c = Challenge(
             users=[u1],
+            challenge_type=ChallengeType.WORKWEEK_HUSTLE.value,
             start_at=datetime.datetime(2020, 12, 1, tzinfo=datetime.timezone.utc),
             end_at=datetime.datetime(2020, 12, 3, tzinfo=datetime.timezone.utc),
         )
@@ -155,6 +158,7 @@ class TestChallenge:
         )
         c = Challenge(
             users=[u1],
+            challenge_type=ChallengeType.WORKWEEK_HUSTLE.value,
             start_at=datetime.datetime(2020, 12, 1, tzinfo=datetime.timezone.utc),
             end_at=datetime.datetime(2020, 12, 3, tzinfo=datetime.timezone.utc),
         )
@@ -198,6 +202,7 @@ class TestChallenge:
         )
         c = Challenge(
             users=[u1],
+            challenge_type=ChallengeType.WORKWEEK_HUSTLE.value,
             start_at=datetime.datetime(2020, 12, 1, tzinfo=datetime.timezone.utc),
             end_at=datetime.datetime(2020, 12, 4, tzinfo=datetime.timezone.utc),
         )
@@ -212,6 +217,7 @@ class TestChallenge:
         u2 = User(activities=[])
         c = Challenge(
             users=[u1, u2],
+            challenge_type=ChallengeType.WORKWEEK_HUSTLE.value,
             end_at=datetime.datetime.now(tz=datetime.timezone.utc),
         )
         assert {
@@ -252,6 +258,7 @@ class TestChallenge:
         )
         c = Challenge(
             users=[u1, u2],
+            challenge_type=ChallengeType.WORKWEEK_HUSTLE.value,
             start_at=datetime.datetime(2020, 12, 1, tzinfo=datetime.timezone.utc),
             end_at=datetime.datetime(2020, 12, 3, tzinfo=datetime.timezone.utc),
         )
@@ -263,6 +270,21 @@ class TestChallenge:
                 steps=24, active_minutes=35, distance_km=decimal.Decimal("4.6")
             ),
         } == c.total_amounts()
+
+    def test_weekend_warrior_seal_at(self):
+        end_dt = datetime.datetime(year=2023, month=12, day=1)
+        c = Challenge(challenge_type=ChallengeType.WEEKEND_WARRIOR.value, end_at=end_dt)
+        assert (end_dt + datetime.timedelta(hours=24)) == c.seal_at
+
+    def test_workweek_hustle_seal_at(self):
+        end_dt = datetime.datetime(year=2023, month=12, day=1)
+        c = Challenge(challenge_type=ChallengeType.WORKWEEK_HUSTLE.value, end_at=end_dt)
+        assert (end_dt + datetime.timedelta(hours=24)) == c.seal_at
+
+    def test_bingo_seal_at(self):
+        end_dt = datetime.datetime(year=2023, month=12, day=1)
+        c = Challenge(challenge_type=ChallengeType.BINGO.value, end_at=end_dt)
+        assert end_dt == c.seal_at
 
 
 def test_apply_fuzz_factor_to_int_minimum():

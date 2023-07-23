@@ -1,6 +1,7 @@
 import dataclasses
 import datetime
 import decimal
+import enum
 import itertools
 import random
 import requests
@@ -22,6 +23,12 @@ class TotalAmounts:
     steps: int
     active_minutes: int
     distance_km: decimal.Decimal
+
+
+class ChallengeType(enum.Enum):
+    WORKWEEK_HUSTLE = 0
+    WEEKEND_WARRIOR = 1
+    BINGO = 2
 
 
 class Challenge(db.Model):  # type: ignore
@@ -59,7 +66,15 @@ class Challenge(db.Model):  # type: ignore
 
     @property
     def seal_at(self) -> datetime.datetime:
-        return self.end_at + datetime.timedelta(hours=24)
+        if self.challenge_type in (
+            ChallengeType.WEEKEND_WARRIOR.value,
+            ChallengeType.WORKWEEK_HUSTLE.value,
+        ):
+            return self.end_at + datetime.timedelta(hours=24)
+        elif self.challenge_type == ChallengeType.BINGO.value:
+            return self.end_at
+        else:
+            raise ValueError(f"Invalid challenge type: {self.challenge_type}")
 
     @property
     def sealed(self) -> bool:
