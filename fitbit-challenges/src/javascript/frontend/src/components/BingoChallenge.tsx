@@ -18,6 +18,8 @@ export const FETCH_BINGO_QUERY = gql`
               startAt
               endAt
               ended
+              sealed
+              sealAt
               bingoCards {
                 id
                 user {
