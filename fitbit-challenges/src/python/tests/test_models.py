@@ -542,18 +542,76 @@ class TestBingoCard:
         )
 
         card = BingoCard()
-        start = now - datetime.timedelta(hours=2)
+        start = now - datetime.timedelta(days=2)
         pattern = SampleBingoCardPattern()
         totals = card.compute_total_amounts_for_resource(u, start, now, pattern)
 
-        # 42 / (5/9)
-        assert 75 == totals.steps
+        # 42/30 * 2 / (5/9) = 5
+        assert 5 == totals.steps
 
-        # 36 / (5/9)
-        assert 64 == totals.active_minutes
+        # 36/30 * 2 / (5/9) = 4
+        assert 4 == totals.active_minutes
 
-        # 1.8 / (5/9)
-        assert decimal.Decimal("3.24") == totals.distance_km
+        # 1.8/30 * 2 / (5/9) = 0.22
+        assert decimal.Decimal("0.22") == totals.distance_km
+
+    def test_compute_total_amounts_for_resource_calculates_average_over_past_month(
+        self, monkeypatch
+    ):
+        now = datetime.datetime(
+            year=2020, month=12, day=10, tzinfo=datetime.timezone.utc
+        )
+        # Average steps over the past 30d are 10000+20000+30000 = 60000, or 2k/day
+        # minutes are 1000+2000+3000 = 6000, or 200/day
+        # distance is 11.1+22.2+33.3 = 66.6, or 2.22/day
+        # Average
+        u = User(
+            activities=[
+                UserActivity(
+                    created_at=now - datetime.timedelta(days=10),
+                    record_date=(now - datetime.timedelta(days=10)).date(),
+                    steps=10000,
+                    active_minutes=1000,
+                    distance_km=decimal.Decimal(11.1),
+                ),
+                UserActivity(
+                    created_at=now - datetime.timedelta(days=20),
+                    record_date=(now - datetime.timedelta(days=20)).date(),
+                    steps=20000,
+                    active_minutes=2000,
+                    distance_km=decimal.Decimal(22.2),
+                ),
+                UserActivity(
+                    created_at=now - datetime.timedelta(days=30),
+                    record_date=(now - datetime.timedelta(days=30)).date(),
+                    steps=30000,
+                    active_minutes=3000,
+                    distance_km=decimal.Decimal(33.3),
+                ),
+                UserActivity(
+                    created_at=now - datetime.timedelta(days=40),
+                    record_date=(now - datetime.timedelta(days=40)).date(),
+                    steps=40000,
+                    active_minutes=4000,
+                    distance_km=decimal.Decimal(44.4),
+                ),
+            ]
+        )
+
+        card = BingoCard()
+        # Set up a challenge over two days
+        start = now - datetime.timedelta(days=2)
+        pattern = SampleBingoCardPattern()
+        totals = card.compute_total_amounts_for_resource(u, start, now, pattern)
+
+        # (2k*2) / (5/9)
+        assert 7200 == totals.steps
+
+        # (200*2) / (5/9)
+        assert 720 == totals.active_minutes
+
+        # (2.22*2) / (5/9)
+        assert decimal.Decimal("7.99") == totals.distance_km
 
 
 class TestUser:

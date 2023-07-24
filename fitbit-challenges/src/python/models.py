@@ -474,32 +474,42 @@ class BingoCard(db.Model):  # type: ignore
     ) -> TotalAmounts:
         # Compute the total amounts for each resource.
         duration = end - start
-        # Get the user's last activity.
-        last_activity = user.last_activity()
-        if last_activity is None:
-            window_end = datetime.datetime.now(tz=datetime.timezone.utc)
-        else:
-            window_end = last_activity.created_at
-        window_start = window_end - duration
+        duration_days = float(duration.total_seconds()) / 86400
+
+        # Get the user's average activity over the last 30d.
+        window_start = start - datetime.timedelta(days=30)
 
         total_steps = 0
         total_active_minutes = 0
         total_distance_km: decimal.Decimal = decimal.Decimal(0)
 
         for activity in user.latest_activity_for_days_within_timespan(
-            start=window_start, end=window_end
+            start=window_start, end=start
         ):
             total_steps += activity.steps
             total_active_minutes += activity.active_minutes
             total_distance_km += activity.distance_km
 
+        # Compute average daily activity over this period.
+        average_steps = float(total_steps) / 30
+        average_active_minutes = float(total_active_minutes) / 30
+        average_distance_km = total_distance_km / 30
+
+        expected_steps = decimal.Decimal(average_steps * duration_days)
+        expected_active_minutes = decimal.Decimal(
+            average_active_minutes * duration_days
+        )
+        expected_distance_km = average_distance_km * decimal.Decimal(duration_days)
+
         victory_tile_proportion = decimal.Decimal(
             pattern.number_of_required_tiles
         ) / decimal.Decimal(pattern.number_of_tiles)
-        total_steps = int(total_steps / victory_tile_proportion)
-        total_active_minutes = int(total_active_minutes / victory_tile_proportion)
+        total_steps = int(round(expected_steps / victory_tile_proportion, 0))
+        total_active_minutes = int(
+            round(expected_active_minutes / victory_tile_proportion, 0)
+        )
         total_distance_km = decimal.Decimal(
-            round(total_distance_km / victory_tile_proportion, 2)
+            round(expected_distance_km / victory_tile_proportion, 2)
         )
 
         return TotalAmounts(
