@@ -78,6 +78,8 @@ it('should render a bingo header', async () => {
                 startAt: 0,
                 endAt: 0,
                 ended: false,
+                sealed: false,
+                sealAt: 0,
                 bingoCards: [
                     emptyBingoCard,
                 ],
@@ -110,6 +112,8 @@ it('should render unused amounts', async () => {
                 startAt: 0,
                 endAt: 0,
                 ended: false,
+                sealed: false,
+                sealAt: 0,
                 bingoCards: [
                     emptyBingoCard,
                 ],
@@ -144,6 +148,8 @@ it('should render a card with a tile', async () => {
                 startAt: 0,
                 endAt: 0,
                 ended: false,
+                sealed: false,
+                sealAt: 0,
                 bingoCards: [
                     {
                         ...emptyBingoCard,
