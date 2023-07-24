@@ -58,6 +58,11 @@ CORS(
     supports_credentials=True,
 )
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(
+    app,
+    session_options={
+        "autoflush": False,
+    },
+)
 
 migrate = Migrate(app, db)

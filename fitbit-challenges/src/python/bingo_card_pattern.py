@@ -51,4 +51,21 @@ class HouseBingoCardPattern(BingoCardPattern):
         ]
 
 
-USABLE_PATTERNS = [TenBingoCardPattern, SailboatBingoCardPattern, HouseBingoCardPattern]
+class CatBingoCardPattern(BingoCardPattern):
+    @property
+    def pattern(self) -> list[list[int]]:
+        return [
+            [0, 0, 0, 0, 0],
+            [1, 1, 0, 0, 1],
+            [0, 1, 1, 1, 1],
+            [0, 1, 0, 1, 0],
+            [0, 1, 0, 1, 0],
+        ]
+
+
+USABLE_PATTERNS = [
+    TenBingoCardPattern,
+    SailboatBingoCardPattern,
+    HouseBingoCardPattern,
+    CatBingoCardPattern,
+]
