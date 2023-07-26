@@ -682,6 +682,204 @@ class TestBingoCard:
         )
         assert decimal.Decimal("0.72") >= actual_distance_bonuses >= 0
 
+    def test_unused_amounts_with_no_activities_returns_zero(self):
+        user = User(activities=[])
+        challenge = Challenge(challenge_type=ChallengeType.BINGO.value)
+        card = BingoCard(user=user, challenge=challenge)
+        amounts = card.unused_amounts()
+        assert 0 == amounts.steps
+        assert 0 == amounts.activeMinutes
+        assert decimal.Decimal(0) == amounts.distanceKm
+
+    def test_unused_amounts_with_one_activity_returns_amount(self):
+        user = User(
+            activities=[
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2021, 12, 31, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2021, 12, 31),
+                    steps=100,
+                    active_minutes=42,
+                    distance_km=decimal.Decimal("3.6"),
+                ),
+            ]
+        )
+        challenge = Challenge(
+            challenge_type=ChallengeType.BINGO.value,
+            start_at=datetime.datetime(2021, 12, 30, tzinfo=datetime.timezone.utc),
+            end_at=datetime.datetime(2022, 1, 1, tzinfo=datetime.timezone.utc),
+        )
+        card = BingoCard(user=user, challenge=challenge)
+        amounts = card.unused_amounts()
+        assert 100 == amounts.steps
+        assert 42 == amounts.activeMinutes
+        assert decimal.Decimal("3.6") == amounts.distanceKm
+
+    def test_unused_amounts_with_unflipped_tile_does_not_count_amount(self):
+        user = User(
+            activities=[
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2021, 12, 31, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2021, 12, 31),
+                    steps=100,
+                    active_minutes=42,
+                    distance_km=decimal.Decimal("3.6"),
+                ),
+            ]
+        )
+        challenge = Challenge(
+            challenge_type=ChallengeType.BINGO.value,
+            start_at=datetime.datetime(2021, 12, 30, tzinfo=datetime.timezone.utc),
+            end_at=datetime.datetime(2022, 1, 1, tzinfo=datetime.timezone.utc),
+        )
+        card = BingoCard(
+            user=user,
+            challenge=challenge,
+            bingo_tiles=[
+                BingoTile(
+                    steps=23,
+                    flipped=False,
+                )
+            ],
+        )
+        amounts = card.unused_amounts()
+        assert 100 == amounts.steps
+        assert 42 == amounts.activeMinutes
+        assert decimal.Decimal("3.6") == amounts.distanceKm
+
+    def test_unused_amounts_with_flipped_tile_returns_reduced_amount(self):
+        user = User(
+            activities=[
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2021, 12, 31, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2021, 12, 31),
+                    steps=100,
+                    active_minutes=42,
+                    distance_km=decimal.Decimal("3.6"),
+                ),
+            ]
+        )
+        challenge = Challenge(
+            challenge_type=ChallengeType.BINGO.value,
+            start_at=datetime.datetime(2021, 12, 30, tzinfo=datetime.timezone.utc),
+            end_at=datetime.datetime(2022, 1, 1, tzinfo=datetime.timezone.utc),
+        )
+        card = BingoCard(
+            user=user,
+            challenge=challenge,
+            bingo_tiles=[
+                BingoTile(flipped=True, steps=11),
+                BingoTile(
+                    flipped=True,
+                    active_minutes=3,
+                ),
+                BingoTile(
+                    flipped=True,
+                    distance_km=decimal.Decimal("1.1"),
+                ),
+            ],
+        )
+        amounts = card.unused_amounts()
+        # 100 - 11
+        assert 89 == amounts.steps
+        # 42 - 3
+        assert 39 == amounts.activeMinutes
+        # 3.6 - 1.1
+        assert decimal.Decimal("2.5") == amounts.distanceKm
+
+    def test_unused_amounts_with_unflipped_bonus_tile_does_not_count(self):
+        user = User(
+            activities=[
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2021, 12, 31, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2021, 12, 31),
+                    steps=100,
+                    active_minutes=42,
+                    distance_km=decimal.Decimal("3.6"),
+                ),
+            ]
+        )
+        challenge = Challenge(
+            challenge_type=ChallengeType.BINGO.value,
+            start_at=datetime.datetime(2021, 12, 30, tzinfo=datetime.timezone.utc),
+            end_at=datetime.datetime(2022, 1, 1, tzinfo=datetime.timezone.utc),
+        )
+        card = BingoCard(
+            user=user,
+            challenge=challenge,
+            bingo_tiles=[
+                BingoTile(flipped=True, steps=11),
+                BingoTile(
+                    flipped=False,
+                    bonus_type=BingoTileBonusType.STEPS.value,
+                    bonus_amount=10,
+                ),
+            ],
+        )
+        amounts = card.unused_amounts()
+        # 100 - 11
+        assert 89 == amounts.steps
+
+    def test_unused_amounts_with_flipped_bonus_tile_counts(self):
+        user = User(
+            activities=[
+                UserActivity(
+                    created_at=datetime.datetime(
+                        2021, 12, 31, tzinfo=datetime.timezone.utc
+                    ),
+                    record_date=datetime.date(2021, 12, 31),
+                    steps=100,
+                    active_minutes=42,
+                    distance_km=decimal.Decimal("3.6"),
+                ),
+            ]
+        )
+        challenge = Challenge(
+            challenge_type=ChallengeType.BINGO.value,
+            start_at=datetime.datetime(2021, 12, 30, tzinfo=datetime.timezone.utc),
+            end_at=datetime.datetime(2022, 1, 1, tzinfo=datetime.timezone.utc),
+        )
+        card = BingoCard(
+            user=user,
+            challenge=challenge,
+            bingo_tiles=[
+                BingoTile(flipped=True, steps=11),
+                BingoTile(
+                    flipped=True,
+                    bonus_type=BingoTileBonusType.STEPS.value,
+                    bonus_amount=10,
+                ),
+                BingoTile(flipped=True, active_minutes=3),
+                BingoTile(
+                    flipped=True,
+                    bonus_type=BingoTileBonusType.ACTIVE_MINUTES.value,
+                    bonus_amount=6,
+                ),
+                BingoTile(flipped=True, distance_km=decimal.Decimal("1.1")),
+                BingoTile(
+                    flipped=True,
+                    bonus_type=BingoTileBonusType.DISTANCE_KM.value,
+                    bonus_amount=234,
+                ),
+            ],
+        )
+        amounts = card.unused_amounts()
+        # 100 + 10 - 11
+        assert 99 == amounts.steps
+
+        # 42 + 6 - 3
+        assert 45 == amounts.activeMinutes
+
+        # 3.6 + 2.34 - 1.1
+        assert decimal.Decimal("4.84") == amounts.distanceKm
+
 
 class TestUser:
     def test_latest_activity_for_days_within_timespan_with_no_activities_returns_empty(

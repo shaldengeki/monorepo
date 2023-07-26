@@ -732,14 +732,24 @@ class BingoCard(db.Model):  # type: ignore
             total_active_minutes += activity.active_minutes
             total_distance_km += activity.distance_km
 
-        # Subtract out the user's used steps.
         for tile in self.flipped_tiles():
+            # Subtract out the user's used steps.
             if tile.steps is not None:
                 total_steps -= tile.steps
             if tile.active_minutes is not None:
                 total_active_minutes -= tile.active_minutes
             if tile.distance_km is not None:
                 total_distance_km -= tile.distance_km
+            # Add in any bonuses.
+            if tile.bonus_type is not None and tile.bonus_amount is not None:
+                if tile.bonus_type == BingoTileBonusType.STEPS.value:
+                    total_steps += tile.bonus_amount
+                elif tile.bonus_type == BingoTileBonusType.ACTIVE_MINUTES.value:
+                    total_active_minutes += tile.bonus_amount
+                elif tile.bonus_type == BingoTileBonusType.DISTANCE_KM.value:
+                    total_distance_km += decimal.Decimal(
+                        tile.bonus_amount
+                    ) / decimal.Decimal("100.00")
 
         return UnusedAmounts(
             steps=total_steps,
