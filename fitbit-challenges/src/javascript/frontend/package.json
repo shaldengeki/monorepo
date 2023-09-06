@@ -12,7 +12,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/node": "^20.5.7",
     "@types/react": "^18.2.21",
-    "graphql": "^16.7.1",
+    "graphql": "^16.8.0",
     "graphql-tag": "^2.12.6",
     "lodash": "^4.17.21",
     "plotly.js-basic-dist": "^2.26.0",
