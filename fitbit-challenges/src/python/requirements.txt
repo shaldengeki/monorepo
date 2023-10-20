@@ -4,7 +4,7 @@ flask-cors
 Flask-Migrate>=4.0.4
 Flask-SQLAlchemy>=3.0.3
 graphql-core
-graphql-server[flask]==3.0.0b6
+graphql-server[flask]==3.0.0b7
 pre-commit
 psycopg2
 pylint
