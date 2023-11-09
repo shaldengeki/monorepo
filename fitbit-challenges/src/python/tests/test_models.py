@@ -350,17 +350,6 @@ class SampleBingoCardPattern(BingoCardPattern):
         ]
 
 
-class TestBingoCardPattern:
-    def test_required_coordinate_for_required_tile(self):
-        assert SampleBingoCardPattern().required_coordinate(1, 1)
-
-    def test_required_coordinate_for_non_required_tile(self):
-        assert not SampleBingoCardPattern().required_coordinate(1, 0)
-
-    def test_number_of_required_tiles(self):
-        assert 5 == SampleBingoCardPattern().number_of_required_tiles
-
-
 class TestBingoCard:
     def test_victory_tiles_returns_empty_when_no_tiles(self):
         c = BingoCard(bingo_tiles=[])

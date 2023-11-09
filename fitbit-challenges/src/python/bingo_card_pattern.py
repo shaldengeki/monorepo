@@ -4,6 +4,9 @@ class BingoCardPattern:
         raise NotImplementedError
 
     def required_coordinate(self, x: int, y: int) -> bool:
+        if x < 0 or y < 0:
+            raise IndexError
+
         return bool(self.pattern[y][x] == 1)
 
     @property
