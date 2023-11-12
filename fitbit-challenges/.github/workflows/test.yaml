@@ -91,14 +91,6 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./src/javascsript/frontend
-          file: ./src/javascript/frontend/Dockerfile
-          push: true
-          tags: shaldengeki/fitbit-challenges-frontend:latest
-      -
-        name: Build and push
-        uses: docker/build-push-action@v5
-        with:
           context: ./src/javascript/frontend
           file: ./src/javascript/frontend/Dockerfile.prod.dockerfile
           push: true
