@@ -39,7 +39,7 @@ jobs:
         working-directory: ./src/python
   build-api:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     needs:
       - test-py
     steps:
@@ -68,7 +68,7 @@ jobs:
           tags: shaldengeki/fitbit-challenges-api:latest
   build-frontend:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     needs:
       - test-js
     steps:
