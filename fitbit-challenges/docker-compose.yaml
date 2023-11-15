@@ -5,31 +5,14 @@ services:
       context: ./src/python
       dockerfile: api/Dockerfile
     image: api
-    environment:
-      - PORT
-      - FLASK_DEBUG
-      - DB_HOST
-      - DB_USERNAME
-      - DB_PASSWORD
-      - DATABASE_NAME
-      - FRONTEND_HOST
-      - FRONTEND_PORT
-      - FITBIT_CLIENT_ID
-      - FITBIT_CLIENT_SECRET
-      - FITBIT_VERIFICATION_CODE
-      - FLASK_SECRET_KEY
+    env_file:
+      - env/.api.env
     restart: always
     depends_on:
       - pg
   migration:
     <<: *api
     command: ["./scripts/wait-for-postgres.sh", "--", "flask", "--app", "api", "db", "upgrade", "--directory", "./api/migrations"]
-    environment:
-      - FLASK_DEBUG
-      - DB_HOST
-      - DB_USERNAME
-      - DB_PASSWORD
-      - DATABASE_NAME
     restart: no
   worker:
     <<: *api
@@ -38,10 +21,8 @@ services:
   pg:
     image: postgres:alpine
     restart: always
-    environment:
-      - POSTGRES_PASSWORD
-      - POSTGRES_USER
-      - POSTGRES_DB
+    env_file:
+      - env/.postgres.env
     volumes:
       - fitbit-challenges-pg:/var/lib/postgresql/data
   frontend:
@@ -49,11 +30,8 @@ services:
       context: ./src/javascript/frontend
       dockerfile: Dockerfile
     image: frontend
-    environment:
-      - PORT=5001
-      - REACT_APP_API_HOST
-      - REACT_APP_API_PORT
-      - REACT_APP_API_PROTOCOL
+    env_file:
+      - env/.frontend.env
     restart: always
 volumes:
   fitbit-challenges-pg:

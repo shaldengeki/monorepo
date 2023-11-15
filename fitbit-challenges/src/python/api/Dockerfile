@@ -16,7 +16,7 @@ COPY . .
 
 ENV FLASK_APP=app.py
 ENV FLASK_DEBUG=True
-ENV PORT=5000
+ENV API_PORT=5000
 ENV FRONTEND_PROTOCOL=http
 ENV FRONTEND_HOST=frontend
 ENV FRONTEND_PORT=5001
@@ -29,4 +29,4 @@ ENV FITBIT_CLIENT_SECRET=testing
 ENV FITBIT_VERIFICATION_CODE=testing
 ENV FLASK_SECRET_KEY=testing
 
-CMD ./scripts/wait-for-postgres.sh -- flask --app api run --host 0.0.0.0 --port $PORT
+CMD ./scripts/wait-for-postgres.sh -- flask --app api run --host 0.0.0.0 --port $API_PORT

@@ -1,0 +1,26 @@
+version: '3'
+services:
+  api: &api
+    ports:
+      - "5000:5000"
+    env_file:
+      - env/.api.prod.env
+  migration:
+    <<: *api
+    ports: []
+  worker:
+    <<: *api
+    ports: []
+  pg:
+    restart: always
+    env_file:
+      - env/.postgres.prod.env
+  frontend:
+    build:
+      context: ./src/javascript/frontend
+      dockerfile: Dockerfile.prod.dockerfile
+    image: frontend
+    ports:
+      - "5001:80"
+    env_file:
+      - env/.frontend.prod.env
