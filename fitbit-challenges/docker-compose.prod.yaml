@@ -1,6 +1,7 @@
 version: '3'
 services:
   api: &api
+    image: shaldengeki/fitbit-challenges-api:latest
     ports:
       - "5000:5000"
     env_file:
@@ -16,10 +17,7 @@ services:
     env_file:
       - env/.postgres.prod.env
   frontend:
-    build:
-      context: ./src/javascript/frontend
-      dockerfile: Dockerfile.prod.dockerfile
-    image: frontend
+    image: shaldengeki/fitbit-challenges-frontend:latest
     ports:
       - "5001:80"
     env_file:
