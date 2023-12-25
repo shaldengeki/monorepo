@@ -20,7 +20,7 @@
     "react-canvas-confetti": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-plotlyjs": "^0.4.4",
-    "react-router-dom": "^6.20.1",
+    "react-router-dom": "^6.21.1",
     "react-scripts": "^5.0.1",
     "typescript": "^5",
     "web-vitals": "^3.5.0"
