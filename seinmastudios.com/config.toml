@@ -17,14 +17,7 @@ pygmentsCodeFences = true
 [author]
     name = "Charles OuGuo"
     github = "shaldengeki"
-    #gitlab = "username"
-    #linkedin = "username"
-    #facebook = "username"
-    #twitter = "guocharles"
-    #instagram = "username"
-    #stackoverflow = "username"
-    #youtube = "user/username" # or channel/channelname
-    #devto = "username"
+    mastodon = "mastodon.online/@ouguoc"
 
 [params]
     tagline = ""
