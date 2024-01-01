@@ -32,7 +32,6 @@ Here's a bunch of predictions for next year, along with rough probabilities. All
   - Goes to trial before the general election in any of his current cases: 10%
   - Wins the Republican primary: 90%
   - Wins the general election: 40%
-  - Is president-elect or otherwise in power: 50%
 
 # Rest of world
 
