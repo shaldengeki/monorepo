@@ -7,7 +7,9 @@ categories = []
 draft = false
 +++
 
-All dollar values inflation-adjusted for start of 2024.
+Here's a bunch of predictions for next year, along with rough probabilities. All dollar values inflation-adjusted for start of 2024.
+
+<!--more-->
 
 # US
 
@@ -53,13 +55,9 @@ All dollar values inflation-adjusted for start of 2024.
   - Announces GPT-5: 90%
   - Releases GPT-5 for consumer use: 80%
   - Gets a new CEO: 50%
-- We achieve AGI: 10%
+- We achieve AGI: 5%
 - Alphabet, Amazon, or Apple are forced via lawsuit to spin off at least one company: 25%
 - At least one company offers widely-available self-driving cars: 30%
 - Tesla stops selling a product named "Full Self-Driving": 40%
 - Twitter files for bankruptcy: 70%
-- Amazon, Google, Apple, or Steam accept Bitcoin: 10%
-
-# Culture
-
-- 
+- Amazon, Google, Apple, or Steam accept Bitcoin: 5%
