@@ -1,15 +1,27 @@
 +++
-title = "Notes From Community Meeting 2024 01 11"
+title = "Notes from Midtown East Casino Proposal Town Hall, 2024/01/11"
 date = 2024-01-11T18:44:55-05:00
 images = []
 tags = []
 categories = []
-draft = true
+draft = false
 +++
 
-I didn't take notes for the first two speakers, but one was a member of the gaming location board (Jerry) & described process. The next speaker was pretty emphatically a no
+Below are some notes I took during a town hall organized by Kristen Gonzalez, on the topic of a proposal for a casino in Midtown East (38th to 41st St, between First Ave and FDR). [For some background, see coverage in the Gothamist.](https://gothamist.com/news/midtown-community-compares-potential-casino-plan-cash-to-blood-money-at-town-hall)
 
-Kirsten Gonazales spoke briefly between each, primarily to calm nerves, remind folks that reps should be appreciated for taking time to listen & thanked
+![Map of the proposed casino site](/images/2024-01-11-manhattan-east-casino-proposal-site.png)
+
+The meeting was structured as follows. First, a member of the gaming location board spoke to give background on the proposal & process. Then, some of the six voting members of the Community Advisory Committee each spoke for a short amount of time, followed by representatives of some locally-powerful groups. Finally, representatives from the proposing group spoke and held a Q&A moderated by Kristen Gonzalez.
+
+I didn't take notes for the first two speakers, but one was a member of the gaming location board (Jerry) & described process. The next speaker was pretty emphatically a no. Kristen Gonazalez spoke briefly between each speaker, primarily to calm nerves, remind folks that reps should be appreciated for taking time to listen & thanked.
+
+I was pretty impressed with Kristen Gonzalez; despite an extremely raucous crowd that heckled the speakers repeatedly, she ran a smooth event, calming nerves between speakers, organizing it in a sensible fashion that meaningfully informed the community both about the facts and each speaker's likely position on the issue. The one exception was the Q&A section, where in an attempt to group up attendee questions, she ended up asking vague questions like "Can you talk about public safety?" which had the effect of softballing what should have been much more hard-hitting concrete questions about the proposal.
+
+I was very unimpressed by the attendees from the Manhattan East Community Association (MECA), who seemed primarily there to advertise for their organization. They spent basically all their time talking about unrelated events they'd run, in contrast to the other speakers who stuck pretty closely to the topic at hand. Maybe they didn't get the memo?
+
+I expect Robert Gottheim (obo Jerry Nadler) to get the most coverage. He had by far the most memorable moment of the night, where in response to a heckler yelling "This is blood money", he responded "It may be blood money, but the money is coming." It was a pretty shocking thing to say in the moment, but it fit with his overall (IMO reasonable) message that residents should prepare themselves for the likely outcome that Manhattan will get a casino _somewhere_ in the near future.
+
+Ultimately, it was a _lot_ of fun to attend! The atmosphere was pretty free-wheeling, with attendees interjecting pretty regularly, and it had the feeling of a small-town meeting. I'd highly recommend events like this if you're at all interested in local politics or shooting the shit with your neighbors in New York.
 
 - Keith Powers, NYC Councilmember, District 4
     - I get questions all the time about what's happening here
@@ -141,7 +153,4 @@ Kirsten Gonzalez describes comunity boards
     - Timeline
         - Nothing is going to happen overnight
 - Public comment
-    - Traffic on these streets is pretty bad
-        - Used to get to hospitals / emergency rooms
-        - This would make it worse
-    - 
+    - I only listened to the first few minutes of this, but what I heard felt pretty unproductive to me
