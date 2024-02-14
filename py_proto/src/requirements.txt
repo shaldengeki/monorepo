@@ -22,7 +22,7 @@ dill==0.3.6
     # via
     #   -r src/requirements.txt
     #   pylint
-distlib==0.3.6
+distlib==0.3.8
     # via
     #   -r src/requirements.txt
     #   virtualenv
