@@ -8,7 +8,7 @@ astroid==2.12.13
     # via
     #   -r src/requirements.txt
     #   pylint
-black==22.10.0
+black==24.2.0
     # via -r src/requirements.txt
 cfgv==3.3.1
     # via
