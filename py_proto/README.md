@@ -1,10 +1,8 @@
 # py_proto
 
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/shaldengeki/py_proto/main.svg)](https://results.pre-commit.ci/latest/github/shaldengeki/py_proto/main)
-
 This is a Python-based protobuf parser. It is intended to serve as a reference implementation and is _not_ production-ready.
 
-![Build status](https://github.com/shaldengeki/py_proto/actions/workflows/main.yml/badge.svg)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/shaldengeki/py_proto/main.svg)](https://results.pre-commit.ci/latest/github/shaldengeki/py_proto/main) ![Build status](https://github.com/shaldengeki/py_proto/actions/workflows/main.yml/badge.svg)
 
 ## Usage
 
