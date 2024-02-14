@@ -4,7 +4,7 @@
 #
 #    pip-compile src/requirements.txt
 #
-astroid==2.12.13
+astroid==3.0.3
     # via
     #   -r src/requirements.txt
     #   pylint
