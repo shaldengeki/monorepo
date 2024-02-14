@@ -15,14 +15,15 @@ repos:
         hooks:
             -   id: black
     -   repo: https://github.com/pycqa/isort
-        rev: 5.10.1
+        rev: 5.13.2
         hooks:
             -   id: isort
                 name: isort (python)
-    -   repo: https://github.com/FelixSeptem/pre-commit-golang.git
-        rev: "12f5442f51377b10b26651ad745206bbe1500ad6"
+    -   repo: https://github.com/keith/pre-commit-buildifier
+        rev: 6.4.0
         hooks:
-            -   id: bazel-buildifier
+        -   id: buildifier
+        -   id: buildifier-lint
     -   repo: https://github.com/pre-commit/mirrors-mypy
         rev: v0.991
         hooks:
