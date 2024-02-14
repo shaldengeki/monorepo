@@ -54,7 +54,7 @@ nodeenv==1.8.0
     # via
     #   -r src/requirements.txt
     #   pre-commit
-pathspec==0.10.2
+pathspec==0.12.1
     # via
     #   -r src/requirements.txt
     #   black
