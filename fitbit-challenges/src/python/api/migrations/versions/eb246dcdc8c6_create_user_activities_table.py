@@ -5,6 +5,7 @@ Revises: fc584ec8e573
 Create Date: 2023-04-20 23:15:51.565977
 
 """
+
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.sql.functions import now, current_date
