@@ -58,7 +58,7 @@ pathspec==0.12.1
     # via
     #   -r src/requirements.txt
     #   black
-platformdirs==2.5.4
+platformdirs==4.2.0
     # via
     #   -r src/requirements.txt
     #   black
