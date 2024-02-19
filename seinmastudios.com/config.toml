@@ -19,6 +19,7 @@ pygmentsCodeFences = true
     github = "shaldengeki"
     mastodon = "mastodon.online/@ouguoc"
     bga = "91572304"
+    goodreads = "71154541-charles-guo"
 
 [params]
     tagline = ""
