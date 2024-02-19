@@ -11,7 +11,9 @@ For a couple years now, I've been leading a team at work that builds tools & inf
 
 # What's a protobuf?
 
-First, let's walk through a practical example.
+First, let's go through an example of using protobufs.
+
+## A worked example
 
 Let's say I have a Python program that needs to pass some data to a Ruby program. Let's say it's some information about a set of users.
 
@@ -96,7 +98,6 @@ ruby my_program.rb
 
 That, in a nutshell, is what protobuf is -- it's a way to describe data & de/serialize it, and it lets you pass stuff between different programs and different languages in a way that makes sense.
 
-- comparison with json
 - compatibility semantics
 
 # What's cool about it?
@@ -105,6 +106,19 @@ That, in a nutshell, is what protobuf is -- it's a way to describe data & de/ser
 - It's insanely ambitious
 - Right tool for the job
 - Interfaces first
+
+# Can't I just use JSON?
+
+Let me tell you a story, hopefully one that'll be familiar.
+
+> - Christine hops on call w/Sam, manager
+> - New feature exposing user birthdays to do age-filtering
+> - MVP, Ruby dump to JSON
+> - Fast forward
+> - Janet needs to add a new field
+>   - Needs to track down where the Ruby code is & read it
+> - Gets paged into an incident
+> - `KeyError`
 
 # Some not-so-cool things
 
