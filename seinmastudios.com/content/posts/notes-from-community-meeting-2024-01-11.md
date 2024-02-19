@@ -9,8 +9,6 @@ draft = false
 
 Below are some notes I took during a town hall organized by Kristen Gonzalez, on the topic of a proposal for a casino in Midtown East (38th to 41st St, between First Ave and FDR). [For some background, see coverage in the Gothamist.](https://gothamist.com/news/midtown-community-compares-potential-casino-plan-cash-to-blood-money-at-town-hall)
 
-![Map of the proposed casino site](/images/2024-01-11-manhattan-east-casino-proposal-site.png)
-
 The meeting was structured as follows. First, a member of the gaming location board spoke to give background on the proposal & process. Then, some of the six voting members of the Community Advisory Committee each spoke for a short amount of time, followed by representatives of some locally-powerful groups. Finally, representatives from the proposing group spoke and held a Q&A moderated by Kristen Gonzalez.
 
 I didn't take notes for the first two speakers, but one was a member of the gaming location board (Jerry) & described process. The next speaker was pretty emphatically a no. Kristen Gonazalez spoke briefly between each speaker, primarily to calm nerves, remind folks that reps should be appreciated for taking time to listen & thanked.
