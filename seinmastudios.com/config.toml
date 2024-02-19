@@ -18,6 +18,7 @@ pygmentsCodeFences = true
     name = "Charles OuGuo"
     github = "shaldengeki"
     mastodon = "mastodon.online/@ouguoc"
+    bga = "91572304"
 
 [params]
     tagline = ""
