@@ -46,7 +46,7 @@ mccabe==0.7.0
     # via
     #   -r src/requirements.txt
     #   pylint
-mypy-extensions==0.4.3
+mypy-extensions==1.0.0
     # via
     #   -r src/requirements.txt
     #   black
