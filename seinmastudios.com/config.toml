@@ -34,6 +34,12 @@ pygmentsCodeFences = true
     #google_fonts = ["Staatliches"] # Adds additional google fonts
     #disableDarkModeCSS = false # disables css style for users using dark-mode
 
+[[ menu.main ]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 1
+
 # uncomment to enable the Tags link on the main toolbar
 #  [[menu.main]]
 #    identifier = "tags"

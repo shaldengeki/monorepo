@@ -1,6 +1,6 @@
 +++
 title = "About Me"
-date = "2020-10-28"
+# date = "2020-10-28"
 menu = "main"
 weight = "20"
 meta = "false"
