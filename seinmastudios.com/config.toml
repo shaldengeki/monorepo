@@ -54,3 +54,6 @@ pygmentsCodeFences = true
 #    name = "Categories"
 #    url = "/categories"
 #    weight = 1
+
+[taxonomies]
+    tag = 'tags'
