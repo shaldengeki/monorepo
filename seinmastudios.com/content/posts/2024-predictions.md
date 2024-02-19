@@ -2,7 +2,7 @@
 title = "Predictions for 2024"
 date = 2023-12-31T19:06:51-05:00
 images = []
-tags = []
+tags = ['predictions']
 categories = []
 draft = false
 +++

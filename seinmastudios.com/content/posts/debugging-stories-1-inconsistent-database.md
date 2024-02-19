@@ -2,7 +2,7 @@
 title = "Debugging stories: the inconsistent database"
 date = 2022-12-05T09:33:10-05:00
 images = []
-tags = []
+tags = ['tech', 'bugs', 'debugging', 'war-stories']
 categories = []
 draft = false
 +++

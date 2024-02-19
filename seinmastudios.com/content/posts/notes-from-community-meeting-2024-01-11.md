@@ -1,8 +1,8 @@
 +++
 title = "Notes from Midtown East Casino Proposal Town Hall, 2024/01/11"
 date = 2024-01-11T18:44:55-05:00
-images = []
-tags = []
+images = ['/images/2024-01-11-manhattan-east-casino-proposal-site.png']
+tags = ['nyc', 'politics', 'kirsten gonzalez', 'notes']
 categories = []
 draft = false
 +++

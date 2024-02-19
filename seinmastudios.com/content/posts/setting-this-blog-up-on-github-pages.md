@@ -2,7 +2,7 @@
 title = "Setting this blog up on Github Pages"
 date = 2022-11-03T22:30:37-04:00
 images = []
-tags = []
+tags = ['tech', 'github', 'tutorials', 'meta']
 categories = []
 draft = false
 +++

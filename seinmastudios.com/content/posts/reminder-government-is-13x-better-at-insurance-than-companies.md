@@ -2,7 +2,7 @@
 title = "The US government is 13x better at healthcare insurance than private companies"
 date = 2023-11-27T23:23:57-05:00
 images = []
-tags = []
+tags = ['us', 'politics', 'healthcare', 'insurance', 'medicare']
 categories = []
 draft = false
 +++
