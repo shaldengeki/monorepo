@@ -96,6 +96,7 @@ ruby my_program.rb
 
 That, in a nutshell, is what protobuf is -- it's a way to describe data & de/serialize it, and it lets you pass stuff between different programs and different languages in a way that makes sense.
 
+- comparison with json
 - compatibility semantics
 
 # What's cool about it?
