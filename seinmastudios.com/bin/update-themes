@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-# Updates themes, which are managed by git submodules.
-# Pushes changes to your current branch.
-
-git submodule update --recursive --remote
-git commit -am "Update themes" && git push
