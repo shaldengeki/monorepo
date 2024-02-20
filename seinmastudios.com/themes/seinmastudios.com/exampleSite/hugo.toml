@@ -1,13 +1,12 @@
-baseurl = "https://seinmastudios.com"
-title = "and some change"
-copyright = "Copyright &copy; 2024 - Charles OuGuo"
-languageCode = "en-us"
+baseurl = "https://www.example.org/"
+title = "Kiera"
+copyright = "Copyright &copy; 2023 - Author Name"
 canonifyurls = true
-theme = "seinmastudios.com"
+theme = "hugo-kiera"
 
-paginate = 10
+paginate = 3
 
-summaryLength = 20
+summaryLength = 30
 enableEmoji = true
 pygmentsCodeFences = true
 
@@ -15,33 +14,31 @@ pygmentsCodeFences = true
 
 # Note: to disable a social network icon delete or comment out the corresponding line
 [author]
-    name = "Charles OuGuo"
-    github = "shaldengeki"
-    mastodon = "mastodon.online/@ouguoc"
-    bga = "91572304"
-    goodreads = "71154541-charles-guo"
-    pinboard = "shaldengeki"
+    name = "Example"
+    github = "funkydan2/hugo-kiera"
+    #gitlab = "username"
+    #linkedin = "username"
+    #facebook = "username"
+    twitter = "ds_says"
+    #instagram = "username"
+    #stackoverflow = "username"
+    #youtube = "user/username" # or channel/channelname
+    #devto = "username"
 
 [params]
-    tagline = ""
-    description = "Charles OuGuo's personal blog"
+    tagline = "A Hugo theme for creative and technical writing"
+    description = "Kiera: A Hugo theme for creative and technical writing."
     #images = [""] #This is used for opengraph/twitter cards.
     customCSS = []  #Optional Customised CSS
-    favicon = "/favicon.ico"
+    #favicon = ""
     #utterancesRepo = "username/repository"
     #utterancesIssueTerm = "pathname"
     #homepageLength = 10
     #commentAutoload = true  #This mean reader don't need click, disqus comment autoload
-    mathjax = true #Enable display of mathematics using mathjax (LaTeX syntax)
+    #mathjax = true #Enable display of mathematics using mathjax (LaTeX syntax)
     #katex = true #Enable display of mathematics using katex (Faster LaTeX rendering)
     #google_fonts = ["Staatliches"] # Adds additional google fonts
     #disableDarkModeCSS = false # disables css style for users using dark-mode
-
-[[ menu.main ]]
-    identifier = "home"
-    name = "Home"
-    url = "/"
-    weight = 1
 
 # uncomment to enable the Tags link on the main toolbar
 #  [[menu.main]]
@@ -56,6 +53,3 @@ pygmentsCodeFences = true
 #    name = "Categories"
 #    url = "/categories"
 #    weight = 1
-
-[taxonomies]
-    tag = 'tags'

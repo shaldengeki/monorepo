@@ -1,0 +1,44 @@
+body {
+  color: #ffffff;
+  background: #2A2829;
+}
+
+#container header h1 a {
+  color: #ffffff;
+}
+
+#container nav ul li a.active {
+  border-bottom: 0.5em solid #ffffff;
+}
+
+#container main article > pre {
+  background-color: #a0a04b;
+  overflow-x: auto;
+  padding: 0.8em;
+  font-size: 0.9em;
+  box-shadow: 0 -1px 0 #bbbbbb inset;
+}
+
+#container main article p code {
+  padding: 0.2em;
+  background-color: #797979;
+  font-size: 0.9em;
+}
+
+#container footer ul li a.active {
+  border-bottom: 0.2em solid #ffffff;
+}
+
+a {
+  color: #ffffff;
+  /*text-decoration: none;*/
+}
+
+blockquote {
+  margin: 1em;
+  border-left: solid 0.1em #797979;
+  padding: 0.5em 2em;
+  position: relative;
+  background-color: #3e3b3c;
+  box-shadow: 0 -1px 0 #797979 inset;
+}
