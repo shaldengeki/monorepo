@@ -7,14 +7,16 @@
     {{ range $index, $page := $paginator.Pages }}
 
     <li {{if eq $index 0}}class="first" {{end}}>
-      <h1><a href="{{ $page.Permalink }}" title="{{ $page.Title }}">{{ .Title }}</a></h1>
-      <aside>{{ T "readingTime" .ReadingTime }}</aside>
+      <div class="post-title">
+        <h1><a href="{{ $page.Permalink }}" title="{{ $page.Title }}">{{ .Title }}</a></h1>
+        <span class="reading-time">{{ T "readingTime" .ReadingTime }}</span>
+      </div>
       {{ partial "featured_image" .}}
       <p>{{ .Summary }}</p>
       {{ if .Truncated }}
       <a href="{{ .RelPermalink }}">{{ T "readMore" }}</a>
       {{ end }}
-      {{ partial "aside" . }}
+      {{ partial "article-meta" . }}
     </li>
     {{ end }}
   </ul>
