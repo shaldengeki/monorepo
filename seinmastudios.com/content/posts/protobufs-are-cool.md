@@ -98,13 +98,30 @@ ruby my_program.rb
 
 That, in a nutshell, is what protobuf is -- it's a way to describe data & de/serialize it, and it lets you pass stuff between different programs and different languages in a way that makes sense.
 
+TODO:
 - compatibility semantics
 
-# What's cool about it?
+# What's cool about protobufs?
 
-- Human-readable
-- It's insanely ambitious
-- Right tool for the job
+## Protobufs are human-readable
+
+The syntax for protobufs is _really_ lightweight, and a lot of it is pretty intuitive. If you look back at our `program_output.proto`, you can immediately see how you'd add a new field to one of our messages, or a new message type. This is really great, because protobufs have to be read & written by all sorts of programmers working in all sorts of languages. At work, I almost never have to tell someone how to express something in protobuf; it's almost always other stuff that folks have questions about.
+
+## They work cross-language
+
+As you saw in the example above, protobufs let you take data from a program written in one language, and pass it to a program written in a totally different language. 
+
+What's even better is that often, the clients in each language quite often feel "normal" for that language. What I mean by that is, the protobuf client in e.g. Python will adhere closely to Python language norms, like class and method names will be capitalized / scoped like you'd expect in Python, or the types of values that end up getting output by those classes are just normal Python types. You end up feeling like you're just writing normal Python code, instead of (as happens often in some frameworks) needing to write alien-looking code in some parts of your codebase. That might sound trivial, but I've found that in practice, minimizing programmer surprise like this avoids a major source of bugs.
+
+This isn't always true, mind you. In particular, I've found that the Ruby bindings are pretty rough, in part because they're Google-maintained and Google basically doesn't use Ruby anywhere. But for most other languages, this is the case.
+
+## They let you use the right tool for the job
+
+This is a consequence of the above, sort of. When starting a project, I often find myself stuck picking a language, because different corners of the project are best-served with different languages. For example, it's hard to beat Python if you're doing scientific computation -- `numpy` and `pandas` are wildly popular and effective tools. But for webapps, I've really enjoyed working in Ruby (Rails) or Javascript. What if I want to build a webapp that does some scientific computation?
+
+Protobufs make it a lot easier to say "yes, and" to programming languages. You can just use whatever tool is good for the job, knowing you'll have a nice way to pass your data around regardless of the language you're using.
+
+TODO:
 - Interfaces first
 
 # Can't I just use JSON?
