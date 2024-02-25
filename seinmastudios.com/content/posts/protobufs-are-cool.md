@@ -9,6 +9,8 @@ draft = true
 
 For a couple years now, I've been leading a team at work that builds tools & infra around our usage of schemas. Stripe almost exclusively uses [Protocol Buffers](https://protobuf.dev) (protobufs for short) for our schemas, and I think the tech here is pretty cool!
 
+<!--more-->
+
 # What's a protobuf?
 
 First, let's go through an example of using protobufs.
@@ -42,7 +44,7 @@ This is a protobuf file. It follows the [Protocol Buffer file syntax](https://pr
 
 Next, I can use the protobuf compiler, `protoc`, to turn this file into a Python library. I run:
 
-```
+```bash
 protoc --python_out=. program_output.proto
 ```
 
