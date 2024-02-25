@@ -15,7 +15,7 @@ One system we rely on is a database that we use to register and store these sche
 
 The first thing I did was actually verify that the new version of the schemas weren't actually registered. One of these schemas we'll call "schemaB":
 
-```
+```bash
 curl http://schema-registry/subjects/schemaB/versions
 []
 ```
@@ -24,7 +24,7 @@ Yep, it was missing all right. That confirmed that there was a real problem.
 
 The next thing to do was to figure out what happened. The thing that actually stores new schema versions in the registry (the _schema publisher_) is an application that we own and emits logs, so I went to take a look at those logs. The logs showed something like this happening:
 
-```
+```log
 Checking if schemaA@1.2 exists...
 Attempting to register schemaA@1.2...
 Success!
@@ -37,7 +37,7 @@ Here, "1.2" and "1.1" are new versions of the schemas that the user is trying to
 
 Note that this is _weird_ - the schema registry was telling us that it registered schemaA@1.2, and then immediately afterwards, complaining that it didn't exist. Wait, _does_ it exist?
 
-```
+```bash
 curl http://schema-registry/subjects/schemaA/versions
 [1.1, 1.2]
 ```
@@ -51,7 +51,7 @@ At this point, I realized that I was asking a question, and _different entities_
 
 To confirm this, I re-ran the above request a few times:
 
-```
+```bash
 curl http://schema-registry/subjects/schemaA/versions
 [1.1, 1.2]
 curl http://schema-registry/subjects/schemaA/versions
@@ -66,7 +66,7 @@ Bingo - a smoking gun - one of the schema registry's request-servers only knew a
 
 I re-ran the publisher, and:
 
-```
+```log
 Checking if schemaA@1.2 exists...
 schemaA@1.2 exists, skipping.
 Checking if schemaB@1.1 exists...
