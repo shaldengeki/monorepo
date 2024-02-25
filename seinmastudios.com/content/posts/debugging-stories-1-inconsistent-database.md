@@ -24,7 +24,7 @@ Yep, it was missing all right. That confirmed that there was a real problem.
 
 The next thing to do was to figure out what happened. The thing that actually stores new schema versions in the registry (the _schema publisher_) is an application that we own and emits logs, so I went to take a look at those logs. The logs showed something like this happening:
 
-```log
+```text
 Checking if schemaA@1.2 exists...
 Attempting to register schemaA@1.2...
 Success!
@@ -66,7 +66,7 @@ Bingo - a smoking gun - one of the schema registry's request-servers only knew a
 
 I re-ran the publisher, and:
 
-```log
+```text
 Checking if schemaA@1.2 exists...
 schemaA@1.2 exists, skipping.
 Checking if schemaB@1.1 exists...
