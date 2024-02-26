@@ -1,4 +1,3 @@
-# Run tests on master and feature branches.
 name: Test
 
 on:
