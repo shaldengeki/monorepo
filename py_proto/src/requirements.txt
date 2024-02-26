@@ -84,7 +84,7 @@ virtualenv==20.16.7
     # via
     #   -r src/requirements.txt
     #   pre-commit
-wrapt==1.14.1
+wrapt==1.16.0
     # via
     #   -r src/requirements.txt
     #   astroid
