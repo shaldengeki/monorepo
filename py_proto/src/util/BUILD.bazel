@@ -1,0 +1,37 @@
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+
+py_library(
+    name = "parser",
+    srcs = ["parser.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src:proto_file",
+    ],
+)
+
+py_binary(
+    name = "parser_binary",
+    srcs = ["parser.py"],
+    main = "parser.py",
+    visibility = ["//visibility:public"],
+    deps = [":parser"],
+)
+
+py_library(
+    name = "compatibility_checker",
+    srcs = ["compatibility_checker.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":parser",
+        "//src:proto_file",
+        "//src:proto_node",
+    ],
+)
+
+py_binary(
+    name = "compatibility_checker_binary",
+    srcs = ["compatibility_checker.py"],
+    main = "compatibility_checker.py",
+    visibility = ["//visibility:public"],
+    deps = [":compatibility_checker"],
+)

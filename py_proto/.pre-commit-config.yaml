@@ -1,0 +1,35 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+ci:
+    skip:
+        - buildifier
+        - buildifier-lint
+
+repos:
+    -   repo: https://github.com/pre-commit/pre-commit-hooks
+        rev: v4.5.0
+        hooks:
+            -   id: trailing-whitespace
+            -   id: end-of-file-fixer
+            -   id: check-yaml
+            -   id: no-commit-to-branch
+                args: [--branch, staging, --branch, main]
+            -   id: requirements-txt-fixer
+    -   repo: https://github.com/psf/black
+        rev: 24.2.0
+        hooks:
+            -   id: black
+    -   repo: https://github.com/pycqa/isort
+        rev: 5.13.2
+        hooks:
+            -   id: isort
+                name: isort (python)
+    -   repo: https://github.com/keith/pre-commit-buildifier
+        rev: 6.4.0
+        hooks:
+        -   id: buildifier
+        -   id: buildifier-lint
+    -   repo: https://github.com/pre-commit/mirrors-mypy
+        rev: v1.8.0
+        hooks:
+            -   id: mypy

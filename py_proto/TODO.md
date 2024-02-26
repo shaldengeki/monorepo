@@ -1,0 +1,103 @@
+# TODO
+
+- [x] Set up Bazel scaffolding
+- [x] Set up testing
+- [x] [Proto file support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#proto_file)
+  - [x] Syntax
+  - [x] Imports
+  - [x] Package
+  - [x] Options
+- [x] [Enum support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#enum_definition)
+  - [x] Empty enum
+  - [x] Enum options
+  - [x] Fields
+    - [x] Empty statements
+    - [x] Values
+    - [x] Value options
+  - [x] Reserveds
+- [x] [Message support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#message_definition)
+  - [x] Empty message
+  - [x] Empty statements
+  - [x] Options
+  - [x] Fields
+    - [x] Basic fields
+    - [x] Field options
+    - [x] OneOfs
+      - [x] Basic oneofs
+      - [x] OneOf options
+      - [x] Field options
+    - [x] Maps
+      - [x] Basic maps
+      - [x] Map options
+    - [x] Reserveds
+    - [x] Extensions
+    - [x] Optional
+  - [x] Nested messages
+  - [x] Nested enums
+- [x] [Service support](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#service_definition)
+  - [x] Empty service
+  - [x] Empty statements
+  - [x] Service options
+  - [x] rpcs
+    - [x] Basic RPC
+    - [x] stream request
+    - [x] stream response
+    - [x] RPC options & empty statements
+- [x] [Comment support](https://protobuf.dev/programming-guides/proto3/#adding-comments)
+  - [x] Single-line // comments
+  - [x] Multi-line /* */ comments
+  - [ ] Same-line comment serialization support
+  - [x] Top-of-file comment support
+- [x] [Extending support](https://protobuf.dev/reference/protobuf/proto2-spec/#extend)
+  - This is required by [a Google well-known proto file.](https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/unittest_proto3_optional.proto#L96)
+  - [x] Top-level extends
+  - [x] Message-scope extends
+- [ ] Google well-known protobuf support
+  - [x] Mount in Google protobufs
+  - [x] Parseable
+  - [ ] Idempotent de/serialization
+- [ ] Diffs
+  - [x] Normalizing
+  - [ ] Complete diffs
+    - [x] Proto file-level diffs
+      - [x] Syntax changes
+      - [x] Import changes
+      - [x] Package changes
+      - [x] Option changes
+    - [ ] Enum-level diffs
+      - [x] Additions/removals
+      - [x] Option changes
+      - [x] Field changes
+        - [x] Value changes
+        - [x] Option changes
+      - [ ] Reserveds changes
+    - [ ] Message-level diffs
+      - [x] Additions/removals
+      - [x] Option changes
+      - [x] Field changes
+      - [ ] Reserved changes
+      - [ ] Nested enum changes
+      - [ ] Nested message changes
+    - [ ] Service-level diffs
+      - [ ] Additions/removals
+      - [ ] Option changes
+      - [ ] RPC changes
+        - [ ] Additions/removals
+        - [ ] Option changes
+    - [ ] Comment diffs
+  - [ ] Backwards-compatibility check
+  - [ ] __eq__ should enforce parent equality
+  - [ ] Scoping of diffs under containing objects
+    - [ ] Enum options under enums
+    - [ ] Enum value changes under enums
+    - [ ] Enum value option changes under enum values
+    - [ ] Enum reserved changes under enums
+    - [ ] Message option changes under messages
+    - [ ] Message field changes under messages
+    - [ ] Message reserved changes under messages
+    - [ ] Message nested enum changes under messages
+    - [ ] Message nested message changes under messages
+- [ ] (Perf) use iterators
+  - [ ] In parsing
+  - [ ] In properties
+- [ ] Remove Proto* and proto_ from everything
