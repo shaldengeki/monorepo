@@ -1,0 +1,9 @@
+# Bazel
+bazel-bin
+bazel-out
+bazel-monorepo
+bazel-rules
+bazel-testlogs
+
+# Github
+.github
