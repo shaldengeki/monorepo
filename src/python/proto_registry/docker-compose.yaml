@@ -4,7 +4,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    image: shaldengeki/proto-registry
+    image: shaldengeki/proto-registry-api
     ports:
       - "17283:17283"
     volumes:
@@ -24,7 +24,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    image: shaldengeki/proto-registry
+    image: shaldengeki/proto-registry-api
     volumes:
       - ./api:/usr/src/app
     command: ["./scripts/wait-for-postgres.sh", "flask", "db", "upgrade"]
@@ -36,26 +36,6 @@ services:
       - DATABASE_NAME
     depends_on:
       - pg
-  worker:
-    build:
-      context: ./worker
-      dockerfile: Dockerfile
-    image: shaldengeki/proto-registry-worker
-    volumes:
-      - ./worker:/usr/src/app
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/proto-registry:/var/proto-registry
-    environment:
-      - API_HOST
-      - API_PORT
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
-      - HOST_PATH
-      - S3_BUCKET
-    depends_on:
-      - api
-    command: ["./wait-for", "$API_HOST:$API_PORT", "--", "python", "worker.py"]
-    restart: always
   pg:
     image: postgres:alpine
     restart: always
