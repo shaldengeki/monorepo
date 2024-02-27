@@ -4,11 +4,20 @@ load("@rules_oci//oci:defs.bzl", "oci_tarball")
 load("@rules_python//python:defs.bzl", "py_binary")
 load("//src/python:py_layer.bzl", "py_oci_image")
 
+py_library(
+    name = "api_lib",
+    srcs = glob(["**/*.py"]),
+    imports = [".."],
+    visibility = ["//:__subpackages__"],
+)
+
 py_binary(
     name = "binary",
-    srcs = glob(["**/*.py"]),
+    srcs = ["app.py"],
+    imports = [".."],
     main = "app.py",
     deps = [
+        ":api_lib",
         requirement("Flask"),
         requirement("Flask-Migrate"),
         requirement("importlib-metadata"),

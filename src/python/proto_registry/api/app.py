@@ -1,10 +1,9 @@
 import json
 
+from api import models
+from api.config import app, db
 from flask import abort, request
 from sqlalchemy import asc
-
-from . import models
-from .config import app, db
 
 
 @app.route("/")

@@ -40,6 +40,6 @@ oci.pull(
         "linux/arm64/v8",
         "linux/amd64",
     ],
-    tag = "3",
+    tag = "3-slim",
 )
 use_repo(oci, "python3_image")
