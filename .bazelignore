@@ -7,3 +7,6 @@ bazel-testlogs
 
 # Github
 .github
+
+# postgres mounts
+postgres-data
