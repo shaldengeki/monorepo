@@ -32,6 +32,9 @@ py_library(
 py_library(
     name = "config_py",
     srcs = ["config.py"],
+    data = [
+        requirement("psycopg2-binary"),
+    ],
     visibility = ["//src/python/fitbit_challenges:__subpackages__"],
     deps = [
         ":fitbit_client_py",
