@@ -1,0 +1,30 @@
+load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_test")
+
+py_test(
+    name = "bingo_card_pattern_test",
+    srcs = ["bingo_card_pattern_test.py"],
+    deps = [
+        "//src/python/fitbit_challenges:bingo_card_pattern_py",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "fitbit_client_test",
+    srcs = ["fitbit_client_test.py"],
+    deps = [
+        "//src/python/fitbit_challenges:fitbit_client_py",
+        requirement("pytest"),
+        requirement("requests"),
+    ],
+)
+
+py_test(
+    name = "models_test",
+    srcs = ["models_test.py"],
+    deps = [
+        "//src/python/fitbit_challenges:models_py",
+        requirement("pytest"),
+    ],
+)

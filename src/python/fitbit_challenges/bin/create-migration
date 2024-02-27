@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -ex
+
+cd src/python/api/migrations
+alembic revision -m "$1"

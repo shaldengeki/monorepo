@@ -3,7 +3,7 @@ set -euxo pipefail
 
 REPO=$1
 cd ~
-rm -rf $REPO
+sudo rm -rf $REPO
 git clone https://github.com/shaldengeki/$REPO
 
 (

@@ -1,0 +1,9 @@
+{
+    "extends": "@tsconfig/create-react-app/tsconfig.json",
+    "include": ["src"],
+    "exclude": ["node_modules", "**/*.spec.ts"],
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "jsx": "react"
+    }
+}

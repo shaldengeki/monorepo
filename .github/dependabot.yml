@@ -8,3 +8,7 @@ updates:
     directory: "/src/python"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/src/javascript/fitbit-challenges/frontend"
+    schedule:
+      interval: "weekly"

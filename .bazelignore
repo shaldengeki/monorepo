@@ -8,5 +8,9 @@ bazel-testlogs
 # Github
 .github
 
-# postgres mounts
+# Production configuration.
+docker-compose.prod.yaml
+
+# Database data.
 postgres-data
+pg_dump.sql

@@ -1,0 +1,37 @@
+version: '3'
+services:
+  api: &api
+    build:
+      context: ./src/python
+      dockerfile: api/Dockerfile
+    image: api
+    env_file:
+      - env/.api.env
+    restart: always
+    depends_on:
+      - pg
+  migration:
+    <<: *api
+    command: ["./scripts/wait-for-postgres.sh", "--", "flask", "--app", "api", "db", "upgrade", "--directory", "./api/migrations"]
+    restart: no
+  worker:
+    <<: *api
+    working_dir: /usr/src
+    command: ["./app/scripts/wait-for-postgres.sh", "--", "python", "-u", "-m", "app.worker.app"]
+  pg:
+    image: postgres:alpine
+    restart: always
+    env_file:
+      - env/.postgres.env
+    volumes:
+      - fitbit-challenges-pg:/var/lib/postgresql/data
+  frontend:
+    build:
+      context: ./src/javascript/frontend
+      dockerfile: Dockerfile
+    image: frontend
+    env_file:
+      - env/.frontend.env
+    restart: always
+volumes:
+  fitbit-challenges-pg:
