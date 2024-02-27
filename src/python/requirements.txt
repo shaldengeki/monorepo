@@ -23,7 +23,7 @@ nodeenv
 pathspec
 platformdirs
 pre-commit
-psycopg2-binary
+psycopg2
 pylint
 pytest
 pyyaml

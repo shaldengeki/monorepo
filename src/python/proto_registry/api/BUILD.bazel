@@ -23,7 +23,7 @@ py_binary(
         requirement("importlib-metadata"),
         requirement("importlib-resources"),
         requirement("typing-extensions"),
-        requirement("psycopg2-binary"),
+        requirement("psycopg2"),
         requirement("sqlalchemy"),
         requirement("Flask-SQLAlchemy"),
         requirement("flask-cors"),
