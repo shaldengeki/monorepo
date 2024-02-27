@@ -30,6 +30,6 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-
             ${{ runner.os }}-${{ env.cache-name }}-${{ github.base_ref }}-
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
       - name: bazel test //...
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc test //...
