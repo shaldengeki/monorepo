@@ -9,7 +9,12 @@ from src.python.py_proto.proto_enum import ProtoEnum
 from src.python.py_proto.proto_extend import ProtoExtend
 from src.python.py_proto.proto_import import ProtoImport
 from src.python.py_proto.proto_message import ProtoMessage
-from src.python.py_proto.proto_node import ParsedProtoNode, ProtoContainerNode, ProtoNode, ProtoNodeDiff
+from src.python.py_proto.proto_node import (
+    ParsedProtoNode,
+    ProtoContainerNode,
+    ProtoNode,
+    ProtoNodeDiff,
+)
 from src.python.py_proto.proto_option import ProtoOption
 from src.python.py_proto.proto_package import ProtoPackage
 from src.python.py_proto.proto_service import ProtoService

@@ -13,7 +13,11 @@ from src.python.py_proto.proto_message_field import (
     ProtoMessageFieldRemoved,
     ProtoMessageFieldTypesEnum,
 )
-from src.python.py_proto.proto_oneof import ProtoOneOf, ProtoOneOfAdded, ProtoOneOfRemoved
+from src.python.py_proto.proto_oneof import (
+    ProtoOneOf,
+    ProtoOneOfAdded,
+    ProtoOneOfRemoved,
+)
 from src.python.py_proto.proto_option import ProtoOption
 from src.python.py_proto.proto_string_literal import ProtoStringLiteral
 

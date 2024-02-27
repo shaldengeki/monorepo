@@ -7,7 +7,11 @@ from src.python.py_proto.proto_identifier import (
     ProtoIdentifier,
 )
 from src.python.py_proto.proto_int import ProtoInt, ProtoIntSign
-from src.python.py_proto.proto_map import ProtoMap, ProtoMapKeyTypesEnum, ProtoMapValueTypesEnum
+from src.python.py_proto.proto_map import (
+    ProtoMap,
+    ProtoMapKeyTypesEnum,
+    ProtoMapValueTypesEnum,
+)
 from src.python.py_proto.proto_message_field import ProtoMessageFieldOption
 from src.python.py_proto.proto_string_literal import ProtoStringLiteral
 

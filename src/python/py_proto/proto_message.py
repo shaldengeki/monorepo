@@ -8,10 +8,18 @@ from src.python.py_proto.proto_comment import (
 from src.python.py_proto.proto_enum import ProtoEnum
 from src.python.py_proto.proto_extend import ProtoExtend
 from src.python.py_proto.proto_extensions import ProtoExtensions
-from src.python.py_proto.proto_identifier import ParsedProtoIdentifierNode, ProtoIdentifier
+from src.python.py_proto.proto_identifier import (
+    ParsedProtoIdentifierNode,
+    ProtoIdentifier,
+)
 from src.python.py_proto.proto_map import ProtoMap
 from src.python.py_proto.proto_message_field import ProtoMessageField
-from src.python.py_proto.proto_node import ParsedProtoNode, ProtoContainerNode, ProtoNode, ProtoNodeDiff
+from src.python.py_proto.proto_node import (
+    ParsedProtoNode,
+    ProtoContainerNode,
+    ProtoNode,
+    ProtoNodeDiff,
+)
 from src.python.py_proto.proto_oneof import ProtoOneOf
 from src.python.py_proto.proto_option import ProtoOption
 from src.python.py_proto.proto_reserved import ProtoReserved

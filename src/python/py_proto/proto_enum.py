@@ -5,9 +5,17 @@ from src.python.py_proto.proto_comment import (
     ProtoMultiLineComment,
     ProtoSingleLineComment,
 )
-from src.python.py_proto.proto_identifier import ParsedProtoIdentifierNode, ProtoIdentifier
+from src.python.py_proto.proto_identifier import (
+    ParsedProtoIdentifierNode,
+    ProtoIdentifier,
+)
 from src.python.py_proto.proto_int import ProtoInt, ProtoIntSign
-from src.python.py_proto.proto_node import ParsedProtoNode, ProtoContainerNode, ProtoNode, ProtoNodeDiff
+from src.python.py_proto.proto_node import (
+    ParsedProtoNode,
+    ProtoContainerNode,
+    ProtoNode,
+    ProtoNodeDiff,
+)
 from src.python.py_proto.proto_option import ParsedProtoOptionNode, ProtoOption
 from src.python.py_proto.proto_reserved import ProtoReserved
 

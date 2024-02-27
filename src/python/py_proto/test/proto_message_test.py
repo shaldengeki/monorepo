@@ -2,7 +2,10 @@ import unittest
 from textwrap import dedent
 
 from src.python.py_proto.proto_bool import ProtoBool
-from src.python.py_proto.proto_comment import ProtoMultiLineComment, ProtoSingleLineComment
+from src.python.py_proto.proto_comment import (
+    ProtoMultiLineComment,
+    ProtoSingleLineComment,
+)
 from src.python.py_proto.proto_constant import ProtoConstant
 from src.python.py_proto.proto_enum import ProtoEnum, ProtoEnumValue
 from src.python.py_proto.proto_extend import ProtoExtend
@@ -13,8 +16,16 @@ from src.python.py_proto.proto_identifier import (
     ProtoIdentifier,
 )
 from src.python.py_proto.proto_int import ProtoInt, ProtoIntSign
-from src.python.py_proto.proto_map import ProtoMap, ProtoMapKeyTypesEnum, ProtoMapValueTypesEnum
-from src.python.py_proto.proto_message import ProtoMessage, ProtoMessageAdded, ProtoMessageRemoved
+from src.python.py_proto.proto_map import (
+    ProtoMap,
+    ProtoMapKeyTypesEnum,
+    ProtoMapValueTypesEnum,
+)
+from src.python.py_proto.proto_message import (
+    ProtoMessage,
+    ProtoMessageAdded,
+    ProtoMessageRemoved,
+)
 from src.python.py_proto.proto_message_field import (
     ProtoMessageField,
     ProtoMessageFieldOption,

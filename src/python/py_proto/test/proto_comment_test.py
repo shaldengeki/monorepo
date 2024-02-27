@@ -1,6 +1,9 @@
 import unittest
 
-from src.python.py_proto.proto_comment import ProtoMultiLineComment, ProtoSingleLineComment
+from src.python.py_proto.proto_comment import (
+    ProtoMultiLineComment,
+    ProtoSingleLineComment,
+)
 
 
 class ProtoSingleLineCommentTest(unittest.TestCase):
