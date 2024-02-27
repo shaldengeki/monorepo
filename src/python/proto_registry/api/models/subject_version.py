@@ -1,9 +1,11 @@
-from ..config import db
-from .subject import Subject
-from sqlalchemy import Enum
 import datetime
 import enum
 import json
+
+from sqlalchemy import Enum
+
+from ..config import db
+from .subject import Subject
 
 
 class SchemaType(enum.Enum):

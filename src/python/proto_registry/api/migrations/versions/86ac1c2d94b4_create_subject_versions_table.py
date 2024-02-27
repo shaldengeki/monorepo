@@ -5,11 +5,12 @@ Revises: 9da1de15cd6a
 Create Date: 2022-07-21 04:39:32.310089
 
 """
-from alembic import op
+
 import datetime
 import enum
-import sqlalchemy as sa
 
+import sqlalchemy as sa
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "86ac1c2d94b4"

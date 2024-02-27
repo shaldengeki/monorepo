@@ -1,6 +1,7 @@
-from ..config import db
 import datetime
 import json
+
+from ..config import db
 
 
 class Subject(db.Model):

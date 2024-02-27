@@ -130,8 +130,3 @@ dmypy.json
 
 postgres-data
 env.production.real
-bazel-bin
-bazel-out
-bazel-registry
-bazel-rules
-bazel-testlogs
