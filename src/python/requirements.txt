@@ -21,9 +21,9 @@ mccabe
 mypy-extensions
 nodeenv
 pathspec
+pg8000
 platformdirs
 pre-commit
-psycopg2
 pylint
 pytest
 pyyaml

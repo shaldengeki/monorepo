@@ -28,7 +28,7 @@ app.config.update(
     ),
     FRONTEND_URL=frontend_url,
     SECRET_KEY=os.getenv("FLASK_SECRET_KEY", "testing"),
-    SQLALCHEMY_DATABASE_URI="postgresql://{user}:{password}@{host}/{db}".format(
+    SQLALCHEMY_DATABASE_URI="postgresql+pg8000://{user}:{password}@{host}/{db}".format(
         user=os.getenv("DB_USERNAME", "admin"),
         password=os.getenv("DB_PASSWORD", "development"),
         host=os.getenv("DB_HOST", "pg"),

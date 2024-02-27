@@ -24,7 +24,7 @@ py_library(
         ":bingo_card_pattern_py",
         ":config_py",
         ":fitbit_client_py",
-        requirement("psycopg2"),
+        requirement("pg8000"),
         requirement("sqlalchemy"),
     ],
 )
@@ -33,7 +33,7 @@ py_library(
     name = "config_py",
     srcs = ["config.py"],
     data = [
-        requirement("psycopg2"),
+        requirement("pg8000"),
     ],
     visibility = ["//src/python/fitbit_challenges:__subpackages__"],
     deps = [
@@ -41,6 +41,6 @@ py_library(
         requirement("flask_cors"),
         requirement("flask_migrate"),
         requirement("flask_sqlalchemy"),
-        requirement("psycopg2"),
+        requirement("pg8000"),
     ],
 )

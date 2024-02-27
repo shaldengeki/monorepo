@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 3,
-  "moduleFileHash": "8d54f33ed9a571e1b1e0a9c1b0bb3937f732145b55fa130815c2005ccc34635a",
+  "moduleFileHash": "266b947ec37c232157c24b316b15994eebc75e45c988b2d46e20902fa8cf9562",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -32,7 +32,7 @@
           "usingModule": "<root>",
           "location": {
             "file": "@@//:MODULE.bazel",
-            "line": 8,
+            "line": 26,
             "column": 23
           },
           "imports": {
@@ -50,7 +50,7 @@
               "devDependency": false,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 9,
+                "line": 27,
                 "column": 17
               }
             }
@@ -64,7 +64,7 @@
           "usingModule": "<root>",
           "location": {
             "file": "@@//:MODULE.bazel",
-            "line": 18,
+            "line": 36,
             "column": 20
           },
           "imports": {
@@ -81,7 +81,7 @@
               "devDependency": false,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 19,
+                "line": 37,
                 "column": 10
               }
             }
@@ -95,7 +95,7 @@
           "usingModule": "<root>",
           "location": {
             "file": "@@//:MODULE.bazel",
-            "line": 25,
+            "line": 43,
             "column": 20
           },
           "imports": {
@@ -118,7 +118,7 @@
               "devDependency": false,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 26,
+                "line": 44,
                 "column": 9
               }
             },
@@ -126,17 +126,22 @@
               "tagName": "pull",
               "attributeValues": {
                 "name": "python3_image",
+                "digest": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
                 "image": "python",
                 "platforms": [
+                  "linux/386",
+                  "linux/amd64",
+                  "linux/arm/v5",
+                  "linux/arm/v7",
                   "linux/arm64/v8",
-                  "linux/amd64"
-                ],
-                "tag": "3-slim"
+                  "linux/ppc64le",
+                  "linux/s390x"
+                ]
               },
               "devDependency": false,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 36,
+                "line": 54,
                 "column": 9
               }
             }
@@ -2390,19 +2395,6 @@
         "accumulatedFileDigests": {},
         "envVariables": {},
         "generatedRepoSpecs": {
-          "python3_image_linux_amd64": {
-            "bzlFile": "@@rules_oci~1.7.2//oci/private:pull.bzl",
-            "ruleClassName": "oci_pull",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~python3_image_linux_amd64",
-              "scheme": "https",
-              "registry": "index.docker.io",
-              "repository": "library/python",
-              "identifier": "3-slim",
-              "platform": "linux/amd64",
-              "target_name": "python3_image_linux_amd64"
-            }
-          },
           "oci_crane_registry_toolchains": {
             "bzlFile": "@@rules_oci~1.7.2//oci/private:toolchains_repo.bzl",
             "ruleClassName": "toolchains_repo",
@@ -2420,20 +2412,17 @@
               "platform": "windows_amd64"
             }
           },
-          "jq": {
-            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:jq_toolchain.bzl",
-            "ruleClassName": "jq_host_alias_repo",
+          "python3_image_linux_s390x": {
+            "bzlFile": "@@rules_oci~1.7.2//oci/private:pull.bzl",
+            "ruleClassName": "oci_pull",
             "attributes": {
-              "name": "rules_oci~1.7.2~oci~jq"
-            }
-          },
-          "oci_crane_darwin_amd64": {
-            "bzlFile": "@@rules_oci~1.7.2//oci:repositories.bzl",
-            "ruleClassName": "crane_repositories",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~oci_crane_darwin_amd64",
-              "platform": "darwin_amd64",
-              "crane_version": "v0.18.0"
+              "name": "rules_oci~1.7.2~oci~python3_image_linux_s390x",
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/python",
+              "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
+              "platform": "linux/s390x",
+              "target_name": "python3_image_linux_s390x"
             }
           },
           "jq_darwin_amd64": {
@@ -2484,14 +2473,6 @@
               "reproducible": true
             }
           },
-          "copy_to_directory_linux_amd64": {
-            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:copy_to_directory_toolchain.bzl",
-            "ruleClassName": "copy_to_directory_platform_repo",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~copy_to_directory_linux_amd64",
-              "platform": "linux_amd64"
-            }
-          },
           "oci_crane_linux_arm64": {
             "bzlFile": "@@rules_oci~1.7.2//oci:repositories.bzl",
             "ruleClassName": "crane_repositories",
@@ -2519,78 +2500,12 @@
               "version": "0.0.16"
             }
           },
-          "coreutils_linux_amd64": {
-            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:coreutils_toolchain.bzl",
-            "ruleClassName": "coreutils_platform_repo",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~coreutils_linux_amd64",
-              "platform": "linux_amd64",
-              "version": "0.0.16"
-            }
-          },
-          "python3_image": {
-            "bzlFile": "@@rules_oci~1.7.2//oci/private:pull.bzl",
-            "ruleClassName": "oci_alias",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~python3_image",
-              "target_name": "python3_image",
-              "scheme": "https",
-              "registry": "index.docker.io",
-              "repository": "library/python",
-              "identifier": "3-slim",
-              "platforms": {
-                "@@platforms//cpu:arm64": "@python3_image_linux_arm64_v8",
-                "@@platforms//cpu:x86_64": "@python3_image_linux_amd64"
-              },
-              "bzlmod_repository": "python3_image",
-              "reproducible": true
-            }
-          },
-          "yq_linux_amd64": {
-            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:yq_toolchain.bzl",
-            "ruleClassName": "yq_platform_repo",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~yq_linux_amd64",
-              "platform": "linux_amd64",
-              "version": "4.25.2"
-            }
-          },
           "copy_to_directory_linux_arm64": {
             "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:copy_to_directory_toolchain.bzl",
             "ruleClassName": "copy_to_directory_platform_repo",
             "attributes": {
               "name": "rules_oci~1.7.2~oci~copy_to_directory_linux_arm64",
               "platform": "linux_arm64"
-            }
-          },
-          "oci_crane_linux_armv6": {
-            "bzlFile": "@@rules_oci~1.7.2//oci:repositories.bzl",
-            "ruleClassName": "crane_repositories",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~oci_crane_linux_armv6",
-              "platform": "linux_armv6",
-              "crane_version": "v0.18.0"
-            }
-          },
-          "python3_image_linux_arm64_v8": {
-            "bzlFile": "@@rules_oci~1.7.2//oci/private:pull.bzl",
-            "ruleClassName": "oci_pull",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~python3_image_linux_arm64_v8",
-              "scheme": "https",
-              "registry": "index.docker.io",
-              "repository": "library/python",
-              "identifier": "3-slim",
-              "platform": "linux/arm64/v8",
-              "target_name": "python3_image_linux_arm64_v8"
-            }
-          },
-          "copy_to_directory_darwin_arm64": {
-            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:copy_to_directory_toolchain.bzl",
-            "ruleClassName": "copy_to_directory_platform_repo",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~copy_to_directory_darwin_arm64",
-              "platform": "darwin_arm64"
             }
           },
           "oci_crane_linux_amd64": {
@@ -2618,14 +2533,6 @@
               "name": "rules_oci~1.7.2~oci~coreutils_linux_arm64",
               "platform": "linux_arm64",
               "version": "0.0.16"
-            }
-          },
-          "coreutils_toolchains": {
-            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:coreutils_toolchain.bzl",
-            "ruleClassName": "coreutils_toolchains_repo",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~coreutils_toolchains",
-              "user_repository_name": "coreutils"
             }
           },
           "yq_linux_s390x": {
@@ -2671,6 +2578,19 @@
               "version": "4.25.2"
             }
           },
+          "python3_image_linux_ppc64le": {
+            "bzlFile": "@@rules_oci~1.7.2//oci/private:pull.bzl",
+            "ruleClassName": "oci_pull",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~python3_image_linux_ppc64le",
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/python",
+              "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
+              "platform": "linux/ppc64le",
+              "target_name": "python3_image_linux_ppc64le"
+            }
+          },
           "oci_crane_linux_i386": {
             "bzlFile": "@@rules_oci~1.7.2//oci:repositories.bzl",
             "ruleClassName": "crane_repositories",
@@ -2678,15 +2598,6 @@
               "name": "rules_oci~1.7.2~oci~oci_crane_linux_i386",
               "platform": "linux_i386",
               "crane_version": "v0.18.0"
-            }
-          },
-          "jq_linux_amd64": {
-            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:jq_toolchain.bzl",
-            "ruleClassName": "jq_platform_repo",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~jq_linux_amd64",
-              "platform": "linux_amd64",
-              "version": "1.7"
             }
           },
           "ubuntu_image_linux_arm64_v8": {
@@ -2700,15 +2611,6 @@
               "identifier": "sha256:67211c14fa74f070d27cc59d69a7fa9aeff8e28ea118ef3babc295a0428a6d21",
               "platform": "linux/arm64/v8",
               "target_name": "ubuntu_image_linux_arm64_v8"
-            }
-          },
-          "yq_windows_amd64": {
-            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:yq_toolchain.bzl",
-            "ruleClassName": "yq_platform_repo",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~yq_windows_amd64",
-              "platform": "windows_amd64",
-              "version": "4.25.2"
             }
           },
           "oci_crane_windows_armv6": {
@@ -2729,6 +2631,212 @@
               "toolchain": "@oci_crane_{platform}//:crane_toolchain"
             }
           },
+          "copy_to_directory_darwin_amd64": {
+            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:copy_to_directory_toolchain.bzl",
+            "ruleClassName": "copy_to_directory_platform_repo",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~copy_to_directory_darwin_amd64",
+              "platform": "darwin_amd64"
+            }
+          },
+          "yq_toolchains": {
+            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:yq_toolchain.bzl",
+            "ruleClassName": "yq_toolchains_repo",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~yq_toolchains",
+              "user_repository_name": "yq"
+            }
+          },
+          "oci_crane_windows_amd64": {
+            "bzlFile": "@@rules_oci~1.7.2//oci:repositories.bzl",
+            "ruleClassName": "crane_repositories",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~oci_crane_windows_amd64",
+              "platform": "windows_amd64",
+              "crane_version": "v0.18.0"
+            }
+          },
+          "oci_crane_linux_s390x": {
+            "bzlFile": "@@rules_oci~1.7.2//oci:repositories.bzl",
+            "ruleClassName": "crane_repositories",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~oci_crane_linux_s390x",
+              "platform": "linux_s390x",
+              "crane_version": "v0.18.0"
+            }
+          },
+          "python3_image_linux_amd64": {
+            "bzlFile": "@@rules_oci~1.7.2//oci/private:pull.bzl",
+            "ruleClassName": "oci_pull",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~python3_image_linux_amd64",
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/python",
+              "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
+              "platform": "linux/amd64",
+              "target_name": "python3_image_linux_amd64"
+            }
+          },
+          "python3_image_linux_386": {
+            "bzlFile": "@@rules_oci~1.7.2//oci/private:pull.bzl",
+            "ruleClassName": "oci_pull",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~python3_image_linux_386",
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/python",
+              "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
+              "platform": "linux/386",
+              "target_name": "python3_image_linux_386"
+            }
+          },
+          "jq": {
+            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:jq_toolchain.bzl",
+            "ruleClassName": "jq_host_alias_repo",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~jq"
+            }
+          },
+          "oci_crane_darwin_amd64": {
+            "bzlFile": "@@rules_oci~1.7.2//oci:repositories.bzl",
+            "ruleClassName": "crane_repositories",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~oci_crane_darwin_amd64",
+              "platform": "darwin_amd64",
+              "crane_version": "v0.18.0"
+            }
+          },
+          "copy_to_directory_linux_amd64": {
+            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:copy_to_directory_toolchain.bzl",
+            "ruleClassName": "copy_to_directory_platform_repo",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~copy_to_directory_linux_amd64",
+              "platform": "linux_amd64"
+            }
+          },
+          "coreutils_linux_amd64": {
+            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:coreutils_toolchain.bzl",
+            "ruleClassName": "coreutils_platform_repo",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~coreutils_linux_amd64",
+              "platform": "linux_amd64",
+              "version": "0.0.16"
+            }
+          },
+          "python3_image": {
+            "bzlFile": "@@rules_oci~1.7.2//oci/private:pull.bzl",
+            "ruleClassName": "oci_alias",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~python3_image",
+              "target_name": "python3_image",
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/python",
+              "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
+              "platforms": {
+                "@@platforms//cpu:i386": "@python3_image_linux_386",
+                "@@platforms//cpu:x86_64": "@python3_image_linux_amd64",
+                "@@platforms//cpu:armv7": "@python3_image_linux_arm_v7",
+                "@@platforms//cpu:arm64": "@python3_image_linux_arm64_v8",
+                "@@platforms//cpu:ppc": "@python3_image_linux_ppc64le",
+                "@@platforms//cpu:s390x": "@python3_image_linux_s390x"
+              },
+              "bzlmod_repository": "python3_image",
+              "reproducible": true
+            }
+          },
+          "yq_linux_amd64": {
+            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:yq_toolchain.bzl",
+            "ruleClassName": "yq_platform_repo",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~yq_linux_amd64",
+              "platform": "linux_amd64",
+              "version": "4.25.2"
+            }
+          },
+          "oci_crane_linux_armv6": {
+            "bzlFile": "@@rules_oci~1.7.2//oci:repositories.bzl",
+            "ruleClassName": "crane_repositories",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~oci_crane_linux_armv6",
+              "platform": "linux_armv6",
+              "crane_version": "v0.18.0"
+            }
+          },
+          "python3_image_linux_arm64_v8": {
+            "bzlFile": "@@rules_oci~1.7.2//oci/private:pull.bzl",
+            "ruleClassName": "oci_pull",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~python3_image_linux_arm64_v8",
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/python",
+              "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
+              "platform": "linux/arm64/v8",
+              "target_name": "python3_image_linux_arm64_v8"
+            }
+          },
+          "copy_to_directory_darwin_arm64": {
+            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:copy_to_directory_toolchain.bzl",
+            "ruleClassName": "copy_to_directory_platform_repo",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~copy_to_directory_darwin_arm64",
+              "platform": "darwin_arm64"
+            }
+          },
+          "coreutils_toolchains": {
+            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:coreutils_toolchain.bzl",
+            "ruleClassName": "coreutils_toolchains_repo",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~coreutils_toolchains",
+              "user_repository_name": "coreutils"
+            }
+          },
+          "python3_image_linux_arm_v5": {
+            "bzlFile": "@@rules_oci~1.7.2//oci/private:pull.bzl",
+            "ruleClassName": "oci_pull",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~python3_image_linux_arm_v5",
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/python",
+              "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
+              "platform": "linux/arm/v5",
+              "target_name": "python3_image_linux_arm_v5"
+            }
+          },
+          "python3_image_linux_arm_v7": {
+            "bzlFile": "@@rules_oci~1.7.2//oci/private:pull.bzl",
+            "ruleClassName": "oci_pull",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~python3_image_linux_arm_v7",
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/python",
+              "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
+              "platform": "linux/arm/v7",
+              "target_name": "python3_image_linux_arm_v7"
+            }
+          },
+          "jq_linux_amd64": {
+            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:jq_toolchain.bzl",
+            "ruleClassName": "jq_platform_repo",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~jq_linux_amd64",
+              "platform": "linux_amd64",
+              "version": "1.7"
+            }
+          },
+          "yq_windows_amd64": {
+            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:yq_toolchain.bzl",
+            "ruleClassName": "yq_platform_repo",
+            "attributes": {
+              "name": "rules_oci~1.7.2~oci~yq_windows_amd64",
+              "platform": "windows_amd64",
+              "version": "4.25.2"
+            }
+          },
           "jq_windows_amd64": {
             "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:jq_toolchain.bzl",
             "ruleClassName": "jq_platform_repo",
@@ -2736,14 +2844,6 @@
               "name": "rules_oci~1.7.2~oci~jq_windows_amd64",
               "platform": "windows_amd64",
               "version": "1.7"
-            }
-          },
-          "copy_to_directory_darwin_amd64": {
-            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:copy_to_directory_toolchain.bzl",
-            "ruleClassName": "copy_to_directory_platform_repo",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~copy_to_directory_darwin_amd64",
-              "platform": "darwin_amd64"
             }
           },
           "yq_linux_ppc64le": {
@@ -2778,32 +2878,6 @@
               "name": "rules_oci~1.7.2~oci~yq_darwin_arm64",
               "platform": "darwin_arm64",
               "version": "4.25.2"
-            }
-          },
-          "yq_toolchains": {
-            "bzlFile": "@@aspect_bazel_lib~2.0.0-rc1//lib/private:yq_toolchain.bzl",
-            "ruleClassName": "yq_toolchains_repo",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~yq_toolchains",
-              "user_repository_name": "yq"
-            }
-          },
-          "oci_crane_windows_amd64": {
-            "bzlFile": "@@rules_oci~1.7.2//oci:repositories.bzl",
-            "ruleClassName": "crane_repositories",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~oci_crane_windows_amd64",
-              "platform": "windows_amd64",
-              "crane_version": "v0.18.0"
-            }
-          },
-          "oci_crane_linux_s390x": {
-            "bzlFile": "@@rules_oci~1.7.2//oci:repositories.bzl",
-            "ruleClassName": "crane_repositories",
-            "attributes": {
-              "name": "rules_oci~1.7.2~oci~oci_crane_linux_s390x",
-              "platform": "linux_s390x",
-              "crane_version": "v0.18.0"
             }
           },
           "coreutils_windows_amd64": {
@@ -3313,7 +3387,7 @@
       "general": {
         "bzlTransitiveDigest": "hXdrqSfjZumetpjS7e8qt/LqGu5yLbqqeaALkYOrE60=",
         "accumulatedFileDigests": {
-          "@@//src/python:requirements.lock.txt": "d9b5c1bc569ee22c3ef2ee37f29da572c7236695150ead66e0a15049603bcad0"
+          "@@//src/python:requirements.lock.txt": "1dcb28308b07b777d61edeeba8777c379e0b239b638a03b17132cd73866032bf"
         },
         "envVariables": {},
         "generatedRepoSpecs": {
@@ -3450,6 +3524,25 @@
               "environment": {}
             }
           },
+          "py_deps_pg8000": {
+            "bzlFile": "@@rules_python~0.21.0//python/pip_install:pip_repository.bzl",
+            "ruleClassName": "whl_library",
+            "attributes": {
+              "name": "rules_python~0.21.0~pip~py_deps_pg8000",
+              "requirement": "pg8000==1.30.5     --hash=sha256:072f7ad00cd723695cb2e9fc02c1dfb84c781455e97b8de6f4c4281eea08078c     --hash=sha256:1abf18da652b0ad8e9cbfe57ed841c350b5330c33d8151303555db1fe5ce57f8",
+              "repo": "py_deps",
+              "repo_prefix": "py_deps_",
+              "python_interpreter": "",
+              "quiet": true,
+              "timeout": 600,
+              "isolated": true,
+              "extra_pip_args": [],
+              "download_only": false,
+              "pip_data_exclude": [],
+              "enable_implicit_namespace_pkgs": false,
+              "environment": {}
+            }
+          },
           "py_deps_mypy": {
             "bzlFile": "@@rules_python~0.21.0//python/pip_install:pip_repository.bzl",
             "ruleClassName": "whl_library",
@@ -3475,6 +3568,25 @@
             "attributes": {
               "name": "rules_python~0.21.0~pip~py_deps_typing_extensions",
               "requirement": "typing-extensions==4.10.0     --hash=sha256:69b1a937c3a517342112fb4c6df7e72fc39a38e7891a5730ed4985b5214b5475     --hash=sha256:b0abd7c89e8fb96f98db18d86106ff1d90ab692004eb746cf6eda2682f91b3cb",
+              "repo": "py_deps",
+              "repo_prefix": "py_deps_",
+              "python_interpreter": "",
+              "quiet": true,
+              "timeout": 600,
+              "isolated": true,
+              "extra_pip_args": [],
+              "download_only": false,
+              "pip_data_exclude": [],
+              "enable_implicit_namespace_pkgs": false,
+              "environment": {}
+            }
+          },
+          "py_deps_scramp": {
+            "bzlFile": "@@rules_python~0.21.0//python/pip_install:pip_repository.bzl",
+            "ruleClassName": "whl_library",
+            "attributes": {
+              "name": "rules_python~0.21.0~pip~py_deps_scramp",
+              "requirement": "scramp==1.4.4     --hash=sha256:b142312df7c2977241d951318b7ee923d6b7a4f75ba0f05b621ece1ed616faa3     --hash=sha256:b7022a140040f33cf863ab2657917ed05287a807b917950489b89b9f685d59bc",
               "repo": "py_deps",
               "repo_prefix": "py_deps_",
               "python_interpreter": "",
@@ -3551,6 +3663,25 @@
             "attributes": {
               "name": "rules_python~0.21.0~pip~py_deps_packaging",
               "requirement": "packaging==23.2     --hash=sha256:048fb0e9405036518eaaf48a55953c750c11e1a1b68e0dd1a9d62ed0c092cfc5     --hash=sha256:8c491190033a9af7e1d931d0b5dacc2ef47509b34dd0de67ed209b5203fc88c7",
+              "repo": "py_deps",
+              "repo_prefix": "py_deps_",
+              "python_interpreter": "",
+              "quiet": true,
+              "timeout": 600,
+              "isolated": true,
+              "extra_pip_args": [],
+              "download_only": false,
+              "pip_data_exclude": [],
+              "enable_implicit_namespace_pkgs": false,
+              "environment": {}
+            }
+          },
+          "py_deps_asn1crypto": {
+            "bzlFile": "@@rules_python~0.21.0//python/pip_install:pip_repository.bzl",
+            "ruleClassName": "whl_library",
+            "attributes": {
+              "name": "rules_python~0.21.0~pip~py_deps_asn1crypto",
+              "requirement": "asn1crypto==1.5.1     --hash=sha256:13ae38502be632115abf8a24cbe5f4da52e3b5231990aff31123c805306ccb9c     --hash=sha256:db4e40728b728508912cbb3d44f19ce188f218e9eba635821bb4b68564f8fd67",
               "repo": "py_deps",
               "repo_prefix": "py_deps_",
               "python_interpreter": "",
@@ -3896,6 +4027,25 @@
               "environment": {}
             }
           },
+          "py_deps_six": {
+            "bzlFile": "@@rules_python~0.21.0//python/pip_install:pip_repository.bzl",
+            "ruleClassName": "whl_library",
+            "attributes": {
+              "name": "rules_python~0.21.0~pip~py_deps_six",
+              "requirement": "six==1.16.0     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254",
+              "repo": "py_deps",
+              "repo_prefix": "py_deps_",
+              "python_interpreter": "",
+              "quiet": true,
+              "timeout": 600,
+              "isolated": true,
+              "extra_pip_args": [],
+              "download_only": false,
+              "pip_data_exclude": [],
+              "enable_implicit_namespace_pkgs": false,
+              "environment": {}
+            }
+          },
           "py_deps_sqlalchemy": {
             "bzlFile": "@@rules_python~0.21.0//python/pip_install:pip_repository.bzl",
             "ruleClassName": "whl_library",
@@ -4181,25 +4331,6 @@
               "environment": {}
             }
           },
-          "py_deps_psycopg2": {
-            "bzlFile": "@@rules_python~0.21.0//python/pip_install:pip_repository.bzl",
-            "ruleClassName": "whl_library",
-            "attributes": {
-              "name": "rules_python~0.21.0~pip~py_deps_psycopg2",
-              "requirement": "psycopg2==2.9.9     --hash=sha256:121081ea2e76729acfb0673ff33755e8703d45e926e416cb59bae3a86c6a4981     --hash=sha256:38a8dcc6856f569068b47de286b472b7c473ac7977243593a288ebce0dc89516     --hash=sha256:426f9f29bde126913a20a96ff8ce7d73fd8a216cfb323b1f04da402d452853c3     --hash=sha256:5e0d98cade4f0e0304d7d6f25bbfbc5bd186e07b38eac65379309c4ca3193efa     --hash=sha256:7e2dacf8b009a1c1e843b5213a87f7c544b2b042476ed7755be813eaf4e8347a     --hash=sha256:a7653d00b732afb6fc597e29c50ad28087dcb4fbfb28e86092277a559ae4e693     --hash=sha256:ade01303ccf7ae12c356a5e10911c9e1c51136003a9a1d92f7aa9d010fb98372     --hash=sha256:bac58c024c9922c23550af2a581998624d6e02350f4ae9c5f0bc642c633a2d5e     --hash=sha256:c92811b2d4c9b6ea0285942b2e7cac98a59e166d59c588fe5cfe1eda58e72d59     --hash=sha256:d1454bde93fb1e224166811694d600e746430c006fbb031ea06ecc2ea41bf156     --hash=sha256:d735786acc7dd25815e89cc4ad529a43af779db2e25aa7c626de864127e5a024     --hash=sha256:de80739447af31525feddeb8effd640782cf5998e1a4e9192ebdf829717e3913     --hash=sha256:ff432630e510709564c01dafdbe996cb552e0b9f3f065eb89bdce5bd31fabf4c",
-              "repo": "py_deps",
-              "repo_prefix": "py_deps_",
-              "python_interpreter": "",
-              "quiet": true,
-              "timeout": 600,
-              "isolated": true,
-              "extra_pip_args": [],
-              "download_only": false,
-              "pip_data_exclude": [],
-              "enable_implicit_namespace_pkgs": false,
-              "environment": {}
-            }
-          },
           "py_deps_pre_commit": {
             "bzlFile": "@@rules_python~0.21.0//python/pip_install:pip_repository.bzl",
             "ruleClassName": "whl_library",
@@ -4225,6 +4356,25 @@
             "attributes": {
               "name": "rules_python~0.21.0~pip~py_deps_blinker",
               "requirement": "blinker==1.7.0     --hash=sha256:c3f865d4d54db7abc53758a01601cf343fe55b84c1de4e3fa910e420b438d5b9     --hash=sha256:e6820ff6fa4e4d1d8e2747c2283749c3f547e4fee112b98555cdcdae32996182",
+              "repo": "py_deps",
+              "repo_prefix": "py_deps_",
+              "python_interpreter": "",
+              "quiet": true,
+              "timeout": 600,
+              "isolated": true,
+              "extra_pip_args": [],
+              "download_only": false,
+              "pip_data_exclude": [],
+              "enable_implicit_namespace_pkgs": false,
+              "environment": {}
+            }
+          },
+          "py_deps_python_dateutil": {
+            "bzlFile": "@@rules_python~0.21.0//python/pip_install:pip_repository.bzl",
+            "ruleClassName": "whl_library",
+            "attributes": {
+              "name": "rules_python~0.21.0~pip~py_deps_python_dateutil",
+              "requirement": "python-dateutil==2.8.2     --hash=sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86     --hash=sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9",
               "repo": "py_deps",
               "repo_prefix": "py_deps_",
               "python_interpreter": "",
