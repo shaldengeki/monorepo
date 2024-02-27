@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
-import pg8000.native
 import os
 import subprocess
 import sys
 import time
+
+import pg8000.native
+
 
 def wait_for_postgres() -> None:
     while True:
@@ -14,7 +16,7 @@ def wait_for_postgres() -> None:
                 host=os.getenv("DB_HOST", "pg"),
                 port=os.getenv("DB_PORT", 5432),
                 database=os.getenv("DATABASE_NAME", "api_development"),
-                password=os.getenv("DB_PASSWORD", "development")
+                password=os.getenv("DB_PASSWORD", "development"),
             )
         except pg8000.exceptions.InterfaceError:
             print("Postgres is unavailable - sleeping")
@@ -25,6 +27,7 @@ def wait_for_postgres() -> None:
 
     print("Postgres is up - executing command")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     wait_for_postgres()
     subprocess.run(sys.argv[1:])
