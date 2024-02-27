@@ -7,10 +7,21 @@ from src.python.py_proto.proto_comment import (
     ProtoMultiLineComment,
     ProtoSingleLineComment,
 )
-from src.python.py_proto.proto_identifier import ParsedProtoIdentifierNode, ProtoIdentifier
+from src.python.py_proto.proto_identifier import (
+    ParsedProtoIdentifierNode,
+    ProtoIdentifier,
+)
 from src.python.py_proto.proto_map import ProtoMap
-from src.python.py_proto.proto_message_field import ParsedProtoMessageFieldNode, ProtoMessageField
-from src.python.py_proto.proto_node import ParsedProtoNode, ProtoContainerNode, ProtoNode, ProtoNodeDiff
+from src.python.py_proto.proto_message_field import (
+    ParsedProtoMessageFieldNode,
+    ProtoMessageField,
+)
+from src.python.py_proto.proto_node import (
+    ParsedProtoNode,
+    ProtoContainerNode,
+    ProtoNode,
+    ProtoNodeDiff,
+)
 from src.python.py_proto.proto_option import ParsedProtoOptionNode, ProtoOption
 
 ProtoOneOfNodeTypes = (

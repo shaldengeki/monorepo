@@ -15,7 +15,11 @@ from src.python.py_proto.proto_identifier import (
 )
 from src.python.py_proto.proto_import import ProtoImport
 from src.python.py_proto.proto_int import ProtoInt, ProtoIntSign
-from src.python.py_proto.proto_map import ProtoMap, ProtoMapKeyTypesEnum, ProtoMapValueTypesEnum
+from src.python.py_proto.proto_map import (
+    ProtoMap,
+    ProtoMapKeyTypesEnum,
+    ProtoMapValueTypesEnum,
+)
 from src.python.py_proto.proto_message import ProtoMessage, ProtoOneOf
 from src.python.py_proto.proto_message_field import (
     ProtoMessageField,

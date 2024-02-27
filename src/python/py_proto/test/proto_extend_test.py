@@ -2,9 +2,15 @@ import unittest
 from textwrap import dedent
 
 from src.python.py_proto.proto_extend import ProtoExtend
-from src.python.py_proto.proto_identifier import ProtoEnumOrMessageIdentifier, ProtoIdentifier
+from src.python.py_proto.proto_identifier import (
+    ProtoEnumOrMessageIdentifier,
+    ProtoIdentifier,
+)
 from src.python.py_proto.proto_int import ProtoInt, ProtoIntSign
-from src.python.py_proto.proto_message_field import ProtoMessageField, ProtoMessageFieldTypesEnum
+from src.python.py_proto.proto_message_field import (
+    ProtoMessageField,
+    ProtoMessageFieldTypesEnum,
+)
 
 
 class ExtendTest(unittest.TestCase):

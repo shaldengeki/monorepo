@@ -2,7 +2,10 @@ import unittest
 from textwrap import dedent
 
 from src.python.py_proto.proto_bool import ProtoBool
-from src.python.py_proto.proto_comment import ProtoMultiLineComment, ProtoSingleLineComment
+from src.python.py_proto.proto_comment import (
+    ProtoMultiLineComment,
+    ProtoSingleLineComment,
+)
 from src.python.py_proto.proto_constant import ProtoConstant
 from src.python.py_proto.proto_identifier import (
     ProtoEnumOrMessageIdentifier,
