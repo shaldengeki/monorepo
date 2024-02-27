@@ -10,10 +10,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: bazel test //...
+      # Caches and restores the bazelisk download directory, the bazel build directory.
+      - name: Cache bazel
+        uses: actions/cache@v4
         env:
-          # Bazelisk will download bazel to here
-          XDG_CACHE_HOME: ~/.cache/bazel-repo
+          cache-name: bazel-cache
+        with:
+          path: |
+            ~/.cache/bazelisk
+            ~/.cache/bazel
+            ~/.cache/bazel-repo
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-${{ github.sha }}
+          # Pull caches from:
+          # - The current sha,
+          # - The current branch,
+          # - base branch
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-${{ github.sha }}
+            ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-
+            ${{ runner.os }}-${{ env.cache-name }}-${{ github.base_ref }}-
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: bazel test //...
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc test //...
