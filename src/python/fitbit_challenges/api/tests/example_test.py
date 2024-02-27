@@ -1,6 +1,6 @@
 from flask.testing import FlaskClient
 
-from .fixtures import app, client  # noqa
+from src.python.fitbit_challenges.api.tests.fixtures import app, client  # noqa
 
 
 def test_example_request(client: FlaskClient) -> None:

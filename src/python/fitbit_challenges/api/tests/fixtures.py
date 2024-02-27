@@ -4,7 +4,7 @@ import flask
 import pytest
 from flask.testing import FlaskClient, FlaskCliRunner
 
-from ..app import app as base_app
+from src.python.fitbit_challenges.api.app import app as base_app
 
 
 @pytest.fixture
