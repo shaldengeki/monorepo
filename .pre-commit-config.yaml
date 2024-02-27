@@ -14,7 +14,6 @@ repos:
             -   id: check-yaml
             -   id: no-commit-to-branch
                 args: [--branch, staging, --branch, main]
-            -   id: requirements-txt-fixer
     -   repo: https://github.com/psf/black
         rev: 24.2.0
         hooks:

@@ -1,6 +1,6 @@
 load("@aspect_bazel_lib//lib:transitions.bzl", "platform_transition_filegroup")
 load("@py_deps//:requirements.bzl", "requirement")
-load("@rules_oci//oci:defs.bzl", "oci_tarball")
+load("@rules_oci//oci:defs.bzl", "oci_push", "oci_tarball")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load("//src/python:py_layer.bzl", "py_oci_image")
 
@@ -25,6 +25,7 @@ py_binary(
     main = "__main__.py",
     deps = [
         ":api_lib",
+        "//src/python/fitbit_challenges/scripts:wait_for_postgres",
     ],
 )
 
@@ -89,4 +90,11 @@ oci_tarball(
     name = "tarball",
     image = ":platform_image",
     repo_tags = ["shaldengeki/fitbit-challenges-api:latest"],
+)
+
+oci_push(
+    name = "dockerhub",
+    image = ":platform_image",
+    repository = "docker.io/shaldengeki/fitbit-challenges-api",
+    remote_tags = ["latest"],
 )

@@ -1,0 +1,12 @@
+load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_binary")
+
+py_binary(
+    name = "wait_for_postgres",
+    srcs = ["wait_for_postgres.py"],
+    main = "wait_for_postgres.py",
+    deps = [
+        requirement("pg8000"),
+    ],
+    visibility = ["//visibility:public"]
+)
