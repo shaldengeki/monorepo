@@ -1,9 +1,27 @@
-bazel_dep(name = "aspect_bazel_lib", version = "2.0.0-rc1")
-bazel_dep(name = "bazel_skylib", version = "1.5.0")
-bazel_dep(name = "aspect_rules_py", version = "0.4.0")
-bazel_dep(name = "rules_python", version = "0.21.0")
-bazel_dep(name = "rules_oci", version = "1.7.2")
-bazel_dep(name = "platforms", version = "0.0.7")
+bazel_dep(
+    name = "aspect_bazel_lib",
+    version = "2.0.0-rc1",
+)
+bazel_dep(
+    name = "bazel_skylib",
+    version = "1.5.0",
+)
+bazel_dep(
+    name = "aspect_rules_py",
+    version = "0.4.0",
+)
+bazel_dep(
+    name = "rules_python",
+    version = "0.21.0",
+)
+bazel_dep(
+    name = "rules_oci",
+    version = "1.7.2",
+)
+bazel_dep(
+    name = "platforms",
+    version = "0.0.7",
+)
 
 python = use_extension("@rules_python//python:extensions.bzl", "python")
 python.toolchain(
@@ -35,11 +53,16 @@ oci.pull(
 use_repo(oci, "ubuntu_image")
 oci.pull(
     name = "python3_image",
+    digest = "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
     image = "python",
     platforms = [
-        "linux/arm64/v8",
+        "linux/386",
         "linux/amd64",
+        "linux/arm/v5",
+        "linux/arm/v7",
+        "linux/arm64/v8",
+        "linux/ppc64le",
+        "linux/s390x",
     ],
-    tag = "3-slim",
 )
 use_repo(oci, "python3_image")
