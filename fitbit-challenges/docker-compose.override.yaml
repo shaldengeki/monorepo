@@ -1,0 +1,28 @@
+version: '3'
+services:
+  api: &api
+    env_file:
+      - env/.api.env
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./src/python:/usr/src/app
+  migration:
+    <<: *api
+    ports: []
+  worker:
+    <<: *api
+    ports: []
+    deploy:
+      replicas: 0
+  pg:
+    env_file:
+      - env/.postgres.env
+  frontend:
+    env_file:
+      - env/.frontend.env
+    command: ["npm", "run", "build-and-start"]
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./src/javascript/frontend/src:/usr/src/app/src

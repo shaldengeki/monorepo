@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -ex
+
+pytest
+cd src/javascript/frontend && CI=true npm test --all

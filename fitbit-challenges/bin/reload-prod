@@ -1,0 +1,9 @@
+#1/usr/bin/env bash
+
+set -ex
+
+git reset --hard
+git switch main
+git pull origin main
+docker compose  -f docker-compose.yaml -f docker-compose.prod.yaml pull api frontend
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up --no-deps -d api frontend migration worker
