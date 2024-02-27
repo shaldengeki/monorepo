@@ -2,10 +2,9 @@ import datetime
 import enum
 import json
 
+from api.config import db
+from api.models.subject import Subject
 from sqlalchemy import Enum
-
-from ..config import db
-from .subject import Subject
 
 
 class SchemaType(enum.Enum):

@@ -1,5 +1,3 @@
---no-binary psycopg2
-
 astroid
 black
 cfgv
@@ -22,7 +20,7 @@ nodeenv
 pathspec
 platformdirs
 pre-commit
-psycopg2
+psycopg2-binary
 pylint
 pyyaml
 sqlalchemy
