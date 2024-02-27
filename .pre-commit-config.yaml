@@ -15,7 +15,7 @@ repos:
             -   id: no-commit-to-branch
                 args: [--branch, staging, --branch, main]
             -   id: requirements-txt-fixer
-                args: [--filenames, src/python/requirements.txt]
+                args: [src/python/requirements.txt]
     -   repo: https://github.com/psf/black
         rev: 24.2.0
         hooks:
