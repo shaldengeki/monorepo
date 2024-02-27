@@ -1,15 +1,45 @@
-bazel_dep(name = "rules_python", version = "0.31.0")
-
-python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-python.toolchain(
-    python_version = "3.11",
-)
-
-pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
-pip.parse(
-    python_version = "3.11",
-    requirements_lock = "//src/python:requirements.txt",
-)
-use_repo(pip, "py_proto_deps")
-
+bazel_dep(name = "aspect_bazel_lib", version = "2.0.0-rc1")
 bazel_dep(name = "bazel_skylib", version = "1.5.0")
+bazel_dep(name = "aspect_rules_py", version = "0.4.0")
+bazel_dep(name = "rules_python", version = "0.21.0")
+bazel_dep(name = "rules_oci", version = "1.7.2")
+bazel_dep(name = "platforms", version = "0.0.7")
+
+python = use_extension("@rules_python//python:extensions.bzl", "python")
+python.toolchain(
+    name = "python3_11",
+    python_version = "3.11",
+)
+use_repo(python, "python3_11")
+use_repo(python, "python3_11_toolchains")
+
+register_toolchains("@python3_11_toolchains//:all")
+
+pip = use_extension("@rules_python//python:extensions.bzl", "pip")
+pip.parse(
+    name = "py_deps",
+    requirements_lock = "//src/python:requirements.lock.txt",
+)
+use_repo(pip, "py_deps")
+
+oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
+oci.pull(
+    name = "ubuntu_image",
+    digest = "sha256:67211c14fa74f070d27cc59d69a7fa9aeff8e28ea118ef3babc295a0428a6d21",
+    image = "ubuntu",
+    platforms = [
+        "linux/arm64/v8",
+        "linux/amd64",
+    ],
+)
+use_repo(oci, "ubuntu_image")
+oci.pull(
+    name = "python3_image",
+    image = "python",
+    platforms = [
+        "linux/arm64/v8",
+        "linux/amd64",
+    ],
+    tag = "3-slim",
+)
+use_repo(oci, "python3_image")

@@ -1,0 +1,78 @@
+load("@aspect_bazel_lib//lib:transitions.bzl", "platform_transition_filegroup")
+load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_oci//oci:defs.bzl", "oci_tarball")
+load("@rules_python//python:defs.bzl", "py_binary")
+load("//src/python:py_layer.bzl", "py_oci_image")
+
+py_library(
+    name = "api_lib",
+    srcs = glob(["**/*.py"]),
+    imports = [".."],
+    visibility = ["//:__subpackages__"],
+)
+
+py_binary(
+    name = "binary",
+    srcs = ["app.py"],
+    imports = [".."],
+    main = "app.py",
+    deps = [
+        ":api_lib",
+        requirement("Flask"),
+        requirement("Flask-Migrate"),
+        requirement("importlib-metadata"),
+        requirement("importlib-resources"),
+        requirement("typing-extensions"),
+        requirement("psycopg2-binary"),
+        requirement("sqlalchemy"),
+        requirement("Flask-SQLAlchemy"),
+        requirement("flask-cors"),
+    ],
+)
+
+# Construct an image that has three layers.
+# The result will look like this:
+#    bazel run //src/python/proto_registry/api:tarball
+#
+#2f2353bd5bea: Loading layer [==================================================>]  47.13MB/47.13MB
+#f02532d45017: Loading layer [==================================================>]   3.62MB/3.62MB
+#9296e9071c11: Loading layer [==================================================>]  16.24kB/16.24kB
+py_oci_image(
+    name = "image",
+    base = "@python3_image",
+    binary = ":binary",
+    entrypoint = ["/src/python/proto_registry/api/binary"],
+)
+
+platform(
+    name = "aarch64_linux",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:aarch64",
+    ],
+)
+
+platform(
+    name = "x86_64_linux",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+)
+
+platform_transition_filegroup(
+    name = "platform_image",
+    srcs = [":image"],
+    target_platform = select({
+        "@platforms//cpu:arm64": ":aarch64_linux",
+        "@platforms//cpu:x86_64": ":x86_64_linux",
+    }),
+)
+
+# $ bazel run //src/python/proto_registry/api:tarball
+# $ docker run --rm shaldengeki/proto-registry-api:latest
+oci_tarball(
+    name = "tarball",
+    image = ":platform_image",
+    repo_tags = ["shaldengeki/proto-registry-api:latest"],
+)
