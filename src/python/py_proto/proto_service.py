@@ -10,7 +10,11 @@ from src.python.py_proto.proto_identifier import (
     ProtoEnumOrMessageIdentifier,
     ProtoIdentifier,
 )
-from src.python.py_proto.proto_node import ParsedProtoNode, ProtoContainerNode, ProtoNode
+from src.python.py_proto.proto_node import (
+    ParsedProtoNode,
+    ProtoContainerNode,
+    ProtoNode,
+)
 from src.python.py_proto.proto_option import ProtoOption
 
 

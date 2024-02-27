@@ -1,8 +1,14 @@
 from enum import Enum
 from typing import Optional, Sequence
 
-from src.python.py_proto.proto_enum import ParsedProtoEnumValueOptionNode, ProtoEnumValueOption
-from src.python.py_proto.proto_identifier import ProtoEnumOrMessageIdentifier, ProtoIdentifier
+from src.python.py_proto.proto_enum import (
+    ParsedProtoEnumValueOptionNode,
+    ProtoEnumValueOption,
+)
+from src.python.py_proto.proto_identifier import (
+    ProtoEnumOrMessageIdentifier,
+    ProtoIdentifier,
+)
 from src.python.py_proto.proto_int import ProtoInt
 from src.python.py_proto.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
 

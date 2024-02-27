@@ -10,7 +10,11 @@ from src.python.py_proto.proto_identifier import (
     ProtoEnumOrMessageIdentifier,
 )
 from src.python.py_proto.proto_message_field import ProtoMessageField
-from src.python.py_proto.proto_node import ParsedProtoNode, ProtoContainerNode, ProtoNode
+from src.python.py_proto.proto_node import (
+    ParsedProtoNode,
+    ProtoContainerNode,
+    ProtoNode,
+)
 
 
 class ProtoExtend(ProtoContainerNode):
