@@ -3081,7 +3081,7 @@
       "os:linux,arch:amd64": {
         "bzlTransitiveDigest": "eCmXSGED/lXGB0RAIQJdwjxzH0kWfPc9/SJs0Yfbbkw=",
         "accumulatedFileDigests": {
-          "@@//src/python:requirements.lock.txt": "1dcb28308b07b777d61edeeba8777c379e0b239b638a03b17132cd73866032bf"
+          "@@//src/python:requirements.lock.txt": "31d5896c366030234765143c63b38093b20ad4864f1984b6b91a50b93a2b811f"
         },
         "envVariables": {},
         "generatedRepoSpecs": {
