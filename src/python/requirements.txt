@@ -4,6 +4,7 @@ cfgv
 click
 dill
 distlib
+exceptiongroup
 filelock
 Flask>=2.2
 flask-cors
