@@ -1,0 +1,67 @@
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+exports_files(["pnpm-lock.yaml"])
+
+ts_config(
+    name = "config",
+    src = "tsconfig.json",
+    deps = [
+        # "//examples:node_modules/@types/node",
+    ],
+)
+
+filegroup(
+    name = "srcs",
+    srcs = glob(["src/**/*.tsx", "src/**/*.ts"]),
+)
+
+ts_project(
+    name = "ts",
+    allow_js = True,
+    transpiler = swc,
+    srcs = [
+        ":srcs",
+    ],
+    tsconfig = ":config",
+    declaration = True,
+    resolve_json_module = True,
+    deps = [
+        "//src/javascript/fitbit-challenges:node_modules/@apollo/client",
+        "//src/javascript/fitbit-challenges:node_modules/@apollo/react-testing",
+        "//src/javascript/fitbit-challenges:node_modules/@headlessui/react",
+        "//src/javascript/fitbit-challenges:node_modules/@heroicons/react",
+        "//src/javascript/fitbit-challenges:node_modules/@testing-library/jest-dom",
+        "//src/javascript/fitbit-challenges:node_modules/@testing-library/react",
+        "//src/javascript/fitbit-challenges:node_modules/@testing-library/user-event",
+        "//src/javascript/fitbit-challenges:node_modules/@tsconfig/create-react-app",
+        "//src/javascript/fitbit-challenges:node_modules/@types/jest",
+        "//src/javascript/fitbit-challenges:node_modules/@types/lodash",
+        "//src/javascript/fitbit-challenges:node_modules/@types/node",
+        "//src/javascript/fitbit-challenges:node_modules/@types/react",
+        "//src/javascript/fitbit-challenges:node_modules/graphql",
+        "//src/javascript/fitbit-challenges:node_modules/graphql-tag",
+        "//src/javascript/fitbit-challenges:node_modules/lodash",
+        "//src/javascript/fitbit-challenges:node_modules/plotly.js-basic-dist",
+        "//src/javascript/fitbit-challenges:node_modules/react",
+        "//src/javascript/fitbit-challenges:node_modules/react-canvas-confetti",
+        "//src/javascript/fitbit-challenges:node_modules/react-dom",
+        "//src/javascript/fitbit-challenges:node_modules/react-plotlyjs",
+        "//src/javascript/fitbit-challenges:node_modules/react-router-dom",
+        "//src/javascript/fitbit-challenges:node_modules/react-scripts",
+        "//src/javascript/fitbit-challenges:node_modules/tailwindcss",
+        "//src/javascript/fitbit-challenges:node_modules/typescript",
+        # "//src/javascript/fitbit-challenges:node_modules/web-vitals",
+    ]
+)
+
+build_test(
+    name = "test",
+    targets = [":ts"],
+)
+
+
+npm_link_all_packages(name = "node_modules")
+

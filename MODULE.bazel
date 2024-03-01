@@ -22,7 +22,9 @@ bazel_dep(
     name = "platforms",
     version = "0.0.8",
 )
+bazel_dep(name = "aspect_rules_js", version = "1.38.0")
 bazel_dep(name = "aspect_rules_ts", version = "2.2.0")
+bazel_dep(name = "aspect_rules_swc", version = "1.2.2")
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
@@ -64,3 +66,25 @@ oci.pull(
     ],
 )
 use_repo(oci, "python3_image")
+
+rules_ts_ext = use_extension(
+    "@aspect_rules_ts//ts:extensions.bzl",
+    "ext",
+    dev_dependency = True,
+)
+
+rules_ts_ext.deps()
+
+use_repo(rules_ts_ext, "npm_typescript")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
+
+npm.npm_translate_lock(
+    name = "npm",
+    pnpm_lock = "//src/javascript/fitbit-challenges:pnpm-lock.yaml",
+    data = ["//src/javascript/fitbit-challenges:package-lock.json"],
+    verify_node_modules_ignored = "//:.bazelignore",
+    update_pnpm_lock = True,
+)
+
+use_repo(npm, "npm")
