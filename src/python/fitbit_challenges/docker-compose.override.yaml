@@ -5,8 +5,6 @@ services:
       - env/.api.env
     ports:
       - "5000:5000"
-    volumes:
-      - ./src/python:/usr/src/app
   migration:
     <<: *api
     ports: []
