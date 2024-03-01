@@ -1,0 +1,93 @@
+load("@aspect_bazel_lib//lib:transitions.bzl", "platform_transition_filegroup")
+load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_oci//oci:defs.bzl", "oci_push", "oci_tarball")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("//src/python:py_layer.bzl", "py_oci_image")
+
+py_library(
+    name = "migrate_lib",
+    srcs = glob(["**/*.py"]),
+    imports = [".."],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        requirement("alembic"),
+        requirement("Flask"),
+    ],
+)
+
+py_binary(
+    name = "binary",
+    srcs = glob(["**/*.py"]),
+    imports = [".."],
+    main = "__main__.py",
+    data = ["alembic.ini"],
+    deps = [
+        "//src/python/fitbit_challenges:config_py",
+        "//src/python/fitbit_challenges/scripts:wait_for_postgres",
+        "@rules_python//python/runfiles",
+        requirement("Flask-Migrate"),
+    ],
+)
+
+py_oci_image(
+    name = "image",
+    base = "//src/python/fitbit_challenges/api:image",
+    binary = ":binary",
+    cmd = ["/src/python/fitbit_challenges/api/migrations/binary.runfiles/_main/src/python/fitbit_challenges/scripts/wait_for_postgres", "/src/python/fitbit_challenges/api/migrations/binary"],
+    env = {
+        "FLASK_APP": "app.py",
+        "FLASK_DEBUG": "True",
+        "API_PORT": "5000",
+        "FRONTEND_PROTOCOL": "http",
+        "FRONTEND_HOST": "frontend",
+        "FRONTEND_PORT": "5001",
+        "DB_HOST": "pg",
+        "DB_USERNAME": "admin",
+        "DB_PASSWORD": "development",
+        "DATABASE_NAME": "api_development",
+        "FITBIT_CLIENT_ID": "testing",
+        "FITBIT_CLIENT_SECRET": "testing",
+        "FITBIT_VERIFICATION_CODE": "testing",
+        "FLASK_SECRET_KEY": "testing",
+    },
+)
+
+platform(
+    name = "aarch64_linux",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:aarch64",
+    ],
+)
+
+platform(
+    name = "x86_64_linux",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+)
+
+platform_transition_filegroup(
+    name = "platform_image",
+    srcs = [":image"],
+    target_platform = select({
+        "@platforms//cpu:arm64": ":aarch64_linux",
+        "@platforms//cpu:x86_64": ":x86_64_linux",
+    }),
+)
+
+# $ bazel run //src/python/fitbit_challenges/api/migrations:tarball
+# $ docker run --rm shaldengeki/fitbit-challenges-api-migrations:latest
+oci_tarball(
+    name = "tarball",
+    image = ":platform_image",
+    repo_tags = ["shaldengeki/fitbit-challenges-api-migrations:latest"],
+)
+
+oci_push(
+    name = "dockerhub",
+    image = ":platform_image",
+    repository = "docker.io/shaldengeki/fitbit-challenges-api-migrations",
+    remote_tags = ["latest"],
+)
