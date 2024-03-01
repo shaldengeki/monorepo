@@ -1,10 +1,7 @@
 version: '3'
 services:
   api: &api
-    build:
-      context: ./src/python
-      dockerfile: api/Dockerfile
-    image: api
+    image: shaldengeki/fitbit-challenges-api:latest
     env_file:
       - env/.api.env
     restart: always
@@ -12,12 +9,12 @@ services:
       - pg
   migration:
     <<: *api
-    command: ["./scripts/wait-for-postgres.sh", "--", "flask", "--app", "api", "db", "upgrade", "--directory", "./api/migrations"]
+    image: shaldengeki/fitbit-challenges-api-migrations:latest
     restart: no
   worker:
     <<: *api
     working_dir: /usr/src
-    command: ["./app/scripts/wait-for-postgres.sh", "--", "python", "-u", "-m", "app.worker.app"]
+    command: ["/src/python/fitbit_challenges/api/binary.runfiles/_main/src/python/fitbit_challenges/scripts/wait_for_postgres", "python", "-u", "-m", "app.worker.app"]
   pg:
     image: postgres:alpine
     restart: always

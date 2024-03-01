@@ -8,7 +8,7 @@ py_library(
     name = "api_lib",
     srcs = glob(["**/*.py"]),
     imports = [".."],
-    visibility = ["//:__subpackages__"],
+    visibility = ["//src/python/fitbit_challenges/api:__subpackages__"],
     deps = [
         "//src/python/fitbit_challenges:config_py",
         "//src/python/fitbit_challenges:models_py",
@@ -29,18 +29,11 @@ py_binary(
     ],
 )
 
-# Construct an image that has three layers.
-# The result will look like this:
-#    bazel run //src/python/fitbit_challenges/api:tarball
-#
-#2f2353bd5bea: Loading layer [==================================================>]  47.13MB/47.13MB
-#f02532d45017: Loading layer [==================================================>]   3.62MB/3.62MB
-#9296e9071c11: Loading layer [==================================================>]  16.24kB/16.24kB
 py_oci_image(
     name = "image",
     base = "@python3_image",
     binary = ":binary",
-    entrypoint = ["/src/python/fitbit_challenges/api/binary"],
+    cmd = ["/src/python/fitbit_challenges/api/binary.runfiles/_main/src/python/fitbit_challenges/scripts/wait_for_postgres", "/src/python/fitbit_challenges/api/binary"],
     env = {
         "FLASK_APP": "app.py",
         "FLASK_DEBUG": "True",
@@ -57,6 +50,7 @@ py_oci_image(
         "FITBIT_VERIFICATION_CODE": "testing",
         "FLASK_SECRET_KEY": "testing",
     },
+    visibility = ["//src/python/fitbit_challenges/api:__subpackages__"],
 )
 
 platform(
