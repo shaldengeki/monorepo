@@ -13,8 +13,7 @@ services:
     restart: no
   worker:
     <<: *api
-    working_dir: /usr/src
-    command: ["/src/python/fitbit_challenges/api/binary.runfiles/_main/src/python/fitbit_challenges/scripts/wait_for_postgres", "python", "-u", "-m", "app.worker.app"]
+    image: shaldengeki/fitbit-challenges-worker:latest
   pg:
     image: postgres:alpine
     restart: always
