@@ -284,9 +284,9 @@ importlib-metadata==7.0.1 \
     --hash=sha256:4805911c3a4ec7c3966410053e9ec6a1fecd629117df5adee56dfc9432a1081e \
     --hash=sha256:f238736bb06590ae52ac1fab06a3a9ef1d8dce2b7a35b5ab329371d6c8f5d2cc
     # via -r src/python/requirements.txt
-importlib-resources==6.1.2 \
-    --hash=sha256:308abf8474e2dba5f867d279237cd4076482c3de7104a40b41426370e891549b \
-    --hash=sha256:9a0a862501dc38b68adebc82970140c9e4209fc99601782925178f8386339938
+importlib-resources==6.3.1 \
+    --hash=sha256:29a3d16556e330c3c8fb8202118c5ff41241cc34cbfb25989bbad226d99b7995 \
+    --hash=sha256:4811639ca7fa830abdb8e9ca0a104dc6ad13de691d9fe0d3173a71304f068159
     # via -r src/python/requirements.txt
 iniconfig==2.0.0 \
     --hash=sha256:2d91e135bf72d31a410b17c16da610a82cb55f6b0477d1a902134b24a455b8b3 \
