@@ -645,9 +645,9 @@ types-flask-cors==4.0.0.20240106 \
     --hash=sha256:bc07707c8eae86b04d177bc19f4cbb128af6fc490de9c4ba4a4348e45c77406f \
     --hash=sha256:e49b29c4ba1de9496f7f43aab90f32393dd2599f87fab448cdebc481facca1a3
     # via -r src/python/requirements.txt
-types-requests==2.31.0.20240218 \
-    --hash=sha256:a82807ec6ddce8f00fe0e949da6d6bc1fbf1715420218a9640d695f70a9e5a9b \
-    --hash=sha256:f1721dba8385958f504a5386240b92de4734e047a08a40751c1654d1ac3349c5
+types-requests==2.31.0.20240406 \
+    --hash=sha256:4428df33c5503945c74b3f42e82b181e86ec7b724620419a2966e2de604ce1a1 \
+    --hash=sha256:6216cdac377c6b9a040ac1c0404f7284bd13199c0e1bb235f4324627e8898cf5
     # via -r src/python/requirements.txt
 typing-extensions==4.10.0 \
     --hash=sha256:69b1a937c3a517342112fb4c6df7e72fc39a38e7891a5730ed4985b5214b5475 \
