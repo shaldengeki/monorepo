@@ -8,7 +8,7 @@ bazel_dep(
 )
 bazel_dep(
     name = "rules_oci",
-    version = "1.7.2",
+    version = "1.7.5",
 )
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
