@@ -654,9 +654,9 @@ tomlkit==0.12.4 \
     # via
     #   -r src/python/requirements.txt
     #   pylint
-types-flask-cors==4.0.0.20240106 \
-    --hash=sha256:bc07707c8eae86b04d177bc19f4cbb128af6fc490de9c4ba4a4348e45c77406f \
-    --hash=sha256:e49b29c4ba1de9496f7f43aab90f32393dd2599f87fab448cdebc481facca1a3
+types-flask-cors==4.0.0.20240405 \
+    --hash=sha256:3838856aff6faf96adf7b1844f357b8f74e5344f88b4ce2a158e81cbc6a82436 \
+    --hash=sha256:7b721df8f1e2cb8d4d0295ebeb7168e5961695bf31983858040d718af071a32b
     # via -r src/python/requirements.txt
 types-requests==2.31.0.20240406 \
     --hash=sha256:4428df33c5503945c74b3f42e82b181e86ec7b724620419a2966e2de604ce1a1 \
