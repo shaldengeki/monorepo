@@ -9,3 +9,10 @@ hugo.darwin
 hugo.linux
 
 /.hugo_build.lock
+
+# Bazel
+bazel-bin
+bazel-out
+bazel-seinmastudios.com
+bazel-rules
+bazel-testlogs
