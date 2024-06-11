@@ -11,10 +11,7 @@ bazel_dep(
 
 register_toolchains("//tools/protoc:all")
 
-bazel_dep(
-    name = "rules_oci",
-    version = "1.7.5",
-)
+bazel_dep(name = "rules_oci", version = "1.7.6")
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
