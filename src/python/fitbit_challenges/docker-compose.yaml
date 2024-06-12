@@ -15,7 +15,7 @@ services:
     <<: *api
     image: shaldengeki/fitbit-challenges-worker:latest
   pg:
-    image: postgres:alpine
+    image: postgres:15-alpine
     restart: always
     env_file:
       - env/.postgres.env
