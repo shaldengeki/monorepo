@@ -32,3 +32,4 @@ services:
 volumes:
   fitbit-challenges-pg:
     name: fitbit-challenges_fitbit-challenges-pg
+    external: true
