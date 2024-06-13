@@ -23,7 +23,7 @@ services:
       - fitbit-challenges-pg:/var/lib/postgresql/data
   frontend:
     build:
-      context: ./src/javascript/frontend
+      context: ../../javascript/fitbit-challenges/frontend
       dockerfile: Dockerfile
     image: frontend
     env_file:
