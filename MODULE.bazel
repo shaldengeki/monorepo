@@ -60,6 +60,7 @@ npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependenc
 
 npm.npm_translate_lock(
     name = "npm",
+    # To update, run bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
     pnpm_lock = "//src/javascript/fitbit-challenges/frontend:pnpm-lock.yaml",
     verify_node_modules_ignored = "//:.bazelignore",
 )

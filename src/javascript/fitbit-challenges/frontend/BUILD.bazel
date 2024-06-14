@@ -32,6 +32,7 @@ ts_project(
         ":node_modules/@types/lodash",
         ":node_modules/@types/node",
         ":node_modules/@types/react",
+        ":node_modules/@types/react-dom",
         ":node_modules/lodash",
         ":node_modules/react-dom",
         ":node_modules/react-router-dom",
