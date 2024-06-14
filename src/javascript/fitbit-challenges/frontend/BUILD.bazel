@@ -15,8 +15,6 @@ ts_project(
     # "." is the same as default
     # explicitly given as a regression test for https://github.com/aspect-build/rules_ts/issues/195
     out_dir = ".",
-    # Note, the tsconfig attribute defaults to the tsconfig.json file in this directory.
-    # tsconfig = "<default>",
     deps = [
         # Two dependencies are linked from first-party code in this repo
         # by the npm_link_package calls in /examples/BUILD.bazel
