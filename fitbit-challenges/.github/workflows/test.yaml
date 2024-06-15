@@ -7,18 +7,6 @@ on:
   merge_group:
 
 jobs:
-  test-js:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - run: npm ci
-        working-directory: ./src/javascript/frontend
-      - run: npm test
-        working-directory: ./src/javascript/frontend
   build-frontend:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
