@@ -5,9 +5,9 @@ from typing import Optional
 from flask import abort, redirect, request, session
 from graphql_server.flask import GraphQLView  # type: ignore
 
-from src.python.fitbit_challenges import models
-from src.python.fitbit_challenges.api import gql
-from src.python.fitbit_challenges.config import app, db, verify_fitbit_verification
+from fitbit_challenges import models
+from fitbit_challenges.api import gql
+from fitbit_challenges.config import app, db, verify_fitbit_verification
 
 app.add_url_rule(
     "/graphql",

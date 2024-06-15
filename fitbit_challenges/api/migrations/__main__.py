@@ -2,8 +2,8 @@ import shutil
 
 from flask_migrate import upgrade
 
+from fitbit_challenges.config import app
 from python.runfiles import Runfiles
-from src.python.fitbit_challenges.config import app
 
 if __name__ == "__main__":
     # Copy the alembic.ini.

@@ -9,6 +9,6 @@ updates:
     schedule:
       interval: "weekly"
   - package-ecosystem: "npm"
-    directory: "/src/javascript/fitbit-challenges/frontend"
+    directory: "/fitbit_challenges/frontend"
     schedule:
       interval: "weekly"

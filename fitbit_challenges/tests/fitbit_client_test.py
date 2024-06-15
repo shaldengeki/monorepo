@@ -5,7 +5,7 @@ from typing import Optional
 import pytest
 import requests
 
-from src.python.fitbit_challenges.fitbit_client import FitbitClient
+from fitbit_challenges.fitbit_client import FitbitClient
 
 
 @pytest.fixture

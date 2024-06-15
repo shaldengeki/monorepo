@@ -9,13 +9,9 @@ import requests
 from sqlalchemy import desc, update
 from sqlalchemy.sql.functions import now
 
-from src.python.fitbit_challenges.config import app, db
-from src.python.fitbit_challenges.fitbit_client import FitbitClient
-from src.python.fitbit_challenges.models import (
-    SubscriptionNotification,
-    User,
-    UserActivity,
-)
+from fitbit_challenges.config import app, db
+from fitbit_challenges.fitbit_client import FitbitClient
+from fitbit_challenges.models import SubscriptionNotification, User, UserActivity
 
 
 def maybe_fetch_subscription_notification() -> Optional[SubscriptionNotification]:

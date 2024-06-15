@@ -6,7 +6,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from src.python.fitbit_challenges.fitbit_client import FitbitClient
+from fitbit_challenges.fitbit_client import FitbitClient
 
 app = Flask(__name__)
 

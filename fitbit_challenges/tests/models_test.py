@@ -2,7 +2,7 @@ import datetime
 import decimal
 from typing import Generator
 
-from src.python.fitbit_challenges.models import (
+from fitbit_challenges.models import (
     BingoCard,
     BingoCardPattern,
     BingoTile,

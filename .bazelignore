@@ -16,4 +16,4 @@ postgres-data
 pg_dump.sql
 
 # JS
-src/javascript/fitbit-challenges/frontend/node_modules
+fitbit_challenges/frontend/node_modules
