@@ -33,7 +33,10 @@ py_oci_image(
     name = "image",
     base = "@python3_image",
     binary = ":binary",
-    cmd = ["/src/python/fitbit_challenges/api/binary.runfiles/_main/src/python/fitbit_challenges/scripts/wait_for_postgres", "/src/python/fitbit_challenges/api/binary"],
+    cmd = [
+        "/src/python/fitbit_challenges/api/binary.runfiles/_main/src/python/fitbit_challenges/scripts/wait_for_postgres",
+        "/src/python/fitbit_challenges/api/binary",
+    ],
     env = {
         "FLASK_APP": "app.py",
         "FLASK_DEBUG": "True",
@@ -89,6 +92,6 @@ oci_tarball(
 oci_push(
     name = "dockerhub",
     image = ":platform_image",
-    repository = "docker.io/shaldengeki/fitbit-challenges-api",
     remote_tags = ["latest"],
+    repository = "docker.io/shaldengeki/fitbit-challenges-api",
 )
