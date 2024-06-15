@@ -34,8 +34,8 @@ py_oci_image(
     base = "//fitbit_challenges/api:image",
     binary = ":binary",
     cmd = [
-        "/src/python/fitbit_challenges/api/migrations/binary.runfiles/_main/src/python/fitbit_challenges/scripts/wait_for_postgres",
-        "/src/python/fitbit_challenges/api/migrations/binary",
+        "/fitbit_challenges/api/migrations/binary.runfiles/_main/fitbit_challenges/scripts/wait_for_postgres",
+        "/fitbit_challenges/api/migrations/binary",
     ],
     env = {
         "FLASK_APP": "app.py",
