@@ -48,6 +48,8 @@ jest_test(
         ":node_modules/react-canvas-confetti",
         ":node_modules/react-router-dom",
     ] + [
+        "mocks/fileMock.js",
+        "src/globals.d.ts",
         "src/setupTests.js",
         "src/DateUtils.js",
         "src/DateUtils.test.js",
