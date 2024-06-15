@@ -28,7 +28,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-${{ github.sha }}
             ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-
-            ${{ runner.os }}-${{ env.cache-name }}-${{ github.base_ref }}-
+            ${{ runner.os }}-${{ env.cache-name }}-refs/heads/${{ github.base_ref }}-
       - name: Checkout
         uses: actions/checkout@v4
       - name: bazel test //...

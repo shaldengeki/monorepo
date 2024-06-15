@@ -18,9 +18,9 @@ py_library(
 py_binary(
     name = "binary",
     srcs = glob(["**/*.py"]),
+    data = ["alembic.ini"],
     imports = [".."],
     main = "__main__.py",
-    data = ["alembic.ini"],
     deps = [
         "//src/python/fitbit_challenges:config_py",
         "//src/python/fitbit_challenges/scripts:wait_for_postgres",
@@ -33,7 +33,10 @@ py_oci_image(
     name = "image",
     base = "//src/python/fitbit_challenges/api:image",
     binary = ":binary",
-    cmd = ["/src/python/fitbit_challenges/api/migrations/binary.runfiles/_main/src/python/fitbit_challenges/scripts/wait_for_postgres", "/src/python/fitbit_challenges/api/migrations/binary"],
+    cmd = [
+        "/src/python/fitbit_challenges/api/migrations/binary.runfiles/_main/src/python/fitbit_challenges/scripts/wait_for_postgres",
+        "/src/python/fitbit_challenges/api/migrations/binary",
+    ],
     env = {
         "FLASK_APP": "app.py",
         "FLASK_DEBUG": "True",
@@ -88,6 +91,6 @@ oci_tarball(
 oci_push(
     name = "dockerhub",
     image = ":platform_image",
-    repository = "docker.io/shaldengeki/fitbit-challenges-api-migrations",
     remote_tags = ["latest"],
+    repository = "docker.io/shaldengeki/fitbit-challenges-api-migrations",
 )
