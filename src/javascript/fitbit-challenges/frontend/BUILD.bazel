@@ -1,3 +1,4 @@
+load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 
@@ -6,7 +7,13 @@ npm_link_all_packages(name = "node_modules")
 ts_project(
     name = "ts",
     allow_js = True,
-    assets = ['src/App.src.css', 'src/index.css', 'src/logo.svg'],
+    assets = [
+        'src/App.src.css',
+        'src/index.css',
+        'src/logo.svg',
+        'src/components/fitbit.png',
+        'src/components/logo192.png',
+    ],
     out_dir = ".",
     deps = [
         ":node_modules/@apollo/client",
@@ -24,4 +31,54 @@ ts_project(
     ],
     transpiler = "tsc",
     resolve_json_module = True,
+)
+
+jest_test(
+    name = "test",
+    data = [
+        "package.json",
+        ":node_modules/@apollo/client",
+        ":node_modules/@apollo/react-testing",
+        ":node_modules/@testing-library/react",
+        ":node_modules/@testing-library/jest-dom",
+        ":node_modules/jest-environment-jsdom",
+        ":node_modules/jsdom",
+        ":node_modules/lodash",
+        ":node_modules/react",
+        ":node_modules/react-canvas-confetti",
+        ":node_modules/react-router-dom",
+    ] + [
+        "mocks/fileMock.js",
+        "src/globals.d.ts",
+        "src/setupTests.js",
+        "src/DateUtils.js",
+        "src/DateUtils.test.js",
+        "src/types/Activity.js",
+        "src/types/Challenge.js",
+        "src/types/Bingo.js",
+        "src/types/User.js",
+        "src/components/BingoChallenge.js",
+        "src/components/BingoChallenge.test.js",
+        "src/components/FormButton.js",
+        "src/components/FormButton.test.js",
+        "src/components/Confetti.js",
+        "src/components/NavBar.js",
+        "src/components/PageContainer.js",
+        "src/components/PageTitle.js",
+        "src/components/ProgressBar.js",
+        "src/components/StepChallenge.js",
+        "src/components/StepChallenge.test.js",
+        "src/components/UserActivityForm.js",
+        "src/components/UserActivityLog.js",
+        "src/components/UserLeaderboard.js",
+        "src/components/WeekendWarrior.js",
+        "src/components/WorkweekHustle.js",
+        "src/views/ChallengeView.js",
+        "src/views/ChallengeView.test.js",
+    ],
+    node_modules = ":node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+    config = "jest.config.json",
 )

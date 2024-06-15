@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import { useMutation, useQuery, gql } from '@apollo/client';
+import { gql } from '@apollo/client/core';
+import { useQuery, useMutation } from '@apollo/client/react/hooks';
 import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import Challenge, {ChallengeType, emptyChallenge} from "../types/Challenge";

@@ -1,5 +1,6 @@
 import React from 'react';
-import { useQuery, gql } from '@apollo/client';
+import { gql } from '@apollo/client/core';
+import { useQuery } from '@apollo/client/react/hooks';
 import { useParams } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import WorkweekHustle from '../components/WorkweekHustle';

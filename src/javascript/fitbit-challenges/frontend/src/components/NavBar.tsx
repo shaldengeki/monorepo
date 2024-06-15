@@ -2,7 +2,8 @@ import React from 'react';
 import fitbit from './fitbit.png';
 import logo192 from './logo192.png';
 import { Link } from 'react-router-dom';
-import { useQuery, gql } from '@apollo/client';
+import { gql } from '@apollo/client/core';
+import { useQuery } from '@apollo/client/react/hooks';
 
 export const FETCH_CURRENT_USER_QUERY = gql`
     query FetchCurrentUser {
