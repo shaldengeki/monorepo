@@ -14,3 +14,6 @@ docker-compose.prod.yaml
 # Database data.
 postgres-data
 pg_dump.sql
+
+# JS
+src/javascript/fitbit-challenges/frontend/node_modules

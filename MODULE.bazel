@@ -53,3 +53,30 @@ oci.pull(
     ],
 )
 use_repo(oci, "python3_image")
+
+bazel_dep(name = "aspect_rules_js", version = "1.42.3")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
+
+npm.npm_translate_lock(
+    name = "npm",
+    # To update, run bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
+    pnpm_lock = "//src/javascript/fitbit-challenges/frontend:pnpm-lock.yaml",
+    verify_node_modules_ignored = "//:.bazelignore",
+)
+
+use_repo(npm, "npm")
+
+pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
+
+# Allows developers to use the matching pnpm version, for example:
+# bazel run -- @pnpm --dir /home/runner/work/rules_js/rules_js install
+use_repo(pnpm, "pnpm")
+
+bazel_dep(name = "aspect_rules_ts", version = "2.4.2")
+
+rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext", dev_dependency = True)
+
+rules_ts_ext.deps()
+
+use_repo(rules_ts_ext, "npm_typescript")
