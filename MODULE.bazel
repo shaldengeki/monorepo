@@ -23,7 +23,7 @@ pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(
     hub_name = "py_deps",
     python_version = "3.11",
-    requirements_lock = "//src/python:requirements.lock.txt",
+    requirements_lock = "//:requirements.lock.txt",
 )
 use_repo(pip, "py_deps")
 
