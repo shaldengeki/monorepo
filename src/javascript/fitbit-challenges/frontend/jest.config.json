@@ -1,0 +1,6 @@
+{
+  "bail": 1,
+  "verbose": true,
+  "testEnvironment": "jsdom",
+  "setupFilesAfterEnv": ["./src/setupTests.js"]
+}

@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import _ from 'lodash'
-import { useQuery, gql, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client/core';
+import { useQuery, useMutation } from '@apollo/client/react/hooks';
 
 import User from '../types/User';
 import BingoCard, {BingoTile, emptyBingoTile} from '../types/Bingo';
