@@ -38,6 +38,8 @@ jest_test(
         "src/types/Bingo.js",
         "src/components/BingoChallenge.js",
         "src/components/BingoChallenge.test.js",
+        "src/components/FormButton.js",
+        "src/components/FormButton.test.js",
         "src/components/PageTitle.js",
         "src/components/ProgressBar.js",
         "src/components/UserLeaderboard.js",
