@@ -74,6 +74,7 @@ jest_test(
         "src/components/WeekendWarrior.js",
         "src/components/WorkweekHustle.js",
         "src/views/ChallengeView.js",
+        "src/views/ChallengeView.test.js",
     ],
     node_modules = ":node_modules",
     node_options = [
