@@ -1,9 +1,6 @@
 import pytest
 
-from src.python.fitbit_challenges.bingo_card_pattern import (
-    USABLE_PATTERNS,
-    BingoCardPattern,
-)
+from fitbit_challenges.bingo_card_pattern import USABLE_PATTERNS, BingoCardPattern
 
 
 class EmptyPattern(BingoCardPattern):

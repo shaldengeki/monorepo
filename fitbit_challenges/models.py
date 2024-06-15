@@ -13,12 +13,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from sqlalchemy.sql.functions import now
 
-from src.python.fitbit_challenges.bingo_card_pattern import (
-    USABLE_PATTERNS,
-    BingoCardPattern,
-)
-from src.python.fitbit_challenges.config import db
-from src.python.fitbit_challenges.fitbit_client import FitbitClient
+from fitbit_challenges.bingo_card_pattern import USABLE_PATTERNS, BingoCardPattern
+from fitbit_challenges.config import db
+from fitbit_challenges.fitbit_client import FitbitClient
 
 
 @dataclasses.dataclass

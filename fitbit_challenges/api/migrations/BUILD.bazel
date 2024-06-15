@@ -22,8 +22,8 @@ py_binary(
     imports = [".."],
     main = "__main__.py",
     deps = [
-        "//src/python/fitbit_challenges:config_py",
-        "//src/python/fitbit_challenges/scripts:wait_for_postgres",
+        "//fitbit_challenges:config_py",
+        "//fitbit_challenges/scripts:wait_for_postgres",
         "@rules_python//python/runfiles",
         requirement("Flask-Migrate"),
     ],
@@ -31,7 +31,7 @@ py_binary(
 
 py_oci_image(
     name = "image",
-    base = "//src/python/fitbit_challenges/api:image",
+    base = "//fitbit_challenges/api:image",
     binary = ":binary",
     cmd = [
         "/src/python/fitbit_challenges/api/migrations/binary.runfiles/_main/src/python/fitbit_challenges/scripts/wait_for_postgres",
@@ -80,7 +80,7 @@ platform_transition_filegroup(
     }),
 )
 
-# $ bazel run //src/python/fitbit_challenges/api/migrations:tarball
+# $ bazel run //fitbit_challenges/api/migrations:tarball
 # $ docker run --rm shaldengeki/fitbit-challenges-api-migrations:latest
 oci_tarball(
     name = "tarball",

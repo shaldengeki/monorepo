@@ -4,7 +4,7 @@ load("@rules_python//python:defs.bzl", "py_library")
 py_library(
     name = "fitbit_client_py",
     srcs = ["fitbit_client.py"],
-    visibility = ["//src/python/fitbit_challenges:__subpackages__"],
+    visibility = ["//fitbit_challenges:__subpackages__"],
     deps = [
         requirement("requests"),
     ],
@@ -13,13 +13,13 @@ py_library(
 py_library(
     name = "bingo_card_pattern_py",
     srcs = ["bingo_card_pattern.py"],
-    visibility = ["//src/python/fitbit_challenges:__subpackages__"],
+    visibility = ["//fitbit_challenges:__subpackages__"],
 )
 
 py_library(
     name = "models_py",
     srcs = ["models.py"],
-    visibility = ["//src/python/fitbit_challenges:__subpackages__"],
+    visibility = ["//fitbit_challenges:__subpackages__"],
     deps = [
         ":bingo_card_pattern_py",
         ":config_py",
@@ -35,7 +35,7 @@ py_library(
     data = [
         requirement("pg8000"),
     ],
-    visibility = ["//src/python/fitbit_challenges:__subpackages__"],
+    visibility = ["//fitbit_challenges:__subpackages__"],
     deps = [
         ":fitbit_client_py",
         requirement("flask_cors"),
