@@ -1,0 +1,44 @@
+load("@rules_python//python:defs.bzl", "py_test")
+
+py_test(
+    name = "parser_test",
+    srcs = ["parser_test.py"],
+    deps = [
+        "//py_proto:proto_comment",
+        "//py_proto:proto_constant",
+        "//py_proto:proto_enum",
+        "//py_proto:proto_extend",
+        "//py_proto:proto_extensions",
+        "//py_proto:proto_float",
+        "//py_proto:proto_identifier",
+        "//py_proto:proto_import",
+        "//py_proto:proto_int",
+        "//py_proto:proto_map",
+        "//py_proto:proto_message",
+        "//py_proto:proto_message_field",
+        "//py_proto:proto_option",
+        "//py_proto:proto_service",
+        "//py_proto:proto_string_literal",
+        "//py_proto:proto_syntax",
+        "//py_proto/util:parser",
+    ],
+)
+
+sh_test(
+    name = "parser_binary_test",
+    srcs = ["parser_binary_test.sh"],
+    data = [
+        "//py_proto/test/resources:all_protos",
+        "//py_proto/util:parser_binary",
+        "@com_google_protobuf//:all_proto",
+    ],
+)
+
+sh_test(
+    name = "compatibility_checker_binary_test",
+    srcs = ["compatibility_checker_binary_test.sh"],
+    data = [
+        "//py_proto/test/resources:all_protos",
+        "//py_proto/util:compatibility_checker_binary",
+    ],
+)
