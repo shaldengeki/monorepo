@@ -1,5 +1,6 @@
 import React from 'react';
-import { useMutation, gql } from '@apollo/client';
+import { gql } from '@apollo/client/core';
+import { useMutation } from '@apollo/client/react/hooks';
 import PageContainer from '../components/PageContainer';
 
 export const FITBIT_AUTH_MUTATION = gql`
