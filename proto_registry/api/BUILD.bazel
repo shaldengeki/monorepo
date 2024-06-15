@@ -32,7 +32,7 @@ py_binary(
 
 # Construct an image that has three layers.
 # The result will look like this:
-#    bazel run //src/python/proto_registry/api:tarball
+#    bazel run //proto_registry/api:tarball
 #
 #2f2353bd5bea: Loading layer [==================================================>]  47.13MB/47.13MB
 #f02532d45017: Loading layer [==================================================>]   3.62MB/3.62MB
@@ -41,7 +41,7 @@ py_oci_image(
     name = "image",
     base = "@python3_image",
     binary = ":binary",
-    entrypoint = ["/src/python/proto_registry/api/binary"],
+    entrypoint = ["/proto_registry/api/binary"],
 )
 
 platform(
@@ -69,7 +69,7 @@ platform_transition_filegroup(
     }),
 )
 
-# $ bazel run //src/python/proto_registry/api:tarball
+# $ bazel run //proto_registry/api:tarball
 # $ docker run --rm shaldengeki/proto-registry-api:latest
 oci_tarball(
     name = "tarball",
