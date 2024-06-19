@@ -1,14 +1,7 @@
-bazel_dep(
-    name = "aspect_bazel_lib",
-    version = "2.5.0",
-)
-bazel_dep(name = "rules_proto", version = "6.0.0")
-bazel_dep(name = "toolchains_protoc", version = "0.2.4")
-bazel_dep(
-    name = "rules_python",
-    version = "0.31.0",
-)
-
+bazel_dep(name = "aspect_bazel_lib", version = "2.7.7")
+bazel_dep(name = "rules_proto", version = "6.0.2")
+bazel_dep(name = "toolchains_protoc", version = "0.3.1")
+bazel_dep(name = "rules_python", version = "0.33.2")
 register_toolchains("//tools/protoc:all")
 
 bazel_dep(name = "rules_oci", version = "1.7.6")
