@@ -39,9 +39,16 @@ webpack_bundle(
     node_modules = ":node_modules",
     srcs = glob(
         include = ["**/*.js","**/*.css"],
-        exclude = ["index.js"]
+        exclude = ["index.js", "**/*.test.js"]
     ),
     entry_point = "src/index.js",
+    deps = [
+        ":node_modules/@apollo/client",
+        ":node_modules/lodash",
+        ":node_modules/react",
+        ":node_modules/react-dom",
+        ":node_modules/react-router-dom",
+    ],
 )
 
 jest_test(
