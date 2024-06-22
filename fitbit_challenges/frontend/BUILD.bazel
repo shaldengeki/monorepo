@@ -68,15 +68,19 @@ ts_project(
 webpack_bundle(
     name = "webpack",
     node_modules = ":node_modules",
-    srcs = [":ts", ":tailwindcss"],
+    srcs = glob(["public/**/*"]) + [":ts", ":tailwindcss"],
     entry_point = "src/index.js",
     deps = BUILD_DEPS + [
+        ":node_modules/copy-webpack-plugin",
         ":node_modules/css-loader",
         ":node_modules/file-loader",
+        ":node_modules/html-webpack-plugin",
+        ":node_modules/process",
         ":node_modules/style-loader",
     ],
     chdir = package_name(),
     webpack_config = ":webpack.config.js",
+    output_dir = True,
 )
 
 jest_test(
