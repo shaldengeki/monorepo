@@ -5,16 +5,6 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 
 npm_link_all_packages(name = "node_modules")
 
-webpack_bundle(
-    name = "webpack",
-    node_modules = ":node_modules",
-    srcs = glob(
-        include = ["**/*.js","**/*.css"],
-        exclude = ["index.js"]
-    ),
-    entry_point = "src/index.js",
-)
-
 ts_project(
     name = "ts",
     allow_js = True,
@@ -42,6 +32,16 @@ ts_project(
         ":node_modules/react-dom",
         ":node_modules/react-router-dom",
     ],
+)
+
+webpack_bundle(
+    name = "webpack",
+    node_modules = ":node_modules",
+    srcs = glob(
+        include = ["**/*.js","**/*.css"],
+        exclude = ["index.js"]
+    ),
+    entry_point = "src/index.js",
 )
 
 jest_test(
