@@ -2,6 +2,7 @@ load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle")
 load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@npm//fitbit_challenges/frontend:tailwindcss/package_json.bzl", tailwindcss_bin = "bin")
 
 npm_link_all_packages(name = "node_modules")
 
@@ -30,12 +31,30 @@ BUILD_DEPS = [
     ":node_modules/react-router-dom",
 ]
 
+tailwindcss_bin.tailwindcss(
+    name = "tailwindcss",
+    srcs = [
+        "src/App.src.css",
+        ":tailwind.config.js",
+        ":node_modules/tailwindcss",
+    ],
+    outs = [
+        "src/App.css",
+    ],
+    args = [
+        "--config fitbit_challenges/frontend/tailwind.config.js",
+        "-i fitbit_challenges/frontend/src/App.src.css",
+        "-o fitbit_challenges/frontend/src/App.css"
+    ],
+    log_level = "debug",
+)
+
 ts_project(
     name = "ts",
     allow_js = True,
     assets = [
         "src/App.src.css",
-        "src/index.css",
+        # "src/index.css",
         "src/logo.svg",
         "src/components/fitbit.png",
         "src/components/logo192.png",
@@ -49,12 +68,15 @@ ts_project(
 webpack_bundle(
     name = "webpack",
     node_modules = ":node_modules",
-    srcs = glob(
-        include = ["**/*.js","**/*.css"],
-        exclude = ["index.js", "**/*.test.js"]
-    ),
+    srcs = [":ts", ":tailwindcss"],
     entry_point = "src/index.js",
-    deps = BUILD_DEPS,
+    deps = BUILD_DEPS + [
+        ":node_modules/css-loader",
+        ":node_modules/file-loader",
+        ":node_modules/style-loader",
+    ],
+    chdir = package_name(),
+    webpack_config = ":webpack.config.js",
 )
 
 jest_test(
