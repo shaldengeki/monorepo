@@ -1,5 +1,6 @@
 load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//fitbit_challenges/frontend:tailwindcss/package_json.bzl", tailwindcss_bin = "bin")
 load(":frontend_images.bzl", "frontend_images", "BUILD_DEPS")
