@@ -22,10 +22,7 @@ services:
     volumes:
       - fitbit-challenges-pg:/var/lib/postgresql/data
   frontend:
-    build:
-      context: frontend
-      dockerfile: Dockerfile
-    image: frontend
+    image: shaldengeki/fitbit-challenges-frontend:latest
     env_file:
       - env/.frontend.env
     restart: always

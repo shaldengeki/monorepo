@@ -3,8 +3,7 @@ load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//fitbit_challenges/frontend:tailwindcss/package_json.bzl", tailwindcss_bin = "bin")
-
-npm_link_all_packages(name = "node_modules")
+load(":frontend_images.bzl", "frontend_images", "BUILD_DEPS")
 
 TYPE_DEPS = [
     ":node_modules/@types/jest",
@@ -22,14 +21,7 @@ TEST_DEPS = [
     ":node_modules/jsdom",
 ]
 
-BUILD_DEPS = [
-    ":node_modules/@apollo/client",
-    ":node_modules/lodash",
-    ":node_modules/react",
-    ":node_modules/react-canvas-confetti",
-    ":node_modules/react-dom",
-    ":node_modules/react-router-dom",
-]
+npm_link_all_packages(name = "node_modules")
 
 tailwindcss_bin.tailwindcss(
     name = "tailwindcss",
@@ -37,6 +29,7 @@ tailwindcss_bin.tailwindcss(
         "src/App.src.css",
         ":tailwind.config.js",
         ":node_modules/tailwindcss",
+        ":ts",
     ],
     outs = [
         "src/App.css",
@@ -65,23 +58,7 @@ ts_project(
     deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS,
 )
 
-webpack_bundle(
-    name = "webpack",
-    node_modules = ":node_modules",
-    srcs = glob(["public/**/*"]) + [":ts", ":tailwindcss"],
-    entry_point = "src/index.js",
-    deps = BUILD_DEPS + [
-        ":node_modules/copy-webpack-plugin",
-        ":node_modules/css-loader",
-        ":node_modules/file-loader",
-        ":node_modules/html-webpack-plugin",
-        ":node_modules/process",
-        ":node_modules/style-loader",
-    ],
-    chdir = package_name(),
-    webpack_config = ":webpack.config.js",
-    output_dir = True,
-)
+frontend_images()
 
 jest_test(
     name = "test",

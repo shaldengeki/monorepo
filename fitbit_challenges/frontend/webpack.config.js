@@ -1,4 +1,3 @@
-const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -34,6 +33,11 @@ module.exports = {
         {from: 'public/manifest.json', to: ''},
         {from: 'public/robots.txt', to: ''},
       ],
+    }),
+    new webpack.EnvironmentPlugin({
+      "REACT_APP_API_HOST": "api",
+      "REACT_APP_API_PORT": "5000",
+      "REACT_APP_API_PROTOCOL": "http",
     }),
     new HtmlWebpackPlugin({
       template: "public/index.html",
