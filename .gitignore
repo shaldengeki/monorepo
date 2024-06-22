@@ -135,3 +135,6 @@ bazel-monorepo
 bazel-rules
 bazel-testlogs
 .aspect/
+
+# JS
+node_modules/

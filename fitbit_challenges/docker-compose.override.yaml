@@ -19,10 +19,8 @@ services:
     env_file:
       - env/.postgres.env
   frontend:
+    image: shaldengeki/fitbit-challenges-frontend:latest
     env_file:
       - env/.frontend.env
-    command: ["npm", "run", "build-and-start"]
     ports:
       - "5001:5001"
-    volumes:
-      - ./src/javascript/frontend/src:/usr/src/app/src
