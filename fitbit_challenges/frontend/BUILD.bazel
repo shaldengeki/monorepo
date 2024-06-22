@@ -1,8 +1,19 @@
 load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 
 npm_link_all_packages(name = "node_modules")
+
+webpack_bundle(
+    name = "webpack",
+    node_modules = ":node_modules",
+    srcs = glob(
+        include = ["**/*.js","**/*.css"],
+        exclude = ["index.js"]
+    ),
+    entry_point = "src/index.js",
+)
 
 ts_project(
     name = "ts",

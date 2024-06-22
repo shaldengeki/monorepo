@@ -63,7 +63,9 @@
     "jest-cli": "^29.7.0",
     "jest-junit": "^16.0.0",
     "jsdom": "^24.1.0",
-    "jest-environment-jsdom": "^29.7.0"
+    "jest-environment-jsdom": "^29.7.0",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
   },
   "overrides": {
     "postcss": "^8.4.31",
