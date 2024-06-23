@@ -45,6 +45,15 @@ tailwindcss_bin.tailwindcss(
 ts_project(
     name = "ts",
     allow_js = True,
+    srcs = glob(
+        include = [
+            "src/**/*.tsx",
+            "src/**/*.ts",
+            "src/**/*.jsx",
+            "src/**/*.js",
+            "tsconfig.json",
+        ]
+    ),
     assets = [
         "src/App.src.css",
         "src/logo.svg",
