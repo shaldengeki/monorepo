@@ -1,10 +1,10 @@
 load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//fitbit_challenges/frontend:tailwindcss/package_json.bzl", tailwindcss_bin = "bin")
 load(":frontend_images.bzl", "frontend_images", "BUILD_DEPS")
 
+# Dependencies required to do typechecks.
 TYPE_DEPS = [
     ":node_modules/@types/jest",
     ":node_modules/@types/lodash",
@@ -13,6 +13,7 @@ TYPE_DEPS = [
     ":node_modules/@types/react-dom",
 ]
 
+# Dependencies required to run tests.
 TEST_DEPS = [
     ":node_modules/@apollo/react-testing",
     ":node_modules/@testing-library/jest-dom",
@@ -21,8 +22,12 @@ TEST_DEPS = [
     ":node_modules/jsdom",
 ]
 
+# To update pnpm-lock.yaml, run:
+# bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
 npm_link_all_packages(name = "node_modules")
 
+# Compiles our CSS using Tailwind styles.
+# Uses the tailwindcss binary from npm.
 tailwindcss_bin.tailwindcss(
     name = "tailwindcss",
     srcs = [
@@ -42,6 +47,7 @@ tailwindcss_bin.tailwindcss(
     log_level = "debug",
 )
 
+# Compiles Typescript to regular old Javascript.
 ts_project(
     name = "ts",
     allow_js = True,
@@ -68,6 +74,7 @@ ts_project(
 
 frontend_images()
 
+# Runs frontend Jest tests.
 jest_test(
     name = "test",
     config = "jest.config.json",
