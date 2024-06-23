@@ -1,11 +1,12 @@
-from graphql import GraphQLObjectType, GraphQLField, GraphQLSchema, GraphQLString
+from graphql import GraphQLField, GraphQLObjectType, GraphQLSchema, GraphQLString
+
 from .types.transaction import (
-    transactionsField,
-    amountByMonthField,
     accountsField,
+    amountByMonthField,
     amountRangeField,
     categoriesField,
     dateRangeField,
+    transactionsField,
     typesField,
 )
 
