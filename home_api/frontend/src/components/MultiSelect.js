@@ -39,4 +39,3 @@ const MultiSelect = (props) => {
     );
 }
 export default MultiSelect;
-
