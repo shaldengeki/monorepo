@@ -91,6 +91,6 @@ oci_tarball(
 oci_push(
     name = "dockerhub",
     image = ":platform_image",
-    remote_tags = ["latest"],
+    remote_tags = "//:stamped",
     repository = "docker.io/shaldengeki/fitbit-challenges-api-migrations",
 )
