@@ -1,7 +1,5 @@
 # fitbit-challenges
 
-![Test status](https://github.com/shaldengeki/fitbit-challenges/actions/workflows/test.yaml/badge.svg)
-
 ## Development
 
 ### Set up pre-commit
