@@ -1,14 +1,12 @@
 version: '3'
 services:
-  api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    image: home_api
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./api:/usr/src/app
+  api: &api
+    image: shaldengeki/home-api-api:latest
+    env_file:
+      - env/.api.env
+    restart: always
+    depends_on:
+      - pg
     environment:
       - API_PORT=5000
       - FLASK_ENV=development
@@ -19,26 +17,16 @@ services:
       - FRONTEND_HOST=192.168.1.5
       - FRONTEND_PORT=5001
   migration:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    image: home_api
-    volumes:
-      - ./api:/usr/src/app
-    command: ["flask", "db", "upgrade"]
-    environment:
-      - FLASK_ENV=development
-      - DB_HOST=pg
-      - DB_USERNAME=admin
-      - DB_PASSWORD=development
-      - DATABASE_NAME=api_development
+    <<: *api
+    image: shaldengeki/home-api-api-migrations:latest
+    restart: no
     depends_on:
       - pg
   pg:
-    image: postgres:alpine
+    image: postgres:15-alpine
     restart: always
-    ports:
-        - "5432:5432"
+    env_file:
+      - env/.postgres.env
     environment:
       - POSTGRES_PASSWORD=development
       - POSTGRES_USER=admin
@@ -46,14 +34,10 @@ services:
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: home_frontend
-    ports:
-      - "5001:5001"
-    volumes:
-      - ./frontend/src:/usr/src/app/src
+    image: shaldengeki/home-api-frontend:latest
+    env_file:
+      - env/.frontend.env
+    restart: always
     environment:
       - PORT=5001
       - REACT_APP_API_HOST=192.168.1.5
