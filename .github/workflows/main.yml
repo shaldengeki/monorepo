@@ -42,7 +42,7 @@ jobs:
       - name: Push to Docker Hub
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run //fitbit_challenges/api:dockerhub
-          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run //fitbit_challenges/api/migrations:dockerhub
-          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run //fitbit_challenges/worker:dockerhub
-          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run //fitbit_challenges/frontend:dockerhub_prod
+          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --stamped --embed_label $(git rev-parse HEAD) //fitbit_challenges/api:dockerhub
+          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --stamped --embed_label $(git rev-parse HEAD) //fitbit_challenges/api/migrations:dockerhub
+          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --stamped --embed_label $(git rev-parse HEAD) //fitbit_challenges/worker:dockerhub
+          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --stamped --embed_label $(git rev-parse HEAD) //fitbit_challenges/frontend:dockerhub_prod

@@ -94,9 +94,10 @@ def frontend_images():
         )
 
         # A runnable target that pushes our container image to Docker Hub.
+        # bazel run --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/frontend:dockerhub_prod
         oci_push(
             name = "dockerhub_" + env,
             image = ":image_" + env,
-            remote_tags = ["latest"],
+            remote_tags = "//:stamped",
             repository = "docker.io/shaldengeki/fitbit-challenges-frontend",
         )
