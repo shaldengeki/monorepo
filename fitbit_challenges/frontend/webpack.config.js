@@ -24,6 +24,9 @@ module.exports = {
       },
     ],
   },
+  output: {
+    publicPath: '/',
+  },
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
