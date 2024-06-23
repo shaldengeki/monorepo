@@ -1,7 +1,7 @@
 import json
 
-from api import models
-from api.config import app, db
+from proto_registry.api import models
+from proto_registry.api.config import app, db
 from flask import abort, request
 from sqlalchemy import asc
 

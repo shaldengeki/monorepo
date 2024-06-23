@@ -1,7 +1,6 @@
 import datetime
-import json
 
-from api.config import db
+from proto_registry.api.config import db
 
 
 class Subject(db.Model):
