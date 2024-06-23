@@ -1,15 +1,16 @@
 import collections
 import datetime
 import itertools
+
 from graphql import (
     GraphQLArgument,
-    GraphQLObjectType,
     GraphQLEnumType,
     GraphQLEnumValue,
     GraphQLField,
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
+    GraphQLObjectType,
     GraphQLString,
 )
 from sqlalchemy import asc, desc, distinct
