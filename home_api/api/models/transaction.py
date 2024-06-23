@@ -1,4 +1,4 @@
-from ..app import db
+from home_api.api.app import db
 
 
 class Transaction(db.Model):
