@@ -15,6 +15,7 @@ git clone https://github.com/shaldengeki/$REPO
 
 (
     cd ~/monorepo/
+    git switch main
     git remote add $REPO ../$REPO
     git fetch $REPO --no-tags
     EDITOR=true git merge --allow-unrelated-histories $REPO/$BRANCH
