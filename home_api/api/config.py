@@ -7,11 +7,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "postgres://{user}:{password}@{host}/{db}".format(
-        user=os.getenv("DB_USER", "admin"),
-        password=os.getenv("DB_PASS", "development"),
+    "postgresql+pg8000://{user}:{password}@{host}/{db}".format(
+        user=os.getenv("DB_USERNAME", "admin"),
+        password=os.getenv("DB_PASSWORD", "development"),
         host=os.getenv("DB_HOST", "pg"),
-        db=os.getenv("DB_NAME", "api_development"),
+        db=os.getenv("DATABASE_NAME", "api_development"),
     )
 )
 CORS(
