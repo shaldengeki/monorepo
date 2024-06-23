@@ -109,4 +109,3 @@ const TransactionFilters = (props) => {
     )
 }
 export default TransactionFilters;
-

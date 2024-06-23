@@ -1,13 +1,13 @@
 """create transactions table
 
 Revision ID: e683a9926450
-Revises: 
+Revises:
 Create Date: 2019-10-24 16:01:01.603106
 
 """
-from alembic import op
-import sqlalchemy as sa
 
+import sqlalchemy as sa
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "e683a9926450"

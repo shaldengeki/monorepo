@@ -2,9 +2,10 @@ import datetime
 import enum
 import json
 
+from sqlalchemy import Enum
+
 from proto_registry.api.config import db
 from proto_registry.api.models.subject import Subject
-from sqlalchemy import Enum
 
 
 class SchemaType(enum.Enum):
