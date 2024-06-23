@@ -45,3 +45,4 @@ jobs:
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run //fitbit_challenges/api:dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run //fitbit_challenges/api/migrations:dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run //fitbit_challenges/worker:dockerhub
+          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run //fitbit_challenges/frontend:dockerhub_prod
