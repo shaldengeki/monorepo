@@ -8,6 +8,7 @@ exceptiongroup
 filelock
 Flask>=2.2
 flask-cors
+flask_graphql
 Flask-Migrate>=4.0.4
 Flask-SQLAlchemy>=3.0.3
 graphql-core
@@ -35,6 +36,7 @@ toml
 tomli
 tomlkit
 types-Flask-Cors
+types-Flask-Migrate
 types-requests
 typing-extensions
 virtualenv

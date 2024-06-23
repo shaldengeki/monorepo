@@ -12,6 +12,8 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
+if config.config_file_name is None:
+    raise ValueError("config_file_name must be provided")
 fileConfig(config.config_file_name)
 logger = logging.getLogger("alembic.env")
 
@@ -23,7 +25,7 @@ from flask import current_app
 
 config.set_main_option(
     "sqlalchemy.url",
-    current_app.config.get("SQLALCHEMY_DATABASE_URI").replace("%", "%%"),
+    current_app.config.get("SQLALCHEMY_DATABASE_URI", "").replace("%", "%%"),
 )
 target_metadata = current_app.extensions["migrate"].db.metadata
 

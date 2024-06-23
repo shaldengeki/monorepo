@@ -7,3 +7,4 @@ graphql-core==2.2
 flask_graphql
 flask-cors
 black
+types-Flask-Migrate

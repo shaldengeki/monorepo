@@ -39,14 +39,14 @@ transactionType = GraphQLObjectType(
         "date": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The date that the transaction was made, in unix epoch time.",
-            resolver=lambda transaction, info, **args: int(
+            resolve=lambda transaction, info, **args: int(
                 transaction.date.timestamp()
             ),
         ),
         "formattedDate": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="The date that the transaction was made, in YYYY-MM-DD format.",
-            resolver=lambda transaction, info, **args: transaction.date.strftime(
+            resolve=lambda transaction, info, **args: transaction.date.strftime(
                 "%Y-%m-%d"
             ),
         ),
@@ -57,7 +57,7 @@ transactionType = GraphQLObjectType(
         "originalDescription": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="The original description for the transaction, retrieved from the account.",
-            resolver=lambda transaction, info, **args: transaction.original_description,
+            resolve=lambda transaction, info, **args: transaction.original_description,
         ),
         "amount": GraphQLField(
             GraphQLNonNull(GraphQLInt),
@@ -96,7 +96,7 @@ amountOverTimeType = GraphQLObjectType(
         "formattedMonth": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="The start of the time bucket, YYYY-MM-01 format.",
-            resolver=lambda obj, info, **args: datetime.datetime.utcfromtimestamp(
+            resolve=lambda obj, info, **args: datetime.datetime.utcfromtimestamp(
                 obj.date
             ).strftime("%Y-%m-01"),
         ),
@@ -211,43 +211,48 @@ def aggregate_transactions(transactions):
 
 transactionsFilters = {
     "earliestDate": GraphQLArgument(
-        description="Earliest date that a transaction should have.", type=GraphQLInt
+        GraphQLInt,
+        description="Earliest date that a transaction should have.",
     ),
     "latestDate": GraphQLArgument(
-        description="Latest date that a transaction should have.", type=GraphQLInt
+        GraphQLInt,
+        description="Latest date that a transaction should have.",
     ),
     "minAmount": GraphQLArgument(
-        description="Lowest amount that a transaction should have.", type=GraphQLInt
+        GraphQLInt,
+        description="Lowest amount that a transaction should have.",
     ),
     "maxAmount": GraphQLArgument(
-        description="Highest amount that a transaction should have.", type=GraphQLInt
+        GraphQLInt,
+        description="Highest amount that a transaction should have.",
     ),
     "description": GraphQLArgument(
+        GraphQLString,
         description="Value for description that a transaction should have.",
-        type=GraphQLString,
     ),
     "type": GraphQLArgument(
-        description="Value for type that a transaction should have.", type=GraphQLString
+        GraphQLString,
+        description="Value for type that a transaction should have.",
     ),
     "types": GraphQLArgument(
+        GraphQLList(GraphQLString),
         description="Transactions will have at least one of the provided types",
-        type=GraphQLList(GraphQLString),
     ),
     "category": GraphQLArgument(
+        GraphQLString,
         description="Value for category that a transaction should have.",
-        type=GraphQLString,
     ),
     "categories": GraphQLArgument(
+        GraphQLList(GraphQLString),
         description="Transactions will have at least one of the provided categories",
-        type=GraphQLList(GraphQLString),
     ),
     "account": GraphQLArgument(
+        GraphQLString,
         description="Value for account that a transaction should have.",
-        type=GraphQLString,
     ),
     "accounts": GraphQLArgument(
+        GraphQLList(GraphQLString),
         description="Transactions will have at least one of the provided accounts",
-        type=GraphQLList(GraphQLString),
     ),
 }
 
@@ -256,7 +261,7 @@ def transactionsField(models):
     return GraphQLField(
         GraphQLList(transactionType),
         args=transactionsFilters,
-        resolver=lambda root, info, **args: fetch_transactions(models, args),
+        resolve=lambda root, info, **args: fetch_transactions(models, args),
     )
 
 
@@ -264,7 +269,7 @@ def amountByMonthField(models):
     return GraphQLField(
         GraphQLList(amountOverTimeType),
         args=transactionsFilters,
-        resolver=lambda root, info, **args: aggregate_transactions(
+        resolve=lambda root, info, **args: aggregate_transactions(
             fetch_transactions(models, args)
         ),
     )
@@ -285,14 +290,14 @@ def fetch_transaction_amount_range(models):
 def dateRangeField(models):
     return GraphQLField(
         dateRangeType,
-        resolver=lambda root, info, **args: fetch_transaction_date_range(models),
+        resolve=lambda root, info, **args: fetch_transaction_date_range(models),
     )
 
 
 def amountRangeField(models):
     return GraphQLField(
         amountRangeType,
-        resolver=lambda root, info, **args: fetch_transaction_amount_range(models),
+        resolve=lambda root, info, **args: fetch_transaction_amount_range(models),
     )
 
 
@@ -308,7 +313,7 @@ def fetch_transaction_accounts(models):
 def accountsField(models):
     return GraphQLField(
         GraphQLList(GraphQLString),
-        resolver=lambda root, info, **args: fetch_transaction_accounts(models),
+        resolve=lambda root, info, **args: fetch_transaction_accounts(models),
     )
 
 
@@ -324,7 +329,7 @@ def fetch_transaction_categories(models):
 def categoriesField(models):
     return GraphQLField(
         GraphQLList(GraphQLString),
-        resolver=lambda root, info, **args: fetch_transaction_categories(models),
+        resolve=lambda root, info, **args: fetch_transaction_categories(models),
     )
 
 
@@ -340,5 +345,5 @@ def fetch_transaction_types(models):
 def typesField(models):
     return GraphQLField(
         GraphQLList(GraphQLString),
-        resolver=lambda root, info, **args: fetch_transaction_types(models),
+        resolve=lambda root, info, **args: fetch_transaction_types(models),
     )
