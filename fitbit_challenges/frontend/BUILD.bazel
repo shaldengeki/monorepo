@@ -47,7 +47,6 @@ ts_project(
     allow_js = True,
     assets = [
         "src/App.src.css",
-        # "src/index.css",
         "src/logo.svg",
         "src/components/fitbit.png",
         "src/components/logo192.png",
