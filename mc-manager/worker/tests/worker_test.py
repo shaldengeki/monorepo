@@ -1,6 +1,5 @@
 import pytest
 import requests
-
 from worker.worker import fetch_expected_servers, record_server_status, split_s3_path
 
 

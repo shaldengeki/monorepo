@@ -1,5 +1,6 @@
-from ..config import db
 import datetime
+
+from ..config import db
 
 
 class Server(db.Model):

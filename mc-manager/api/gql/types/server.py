@@ -1,11 +1,12 @@
 import datetime
+
 from graphql import (
     GraphQLArgument,
-    GraphQLObjectType,
     GraphQLField,
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
+    GraphQLObjectType,
     GraphQLString,
 )
 from sqlalchemy import desc
@@ -44,8 +45,8 @@ def backupsResolver(server, info, args):
 
 
 def serverTypeResolver():
-    from .server_log import serverLogType
     from .server_backup import serverBackupType
+    from .server_log import serverLogType
 
     return {
         "id": GraphQLField(

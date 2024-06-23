@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 
 import argparse
-import boto3
-from boto3.exceptions import S3UploadFailedError
 import datetime
-import docker
 import json
 import logging
 import os
-import requests
 import shutil
 import tarfile
 import time
 from typing import Any, Dict, List, NoReturn
+
+import boto3
+import docker
+import requests
+from boto3.exceptions import S3UploadFailedError
 
 logging.basicConfig(
     format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.WARNING

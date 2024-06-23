@@ -1,20 +1,20 @@
 import datetime
+
 from graphql import (
     GraphQLArgument,
-    GraphQLObjectType,
-    GraphQLField,
     GraphQLBoolean,
     GraphQLEnumType,
     GraphQLEnumValue,
+    GraphQLField,
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
+    GraphQLObjectType,
     GraphQLString,
 )
 from sqlalchemy import desc
 
 from ...config import db
-
 
 serverLogStateEnum = GraphQLEnumType(
     "ServerLogState",

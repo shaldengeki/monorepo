@@ -1,19 +1,19 @@
 import os
 
 from flask import Flask
-from graphql_server.flask import GraphQLView
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_cors import CORS
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+from graphql_server.flask import GraphQLView
 
 app = Flask(__name__)
-app.config[
-    "SQLALCHEMY_DATABASE_URI"
-] = "postgresql://{user}:{password}@{host}/{db}".format(
-    user=os.getenv("DB_USER", "admin"),
-    password=os.getenv("DB_PASS", "development"),
-    host=os.getenv("DB_HOST", "pg"),
-    db=os.getenv("DB_NAME", "api_development"),
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    "postgresql://{user}:{password}@{host}/{db}".format(
+        user=os.getenv("DB_USER", "admin"),
+        password=os.getenv("DB_PASS", "development"),
+        host=os.getenv("DB_HOST", "pg"),
+        db=os.getenv("DB_NAME", "api_development"),
+    )
 )
 CORS(
     app,
