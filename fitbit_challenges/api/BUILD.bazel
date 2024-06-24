@@ -25,7 +25,7 @@ py_binary(
     main = "__main__.py",
     deps = [
         ":api_lib",
-        "//fitbit_challenges/scripts:wait_for_postgres",
+        "//scripts:wait_for_postgres",
     ],
 )
 
@@ -34,7 +34,7 @@ py_oci_image(
     base = "@python3_image",
     binary = ":binary",
     cmd = [
-        "/fitbit_challenges/api/binary.runfiles/_main/fitbit_challenges/scripts/wait_for_postgres",
+        "/fitbit_challenges/api/binary.runfiles/_main/scripts/wait_for_postgres",
         "/fitbit_challenges/api/binary",
     ],
     env = {

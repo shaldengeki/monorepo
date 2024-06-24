@@ -16,5 +16,6 @@ postgres-data
 pg_dump.sql
 
 # JS
+node_modules
 fitbit_challenges/frontend/node_modules
 .aspect
