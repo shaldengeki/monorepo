@@ -90,7 +90,8 @@ jest_test(
     data = [
         "package.json",
     ] + BUILD_DEPS + TEST_DEPS + [
-        "src/App.test.js",
+        "src/components/DatePicker.js",
+        "src/components/DatePicker.test.js",
         "src/setupTests.js",
     ],
     node_modules = "//:node_modules",
