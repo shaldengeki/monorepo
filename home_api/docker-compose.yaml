@@ -16,12 +16,15 @@ services:
       - DATABASE_NAME=api_development
       - FRONTEND_HOST=192.168.1.5
       - FRONTEND_PORT=5001
+    ports:
+      - "5000:5000"
   migration:
     <<: *api
     image: shaldengeki/home-api-api-migrations:latest
     restart: no
     depends_on:
       - pg
+    ports: []
   pg:
     image: postgres:15-alpine
     restart: always
@@ -42,3 +45,5 @@ services:
       - PORT=5001
       - REACT_APP_API_HOST=192.168.1.5
       - REACT_APP_API_PORT=5000
+    ports:
+      - "5001:80"

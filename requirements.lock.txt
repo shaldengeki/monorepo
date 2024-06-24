@@ -183,7 +183,6 @@ flask==3.0.3 \
     # via
     #   -r requirements.txt
     #   flask-cors
-    #   flask-graphql
     #   flask-migrate
     #   flask-sqlalchemy
     #   graphql-server
@@ -192,9 +191,6 @@ flask==3.0.3 \
 flask-cors==4.0.1 \
     --hash=sha256:eeb69b342142fdbf4766ad99357a7f3876a2ceb77689dc10ff912aac06c389e4 \
     --hash=sha256:f2a704e4458665580c074b714c4627dd5a306b333deb9074d0b1794dfa2fb677
-    # via -r requirements.txt
-flask-graphql==2.0.0 \
-    --hash=sha256:b4e23dfd767f7028835208db0bfa7145f59467225882e6d4f560d15c09f32de8
     # via -r requirements.txt
 flask-migrate==4.0.5 \
     --hash=sha256:613a2df703998e78716cace68cd83972960834424457f5b67f56e74fff950aef \
@@ -212,15 +208,10 @@ graphql-core==3.2.3 \
     --hash=sha256:5766780452bd5ec8ba133f8bf287dc92713e3868ddd83aee4faab9fc3e303dc3
     # via
     #   -r requirements.txt
-    #   flask-graphql
     #   graphql-server
-    #   graphql-server-core
 graphql-server[flask]==3.0.0b7 \
     --hash=sha256:99adc23fb40c2e5d304215e2730b945f2883ee008c93f302438d849ab1d4e9e7
     # via -r requirements.txt
-graphql-server-core==1.1.1 \
-    --hash=sha256:e5f82add4b3d5580aa1f1e7d9f00e944ad3abe1b65eb337e611d6a77cc20f231
-    # via flask-graphql
 greenlet==3.0.3 \
     --hash=sha256:01bc7ea167cf943b4c802068e178bbf70ae2e8c080467070d01bfa02f337ee67 \
     --hash=sha256:0448abc479fab28b00cb472d278828b3ccca164531daab4e970a0458786055d6 \
@@ -505,9 +496,6 @@ pre-commit==3.7.1 \
     --hash=sha256:8ca3ad567bc78a4972a3f1a477e94a79d4597e8140a6e0b651c5e33899c3654a \
     --hash=sha256:fae36fd1d7ad7d6a5a1c0b0d5adb2ed1a3bda5a21bf6c3e5372073d7a11cd4c5
     # via -r requirements.txt
-promise==2.3 \
-    --hash=sha256:dfd18337c523ba4b6a58801c164c1904a9d4d1b1747c7d5dbf45b693a49d93d0
-    # via graphql-server-core
 protobuf==5.26.1 \
     --hash=sha256:38aa5f535721d5bb99861166c445c4105c4e285c765fbb2ac10f116e32dcd46d \
     --hash=sha256:3c388ea6ddfe735f8cf69e3f7dc7611e73107b60bdfcf5d0f024c3ccd3794e23 \
@@ -599,9 +587,7 @@ scramp==1.4.5 \
 six==1.16.0 \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254
-    # via
-    #   promise
-    #   python-dateutil
+    # via python-dateutil
 sqlalchemy[mypy]==2.0.30 \
     --hash=sha256:0094c5dc698a5f78d3d1539853e8ecec02516b62b8223c970c86d44e7a80f6c7 \
     --hash=sha256:0138c5c16be3600923fa2169532205d18891b28afa817cb49b50e08f62198bb8 \

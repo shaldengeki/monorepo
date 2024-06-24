@@ -3,7 +3,7 @@ import shutil
 from flask_migrate import upgrade
 from python.runfiles import Runfiles
 
-from home_api.config import app
+from home_api.api.config import app
 
 if __name__ == "__main__":
     # Copy the alembic.ini.

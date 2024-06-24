@@ -113,9 +113,9 @@ const TransactionDisplay = () => {
     ) : (<div />);
 
     return (
-        <div class="px-2">
-            <div class="flex -mx-2">
-                <div class="w-1/4 px-2">
+        <div className="px-2">
+            <div className="flex -mx-2">
+                <div className="w-1/4 px-2">
                     <TransactionFilters
                         start={start}
                         onChangeStart={setStart}
@@ -134,7 +134,7 @@ const TransactionDisplay = () => {
                     />
                     {chartElement}
                 </div>
-                <div class="w-3/4 px-2">
+                <div className="w-3/4 px-2">
                     {listElement}
                 </div>
             </div>

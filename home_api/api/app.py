@@ -1,4 +1,4 @@
-from flask_graphql import GraphQLView
+from graphql_server.flask import GraphQLView
 
 from home_api.api import models
 from home_api.api.config import app, db

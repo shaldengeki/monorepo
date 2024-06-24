@@ -17,7 +17,6 @@ py_library(
     ],
 )
 
-
 py_library(
     name = "api_lib",
     srcs = glob(["**/*.py"]),
@@ -28,7 +27,6 @@ py_library(
     visibility = ["//home_api/api:__subpackages__"],
     deps = [
         "//home_api/api:config_py",
-        "//home_api/api/models:transaction_py",
         requirement("Flask"),
         requirement("flask_cors"),
         requirement("flask_migrate"),

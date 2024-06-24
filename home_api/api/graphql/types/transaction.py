@@ -275,14 +275,34 @@ def amountByMonthField(models):
 
 def fetch_transaction_date_range(models):
     min_txn = models.Transaction.query.order_by(asc(models.Transaction.date)).first()
+    if min_txn is None:
+        min_ts = 0
+    else:
+        min_ts = min_txn.date.timestamp()
+
     max_txn = models.Transaction.query.order_by(desc(models.Transaction.date)).first()
-    return DateRange(start=min_txn.date.timestamp(), end=max_txn.date.timestamp())
+    if max_txn is None:
+        max_ts = 0
+    else:
+        max_ts = max_txn.date.timestamp()
+
+    return DateRange(start=min_ts, end=max_ts)
 
 
 def fetch_transaction_amount_range(models):
     min_txn = models.Transaction.query.order_by(asc(models.Transaction.amount)).first()
+    if min_txn is None:
+        min_amt = 0
+    else:
+        min_amt = min_txn.amount
+
     max_txn = models.Transaction.query.order_by(desc(models.Transaction.amount)).first()
-    return AmountRange(min=min_txn.amount, max=max_txn.amount)
+    if max_txn is None:
+        max_amt = 0
+    else:
+        max_amt = max_txn.amount
+
+    return AmountRange(min=min_amt, max=max_amt)
 
 
 def dateRangeField(models):
