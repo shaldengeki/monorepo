@@ -1,6 +1,14 @@
+"""
+frontend_image.bzl
+
+A macro used to define a frontend container image,
+built using webpack.
+"""
+
 load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_push", "oci_tarball")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+load("//tools/build_rules:nginx_conf.bzl", "nginx_conf")
 
 # Third-party dependencies required to build our application.
 BUILD_DEPS = [
@@ -12,32 +20,53 @@ BUILD_DEPS = [
     ":node_modules/react-router-dom",
 ]
 
-def _frontend_images_impl(ctx):
-    # Defines a set of frontend images for our application.
-    # You're probably interested in the oci_tarball & oci_push targets,
-    # which build a container image & push it to Docker Hub, respectively.
+def frontend_image(
+        name,
+        srcs,
+        server_name,
+        node_modules,
+        webpack_conf,
+        repo_tags,
+        docker_hub_repository,
+        build_env = {},
+        base_image = "@nginx_debian_slim",
+        stamp_file = "//:stamped"):
+    """
+    Defines a set of frontend images for our application.
 
-    nginx_conf_out = ctx.actions.declare_file(ctx.label.name + "_nginx_default.conf")
-    ctx.actions.expand_template(
-        output = nginx_conf_out,
-        template = ctx.file._nginx_conf_template,
-        substitutions = {
-            "{server_name}": ctx.attr.server_name,
-        }
+    Args:
+        name (str): Prefix to append to the generated targets.
+        srcs (list[label]): List of source files (js, css, assets, etc) to include in the build.
+        server_name (str): Name of the application to use in the nginx configuration.
+        node_modules (label): Target containing the node_modules deps. Should have at least webpack in it.
+        webpack_conf (file): Webpack configuration file.
+        repo_tags (list[str]): List of repo + tag pairs that the container images should be loaded under.
+        docker_hub_repository (str): Repository on Docker Hub that the container images should be pushed to.
+        build_env (dict[str, str]): Environment variables to set in the build.
+        base_image (label): Base container image to use.
+        stamp_file (file): File containing image tags that the image should be pushed under.
+
+    You're probably interested in the oci_tarball & oci_push targets,
+    which build a container image & push it to Docker Hub, respectively.
+    """
+
+    nginx_conf(
+        name = name + "_nginx_conf",
+        server_name = server_name,
     )
 
     # Define a container layer for just our nginx configuration.
     pkg_tar(
-        name = ctx.label.name + "_nginx_default_tar",
-        srcs = [nginx_conf_out],
+        name = name + "_nginx_default_tar",
+        srcs = [name + "_nginx_conf"],
         package_dir = "/etc/nginx/conf.d",
     )
 
     # Bundle our application.
     webpack_bundle(
-        name = ctx.label + "_webpack",
-        node_modules = ctx.attr.node_modules,
-        srcs = native.glob(["public/**/*"]) + [":ts", ":tailwindcss"],
+        name = name + "_webpack",
+        node_modules = node_modules,
+        srcs = srcs,
         entry_point = "src/index.js",
         deps = BUILD_DEPS + [
             ":node_modules/copy-webpack-plugin",
@@ -48,26 +77,26 @@ def _frontend_images_impl(ctx):
             ":node_modules/style-loader",
         ],
         chdir = native.package_name(),
-        webpack_config = ctx.attr.webpack_conf,
+        webpack_config = webpack_conf,
         output_dir = True,
-        env = ctx.attr.build_env,
+        env = build_env,
     )
 
     # Define a container layer for our application, for use in nginx.
     pkg_tar(
-        name = ctx.label + "_webpack_tar",
-        srcs = [ctx.label + "_webpack"],
+        name = name + "_webpack_tar",
+        srcs = [name + "_webpack"],
         package_dir = "/usr/share/nginx/html",
-        strip_prefix = ctx.label + "_webpack",
+        strip_prefix = name + "_webpack",
     )
 
     # Define an nginx container image with all of our layers.
     oci_image(
-        name = ctx.label + "_image",
-        base = ctx.attr._base_image,
+        name = name + "_image",
+        base = base_image,
         tars = [
-            ctx.label + "_webpack_tar",
-            ctx.label + "_nginx_default_tar",
+            name + "_webpack_tar",
+            name + "_nginx_default_tar",
         ],
         # Intentionally omit cmd/entrypoint to default to the base nginx container's cmd/entrypoint.
         # entrypoint = [],
@@ -79,49 +108,16 @@ def _frontend_images_impl(ctx):
     # To run it:
     # docker run --rm shaldengeki/fitbit-challenges-frontend:latest
     oci_tarball(
-        name = ctx.label + "_tarball",
-        image = ctx.label + "_image",
-        repo_tags = ctx.attr.repo_tags,
+        name = name + "_tarball",
+        image = name + "_image",
+        repo_tags = repo_tags,
     )
 
     # A runnable target that pushes our container image to Docker Hub.
     # bazel run --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/frontend:dockerhub_prod
     oci_push(
-        name = ctx.label + "_dockerhub",
-        image = ctx.label + "_image",
-        remote_tags = ctx.attr._stamp_file,
-        repository = ctx.attr.docker_hub_repository,
+        name = name + "_dockerhub",
+        image = name + "_image",
+        remote_tags = stamp_file,
+        repository = docker_hub_repository,
     )
-
-frontend_image = rule(
-    implementation = _frontend_images_impl,
-    attrs = {
-        "server_name": attr.string(mandatory=True),
-        "node_modules": attr.label(mandatory=True),
-        "webpack_conf": attr.label(
-            mandatory = True,
-            allow_single_file=True
-        ),
-        "build_env": attr.string_dict(
-            allow_empty = True,
-        ),
-        "repo_tags": attr.string_list(
-            mandatory = True,
-            allow_empty = False,
-        ),
-        "docker_hub_repository": attr.string(
-            mandatory = True,
-        ),
-        "_nginx_conf_template": attr.label(
-            default = "templates/nginx.conf.tpl",
-            allow_single_file = True,
-        ),
-        "_base_image": attr.label(
-            default = "@nginx_debian_slim",
-        ),
-        "_stamp_file": attr.label(
-            default = "//:stamped",
-            allow_single_file=True,
-        ),
-    }
-)

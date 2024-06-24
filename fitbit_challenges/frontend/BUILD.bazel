@@ -2,7 +2,7 @@ load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//fitbit_challenges/frontend:tailwindcss/package_json.bzl", tailwindcss_bin = "bin")
-load("//tools/build_rules:frontend_image.bzl", "frontend_image", "BUILD_DEPS")
+load("//tools/build_rules:frontend_image.bzl", "BUILD_DEPS", "frontend_image")
 
 # Dependencies required to do typechecks.
 TYPE_DEPS = [
@@ -32,8 +32,8 @@ tailwindcss_bin.tailwindcss(
     name = "tailwindcss",
     srcs = [
         "src/App.src.css",
-        ":tailwind.config.js",
         ":node_modules/tailwindcss",
+        ":tailwind.config.js",
         ":ts",
     ],
     outs = [
@@ -42,7 +42,7 @@ tailwindcss_bin.tailwindcss(
     args = [
         "--config fitbit_challenges/frontend/tailwind.config.js",
         "-i fitbit_challenges/frontend/src/App.src.css",
-        "-o fitbit_challenges/frontend/src/App.css"
+        "-o fitbit_challenges/frontend/src/App.css",
     ],
     log_level = "debug",
 )
@@ -50,7 +50,6 @@ tailwindcss_bin.tailwindcss(
 # Compiles Typescript to regular old Javascript.
 ts_project(
     name = "ts",
-    allow_js = True,
     srcs = glob(
         include = [
             "src/**/*.tsx",
@@ -58,8 +57,9 @@ ts_project(
             "src/**/*.jsx",
             "src/**/*.js",
             "tsconfig.json",
-        ]
+        ],
     ),
+    allow_js = True,
     assets = [
         "src/App.src.css",
         "src/logo.svg",
@@ -74,16 +74,20 @@ ts_project(
 
 frontend_image(
     name = "production",
-    server_name = "fitbit.ouguo.us",
-    node_modules = ":node_modules",
-    webpack_conf = ":webpack.config.js",
+    srcs = glob(["public/**/*"]) + [
+        ":tailwindcss",
+        ":ts",
+    ],
     build_env = {
         "REACT_APP_API_HOST": "api.fitbit.ouguo.us",
         "REACT_APP_API_PORT": "443",
         "REACT_APP_API_PROTOCOL": "https",
     },
-    repo_tags = ["shaldengeki/fitbit-challenges-frontend:latest"],
     docker_hub_repository = "docker.io/shaldengeki/fitbit-challenges-frontend",
+    node_modules = ":node_modules",
+    repo_tags = ["shaldengeki/fitbit-challenges-frontend:latest"],
+    server_name = "fitbit.ouguo.us",
+    webpack_conf = ":webpack.config.js",
 )
 
 # Runs frontend Jest tests.
