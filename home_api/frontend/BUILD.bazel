@@ -91,6 +91,7 @@ jest_test(
         "package.json",
     ] + BUILD_DEPS + TEST_DEPS + [
         "src/App.test.js",
+        "src/setupTests.js",
     ],
     node_modules = "//:node_modules",
     node_options = [
