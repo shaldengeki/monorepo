@@ -11,7 +11,7 @@ def _nginx_conf_impl(ctx):
         template = ctx.file._nginx_conf_template,
         substitutions = {
             "{server_name}": ctx.attr.server_name,
-            "{port}": ctx.attr.port,
+            "{port}": str(ctx.attr.port),
         },
     )
 
