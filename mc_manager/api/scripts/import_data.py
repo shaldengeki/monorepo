@@ -8,8 +8,8 @@ import datetime
 import subprocess
 import sys
 
-from ..app import db
-from ..models.server import Server
+from mc_manager.api.config import db
+from mc_manager.api.models.server import Server
 
 
 def read_servers():

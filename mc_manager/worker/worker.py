@@ -8,7 +8,7 @@ import os
 import shutil
 import tarfile
 import time
-from typing import Any, Dict, List, NoReturn
+from typing import Any, Dict, Iterable, List, NoReturn, Optional
 
 import boto3
 import docker
@@ -198,7 +198,7 @@ def fetch_expected_servers(host: str, port: int) -> List[Dict[str, Any]]:
 
 
 def update_server_status(
-    host: str, port: int, server: Dict[str, Any], container_names: list
+    host: str, port: int, server: Dict[str, Any], container_names: Iterable
 ) -> Dict[str, Any]:
     logger.error(f"Updating status for server {server['name']}")
     if server["name"] not in container_names:
@@ -212,7 +212,7 @@ def update_server_status(
 
 
 def record_server_status(
-    host: str, port: int, server_id: int, status: str, backup_id: str = None
+    host: str, port: int, server_id: int, status: str, backup_id: Optional[str] = None
 ) -> Dict[str, Any]:
     logger.error(f"Recording server status")
     response = query_graphql(
@@ -292,7 +292,7 @@ def back_up_server(
     with tarfile.open(file_path, "w:gz") as tar:
         tar.add(server["name"])
 
-    remote_path = f"s3://{s3_bucket}/{server['name']}/{file_name}"
+    remote_path: Optional[str] = f"s3://{s3_bucket}/{server['name']}/{file_name}"
 
     # Next, upload the zipfile to S3.
     logger.error(f"Uploading zipped backup at {file_path} to s3 at {remote_path}")
@@ -371,7 +371,7 @@ def clean_up_backups(
         logger.error(
             f"Error encountered while cleaning up backups: {response['errors']}"
         )
-        return
+        return []
 
     # Select just the N oldest backups for this server.
     backups = response.get("data", {}).get("serverBackups", [])
