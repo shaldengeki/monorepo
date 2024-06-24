@@ -1,4 +1,5 @@
 load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
+load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 compile_pip_requirements(
@@ -19,5 +20,9 @@ expand_template(
         "0.0.0",
         "latest",
     ],
-    visibility = ["//visibility:public"]
+    visibility = ["//visibility:public"],
 )
+
+# To update pnpm-lock.yaml, run:
+# bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
+npm_link_all_packages(name = "node_modules")

@@ -1,6 +1,6 @@
 import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import gql from "graphql-tag";
+import { gql } from '@apollo/client/core';
+import { useQuery } from '@apollo/client/react/hooks';
 import _ from 'lodash';
 import createPlotlyComponent from 'react-plotlyjs';
 import Plotly from 'plotly.js-basic-dist';

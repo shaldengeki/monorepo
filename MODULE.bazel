@@ -2,6 +2,7 @@ bazel_dep(name = "aspect_bazel_lib", version = "2.7.7")
 bazel_dep(name = "rules_proto", version = "6.0.2")
 bazel_dep(name = "toolchains_protoc", version = "0.3.1")
 bazel_dep(name = "rules_python", version = "0.33.2")
+
 register_toolchains("//tools/protoc:all")
 
 bazel_dep(name = "rules_oci", version = "1.7.6")
@@ -46,7 +47,6 @@ oci.pull(
     ],
 )
 use_repo(oci, "python3_image")
-
 oci.pull(
     name = "nginx_debian_slim",
     digest = "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
@@ -68,8 +68,9 @@ bazel_dep(name = "aspect_rules_js", version = "1.42.3")
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
 npm.npm_translate_lock(
     name = "npm",
+    npmrc = "//:.npmrc",
     # To update, run bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
-    pnpm_lock = "//fitbit_challenges/frontend:pnpm-lock.yaml",
+    pnpm_lock = "//:pnpm-lock.yaml",
     verify_node_modules_ignored = "//:.bazelignore",
 )
 use_repo(npm, "npm")
@@ -87,7 +88,5 @@ rules_ts_ext.deps()
 use_repo(rules_ts_ext, "npm_typescript")
 
 bazel_dep(name = "aspect_rules_jest", version = "0.21.0")
-
 bazel_dep(name = "aspect_rules_webpack", version = "0.15.0")
-
 bazel_dep(name = "rules_pkg", version = "0.10.1")

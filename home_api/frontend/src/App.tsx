@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route
 } from "react-router-dom";
 
@@ -10,13 +10,12 @@ import TransactionDisplay from './components/TransactionDisplay';
 function App() {
   return (
     <Router>
-        <Switch>
-          <Route path="/">
-            <div className="text-center">
+        <Routes>
+          <Route path="/" element={<div className="text-center">
               <TransactionDisplay />
-            </div>
+            </div>}>
           </Route>
-        </Switch>
+        </Routes>
     </Router>
   );
 }

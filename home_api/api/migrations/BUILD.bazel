@@ -8,7 +8,7 @@ py_library(
     name = "migrate_lib",
     srcs = glob(["**/*.py"]),
     imports = [".."],
-    visibility = ["//:__subpackages__"],
+    visibility = ["//home_api/api:__subpackages__"],
     deps = [
         requirement("alembic"),
         requirement("Flask"),
@@ -22,7 +22,7 @@ py_binary(
     imports = [".."],
     main = "__main__.py",
     deps = [
-        "//fitbit_challenges:config_py",
+        "//home_api/api:config_py",
         "//scripts:wait_for_postgres",
         "@rules_python//python/runfiles",
         requirement("Flask-Migrate"),
@@ -31,11 +31,11 @@ py_binary(
 
 py_oci_image(
     name = "image",
-    base = "//fitbit_challenges/api:image",
+    base = "//home_api/api:image",
     binary = ":binary",
     cmd = [
-        "/fitbit_challenges/api/migrations/binary.runfiles/_main/scripts/wait_for_postgres",
-        "/fitbit_challenges/api/migrations/binary",
+        "/home_api/api/migrations/binary.runfiles/_main/scripts/wait_for_postgres",
+        "/home_api/api/migrations/binary",
     ],
     env = {
         "FLASK_APP": "app.py",
@@ -48,9 +48,6 @@ py_oci_image(
         "DB_USERNAME": "admin",
         "DB_PASSWORD": "development",
         "DATABASE_NAME": "api_development",
-        "FITBIT_CLIENT_ID": "testing",
-        "FITBIT_CLIENT_SECRET": "testing",
-        "FITBIT_VERIFICATION_CODE": "testing",
         "FLASK_SECRET_KEY": "testing",
     },
 )
@@ -80,17 +77,17 @@ platform_transition_filegroup(
     }),
 )
 
-# $ bazel run //fitbit_challenges/api/migrations:tarball
-# $ docker run --rm shaldengeki/fitbit-challenges-api-migrations:latest
+# $ bazel run //home_api/api/migrations:tarball
+# $ docker run --rm shaldengeki/home-api-api-migrations:latest
 oci_tarball(
     name = "tarball",
     image = ":platform_image",
-    repo_tags = ["shaldengeki/fitbit-challenges-api-migrations:latest"],
+    repo_tags = ["shaldengeki/home-api-api-migrations:latest"],
 )
 
 oci_push(
     name = "dockerhub",
     image = ":platform_image",
     remote_tags = "//:stamped",
-    repository = "docker.io/shaldengeki/fitbit-challenges-api-migrations",
+    repository = "docker.io/shaldengeki/home-api-api-migrations",
 )

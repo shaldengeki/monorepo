@@ -16,7 +16,7 @@ py_binary(
         "//fitbit_challenges:config_py",
         "//fitbit_challenges:fitbit_client_py",
         "//fitbit_challenges:models_py",
-        "//fitbit_challenges/scripts:wait_for_postgres",
+        "//scripts:wait_for_postgres",
         requirement("requests"),
         requirement("sqlalchemy"),
         requirement("graphql_server"),
@@ -28,7 +28,7 @@ py_oci_image(
     base = "@python3_image",
     binary = ":binary",
     cmd = [
-        "/fitbit_challenges/worker/binary.runfiles/_main/fitbit_challenges/scripts/wait_for_postgres",
+        "/fitbit_challenges/worker/binary.runfiles/_main/scripts/wait_for_postgres",
         "/fitbit_challenges/worker/binary",
     ],
     env = {
