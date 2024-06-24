@@ -13,10 +13,13 @@ load("//tools/build_rules:nginx_conf.bzl", "nginx_conf")
 # Third-party dependencies required to build our application.
 BUILD_DEPS = [
     "//:node_modules/@apollo/client",
+    "//:node_modules/history",
     "//:node_modules/lodash",
+    "//:node_modules/plotly.js-basic-dist",
     "//:node_modules/react",
     "//:node_modules/react-canvas-confetti",
     "//:node_modules/react-dom",
+    "//:node_modules/react-plotlyjs",
     "//:node_modules/react-router-dom",
 ]
 
@@ -30,7 +33,8 @@ def frontend_image(
         docker_hub_repository,
         build_env = {},
         base_image = "@nginx_debian_slim",
-        stamp_file = "//:stamped"):
+        stamp_file = "//:stamped",
+        webpack_deps = []):
     """
     Defines a set of frontend images for our application.
 
@@ -45,6 +49,7 @@ def frontend_image(
         build_env (dict[str, str]): Environment variables to set in the build.
         base_image (label): Base container image to use.
         stamp_file (file): File containing image tags that the image should be pushed under.
+        webpack_deps (list[label]): Dependencies to inject into the webpack build.
 
     You're probably interested in the oci_tarball & oci_push targets,
     which build a container image & push it to Docker Hub, respectively.
@@ -68,7 +73,7 @@ def frontend_image(
         node_modules = node_modules,
         srcs = srcs,
         entry_point = "src/index.js",
-        deps = BUILD_DEPS + [
+        deps = BUILD_DEPS + webpack_deps + [
             "//:node_modules/copy-webpack-plugin",
             "//:node_modules/css-loader",
             "//:node_modules/file-loader",

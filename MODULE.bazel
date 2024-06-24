@@ -68,6 +68,7 @@ bazel_dep(name = "aspect_rules_js", version = "1.42.3")
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
 npm.npm_translate_lock(
     name = "npm",
+    npmrc = "//:.npmrc",
     # To update, run bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
     pnpm_lock = "//:pnpm-lock.yaml",
     verify_node_modules_ignored = "//:.bazelignore",

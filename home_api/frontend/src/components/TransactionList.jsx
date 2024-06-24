@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
-import { useQuery } from '@apollo/react-hooks';
-import gql from "graphql-tag";
+import { gql } from '@apollo/client/core';
+import { useQuery, useMutation } from '@apollo/client/react/hooks';
 
 import Table from './Table';
 
