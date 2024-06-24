@@ -2,7 +2,7 @@ load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//fitbit_challenges/frontend:tailwindcss/package_json.bzl", tailwindcss_bin = "bin")
-load(":frontend_images.bzl", "frontend_images", "BUILD_DEPS")
+load("//tools/build_rules:frontend_image.bzl", "frontend_image", "BUILD_DEPS")
 
 # Dependencies required to do typechecks.
 TYPE_DEPS = [
@@ -72,7 +72,19 @@ ts_project(
     deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS,
 )
 
-frontend_images()
+frontend_image(
+    name = "production",
+    server_name = "fitbit.ouguo.us",
+    node_modules = ":node_modules",
+    webpack_conf = ":webpack.config.js",
+    build_env = {
+        "REACT_APP_API_HOST": "api.fitbit.ouguo.us",
+        "REACT_APP_API_PORT": "443",
+        "REACT_APP_API_PROTOCOL": "https",
+    },
+    repo_tags = ["shaldengeki/fitbit-challenges-frontend:latest"],
+    docker_hub_repository = "docker.io/shaldengeki/fitbit-challenges-frontend",
+)
 
 # Runs frontend Jest tests.
 jest_test(
