@@ -138,3 +138,6 @@ bazel-testlogs
 
 # JS
 node_modules/
+
+# PG
+postgres-data/
