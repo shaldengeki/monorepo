@@ -85,6 +85,24 @@ frontend_image(
     webpack_conf = ":webpack.config.js",
 )
 
+frontend_image(
+    name = "development",
+    srcs = glob(["public/**/*"]) + [
+        ":tailwindcss",
+        ":ts",
+    ],
+    build_env = {
+        "REACT_APP_API_HOST": "localhost",
+        "REACT_APP_API_PORT": "5000",
+        "REACT_APP_API_PROTOCOL": "http",
+    },
+    docker_hub_repository = "docker.io/shaldengeki/fitbit-challenges-frontend",
+    node_modules = "//:node_modules",
+    repo_tags = ["shaldengeki/fitbit-challenges-frontend:latest"],
+    server_name = "fitbit.ouguo.us",
+    webpack_conf = ":webpack.config.js",
+)
+
 # Runs frontend Jest tests.
 jest_test(
     name = "test",

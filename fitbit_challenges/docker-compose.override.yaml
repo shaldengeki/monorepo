@@ -23,4 +23,4 @@ services:
     env_file:
       - env/.frontend.env
     ports:
-      - "5001:5001"
+      - "5001:80"
