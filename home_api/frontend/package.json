@@ -2,7 +2,6 @@
   "name": "@monorepo/home_api/frontend",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "tailwind:css": "npx tailwind build src/App.src.css -o src/App.css",
     "start": "react-scripts start",
