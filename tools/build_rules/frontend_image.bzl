@@ -12,12 +12,12 @@ load("//tools/build_rules:nginx_conf.bzl", "nginx_conf")
 
 # Third-party dependencies required to build our application.
 BUILD_DEPS = [
-    ":node_modules/@apollo/client",
-    ":node_modules/lodash",
-    ":node_modules/react",
-    ":node_modules/react-canvas-confetti",
-    ":node_modules/react-dom",
-    ":node_modules/react-router-dom",
+    "//:node_modules/@apollo/client",
+    "//:node_modules/lodash",
+    "//:node_modules/react",
+    "//:node_modules/react-canvas-confetti",
+    "//:node_modules/react-dom",
+    "//:node_modules/react-router-dom",
 ]
 
 def frontend_image(
@@ -69,12 +69,12 @@ def frontend_image(
         srcs = srcs,
         entry_point = "src/index.js",
         deps = BUILD_DEPS + [
-            ":node_modules/copy-webpack-plugin",
-            ":node_modules/css-loader",
-            ":node_modules/file-loader",
-            ":node_modules/html-webpack-plugin",
-            ":node_modules/process",
-            ":node_modules/style-loader",
+            "//:node_modules/copy-webpack-plugin",
+            "//:node_modules/css-loader",
+            "//:node_modules/file-loader",
+            "//:node_modules/html-webpack-plugin",
+            "//:node_modules/process",
+            "//:node_modules/style-loader",
         ],
         chdir = native.package_name(),
         webpack_config = webpack_conf,

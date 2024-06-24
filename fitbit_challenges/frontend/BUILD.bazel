@@ -1,30 +1,25 @@
 load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@npm//:defs.bzl", "npm_link_all_packages")
-load("@npm//fitbit_challenges/frontend:tailwindcss/package_json.bzl", tailwindcss_bin = "bin")
+load("@npm//:tailwindcss/package_json.bzl", tailwindcss_bin = "bin")
 load("//tools/build_rules:frontend_image.bzl", "BUILD_DEPS", "frontend_image")
 
 # Dependencies required to do typechecks.
 TYPE_DEPS = [
-    ":node_modules/@types/jest",
-    ":node_modules/@types/lodash",
-    ":node_modules/@types/node",
-    ":node_modules/@types/react",
-    ":node_modules/@types/react-dom",
+    "//:node_modules/@types/jest",
+    "//:node_modules/@types/lodash",
+    "//:node_modules/@types/node",
+    "//:node_modules/@types/react",
+    "//:node_modules/@types/react-dom",
 ]
 
 # Dependencies required to run tests.
 TEST_DEPS = [
-    ":node_modules/@apollo/react-testing",
-    ":node_modules/@testing-library/jest-dom",
-    ":node_modules/@testing-library/react",
-    ":node_modules/jest-environment-jsdom",
-    ":node_modules/jsdom",
+    "//:node_modules/@apollo/react-testing",
+    "//:node_modules/@testing-library/jest-dom",
+    "//:node_modules/@testing-library/react",
+    "//:node_modules/jest-environment-jsdom",
+    "//:node_modules/jsdom",
 ]
-
-# To update pnpm-lock.yaml, run:
-# bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
-npm_link_all_packages(name = "node_modules")
 
 # Compiles our CSS using Tailwind styles.
 # Uses the tailwindcss binary from npm.
@@ -32,9 +27,9 @@ tailwindcss_bin.tailwindcss(
     name = "tailwindcss",
     srcs = [
         "src/App.src.css",
-        ":node_modules/tailwindcss",
         ":tailwind.config.js",
         ":ts",
+        "//:node_modules/tailwindcss",
     ],
     outs = [
         "src/App.css",
@@ -84,7 +79,7 @@ frontend_image(
         "REACT_APP_API_PROTOCOL": "https",
     },
     docker_hub_repository = "docker.io/shaldengeki/fitbit-challenges-frontend",
-    node_modules = ":node_modules",
+    node_modules = "//:node_modules",
     repo_tags = ["shaldengeki/fitbit-challenges-frontend:latest"],
     server_name = "fitbit.ouguo.us",
     webpack_conf = ":webpack.config.js",
@@ -125,7 +120,7 @@ jest_test(
         "src/views/ChallengeView.js",
         "src/views/ChallengeView.test.js",
     ],
-    node_modules = ":node_modules",
+    node_modules = "//:node_modules",
     node_options = [
         "--experimental-vm-modules",
     ],
