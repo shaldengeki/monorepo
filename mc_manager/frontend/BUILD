@@ -11,10 +11,10 @@ copy_to_bin(
         "public/*",
         "src/**/*",
     ]) + [
-        "package.json",
-        "tsconfig.json",
-        "tailwind.config.js",
         "craco.config.js",
+        "package.json",
+        "tailwind.config.js",
+        "tsconfig.json",
     ],
 )
 
@@ -53,11 +53,11 @@ craco(
         "build",
     ],
     data = _RUNTIME_DEPS + [
-        "@npm//@types",
-        "package.json",
-        "tsconfig.json",
-        "tailwind.config.js",
         "craco.config.js",
+        "package.json",
+        "tailwind.config.js",
+        "tsconfig.json",
+        "@npm//@types",
     ],
     env = {
         "BUILD_PATH": "./build",
@@ -68,8 +68,8 @@ craco(
 container_image(
     name = "image",
     base = "@nginx_image//image",
-    files = [":build"],
     directory = "/usr/share/nginx/html_content",
+    files = [":build"],
     symlinks = {
         "/usr/share/nginx/html": "/usr/share/nginx/html_content/build",
     },
@@ -82,8 +82,8 @@ craco(
         "start",
     ],
     data = _RUNTIME_DEPS + [
-        "tailwind.config.js",
         "craco.config.js",
+        "tailwind.config.js",
     ],
     tags = [
         # This tag instructs ibazel to pipe into stdin a event describing actions.

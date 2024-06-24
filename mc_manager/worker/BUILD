@@ -1,11 +1,11 @@
+load("@io_bazel_rules_docker//python3:image.bzl", "py3_image")
 load("@rules_python//python:defs.bzl", "py_binary")
 load("@worker_deps//:requirements.bzl", "requirement")
-load("@io_bazel_rules_docker//python3:image.bzl", "py3_image")
 
 _RUNTIME_DEPS = [
     requirement("boto3"),
     requirement("docker"),
-    requirement("requests")
+    requirement("requests"),
 ]
 
 py_library(
@@ -24,7 +24,7 @@ py_binary(
 py3_image(
     name = "image",
     srcs = glob(["**/*.py"]),
-    main = "worker.py",
     base = "@py3_image//image",
+    main = "worker.py",
     deps = _RUNTIME_DEPS,
 )

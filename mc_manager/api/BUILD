@@ -1,6 +1,6 @@
-load("@rules_python//python:defs.bzl", "py_binary")
 load("@api_deps//:requirements.bzl", "requirement")
 load("@io_bazel_rules_docker//python3:image.bzl", "py3_image")
+load("@rules_python//python:defs.bzl", "py_binary")
 
 py_binary(
     name = "binary",
@@ -14,15 +14,15 @@ py_binary(
         requirement("Flask-SQLAlchemy"),
         requirement("graphql-core"),
         requirement("graphql-server"),
-        requirement("flask-cors")
-    ]
+        requirement("flask-cors"),
+    ],
 )
 
 py3_image(
     name = "image",
     srcs = glob(["**/*.py"]),
-    main = "app.py",
     base = "@py3_image//image",
+    main = "app.py",
     deps = [
         requirement("Flask"),
         requirement("Flask-Migrate"),
@@ -31,6 +31,6 @@ py3_image(
         requirement("Flask-SQLAlchemy"),
         requirement("graphql-core"),
         requirement("graphql-server"),
-        requirement("flask-cors")
-    ]
+        requirement("flask-cors"),
+    ],
 )
