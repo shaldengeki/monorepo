@@ -141,3 +141,7 @@ node_modules/
 
 # PG
 postgres-data/
+
+# AWS
+settings.json
+.aws-credentials
