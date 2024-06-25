@@ -8,7 +8,7 @@ from graphql_server.flask import GraphQLView
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "postgresql://{user}:{password}@{host}/{db}".format(
+    "postgresql+pg8000://{user}:{password}@{host}/{db}".format(
         user=os.getenv("DB_USER", "admin"),
         password=os.getenv("DB_PASS", "development"),
         host=os.getenv("DB_HOST", "pg"),

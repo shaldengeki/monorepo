@@ -1,6 +1,22 @@
 load("@py_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_binary")
+load("//tools/build_rules:cross_platform_image.bzl", "cross_platform_image")
 load("//tools/build_rules:py_layer.bzl", "py_oci_image")
+
+py_library(
+    name = "config_py",
+    srcs = ["config.py"],
+    data = [
+        requirement("pg8000"),
+    ],
+    visibility = ["//mc_manager:__subpackages__"],
+    deps = [
+        requirement("flask_cors"),
+        requirement("flask_migrate"),
+        requirement("flask_sqlalchemy"),
+        requirement("pg8000"),
+    ],
+)
 
 py_library(
     name = "api_lib",
@@ -31,7 +47,7 @@ py_binary(
 )
 
 py_oci_image(
-    name = "image",
+    name = "base_image",
     base = "@python3_image",
     binary = ":binary",
     cmd = [
@@ -54,5 +70,15 @@ py_oci_image(
         "FITBIT_VERIFICATION_CODE": "testing",
         "FLASK_SECRET_KEY": "testing",
     },
+    visibility = ["//mc_manager/api:__subpackages__"],
+)
+
+# $ bazel run //mc_manager/api:image_tarball
+# $ docker run --rm shaldengeki/mc-manager-api:latest
+cross_platform_image(
+    name = "image",
+    image = ":base_image",
+    repo_tags = ["shaldengeki/mc-manager-api:latest"],
+    repository = "docker.io/shaldengeki/mc-manager-api",
     visibility = ["//mc_manager/api:__subpackages__"],
 )

@@ -1,84 +1,35 @@
 version: '3'
 services:
-  api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    image: shaldengeki/mc-manager-api
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./api:/usr/src/app
-    command: ["./scripts/wait-for-postgres.sh", "flask", "run", "--host", "0.0.0.0", "--port", "$API_PORT"]
-    environment:
-      - FRONTEND_HOST
-      - FRONTEND_PORT
-      - API_PORT
-      - FLASK_ENV
-      - DB_HOST
-      - DB_USERNAME
-      - DB_PASSWORD
-      - DATABASE_NAME
+  api: &api
+    image: shaldengeki/mc-manager-api:latest
+    env_file:
+      - env/.api.env
     restart: always
-  migration:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    image: shaldengeki/mc-manager-api
-    volumes:
-      - ./api:/usr/src/app
-    command: ["./scripts/wait-for-postgres.sh", "flask", "db", "upgrade"]
-    environment:
-      - FLASK_ENV
-      - DB_HOST
-      - DB_USERNAME
-      - DB_PASSWORD
-      - DATABASE_NAME
     depends_on:
       - pg
+  migration:
+    <<: *api
+    image: shaldengeki/mc-manager-api-migrations:latest
+    restart: no
   worker:
-    build:
-      context: ./worker
-      dockerfile: Dockerfile
-    image: shaldengeki/mc-manager-worker
+    <<: *api
+    image: shaldengeki/mc-manager-worker:latest
     volumes:
       - ./worker:/usr/src/app
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/minecraft:/var/minecraft
-    environment:
-      - API_HOST
-      - API_PORT
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
-      - HOST_PATH
-      - S3_BUCKET
-    depends_on:
-      - api
-    command: ["./wait-for", "$API_HOST:$API_PORT", "--", "python", "worker.py"]
-    restart: always
   pg:
-    image: postgres:alpine
+    image: postgres:15-alpine
     restart: always
-    environment:
-      - POSTGRES_PASSWORD
-      - POSTGRES_USER
-      - POSTGRES_DB
+    env_file:
+      - env/.postgres.env
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - mc-manager-pg:/var/lib/postgresql/data
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: shaldengeki/mc-manager-frontend
-    ports:
-      - "5001:5001"
-    stdin_open: true
-    volumes:
-      - ./frontend/src:/usr/src/app/src
-    environment:
-      - REACT_APP_API_SCHEME
-      - REACT_APP_API_HOST
-      - REACT_APP_API_PORT
-      - REACT_APP_API_PATH
-      - PORT=5001
+    image: shaldengeki/mc-manager-frontend:latest
+    env_file:
+      - env/.frontend.env
     restart: always
+volumes:
+  mc-manager-pg:
+    name: mc-manager_mc-manager-pg
