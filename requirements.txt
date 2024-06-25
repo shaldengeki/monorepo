@@ -1,9 +1,11 @@
 astroid
 black
+boto3
 cfgv
 click
 dill
 distlib
+docker
 exceptiongroup
 filelock
 Flask>=2.2
@@ -26,6 +28,7 @@ platformdirs
 pre-commit
 protobuf
 pylint
+pysocks
 pytest
 pyyaml
 requests

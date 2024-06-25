@@ -1,0 +1,35 @@
+version: '3'
+services:
+  api: &api
+    image: shaldengeki/mc-manager-api:latest
+    env_file:
+      - env/.api.env
+    restart: always
+    depends_on:
+      - pg
+  migration:
+    <<: *api
+    image: shaldengeki/mc-manager-api-migrations:latest
+    restart: no
+  worker:
+    <<: *api
+    image: shaldengeki/mc-manager-worker:latest
+    volumes:
+      - ./worker:/usr/src/app
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/minecraft:/var/minecraft
+  pg:
+    image: postgres:15-alpine
+    restart: always
+    env_file:
+      - env/.postgres.env
+    volumes:
+      - mc-manager-pg:/var/lib/postgresql/data
+  frontend:
+    image: shaldengeki/mc-manager-frontend:latest
+    env_file:
+      - env/.frontend.env
+    restart: always
+volumes:
+  mc-manager-pg:
+    name: mc-manager_mc-manager-pg
