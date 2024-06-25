@@ -1,13 +1,13 @@
 import React from 'react'
 import {
-  Switch,
+  Routes,
   Route,
-  useRouteMatch,
+  useLocation,
   useParams
 } from 'react-router-dom'
 
-import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client/core';
+import { useQuery } from '@apollo/client/react/hooks';
 
 import ServerBackups from '../components/ServerBackups'
 import ServerHeader from '../components/ServerHeader'
@@ -80,18 +80,18 @@ function Server () {
 }
 
 function Servers () {
-  const match = useRouteMatch()
+  const { pathname } = useLocation()
 
   return (
         <div className="bg-gray-50 rounded overflow-auto p-4">
-            <Switch>
-                <Route path={`${match.path}/:name`}>
+            <Routes>
+                <Route path={`${pathname}/:name`}>
                     <Server />
                 </Route>
-                <Route path={match.path}>
+                <Route path={pathname}>
                     <ServerListing />
                 </Route>
-            </Switch>
+            </Routes>
         </div>
   )
 }

@@ -35,7 +35,8 @@ def frontend_image(
         build_env = {},
         base_image = "@nginx_debian_slim",
         stamp_file = "//:stamped",
-        webpack_deps = []):
+        webpack_deps = [],
+        visibility = None):
     """
     Defines a set of frontend images for our application.
 
@@ -51,14 +52,19 @@ def frontend_image(
         base_image (label): Base container image to use.
         stamp_file (file): File containing image tags that the image should be pushed under.
         webpack_deps (list[label]): Dependencies to inject into the webpack build.
+        visibility (list[str]): Visibility to set on all the targets.
 
     You're probably interested in the oci_tarball & oci_push targets,
     which build a container image & push it to Docker Hub, respectively.
     """
 
+    if visibility == None:
+        visibility = ["//visibility:public"]
+
     nginx_conf(
         name = name + "_nginx_conf",
         server_name = server_name,
+        visibility = visibility,
     )
 
     # Define a container layer for just our nginx configuration.
@@ -66,6 +72,7 @@ def frontend_image(
         name = name + "_nginx_default_tar",
         srcs = [name + "_nginx_conf"],
         package_dir = "/etc/nginx/conf.d",
+        visibility = visibility,
     )
 
     # Bundle our application.
@@ -86,6 +93,7 @@ def frontend_image(
         webpack_config = webpack_conf,
         output_dir = True,
         env = build_env,
+        visibility = visibility,
     )
 
     # Define a container layer for our application, for use in nginx.
@@ -94,6 +102,7 @@ def frontend_image(
         srcs = [name + "_webpack"],
         package_dir = "/usr/share/nginx/html",
         strip_prefix = name + "_webpack",
+        visibility = visibility,
     )
 
     # Define an nginx container image with all of our layers.
@@ -107,6 +116,7 @@ def frontend_image(
         # Intentionally omit cmd/entrypoint to default to the base nginx container's cmd/entrypoint.
         # entrypoint = [],
         # cmd = [],
+        visibility = visibility,
     )
 
     cross_platform_image(
@@ -115,4 +125,5 @@ def frontend_image(
         repository = docker_hub_repository,
         repo_tags = repo_tags,
         stamp_file = stamp_file,
+        visibility = visibility,
     )

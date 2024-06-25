@@ -14,6 +14,6 @@ py_test(
     deps = [
         requirement("pytest"),
         requirement("pysocks"),
-        "//worker:library",
+        "//mc_manager/worker:library",
     ] + _RUNTIME_DEPS,
 )

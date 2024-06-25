@@ -2,7 +2,7 @@ import React from 'react'
 import './App.css'
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route
 } from 'react-router-dom'
 
@@ -16,14 +16,14 @@ function App () {
       <div className="p-4 content-start">
           <Router>
             <Header />
-            <Switch>
+            <Routes>
               <Route path="/servers">
                 <Servers />
               </Route>
               <Route path="/">
                 <Servers />
               </Route>
-            </Switch>
+            </Routes>
         </Router>
       </div>
     </div>

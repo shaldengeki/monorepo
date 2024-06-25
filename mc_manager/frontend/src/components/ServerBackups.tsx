@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
-import { useQuery, useMutation } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client/core';
+import { useQuery, useMutation } from '@apollo/client/react/hooks';
 
 import { serverBackupStatusSymbol } from '../Utils'
 import Table from './Table'

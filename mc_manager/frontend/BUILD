@@ -1,94 +1,102 @@
-load("@bazel_skylib//rules:write_file.bzl", "write_file")
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("@io_bazel_rules_docker//container:image.bzl", "container_image")
-load("@npm//@craco/craco:index.bzl", "craco")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@npm//:tailwindcss/package_json.bzl", tailwindcss_bin = "bin")
+load("//tools/build_rules:frontend_image.bzl", "BUILD_DEPS", "frontend_image")
 
-# We don't want to teach react-scripts to include from multiple directories
-# So we copy everything it wants to read to the output "bin" directory
-copy_to_bin(
-    name = "copy_static_files",
-    srcs = glob([
-        "public/*",
-        "src/**/*",
-    ]) + [
-        "craco.config.js",
-        "package.json",
-        "tailwind.config.js",
-        "tsconfig.json",
-    ],
-)
-
-# react-scripts can only work if the working directory is the root of the application.
-# So we'll need to chdir before it runs.
-write_file(
-    name = "write_chdir_script",
-    out = "chdir.js",
-    content = ["process.chdir(__dirname)"],
-)
-
-_RUNTIME_DEPS = [
-    "chdir.js",
-    "copy_static_files",
-    "@npm//@apollo/react-hooks",
-    "@npm//@tsconfig/recommended",
-    "@npm//apollo-cache-inmemory",
-    "@npm//apollo-client",
-    "@npm//apollo-link-http",
-    "@npm//autoprefixer",
-    "@npm//graphql",
-    "@npm//graphql-tag",
-    "@npm//moment",
-    "@npm//postcss",
-    "@npm//react",
-    "@npm//react-dom",
-    "@npm//react-router-dom",
-    "@npm//tailwindcss",
-    "@npm//web-vitals",
+# Dependencies required to do typechecks.
+TYPE_DEPS = [
+    "//:node_modules/@types/jest",
+    "//:node_modules/@types/lodash",
+    "//:node_modules/@types/node",
+    "//:node_modules/@types/react",
+    "//:node_modules/@types/react-dom",
 ]
 
-craco(
-    name = "build",
-    args = [
-        "--node_options=--require=./$(execpath chdir.js)",
-        "build",
+# Dependencies required to run tests.
+TEST_DEPS = [
+    "//:node_modules/@apollo/react-testing",
+    "//:node_modules/@testing-library/jest-dom",
+    "//:node_modules/@testing-library/react",
+    "//:node_modules/jest-environment-jsdom",
+    "//:node_modules/jsdom",
+]
+
+# Compiles our CSS using Tailwind styles.
+# Uses the tailwindcss binary from npm.
+tailwindcss_bin.tailwindcss(
+    name = "tailwindcss",
+    srcs = [
+        "src/App.src.css",
+        ":tailwind.config.js",
+        ":ts",
+        "//:node_modules/tailwindcss",
     ],
-    data = _RUNTIME_DEPS + [
-        "craco.config.js",
-        "package.json",
-        "tailwind.config.js",
+    outs = [
+        "src/App.css",
+    ],
+    args = [
+        "--config mc_manager/frontend/tailwind.config.js",
+        "-i mc_manager/frontend/src/App.src.css",
+        "-o mc_manager/frontend/src/App.css",
+    ],
+    log_level = "debug",
+)
+
+# Compiles Typescript to regular old Javascript.
+ts_project(
+    name = "ts",
+    srcs = glob(
+        include = [
+            "src/**/*.tsx",
+            "src/**/*.ts",
+            "src/**/*.jsx",
+            "src/**/*.js",
+        ],
+    ) + [
         "tsconfig.json",
-        "@npm//@types",
     ],
-    env = {
-        "BUILD_PATH": "./build",
-    },
-    output_dir = True,
+    allow_js = True,
+    assets = [
+        "src/App.src.css",
+        "src/components/logo.svg",
+    ],
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS,
 )
 
-container_image(
-    name = "image",
-    base = "@nginx_image//image",
-    directory = "/usr/share/nginx/html_content",
-    files = [":build"],
-    symlinks = {
-        "/usr/share/nginx/html": "/usr/share/nginx/html_content/build",
+frontend_image(
+    name = "production",
+    srcs = glob(["public/**/*"]) + [
+        ":tailwindcss",
+        ":ts",
+    ],
+    build_env = {
+        "REACT_APP_API_HOST": "api.minecraft.ouguo.us",
+        "REACT_APP_API_PORT": "443",
+        "REACT_APP_API_PROTOCOL": "https",
     },
+    docker_hub_repository = "docker.io/shaldengeki/mc-manager-frontend",
+    node_modules = "//:node_modules",
+    repo_tags = ["shaldengeki/mc-manager-frontend:latest"],
+    server_name = "minecraft.ouguo.us",
+    webpack_conf = ":webpack.config.js",
 )
 
-craco(
-    name = "start",
-    args = [
-        "--node_options=--require=./$(rootpath chdir.js)",
-        "start",
+frontend_image(
+    name = "development",
+    srcs = glob(["public/**/*"]) + [
+        ":tailwindcss",
+        ":ts",
     ],
-    data = _RUNTIME_DEPS + [
-        "craco.config.js",
-        "tailwind.config.js",
-    ],
-    tags = [
-        # This tag instructs ibazel to pipe into stdin a event describing actions.
-        # ibazel send EOF to stdin by default and `react-scripts start` will stop when getting EOF in stdin.
-        # So use this to prevent EOF.
-        "ibazel_notify_changes",
-    ],
+    build_env = {
+        "REACT_APP_API_HOST": "localhost",
+        "REACT_APP_API_PORT": "5000",
+        "REACT_APP_API_PROTOCOL": "http",
+    },
+    docker_hub_repository = "docker.io/shaldengeki/mc-manager-frontend",
+    node_modules = "//:node_modules",
+    repo_tags = ["shaldengeki/mc-manager-frontend:latest"],
+    server_name = "minecraft.ouguo.us",
+    webpack_conf = ":webpack.config.js",
 )

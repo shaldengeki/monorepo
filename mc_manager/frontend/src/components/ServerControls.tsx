@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { useMutation } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client/core';
+import { useQuery, useMutation } from '@apollo/client/react/hooks';
 
 import type Server from '../types/Server'
 

@@ -77,4 +77,5 @@ cross_platform_image(
     image = ":base_image",
     repo_tags = ["shaldengeki/home-api-api:latest"],
     repository = "docker.io/shaldengeki/home-api-api",
+    visibility = ["//home_api/api:__subpackages__"],
 )

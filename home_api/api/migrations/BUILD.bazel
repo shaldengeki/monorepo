@@ -30,7 +30,7 @@ py_binary(
 
 py_oci_image(
     name = "base_image",
-    base = "//home_api/api:image",
+    base = "//home_api/api:base_image",
     binary = ":binary",
     cmd = [
         "/home_api/api/migrations/binary.runfiles/_main/scripts/wait_for_postgres",
@@ -58,4 +58,5 @@ cross_platform_image(
     image = ":base_image",
     repo_tags = ["shaldengeki/home-api-migrations:latest"],
     repository = "docker.io/shaldengeki/home-api-migrations",
+    visibility = ["//home_api/api/migrations:__subpackages__"],
 )
