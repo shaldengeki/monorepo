@@ -1,7 +1,6 @@
-load("@aspect_bazel_lib//lib:transitions.bzl", "platform_transition_filegroup")
 load("@py_deps//:requirements.bzl", "requirement")
-load("@rules_oci//oci:defs.bzl", "oci_push", "oci_tarball")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("//tools/build_rules:cross_platform_image.bzl", "cross_platform_image")
 load("//tools/build_rules:py_layer.bzl", "py_oci_image")
 
 py_library(
@@ -48,7 +47,7 @@ py_binary(
 )
 
 py_oci_image(
-    name = "image",
+    name = "base_image",
     base = "@python3_image",
     binary = ":binary",
     cmd = [
@@ -71,42 +70,11 @@ py_oci_image(
     visibility = ["//home_api/api:__subpackages__"],
 )
 
-platform(
-    name = "aarch64_linux",
-    constraint_values = [
-        "@platforms//os:linux",
-        "@platforms//cpu:aarch64",
-    ],
-)
-
-platform(
-    name = "x86_64_linux",
-    constraint_values = [
-        "@platforms//os:linux",
-        "@platforms//cpu:x86_64",
-    ],
-)
-
-platform_transition_filegroup(
-    name = "platform_image",
-    srcs = [":image"],
-    target_platform = select({
-        "@platforms//cpu:arm64": ":aarch64_linux",
-        "@platforms//cpu:x86_64": ":x86_64_linux",
-    }),
-)
-
-# $ bazel run //home_api/api:tarball
+# $ bazel run //home_api/api:image_tarball
 # $ docker run --rm shaldengeki/home-api-api:latest
-oci_tarball(
-    name = "tarball",
-    image = ":platform_image",
+cross_platform_image(
+    name = "image",
+    image = ":base_image",
     repo_tags = ["shaldengeki/home-api-api:latest"],
-)
-
-oci_push(
-    name = "dockerhub",
-    image = ":platform_image",
-    remote_tags = "//:stamped",
     repository = "docker.io/shaldengeki/home-api-api",
 )

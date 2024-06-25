@@ -1,5 +1,5 @@
+load("@py_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_test")
-load("@worker_deps//:requirements.bzl", "requirement")
 
 _RUNTIME_DEPS = [
     requirement("boto3"),

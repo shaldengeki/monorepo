@@ -6,8 +6,9 @@ built using webpack.
 """
 
 load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle")
-load("@rules_oci//oci:defs.bzl", "oci_image", "oci_push", "oci_tarball")
+load("@rules_oci//oci:defs.bzl", "oci_image")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+load("//tools/build_rules:cross_platform_image.bzl", "cross_platform_image")
 load("//tools/build_rules:nginx_conf.bzl", "nginx_conf")
 
 # Third-party dependencies required to build our application.
@@ -108,21 +109,10 @@ def frontend_image(
         # cmd = [],
     )
 
-    # A runnable target that loads our container image:
-    # bazel run //fitbit_challenges/frontend:tarball_prod
-    # To run it:
-    # docker run --rm shaldengeki/fitbit-challenges-frontend:latest
-    oci_tarball(
-        name = name + "_tarball",
+    cross_platform_image(
+        name = name + "_cross_platform_image",
         image = name + "_image",
-        repo_tags = repo_tags,
-    )
-
-    # A runnable target that pushes our container image to Docker Hub.
-    # bazel run --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/frontend:dockerhub_prod
-    oci_push(
-        name = name + "_dockerhub",
-        image = name + "_image",
-        remote_tags = stamp_file,
         repository = docker_hub_repository,
+        repo_tags = repo_tags,
+        stamp_file = stamp_file,
     )
