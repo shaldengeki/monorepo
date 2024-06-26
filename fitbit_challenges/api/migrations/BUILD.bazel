@@ -30,7 +30,7 @@ py_binary(
 
 py_oci_image(
     name = "base_image",
-    base = "//fitbit_challenges/api:image",
+    base = "@python3_image",
     binary = ":binary",
     cmd = [
         "/fitbit_challenges/api/migrations/binary.runfiles/_main/scripts/wait_for_postgres",
