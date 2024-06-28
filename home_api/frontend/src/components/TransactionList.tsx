@@ -49,7 +49,7 @@ type TransactionListProps = {
     accounts: string[],
 }
 
-type FormattedTransaction = {
+export type FormattedTransaction = {
     formattedDate: string,
     account: string,
     description: string,
