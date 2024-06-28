@@ -23,9 +23,9 @@ const GET_FILTERS = gql`
 `;
 
 type TransactionFiltersProps = {
-    start: number,
+    start: string,
     onChangeStart: Function,
-    end: number,
+    end: string,
     onChangeEnd: Function,
     minAmount: number,
     onChangeMinAmount: Function,

@@ -1,8 +1,8 @@
 import React from 'react';
 
 type DatePickerProps = {
-    start: number,
-    end: number,
+    start: string,
+    end: string,
     onChangeStart: Function,
     onChangeEnd: Function
 }
