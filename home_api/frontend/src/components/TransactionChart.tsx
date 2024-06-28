@@ -32,17 +32,26 @@ const GET_MONTHLY_SPEND = gql`
     }
 `;
 
-const TransactionChart = (props) => {
-    const {
-        earliestDate,
-        latestDate,
-        minAmount,
-        maxAmount,
-        types,
-        categories,
-        accounts
-    } = props;
+type TransactionChartProps = {
+    earliestDate: number,
+    latestDate: number,
+    minAmount: number,
+    maxAmount: number,
+    types: string[],
+    categories: string[],
+    accounts: string[],
 
+}
+
+const TransactionChart = ({
+    earliestDate,
+    latestDate,
+    minAmount,
+    maxAmount,
+    types,
+    categories,
+    accounts
+}: TransactionChartProps) => {
     const { data, loading, error } = useQuery(GET_MONTHLY_SPEND, {
         variables: {
             earliestDate,
