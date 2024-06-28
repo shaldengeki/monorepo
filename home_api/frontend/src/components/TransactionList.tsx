@@ -34,21 +34,30 @@ const GET_TRANSACTIONS = gql`
     }
 `;
 
-const formatCurrency = (amt, type) => {
+const formatCurrency = (amt: number, type: string): string => {
     const dollarAmt = `$${amt / 100.0}`;
     return (type === 'debit') ? dollarAmt : '-' + dollarAmt;
 }
 
-const TransactionList = (props) => {
-    const {
-        earliestDate,
-        latestDate,
-        minAmount,
-        maxAmount,
-        types,
-        categories,
-        accounts
-    } = props;
+type TransactionListProps = {
+    earliestDate: number,
+    latestDate: number,
+    minAmount: number,
+    maxAmount: number,
+    types: string[],
+    categories: string[],
+    accounts: string[],
+}
+
+type FormattedTransaction = {
+    formattedDate: string,
+    account: string,
+    description: string,
+    category: string,
+    amount: string,
+}
+
+const TransactionList = ({earliestDate, latestDate, minAmount, maxAmount, types, categories, accounts}: TransactionListProps) => {
     const { data, loading, error } = useQuery(GET_TRANSACTIONS, {
         variables: {
             earliestDate,
@@ -67,7 +76,7 @@ const TransactionList = (props) => {
     if (loading) return loadingDisplay;
     if (error) return errorDisplay;
 
-    const formattedTransactions = _.map(data.transactions || [], (txn) => {
+    const formattedTransactions = _.map(data.transactions || [], (txn): FormattedTransaction => {
         return {
             formattedDate: txn.formattedDate,
             account: txn.account,
