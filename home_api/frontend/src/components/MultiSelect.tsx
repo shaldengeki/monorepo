@@ -1,15 +1,15 @@
 import React from 'react';
 import _ from 'lodash';
 
-const MultiSelect = (props) => {
-    const {
-        name,
-        value,
-        onChange,
-        allValues
-    } = props;
+type MultiSelectProps = {
+    name: string,
+    value: Array<string>,
+    onChange: Function,
+    allValues: Array<string>
+}
 
-    const optionElement = (type, selectedValues) => {
+const MultiSelect = ({name, value, onChange, allValues}: MultiSelectProps) => {
+    const optionElement = (type: string, selectedValues: Array<string>) => {
         if (selectedValues.includes(type)) {
             return (<option value={type} selected>{type}</option>);
         } else {
@@ -17,9 +17,9 @@ const MultiSelect = (props) => {
         }
     }
 
-    const getSelectedOptions = (select) => {
+    const getSelectedOptions = (options: HTMLOptionsCollection) => {
         return _.map(
-            _.filter(select.options, (opt) => {return opt.selected;}),
+            _.filter(options, (opt) => {return opt.selected;}),
             (opt) => { return opt.value; }
         );
     }
@@ -29,7 +29,7 @@ const MultiSelect = (props) => {
             multiple={true}
             name={name}
             value={value}
-            onChange={(e) => {onChange(getSelectedOptions(e.target));}}
+            onChange={(e) => {onChange(getSelectedOptions(e.target.options));}}
         >
             {_.map(
                 allValues,
