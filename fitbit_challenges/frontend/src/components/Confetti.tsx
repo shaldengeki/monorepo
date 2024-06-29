@@ -10,12 +10,15 @@ const canvasStyles = {
   left: 0
 };
 
-export default function Confetti(props) {
-  const {colors = ["#ffd700", "#000000"]}  = props;
+type ConfettiProps = {
+  colors: string[],
+}
+
+export default function Confetti({colors = ["#ffd700", "#000000"]}: ConfettiProps) {
   const refAnimationInstance = useRef(null);
   const [intervalId, setIntervalId] = useState();
 
-  const getAnimationSettings = (angle, originX, colors) => {
+  const getAnimationSettings = (angle: number, originX: number, colors: string[]) => {
     return {
       particleCount: 3,
       angle,
@@ -29,14 +32,14 @@ export default function Confetti(props) {
     refAnimationInstance.current = instance;
   }, []);
 
-  const nextTickAnimation = useCallback((colors) => {
+  const nextTickAnimation = useCallback((colors: string[]) => {
     if (refAnimationInstance.current) {
       refAnimationInstance.current(getAnimationSettings(60, 0, colors));
       refAnimationInstance.current(getAnimationSettings(120, 1, colors));
     }
   }, []);
 
-  const startAnimation = useCallback(() => {
+  const startAnimation = useCallback((colors: string[]) => {
     if (!intervalId) {
       setIntervalId(setInterval(nextTickAnimation, 16, colors));
     }
