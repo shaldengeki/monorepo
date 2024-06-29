@@ -1,7 +1,13 @@
 import React from 'react';
 
-const DatePicker = (props) => {
-    const {start, end, onChangeStart, onChangeEnd} = props;
+type DatePickerProps = {
+    start: string,
+    end: string,
+    onChangeStart: Function,
+    onChangeEnd: Function
+}
+
+const DatePicker = ({start, end, onChangeStart, onChangeEnd}: DatePickerProps) => {
     return (
         <div>
             <div>

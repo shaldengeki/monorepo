@@ -6,10 +6,10 @@ import TransactionFilters from './TransactionFilters';
 import TransactionList from './TransactionList';
 import TransactionChart from './TransactionChart';
 
-function updateStateInUrl(param, stateFn) {
+function updateStateInUrl(param: string, stateFn: Function): Function {
     const history = createBrowserHistory();
     const query = new URLSearchParams(history.location.search)
-    function update(value) {
+    function update(value: any) {
         if (Array.isArray(value)) {
             query.set(param, value.join(','))
         } else {
@@ -21,41 +21,41 @@ function updateStateInUrl(param, stateFn) {
     return update;
 }
 
-function useStart(initialStart) {
+function useStart(initialStart: string | null): [string, Function] {
     const defaultDate = new Date();
     const earliestDate = (defaultDate.getFullYear() - 1) + '-' + (defaultDate.getMonth() + 1) + '-' + defaultDate.getDate();
     const [start, setStart] = useState(initialStart || earliestDate);
     return [start, updateStateInUrl('start', setStart)];
 }
 
-function useEnd(initialEnd) {
+function useEnd(initialEnd: string | null): [string, Function] {
     const defaultDate = new Date();
     const latestDate = defaultDate.getFullYear() + '-' + (defaultDate.getMonth() + 1) + '-' + defaultDate.getDate();
     const [end, setEnd] = useState(initialEnd || latestDate);
     return [end, updateStateInUrl('end', setEnd)];
 }
 
-function useMinAmount(initialMinAmount) {
+function useMinAmount(initialMinAmount: number): [number, Function] {
     const [minAmount, setMinAmount] = useState(initialMinAmount);
     return [minAmount, updateStateInUrl('minAmount', setMinAmount)];
 }
 
-function useMaxAmount(initialMaxAmount) {
+function useMaxAmount(initialMaxAmount: number): [number, Function] {
     const [maxAmount, setMaxAmount] = useState(initialMaxAmount);
     return [maxAmount, updateStateInUrl('maxAmount', setMaxAmount)];
 }
 
-function useTypes(initialTypes) {
+function useTypes(initialTypes: string[]): [string[], Function] {
     const [types, setTypes] = useState(initialTypes);
     return [types, updateStateInUrl('types', setTypes)];
 }
 
-function useCategories(initialCategories) {
+function useCategories(initialCategories: string[]): [string[], Function] {
     const [categories, setCategories] = useState(initialCategories);
     return [categories, updateStateInUrl('categories', setCategories)];
 }
 
-function useAccounts(initialAccounts) {
+function useAccounts(initialAccounts: string[]): [string[], Function] {
     const [accounts, setAccounts] = useState(initialAccounts);
     return [accounts, updateStateInUrl('accounts', setAccounts)];
 }
@@ -74,19 +74,19 @@ const TransactionDisplay = () => {
     const parsedStartSeconds = Math.round(parsedStart / 1000);
     const parsedEndSeconds = Math.round(parsedEnd / 1000);
 
-    const [minAmount, setMinAmount] = useMinAmount(parseInt(query.get('minAmount'), 10));
-    const [maxAmount, setMaxAmount] = useMaxAmount(parseInt(query.get('maxAmount'), 10));
+    const [minAmount, setMinAmount] = useMinAmount(parseInt(query.get('minAmount') || '0', 10));
+    const [maxAmount, setMaxAmount] = useMaxAmount(parseInt(query.get('maxAmount') || '0', 10));
 
     const queryTypes = query.get('types');
-    const defaultTypes = (queryTypes === null || queryTypes === '') ? null : queryTypes.split(",")
+    const defaultTypes = (queryTypes === null || queryTypes === '') ? [] : queryTypes.split(",")
     const [types, setTypes] = useTypes(defaultTypes);
 
     const queryCategories = query.get('categories')
-    const defaultCategories = (queryCategories === null || queryCategories === '') ? null : queryCategories.split(",")
+    const defaultCategories = (queryCategories === null || queryCategories === '') ? [] : queryCategories.split(",")
     const [categories, setCategories] = useCategories(defaultCategories);
 
     const queryAccounts = query.get('accounts')
-    const defaultAccounts = (queryAccounts === null || queryAccounts === '') ? null : queryAccounts.split(",")
+    const defaultAccounts = (queryAccounts === null || queryAccounts === '') ? [] : queryAccounts.split(",")
     const [accounts, setAccounts] = useAccounts(defaultAccounts);
 
     const chartElement = validDates ? (

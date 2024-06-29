@@ -22,24 +22,39 @@ const GET_FILTERS = gql`
     }
 `;
 
-const TransactionFilters = (props) => {
-    const {
-        start,
-        onChangeStart,
-        end,
-        onChangeEnd,
-        minAmount,
-        onChangeMinAmount,
-        maxAmount,
-        onChangeMaxAmount,
-        types,
-        onChangeTypes,
-        categories,
-        onChangeCategories,
-        accounts,
-        onChangeAccounts
-    } = props;
+type TransactionFiltersProps = {
+    start: string,
+    onChangeStart: Function,
+    end: string,
+    onChangeEnd: Function,
+    minAmount: number,
+    onChangeMinAmount: Function,
+    maxAmount: number,
+    onChangeMaxAmount: Function,
+    types: string[],
+    onChangeTypes: Function,
+    categories: string[],
+    onChangeCategories: Function,
+    accounts: string[],
+    onChangeAccounts: Function,
+}
 
+const TransactionFilters = ({
+    start,
+    onChangeStart,
+    end,
+    onChangeEnd,
+    minAmount,
+    onChangeMinAmount,
+    maxAmount,
+    onChangeMaxAmount,
+    types,
+    onChangeTypes,
+    categories,
+    onChangeCategories,
+    accounts,
+    onChangeAccounts
+}: TransactionFiltersProps) => {
     const { data, loading, error } = useQuery(GET_FILTERS);
 
     const loadingDisplay = <h1>Loading filters...</h1>;
@@ -57,7 +72,7 @@ const TransactionFilters = (props) => {
                 onChangeEnd={onChangeEnd}
             />
             <div className="mb-6">
-                <label className="block mb-2" for="minAmount">Minimum Amount</label>
+                <label className="block mb-2" htmlFor="minAmount">Minimum Amount</label>
                 <input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="minAmount"
@@ -68,7 +83,7 @@ const TransactionFilters = (props) => {
                 />
             </div>
             <div className="mb-6">
-                <label className="block mb-2" for="maxAmount">Maximum Amount</label>
+                <label className="block mb-2" htmlFor="maxAmount">Maximum Amount</label>
                 <input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="maxAmount"
@@ -79,7 +94,7 @@ const TransactionFilters = (props) => {
                 />
             </div>
             <div className="mb-6">
-                <label className="block mb-2" for="types">Types</label>
+                <label className="block mb-2" htmlFor="types">Types</label>
                 <MultiSelect
                     name="types"
                     value={types}
@@ -88,7 +103,7 @@ const TransactionFilters = (props) => {
                 />
             </div>
             <div className="mb-6">
-                <label className="block mb-2" for="types">Accounts</label>
+                <label className="block mb-2" htmlFor="types">Accounts</label>
                 <MultiSelect
                     name="accounts"
                     value={accounts}
@@ -97,7 +112,7 @@ const TransactionFilters = (props) => {
                 />
             </div>
             <div className="mb-6">
-                <label className="block mb-2" for="types">Categories</label>
+                <label className="block mb-2" htmlFor="types">Categories</label>
                 <MultiSelect
                     name="categories"
                     value={categories}

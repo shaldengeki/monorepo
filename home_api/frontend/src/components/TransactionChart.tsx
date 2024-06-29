@@ -2,10 +2,7 @@ import React from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery } from '@apollo/client/react/hooks';
 import _ from 'lodash';
-import createPlotlyComponent from 'react-plotlyjs';
-import Plotly from 'plotly.js-basic-dist';
-
-const PlotlyComponent = createPlotlyComponent(Plotly);
+import Plot from 'react-plotly.js';
 
 const GET_MONTHLY_SPEND = gql`
     query MonthlySpend(
@@ -32,17 +29,26 @@ const GET_MONTHLY_SPEND = gql`
     }
 `;
 
-const TransactionChart = (props) => {
-    const {
-        earliestDate,
-        latestDate,
-        minAmount,
-        maxAmount,
-        types,
-        categories,
-        accounts
-    } = props;
+type TransactionChartProps = {
+    earliestDate: number,
+    latestDate: number,
+    minAmount: number,
+    maxAmount: number,
+    types: string[],
+    categories: string[],
+    accounts: string[],
 
+}
+
+const TransactionChart = ({
+    earliestDate,
+    latestDate,
+    minAmount,
+    maxAmount,
+    types,
+    categories,
+    accounts
+}: TransactionChartProps) => {
     const { data, loading, error } = useQuery(GET_MONTHLY_SPEND, {
         variables: {
             earliestDate,
@@ -61,13 +67,6 @@ const TransactionChart = (props) => {
     if (loading) return loadingDisplay;
     if (error) return errorDisplay;
 
-    const graphData = [
-        {
-            x: _.map(data.amountByMonth, (a) => { return a.formattedMonth; }),
-            y: _.map(data.amountByMonth, (a) => { return a.amount / 100.0; }),
-            type: 'bar'
-        }
-    ];
     const layout = {
 
     };
@@ -75,9 +74,16 @@ const TransactionChart = (props) => {
 
     };
     return (
-        <PlotlyComponent
+        <Plot
             className="whatever"
-            data={graphData}
+            data={[
+                {
+                    x: _.map(data.amountByMonth, (a) => { return a.formattedMonth; }),
+                    y: _.map(data.amountByMonth, (a) => { return a.amount / 100.0; }),
+                    type: 'bar',
+                    mode: 'lines',
+                },
+            ]}
             layout={layout}
             config={config}
         />
