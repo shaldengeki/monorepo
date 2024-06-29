@@ -10,6 +10,8 @@ TYPE_DEPS = [
     "//:node_modules/@types/node",
     "//:node_modules/@types/react",
     "//:node_modules/@types/react-dom",
+    "//:node_modules/@types/plotly.js",
+    "//:node_modules/@types/react-plotly.js",
 ]
 
 # Dependencies required to run tests.

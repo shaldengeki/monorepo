@@ -2,10 +2,7 @@ import React from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery } from '@apollo/client/react/hooks';
 import _ from 'lodash';
-import createPlotlyComponent from 'react-plotlyjs';
-import Plotly from 'plotly.js-basic-dist';
-
-const PlotlyComponent = createPlotlyComponent(Plotly);
+import Plot from 'react-plotly.js';
 
 const GET_MONTHLY_SPEND = gql`
     query MonthlySpend(
@@ -70,13 +67,6 @@ const TransactionChart = ({
     if (loading) return loadingDisplay;
     if (error) return errorDisplay;
 
-    const graphData = [
-        {
-            x: _.map(data.amountByMonth, (a) => { return a.formattedMonth; }),
-            y: _.map(data.amountByMonth, (a) => { return a.amount / 100.0; }),
-            type: 'bar'
-        }
-    ];
     const layout = {
 
     };
@@ -84,9 +74,16 @@ const TransactionChart = ({
 
     };
     return (
-        <PlotlyComponent
+        <Plot
             className="whatever"
-            data={graphData}
+            data={[
+                {
+                    x: _.map(data.amountByMonth, (a) => { return a.formattedMonth; }),
+                    y: _.map(data.amountByMonth, (a) => { return a.amount / 100.0; }),
+                    type: 'bar',
+                    mode: 'lines',
+                },
+            ]}
             layout={layout}
             config={config}
         />

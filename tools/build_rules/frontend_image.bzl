@@ -20,7 +20,7 @@ BUILD_DEPS = [
     "//:node_modules/react",
     "//:node_modules/react-canvas-confetti",
     "//:node_modules/react-dom",
-    "//:node_modules/react-plotlyjs",
+    "//:node_modules/react-plotly.js",
     "//:node_modules/react-router-dom",
 ]
 
