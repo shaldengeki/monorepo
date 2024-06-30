@@ -92,17 +92,13 @@ def fetch_server_backups(params):
             <= datetime.datetime.utcfromtimestamp(int(params["latestDate"]))
         )
     if params.get("serverId", False):
-        query_obj = query_obj.filter(
-            ServerBackup.server_id == params["serverId"]
-        )
+        query_obj = query_obj.filter(ServerBackup.server_id == params["serverId"])
     if params.get("state", False):
         query_obj = query_obj.filter(ServerBackup.state == params["state"])
     if params.get("error", False):
         query_obj = query_obj.filter(ServerBackup.error != None)
     if params.get("remote_path", False):
-        query_obj = query_obj.filter(
-            ServerBackup.remote_path == params["remotePath"]
-        )
+        query_obj = query_obj.filter(ServerBackup.remote_path == params["remotePath"])
 
     if params.get("after", False):
         query_obj = query_obj.filter(ServerBackup.id > int(params["after"]))
@@ -196,9 +192,7 @@ def createServerBackupField():
 
 
 def update_server_backup(params):
-    server_backup = ServerBackup.query.filter(
-        ServerBackup.id == params["id"]
-    ).first()
+    server_backup = ServerBackup.query.filter(ServerBackup.id == params["id"]).first()
     if server_backup is None:
         raise ValueError(
             f"Server backup with id {params['id']} doesn't exist, and can't be updated."
@@ -245,9 +239,7 @@ def updateServerBackupField():
 
 
 def delete_server_backup(params):
-    server_backup = ServerBackup.query.filter(
-        ServerBackup.id == params["id"]
-    ).first()
+    server_backup = ServerBackup.query.filter(ServerBackup.id == params["id"]).first()
     if server_backup is None:
         raise ValueError(
             f"Server backup with id {params['id']} doesn't exist, and can't be deleted."
