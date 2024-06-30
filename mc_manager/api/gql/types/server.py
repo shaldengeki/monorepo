@@ -14,6 +14,7 @@ from sqlalchemy import desc
 from mc_manager.api.config import db
 from mc_manager.api.gql.types.server_log import serverLogStateEnum
 
+# TODO: remove models.*
 
 def latestBackupResolver(server):
     if not server.backups:

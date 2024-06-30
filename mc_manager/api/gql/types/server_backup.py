@@ -15,6 +15,7 @@ from graphql import (
 from sqlalchemy import desc
 
 from mc_manager.api.config import db
+from mc_manager.api.models.server_backup import ServerBackup
 
 serverBackupStateEnum = GraphQLEnumType(
     "ServerBackupState",
@@ -78,35 +79,35 @@ serverBackupType = GraphQLObjectType(
 )
 
 
-def fetch_server_backups(models, params):
-    query_obj = models.ServerBackup.query
+def fetch_server_backups(params):
+    query_obj = ServerBackup.query
     if params.get("earliestDate", False):
         query_obj = query_obj.filter(
-            models.ServerBackup.created
+            ServerBackup.created
             >= datetime.datetime.utcfromtimestamp(int(params["earliestDate"]))
         )
     if params.get("latestDate", False):
         query_obj = query_obj.filter(
-            models.ServerBackup.created
+            ServerBackup.created
             <= datetime.datetime.utcfromtimestamp(int(params["latestDate"]))
         )
     if params.get("serverId", False):
         query_obj = query_obj.filter(
-            models.ServerBackup.server_id == params["serverId"]
+            ServerBackup.server_id == params["serverId"]
         )
     if params.get("state", False):
-        query_obj = query_obj.filter(models.ServerBackup.state == params["state"])
+        query_obj = query_obj.filter(ServerBackup.state == params["state"])
     if params.get("error", False):
-        query_obj = query_obj.filter(models.ServerBackup.error != None)
+        query_obj = query_obj.filter(ServerBackup.error != None)
     if params.get("remote_path", False):
         query_obj = query_obj.filter(
-            models.ServerBackup.remote_path == params["remotePath"]
+            ServerBackup.remote_path == params["remotePath"]
         )
 
     if params.get("after", False):
-        query_obj = query_obj.filter(models.ServerBackup.id > int(params["after"]))
+        query_obj = query_obj.filter(ServerBackup.id > int(params["after"]))
 
-    query_obj = query_obj.order_by(desc(models.ServerBackup.created))
+    query_obj = query_obj.order_by(desc(ServerBackup.created))
     limit = min((100, int(params["limit"])))
     query_obj = query_obj.limit(limit)
 
@@ -148,16 +149,16 @@ serverBackupsFilters = {
 }
 
 
-def serverBackupsField(models):
+def serverBackupsField():
     return GraphQLField(
         GraphQLList(serverBackupType),
         args=serverBackupsFilters,
-        resolve=lambda root, info, **args: fetch_server_backups(models, args),
+        resolve=lambda root, info, **args: fetch_server_backups(args),
     )
 
 
-def create_server_backup(models, args):
-    server_backup = models.ServerBackup(
+def create_server_backup(args):
+    server_backup = ServerBackup(
         server_id=args["serverId"],
         state=args.get("state", "created"),
         error=args.get("error"),
@@ -169,7 +170,7 @@ def create_server_backup(models, args):
     return server_backup
 
 
-def createServerBackupField(models):
+def createServerBackupField():
     return GraphQLField(
         serverBackupType,
         description="Create a server backup entry for a given server.",
@@ -190,13 +191,13 @@ def createServerBackupField(models):
                 description="URL to the remote location of the server backup.",
             ),
         },
-        resolve=lambda root, info, **args: create_server_backup(models, args),
+        resolve=lambda root, info, **args: create_server_backup(args),
     )
 
 
-def update_server_backup(models, params):
-    server_backup = models.ServerBackup.query.filter(
-        models.ServerBackup.id == params["id"]
+def update_server_backup(params):
+    server_backup = ServerBackup.query.filter(
+        ServerBackup.id == params["id"]
     ).first()
     if server_backup is None:
         raise ValueError(
@@ -218,7 +219,7 @@ def update_server_backup(models, params):
     return server_backup
 
 
-def updateServerBackupField(models):
+def updateServerBackupField():
     return GraphQLField(
         serverBackupType,
         description="Update a server backup entry for a given server.",
@@ -239,13 +240,13 @@ def updateServerBackupField(models):
                 description="URL to the remote location of the server backup.",
             ),
         },
-        resolve=lambda root, info, **args: update_server_backup(models, args),
+        resolve=lambda root, info, **args: update_server_backup(args),
     )
 
 
-def delete_server_backup(models, params):
-    server_backup = models.ServerBackup.query.filter(
-        models.ServerBackup.id == params["id"]
+def delete_server_backup(params):
+    server_backup = ServerBackup.query.filter(
+        ServerBackup.id == params["id"]
     ).first()
     if server_backup is None:
         raise ValueError(
@@ -258,7 +259,7 @@ def delete_server_backup(models, params):
     return server_backup
 
 
-def deleteServerBackupField(models):
+def deleteServerBackupField():
     return GraphQLField(
         serverBackupType,
         description="Delete a server backup entry for a given server.",
@@ -268,5 +269,5 @@ def deleteServerBackupField(models):
                 description="ID of the server backup.",
             ),
         },
-        resolve=lambda root, info, **args: delete_server_backup(models, args),
+        resolve=lambda root, info, **args: delete_server_backup(args),
     )

@@ -15,6 +15,8 @@ from graphql import (
 from sqlalchemy import desc
 
 from mc_manager.api.config import db
+from mc_manager.api.models.server_backup import ServerBackup
+from mc_manager.api.models.server_log import ServerLog
 
 serverLogStateEnum = GraphQLEnumType(
     "ServerLogState",
@@ -86,26 +88,26 @@ serverLogType = GraphQLObjectType(
 )
 
 
-def fetch_server_logs(models, params):
-    query_obj = models.ServerLog.query
+def fetch_server_logs(params):
+    query_obj = ServerLog.query
     if params.get("earliestDate", False):
         query_obj = query_obj.filter(
-            models.ServerLog.created
+            ServerLog.created
             >= datetime.datetime.utcfromtimestamp(int(params["earliestDate"]))
         )
     if params.get("latestDate", False):
         query_obj = query_obj.filter(
-            models.ServerLog.created
+            ServerLog.created
             <= datetime.datetime.utcfromtimestamp(int(params["latestDate"]))
         )
     if params.get("serverId", False):
-        query_obj = query_obj.filter(models.ServerLog.server_id == params["serverId"])
+        query_obj = query_obj.filter(ServerLog.server_id == params["serverId"])
     if params.get("state", False):
-        query_obj = query_obj.filter(models.ServerLog.state == params["state"])
+        query_obj = query_obj.filter(ServerLog.state == params["state"])
     if params.get("error", False):
-        query_obj = query_obj.filter(models.ServerLog.error != None)
+        query_obj = query_obj.filter(ServerLog.error != None)
 
-    return query_obj.order_by(desc(models.ServerLog.created)).all()
+    return query_obj.order_by(desc(ServerLog.created)).all()
 
 
 serverLogsFilters = {
@@ -130,22 +132,22 @@ serverLogsFilters = {
 }
 
 
-def serverLogsField(models):
+def serverLogsField():
     return GraphQLField(
         GraphQLList(serverLogType),
         args=serverLogsFilters,
-        resolve=lambda root, info, **args: fetch_server_logs(models, args),
+        resolve=lambda root, info, **args: fetch_server_logs(args),
     )
 
 
-def create_server_log(models, args):
+def create_server_log(args):
     backup = None
     if args.get("backupId") is not None:
-        backup = models.ServerBackup.query.filter(
-            models.ServerBackup.id == int(args.get("backupId"))
+        backup = ServerBackup.query.filter(
+            ServerBackup.id == int(args.get("backupId"))
         ).first()
 
-    server_log = models.ServerLog(
+    server_log = ServerLog(
         server_id=args["serverId"],
         state=args["state"],
         error=args.get("error"),
@@ -157,7 +159,7 @@ def create_server_log(models, args):
     return server_log
 
 
-def createServerLogField(models):
+def createServerLogField():
     return GraphQLField(
         serverLogType,
         description="Create a server log for a given server.",
@@ -178,5 +180,5 @@ def createServerLogField(models):
                 description="ID of the backup that should be associated with this server log.",
             ),
         },
-        resolve=lambda root, info, **args: create_server_log(models, args),
+        resolve=lambda root, info, **args: create_server_log(args),
     )

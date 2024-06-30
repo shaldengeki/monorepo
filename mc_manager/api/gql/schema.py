@@ -10,24 +10,24 @@ from mc_manager.api.gql.types.server_backup import (
 from mc_manager.api.gql.types.server_log import createServerLogField, serverLogsField
 
 
-def Schema(models):
+def Schema():
     return GraphQLSchema(
         query=GraphQLObjectType(
             name="RootQueryType",
             fields={
-                "servers": serversField(models),
-                "serverBackups": serverBackupsField(models),
-                "serverLogs": serverLogsField(models),
+                "servers": serversField(),
+                "serverBackups": serverBackupsField(),
+                "serverLogs": serverLogsField(),
             },
         ),
         mutation=GraphQLObjectType(
             name="RootMutationType",
             fields={
-                "createServer": createServerField(models),
-                "createServerBackup": createServerBackupField(models),
-                "createServerLog": createServerLogField(models),
-                "deleteServerBackup": deleteServerBackupField(models),
-                "updateServerBackup": updateServerBackupField(models),
+                "createServer": createServerField(),
+                "createServerBackup": createServerBackupField(),
+                "createServerLog": createServerLogField(),
+                "deleteServerBackup": deleteServerBackupField(),
+                "updateServerBackup": updateServerBackupField(),
             },
         ),
     )
