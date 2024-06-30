@@ -32,15 +32,9 @@ py_library(
 py_library(
     name = "config_py",
     srcs = ["config.py"],
-    data = [
-        requirement("pg8000"),
-    ],
     visibility = ["//fitbit_challenges:__subpackages__"],
     deps = [
         ":fitbit_client_py",
-        requirement("flask_cors"),
-        requirement("flask_migrate"),
-        requirement("flask_sqlalchemy"),
-        requirement("pg8000"),
+        "//base:flask_app_py",
     ],
 )

@@ -1,33 +1,3 @@
-import os
+from base.flask_app import FlaskApp
 
-from flask import Flask
-from flask_cors import CORS
-from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "postgresql+pg8000://{user}:{password}@{host}/{db}".format(
-        user=os.getenv("DB_USERNAME", "admin"),
-        password=os.getenv("DB_PASSWORD", "development"),
-        host=os.getenv("DB_HOST", "pg"),
-        db=os.getenv("DATABASE_NAME", "api_development"),
-    )
-)
-CORS(
-    app,
-    resources={
-        "/graphql": {
-            "origins": [
-                "http://{host}:{port}".format(
-                    host=os.getenv("FRONTEND_HOST", "localhost"),
-                    port=os.getenv("FRONTEND_PORT", 5001),
-                )
-            ],
-        }
-    },
-)
-
-db = SQLAlchemy(app)
-
-migrate = Migrate(app, db)
+app, cors, db, migrate = FlaskApp(__name__)
