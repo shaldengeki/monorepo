@@ -1,4 +1,7 @@
-exports_files(["templates/nginx.conf.tpl"])
+exports_files([
+    "templates/nginx.conf.tpl",
+    "templates/__main__.py.tpl",
+])
 
 platform(
     name = "aarch64_linux",
