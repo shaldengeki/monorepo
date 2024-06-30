@@ -6,15 +6,9 @@ load("//tools/build_rules:py_layer.bzl", "py_oci_image")
 py_library(
     name = "config_py",
     srcs = ["config.py"],
-    data = [
-        requirement("pg8000"),
-    ],
     visibility = ["//mc_manager:__subpackages__"],
     deps = [
-        requirement("flask_cors"),
-        requirement("flask_migrate"),
-        requirement("flask_sqlalchemy"),
-        requirement("pg8000"),
+        "//base:flask_app_py",
     ],
 )
 

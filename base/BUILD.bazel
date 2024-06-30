@@ -1,0 +1,17 @@
+load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "flask_app_py",
+    srcs = ["flask_app.py"],
+    data = [
+        requirement("pg8000"),
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        requirement("Flask"),
+        requirement("flask-cors"),
+        requirement("Flask-Migrate"),
+        requirement("Flask-SQLAlchemy"),
+    ],
+)

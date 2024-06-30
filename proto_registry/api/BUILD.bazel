@@ -5,10 +5,22 @@ load("@rules_python//python:defs.bzl", "py_binary")
 load("//tools/build_rules:py_layer.bzl", "py_oci_image")
 
 py_library(
+    name = "config_py",
+    srcs = ["config.py"],
+    visibility = ["//proto_registry:__subpackages__"],
+    deps = [
+        "//base:flask_app_py",
+    ],
+)
+
+py_library(
     name = "api_lib",
     srcs = glob(["**/*.py"]),
     imports = [".."],
-    visibility = ["//:__subpackages__"],
+    visibility = ["//proto_registry:__subpackages__"],
+    deps = [
+        ":config_py",
+    ],
 )
 
 py_binary(
@@ -23,10 +35,7 @@ py_binary(
         requirement("importlib-metadata"),
         requirement("importlib-resources"),
         requirement("typing-extensions"),
-        requirement("pg8000"),
         requirement("sqlalchemy"),
-        requirement("Flask-SQLAlchemy"),
-        requirement("flask-cors"),
     ],
 )
 

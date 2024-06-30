@@ -8,11 +8,7 @@ py_library(
     srcs = ["config.py"],
     visibility = ["//home_api:__subpackages__"],
     deps = [
-        requirement("Flask"),
-        requirement("flask_cors"),
-        requirement("flask_migrate"),
-        requirement("flask_sqlalchemy"),
-        requirement("pg8000"),
+        "//base:flask_app_py",
     ],
 )
 
