@@ -18,7 +18,7 @@ py_library(
 
 api_image(
     name = "api_image",
-    app_package = "",
+    app_package = "fitbit_challenges.api.app",
     docker_hub_repository = "docker.io/shaldengeki/fitbit-challenges-api",
     env = {
         "FITBIT_CLIENT_ID": "testing",
