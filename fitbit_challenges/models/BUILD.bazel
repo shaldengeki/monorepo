@@ -11,6 +11,7 @@ py_library(
         "//fitbit_challenges:fitbit_client_py",
         "//fitbit_challenges:total_amounts_py",
         "//fitbit_challenges/models:fitbit_subscription_py",
+        "//fitbit_challenges/models:subscription_notification_py",
         requirement("pg8000"),
         requirement("sqlalchemy"),
     ],
@@ -30,6 +31,16 @@ py_library(
 py_library(
     name = "fitbit_subscription_py",
     srcs = ["fitbit_subscription.py"],
+    visibility = ["//fitbit_challenges:__subpackages__"],
+    deps = [
+        "//fitbit_challenges:config_py",
+        requirement("sqlalchemy"),
+    ],
+)
+
+py_library(
+    name = "subscription_notification_py",
+    srcs = ["subscription_notification.py"],
     visibility = ["//fitbit_challenges:__subpackages__"],
     deps = [
         "//fitbit_challenges:config_py",

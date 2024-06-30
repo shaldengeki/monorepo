@@ -18,28 +18,8 @@ from fitbit_challenges.config import db
 from fitbit_challenges.fitbit_client import FitbitClient
 from fitbit_challenges.models.challenge import Challenge
 from fitbit_challenges.models.fitbit_subscription import FitbitSubscription
+from fitbit_challenges.models.subscription_notification import SubscriptionNotification
 from fitbit_challenges.total_amounts import TotalAmounts
-
-
-class SubscriptionNotification(db.Model):  # type: ignore
-    __tablename__ = "subscription_notifications"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    created_at: Mapped[datetime.datetime] = mapped_column(
-        db.TIMESTAMP(timezone=True),
-        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
-    )
-    processed_at: Mapped[Optional[datetime.datetime]] = mapped_column(
-        db.TIMESTAMP(timezone=True)
-    )
-    collection_type: Mapped[str]
-    date: Mapped[datetime.datetime] = mapped_column(db.TIMESTAMP(timezone=True))
-    fitbit_user_id: Mapped[str] = mapped_column(ForeignKey("users.fitbit_user_id"))
-
-    user: Mapped["User"] = relationship(back_populates="subscription_notifications")
-
-    def __repr__(self) -> str:
-        return "<SubscriptionNotification {id}>".format(id=self.id)
 
 
 class User(db.Model):  # type: ignore
