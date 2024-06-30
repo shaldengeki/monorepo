@@ -4,7 +4,7 @@ import secrets
 from flask import session
 from graphql import GraphQLField, GraphQLNonNull, GraphQLObjectType, GraphQLString
 
-from ....fitbit_client import FitbitClient
+from fitbit_challenges.fitbit_client import FitbitClient
 
 
 def fitbit_authorization_fields() -> dict[str, GraphQLField]:

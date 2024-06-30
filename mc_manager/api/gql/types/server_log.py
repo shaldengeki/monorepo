@@ -14,7 +14,7 @@ from graphql import (
 )
 from sqlalchemy import desc
 
-from ...config import db
+from mc_manager.api.config import db
 
 serverLogStateEnum = GraphQLEnumType(
     "ServerLogState",
@@ -48,8 +48,8 @@ serverLogStateEnum = GraphQLEnumType(
 
 
 def serverLogResolver():
-    from .server import serverType
-    from .server_backup import serverBackupType
+    from mc_manager.api.gql.types.server import serverType
+    from mc_manager.api.gql.types.server_backup import serverBackupType
 
     return {
         "id": GraphQLField(

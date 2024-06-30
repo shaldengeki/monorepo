@@ -1,6 +1,6 @@
 import datetime
 
-from ..config import db
+from mc_manager.api.config import db
 
 
 class Server(db.Model):

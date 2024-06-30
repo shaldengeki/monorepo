@@ -14,8 +14,8 @@ from graphql import (
 from sqlalchemy import desc
 from sqlalchemy.sql.functions import now
 
-from ....config import db
-from ....models import UserActivity
+from fitbit_challenges.config import db
+from fitbit_challenges.models import UserActivity
 
 
 def user_activity_fields() -> dict[str, GraphQLField]:

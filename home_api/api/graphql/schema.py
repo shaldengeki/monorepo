@@ -1,6 +1,6 @@
 from graphql import GraphQLField, GraphQLObjectType, GraphQLSchema, GraphQLString
 
-from .types.transaction import (
+from home_api.api.graphql.types.transaction import (
     accountsField,
     amountByMonthField,
     amountRangeField,

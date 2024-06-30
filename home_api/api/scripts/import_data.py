@@ -8,8 +8,8 @@ import csv
 import datetime
 import sys
 
-from ..app import db
-from ..models.transaction import Transaction
+from home_api.api.app import db
+from home_api.api.models.transaction import Transaction
 
 
 def read_file(filename):

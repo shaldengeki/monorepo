@@ -1,10 +1,18 @@
 from graphql import GraphQLObjectType, GraphQLSchema
 
-from .types.bingo_card import bingo_challenge_field, flip_bingo_tile_field
-from .types.challenge import challenges_field, create_challenge_field
-from .types.fitbit_authorization import authorize_with_fitbit_field
-from .types.user import current_user_field, users_field
-from .types.user_activities import (
+from fitbit_challenges.api.gql.types.bingo_card import (
+    bingo_challenge_field,
+    flip_bingo_tile_field,
+)
+from fitbit_challenges.api.gql.types.challenge import (
+    challenges_field,
+    create_challenge_field,
+)
+from fitbit_challenges.api.gql.types.fitbit_authorization import (
+    authorize_with_fitbit_field,
+)
+from fitbit_challenges.api.gql.types.user import current_user_field, users_field
+from fitbit_challenges.api.gql.types.user_activities import (
     activities_field,
     create_user_activity_field,
     update_user_activity_field,

@@ -11,8 +11,8 @@ from graphql import (
 )
 from sqlalchemy import desc
 
-from ...config import db
-from .server_log import serverLogStateEnum
+from mc_manager.api.config import db
+from mc_manager.api.gql.types.server_log import serverLogStateEnum
 
 
 def latestBackupResolver(server):
@@ -45,8 +45,8 @@ def backupsResolver(server, info, args):
 
 
 def serverTypeResolver():
-    from .server_backup import serverBackupType
-    from .server_log import serverLogType
+    from mc_manager.api.gql.types.server_backup import serverBackupType
+    from mc_manager.api.gql.types.server_log import serverLogType
 
     return {
         "id": GraphQLField(

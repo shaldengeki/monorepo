@@ -1,13 +1,13 @@
 from graphql import GraphQLObjectType, GraphQLSchema
 
-from .types.server import createServerField, serversField
-from .types.server_backup import (
+from mc_manager.api.gql.types.server import createServerField, serversField
+from mc_manager.api.gql.types.server_backup import (
     createServerBackupField,
     deleteServerBackupField,
     serverBackupsField,
     updateServerBackupField,
 )
-from .types.server_log import createServerLogField, serverLogsField
+from mc_manager.api.gql.types.server_log import createServerLogField, serverLogsField
 
 
 def Schema(models):
