@@ -9,14 +9,6 @@ from fitbit_challenges import models
 from fitbit_challenges.api import gql
 from fitbit_challenges.config import app, db, verify_fitbit_verification
 
-app.add_url_rule(
-    "/graphql",
-    view_func=GraphQLView.as_view(
-        "graphql", schema=gql.Schema(models, app), graphiql=True
-    ),
-)
-
-
 @app.route("/fitbit-notifications", methods=["GET"])
 def fitbit_verification():
     if not request.args.get("verify", False):

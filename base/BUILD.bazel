@@ -13,5 +13,6 @@ py_library(
         requirement("flask-cors"),
         requirement("Flask-Migrate"),
         requirement("Flask-SQLAlchemy"),
+        requirement("graphql_server"),
     ],
 )

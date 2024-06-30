@@ -1,14 +1,16 @@
 import datetime
 import os
-from typing import Optional
+from typing import Callable, Optional
 
 from flask import Flask, session
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from graphql import GraphQLSchema
+from graphql_server.flask import GraphQLView
 
 
-def FlaskApp(name) -> tuple[Flask, CORS, SQLAlchemy, Migrate]:
+def FlaskApp(name, graphql_schema: Callable[[Flask], GraphQLSchema]) -> tuple[Flask, CORS, SQLAlchemy, Migrate]:
     app = Flask(name)
 
     frontend_url_parts = [
@@ -37,6 +39,13 @@ def FlaskApp(name) -> tuple[Flask, CORS, SQLAlchemy, Migrate]:
     @app.before_request
     def make_session_permanent():
         session.permanent = True
+
+    app.add_url_rule(
+        "/graphql",
+        view_func=GraphQLView.as_view(
+            "graphql", schema=graphql_schema(app), graphiql=True
+        ),
+    )
 
     cors = CORS(
         app,
