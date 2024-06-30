@@ -10,7 +10,8 @@ from graphql import (
     GraphQLString,
 )
 
-from ....models import User
+from fitbit_challenges.models.user import User
+
 from .user_activities import user_activity_type
 
 

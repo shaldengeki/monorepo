@@ -11,6 +11,7 @@ py_library(
     deps = [
         "//fitbit_challenges:config_py",
         "//fitbit_challenges/models:global",
+        "//fitbit_challenges/models:user_py",
         requirement("Flask"),
         requirement("Flask-Migrate"),
         requirement("graphql_server"),

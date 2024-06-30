@@ -24,6 +24,7 @@ py_library(
     deps = [
         "//fitbit_challenges:config_py",
         "//fitbit_challenges:total_amounts_py",
+        "//fitbit_challenges/models:user_py",
         requirement("sqlalchemy"),
     ],
 )
@@ -44,6 +45,21 @@ py_library(
     visibility = ["//fitbit_challenges:__subpackages__"],
     deps = [
         "//fitbit_challenges:config_py",
+        requirement("sqlalchemy"),
+    ],
+)
+
+py_library(
+    name = "user_py",
+    srcs = ["user.py"],
+    visibility = ["//fitbit_challenges:__subpackages__"],
+    deps = [
+        "//fitbit_challenges:config_py",
+        "//fitbit_challenges:fitbit_client_py",
+        "//fitbit_challenges/models:challenge_py",
+        "//fitbit_challenges/models:fitbit_subscription_py",
+        "//fitbit_challenges/models:global",
+        requirement("requests"),
         requirement("sqlalchemy"),
     ],
 )

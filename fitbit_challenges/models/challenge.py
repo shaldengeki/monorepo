@@ -8,7 +8,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from fitbit_challenges.config import db
-from fitbit_challenges.models import User, UserActivity
+from fitbit_challenges.models import UserActivity
+from fitbit_challenges.models.user import User
 from fitbit_challenges.total_amounts import TotalAmounts
 
 
