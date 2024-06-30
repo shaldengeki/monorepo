@@ -11,9 +11,7 @@ from fitbit_challenges.config import app, db, verify_fitbit_verification
 
 app.add_url_rule(
     "/graphql",
-    view_func=GraphQLView.as_view(
-        "graphql", schema=schema.Schema(models, app), graphiql=True
-    ),
+    view_func=GraphQLView.as_view("graphql", schema=schema.Schema(app), graphiql=True),
 )
 
 
