@@ -30,4 +30,5 @@ def wait_for_postgres() -> None:
 
 if __name__ == "__main__":
     wait_for_postgres()
-    subprocess.run(sys.argv[1:])
+    if sys.argv[1:]:
+        subprocess.run(sys.argv[1:])
