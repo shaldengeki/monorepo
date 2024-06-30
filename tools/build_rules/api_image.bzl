@@ -13,9 +13,9 @@ def api_image(
         name,
         app_package,
         deps,
-        env,
         repo_tags,
         docker_hub_repository,
+        env = None,
         stamp_file = "//:stamped",
         base_image = "@python3_image",
         visibility = None):
@@ -53,6 +53,8 @@ def api_image(
         ],
     )
 
+    if env == None:
+        env = {}
     container_env = {
         "FLASK_APP": "app.py",
         "FLASK_DEBUG": "True",
