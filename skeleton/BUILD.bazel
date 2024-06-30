@@ -1,0 +1,28 @@
+load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "models_py",
+    srcs = ["models.py"],
+    visibility = ["//skeleton:__subpackages__"],
+    deps = [
+        ":config_py",
+        requirement("pg8000"),
+        requirement("sqlalchemy"),
+    ],
+)
+
+py_library(
+    name = "config_py",
+    srcs = ["config.py"],
+    data = [
+        requirement("pg8000"),
+    ],
+    visibility = ["//skeleton:__subpackages__"],
+    deps = [
+        requirement("flask_cors"),
+        requirement("flask_migrate"),
+        requirement("flask_sqlalchemy"),
+        requirement("pg8000"),
+    ],
+)

@@ -1,0 +1,25 @@
+version: '3'
+services:
+  api: &api
+    ports:
+      - "5000:5000"
+    env_file:
+      - env/.api.prod.env
+  migration:
+    <<: *api
+    image: shaldengeki/skeleton-api-migrations:latest
+    ports: []
+  worker:
+    <<: *api
+    image: shaldengeki/skeleton-worker:latest
+    ports: []
+  pg:
+    restart: always
+    env_file:
+      - env/.postgres.prod.env
+  frontend:
+    image: shaldengeki/skeleton-frontend:latest
+    ports:
+      - "5001:80"
+    env_file:
+      - env/.frontend.prod.env

@@ -1,0 +1,31 @@
+{
+  "name": "@monorepo/skeleton/frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "tailwind:css": "bazel build //skeleton/frontend:tailwindcss",
+    "start": "PORT=$REACT_APP_PORT react-scripts start",
+    "build": "bazel build //skeleton/frontend/...",
+    "build-and-start": "npm run tailwind:css && npm run start",
+    "test": "bazel test //skeleton/frontend/..."
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

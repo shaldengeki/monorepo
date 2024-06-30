@@ -1,0 +1,11 @@
+load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_test")
+
+py_test(
+    name = "models_test",
+    srcs = ["models_test.py"],
+    deps = [
+        "//skeleton:models_py",
+        requirement("pytest"),
+    ],
+)

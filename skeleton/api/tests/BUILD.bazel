@@ -1,0 +1,21 @@
+load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_test")
+
+py_library(
+    name = "fixtures",
+    srcs = ["fixtures.py"],
+    deps = [
+        requirement("flask"),
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "example_test",
+    srcs = ["example_test.py"],
+    deps = [
+        ":fixtures",
+        "//skeleton/api:api_lib",
+        requirement("flask"),
+    ],
+)
