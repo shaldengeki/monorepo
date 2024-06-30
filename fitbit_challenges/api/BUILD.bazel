@@ -10,7 +10,7 @@ py_library(
     visibility = ["//fitbit_challenges/api:__subpackages__"],
     deps = [
         "//fitbit_challenges:config_py",
-        "//fitbit_challenges:models_py",
+        "//fitbit_challenges/models:global",
         requirement("Flask"),
         requirement("Flask-Migrate"),
         requirement("graphql_server"),

@@ -1,0 +1,38 @@
+load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "global",
+    srcs = ["__init__.py"],
+    visibility = ["//fitbit_challenges:__subpackages__"],
+    deps = [
+        "//fitbit_challenges:bingo_card_pattern_py",
+        "//fitbit_challenges:config_py",
+        "//fitbit_challenges:fitbit_client_py",
+        "//fitbit_challenges:total_amounts_py",
+        "//fitbit_challenges/models:fitbit_subscription_py",
+        requirement("pg8000"),
+        requirement("sqlalchemy"),
+    ],
+)
+
+py_library(
+    name = "challenge_py",
+    srcs = ["challenge.py"],
+    visibility = ["//fitbit_challenges:__subpackages__"],
+    deps = [
+        "//fitbit_challenges:config_py",
+        "//fitbit_challenges:total_amounts_py",
+        requirement("sqlalchemy"),
+    ],
+)
+
+py_library(
+    name = "fitbit_subscription_py",
+    srcs = ["fitbit_subscription.py"],
+    visibility = ["//fitbit_challenges:__subpackages__"],
+    deps = [
+        "//fitbit_challenges:config_py",
+        requirement("sqlalchemy"),
+    ],
+)

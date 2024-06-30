@@ -2,6 +2,12 @@ load("@py_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_library")
 
 py_library(
+    name = "total_amounts_py",
+    srcs = ["total_amounts.py"],
+    visibility = ["//fitbit_challenges:__subpackages__"],
+)
+
+py_library(
     name = "fitbit_client_py",
     srcs = ["fitbit_client.py"],
     visibility = ["//fitbit_challenges:__subpackages__"],
@@ -14,19 +20,6 @@ py_library(
     name = "bingo_card_pattern_py",
     srcs = ["bingo_card_pattern.py"],
     visibility = ["//fitbit_challenges:__subpackages__"],
-)
-
-py_library(
-    name = "models_py",
-    srcs = ["models.py"],
-    visibility = ["//fitbit_challenges:__subpackages__"],
-    deps = [
-        ":bingo_card_pattern_py",
-        ":config_py",
-        ":fitbit_client_py",
-        requirement("pg8000"),
-        requirement("sqlalchemy"),
-    ],
 )
 
 py_library(

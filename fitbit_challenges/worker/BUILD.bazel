@@ -14,7 +14,7 @@ py_binary(
     deps = [
         "//fitbit_challenges:config_py",
         "//fitbit_challenges:fitbit_client_py",
-        "//fitbit_challenges:models_py",
+        "//fitbit_challenges/models:global",
         "//scripts:wait_for_postgres",
         requirement("requests"),
         requirement("sqlalchemy"),

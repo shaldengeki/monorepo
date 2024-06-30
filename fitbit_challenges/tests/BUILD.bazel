@@ -24,7 +24,7 @@ py_test(
     name = "models_test",
     srcs = ["models_test.py"],
     deps = [
-        "//fitbit_challenges:models_py",
+        "//fitbit_challenges/models:global",
         requirement("pytest"),
     ],
 )
