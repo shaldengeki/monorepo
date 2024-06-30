@@ -44,11 +44,13 @@ def api_image(
 
     py_binary(
         name = name + "_binary",
-        srcs = ["__main__.py"],
+        srcs = [name + "_main_py"],
         imports = [".."],
         main = "__main__.py",
-        deps = deps + [
+        data = [
             "//scripts:wait_for_postgres",
+        ],
+        deps = deps + [
             "@rules_python//python/runfiles",
         ],
     )

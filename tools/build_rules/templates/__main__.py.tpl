@@ -10,7 +10,7 @@ if __name__ == "__main__":
     env = os.environ
     env.update(r.EnvVars())
     p = subprocess.run(
-        [r.Rlocation("scripts/wait_for_postgres")],
+        [r.Rlocation("_main/scripts/wait_for_postgres")],
         env = env,
     )
 
