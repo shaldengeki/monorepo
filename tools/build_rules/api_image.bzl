@@ -20,7 +20,7 @@ def api_image(
         base_image = "@python3_image",
         visibility = None):
     """
-    Defines a set of frontend images for our application.
+    Defines a set of API images for our application.
 
     Args:
         name (str): Prefix to append to the generated targets.
