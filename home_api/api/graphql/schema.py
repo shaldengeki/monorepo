@@ -11,18 +11,18 @@ from home_api.api.graphql.types.transaction import (
 )
 
 
-def Schema(models):
+def Schema():
     return GraphQLSchema(
         query=GraphQLObjectType(
             name="RootQueryType",
             fields={
-                "transactions": transactionsField(models),
-                "amountByMonth": amountByMonthField(models),
-                "accounts": accountsField(models),
-                "amountRange": amountRangeField(models),
-                "categories": categoriesField(models),
-                "dateRange": dateRangeField(models),
-                "types": typesField(models),
+                "transactions": transactionsField(),
+                "amountByMonth": amountByMonthField(),
+                "accounts": accountsField(),
+                "amountRange": amountRangeField(),
+                "categories": categoriesField(),
+                "dateRange": dateRangeField(),
+                "types": typesField(),
             },
         )
     )

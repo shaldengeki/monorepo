@@ -16,6 +16,8 @@ from graphql import (
 from sqlalchemy import asc, desc, distinct
 from sqlalchemy.sql import func
 
+from home_api.api.models.transaction import Transaction
+
 transactionTypeEnum = GraphQLEnumType(
     "TransactionType",
     description="Types of transactions",
@@ -144,55 +146,37 @@ amountRangeType = GraphQLObjectType(
 AmountRange = collections.namedtuple("AmountRange", ["min", "max"])
 
 
-def fetch_transactions(models, params):
-    query_obj = models.transaction.Transaction.query
+def fetch_transactions(params):
+    query_obj = Transaction.query
     if params.get("earliestDate", False):
         query_obj = query_obj.filter(
-            models.transaction.Transaction.date
+            Transaction.date
             >= datetime.datetime.utcfromtimestamp(int(params["earliestDate"]))
         )
     if params.get("latestDate", False):
         query_obj = query_obj.filter(
-            models.transaction.Transaction.date
+            Transaction.date
             <= datetime.datetime.utcfromtimestamp(int(params["latestDate"]))
         )
     if params.get("minAmount", False):
-        query_obj = query_obj.filter(
-            models.transaction.Transaction.amount >= int(params["minAmount"])
-        )
+        query_obj = query_obj.filter(Transaction.amount >= int(params["minAmount"]))
     if params.get("maxAmount", False):
-        query_obj = query_obj.filter(
-            models.transaction.Transaction.amount <= int(params["maxAmount"])
-        )
+        query_obj = query_obj.filter(Transaction.amount <= int(params["maxAmount"]))
     if params.get("description", False):
-        query_obj = query_obj.filter(
-            models.transaction.Transaction.description == params["description"]
-        )
+        query_obj = query_obj.filter(Transaction.description == params["description"])
     if params.get("type", False):
-        query_obj = query_obj.filter(
-            models.transaction.Transaction.type == params["type"]
-        )
+        query_obj = query_obj.filter(Transaction.type == params["type"])
     elif params.get("types", False):
-        query_obj = query_obj.filter(
-            models.transaction.Transaction.type.in_(params["types"])
-        )
+        query_obj = query_obj.filter(Transaction.type.in_(params["types"]))
     if params.get("category", False):
-        query_obj = query_obj.filter(
-            models.transaction.Transaction.category == params["category"]
-        )
+        query_obj = query_obj.filter(Transaction.category == params["category"])
     elif params.get("categories", False):
-        query_obj = query_obj.filter(
-            models.transaction.Transaction.category.in_(params["categories"])
-        )
+        query_obj = query_obj.filter(Transaction.category.in_(params["categories"]))
     if params.get("account", False):
-        query_obj = query_obj.filter(
-            models.transaction.Transaction.account == params["account"]
-        )
+        query_obj = query_obj.filter(Transaction.account == params["account"])
     elif params.get("accounts", False):
-        query_obj = query_obj.filter(
-            models.transaction.Transaction.account.in_(params["accounts"])
-        )
-    return query_obj.order_by(desc(models.transaction.Transaction.date)).all()
+        query_obj = query_obj.filter(Transaction.account.in_(params["accounts"]))
+    return query_obj.order_by(desc(Transaction.date)).all()
 
 
 AggregatedTransaction = collections.namedtuple(
@@ -265,36 +249,32 @@ transactionsFilters = {
 }
 
 
-def transactionsField(models):
+def transactionsField():
     return GraphQLField(
         GraphQLList(transactionType),
         args=transactionsFilters,
-        resolve=lambda root, info, **args: fetch_transactions(models, args),
+        resolve=lambda root, info, **args: fetch_transactions(args),
     )
 
 
-def amountByMonthField(models):
+def amountByMonthField():
     return GraphQLField(
         GraphQLList(amountOverTimeType),
         args=transactionsFilters,
         resolve=lambda root, info, **args: aggregate_transactions(
-            fetch_transactions(models, args)
+            fetch_transactions(args)
         ),
     )
 
 
-def fetch_transaction_date_range(models):
-    min_txn = models.transaction.Transaction.query.order_by(
-        asc(models.transaction.Transaction.date)
-    ).first()
+def fetch_transaction_date_range():
+    min_txn = Transaction.query.order_by(asc(Transaction.date)).first()
     if min_txn is None:
         min_ts = 0
     else:
         min_ts = min_txn.date.timestamp()
 
-    max_txn = models.transaction.Transaction.query.order_by(
-        desc(models.transaction.Transaction.date)
-    ).first()
+    max_txn = Transaction.query.order_by(desc(Transaction.date)).first()
     if max_txn is None:
         max_ts = 0
     else:
@@ -303,18 +283,14 @@ def fetch_transaction_date_range(models):
     return DateRange(start=min_ts, end=max_ts)
 
 
-def fetch_transaction_amount_range(models):
-    min_txn = models.transaction.Transaction.query.order_by(
-        asc(models.transaction.Transaction.amount)
-    ).first()
+def fetch_transaction_amount_range():
+    min_txn = Transaction.query.order_by(asc(Transaction.amount)).first()
     if min_txn is None:
         min_amt = 0
     else:
         min_amt = min_txn.amount
 
-    max_txn = models.transaction.Transaction.query.order_by(
-        desc(models.transaction.Transaction.amount)
-    ).first()
+    max_txn = Transaction.query.order_by(desc(Transaction.amount)).first()
     if max_txn is None:
         max_amt = 0
     else:
@@ -323,69 +299,63 @@ def fetch_transaction_amount_range(models):
     return AmountRange(min=min_amt, max=max_amt)
 
 
-def dateRangeField(models):
+def dateRangeField():
     return GraphQLField(
         dateRangeType,
-        resolve=lambda root, info, **args: fetch_transaction_date_range(models),
+        resolve=lambda root, info, **args: fetch_transaction_date_range(),
     )
 
 
-def amountRangeField(models):
+def amountRangeField():
     return GraphQLField(
         amountRangeType,
-        resolve=lambda root, info, **args: fetch_transaction_amount_range(models),
+        resolve=lambda root, info, **args: fetch_transaction_amount_range(),
     )
 
 
-def fetch_transaction_accounts(models):
+def fetch_transaction_accounts():
     accounts = (
-        models.transaction.Transaction.query.order_by(
-            asc(models.transaction.Transaction.account)
-        )
-        .distinct(models.transaction.Transaction.account)
+        Transaction.query.order_by(asc(Transaction.account))
+        .distinct(Transaction.account)
         .all()
     )
     return [t.account for t in accounts]
 
 
-def accountsField(models):
+def accountsField():
     return GraphQLField(
         GraphQLList(GraphQLString),
-        resolve=lambda root, info, **args: fetch_transaction_accounts(models),
+        resolve=lambda root, info, **args: fetch_transaction_accounts(),
     )
 
 
-def fetch_transaction_categories(models):
+def fetch_transaction_categories():
     categories = (
-        models.transaction.Transaction.query.order_by(
-            asc(models.transaction.Transaction.category)
-        )
-        .distinct(models.transaction.Transaction.category)
+        Transaction.query.order_by(asc(Transaction.category))
+        .distinct(Transaction.category)
         .all()
     )
     return [t.category for t in categories]
 
 
-def categoriesField(models):
+def categoriesField():
     return GraphQLField(
         GraphQLList(GraphQLString),
-        resolve=lambda root, info, **args: fetch_transaction_categories(models),
+        resolve=lambda root, info, **args: fetch_transaction_categories(),
     )
 
 
-def fetch_transaction_types(models):
+def fetch_transaction_types():
     types = (
-        models.transaction.Transaction.query.order_by(
-            asc(models.transaction.Transaction.type)
-        )
-        .distinct(models.transaction.Transaction.type)
+        Transaction.query.order_by(asc(Transaction.type))
+        .distinct(Transaction.type)
         .all()
     )
     return [t.type for t in types]
 
 
-def typesField(models):
+def typesField():
     return GraphQLField(
         GraphQLList(GraphQLString),
-        resolve=lambda root, info, **args: fetch_transaction_types(models),
+        resolve=lambda root, info, **args: fetch_transaction_types(),
     )
