@@ -1,4 +1,3 @@
-import React from 'react'
 import './App.css'
 import {
   BrowserRouter as Router,
@@ -17,12 +16,8 @@ function App () {
           <Router>
             <Header />
             <Routes>
-              <Route path="/servers">
-                <Servers />
-              </Route>
-              <Route path="/">
-                <Servers />
-              </Route>
+              <Route path="/servers" element={<Servers />} />
+              <Route path="/" element={<Servers />} />
             </Routes>
         </Router>
       </div>

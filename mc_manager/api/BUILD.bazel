@@ -16,6 +16,7 @@ py_library(
     imports = [".."],
     visibility = ["//mc_manager/api:__subpackages__"],
     deps = [
+        "//base:flask_app_py",
         requirement("Flask"),
         requirement("flask-cors"),
         requirement("Flask-Migrate"),

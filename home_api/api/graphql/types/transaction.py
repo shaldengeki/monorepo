@@ -145,44 +145,54 @@ AmountRange = collections.namedtuple("AmountRange", ["min", "max"])
 
 
 def fetch_transactions(models, params):
-    query_obj = models.Transaction.query
+    query_obj = models.transaction.Transaction.query
     if params.get("earliestDate", False):
         query_obj = query_obj.filter(
-            models.Transaction.date
+            models.transaction.Transaction.date
             >= datetime.datetime.utcfromtimestamp(int(params["earliestDate"]))
         )
     if params.get("latestDate", False):
         query_obj = query_obj.filter(
-            models.Transaction.date
+            models.transaction.Transaction.date
             <= datetime.datetime.utcfromtimestamp(int(params["latestDate"]))
         )
     if params.get("minAmount", False):
         query_obj = query_obj.filter(
-            models.Transaction.amount >= int(params["minAmount"])
+            models.transaction.Transaction.amount >= int(params["minAmount"])
         )
     if params.get("maxAmount", False):
         query_obj = query_obj.filter(
-            models.Transaction.amount <= int(params["maxAmount"])
+            models.transaction.Transaction.amount <= int(params["maxAmount"])
         )
     if params.get("description", False):
         query_obj = query_obj.filter(
-            models.Transaction.description == params["description"]
+            models.transaction.Transaction.description == params["description"]
         )
     if params.get("type", False):
-        query_obj = query_obj.filter(models.Transaction.type == params["type"])
+        query_obj = query_obj.filter(
+            models.transaction.Transaction.type == params["type"]
+        )
     elif params.get("types", False):
-        query_obj = query_obj.filter(models.Transaction.type.in_(params["types"]))
+        query_obj = query_obj.filter(
+            models.transaction.Transaction.type.in_(params["types"])
+        )
     if params.get("category", False):
-        query_obj = query_obj.filter(models.Transaction.category == params["category"])
+        query_obj = query_obj.filter(
+            models.transaction.Transaction.category == params["category"]
+        )
     elif params.get("categories", False):
         query_obj = query_obj.filter(
-            models.Transaction.category.in_(params["categories"])
+            models.transaction.Transaction.category.in_(params["categories"])
         )
     if params.get("account", False):
-        query_obj = query_obj.filter(models.Transaction.account == params["account"])
+        query_obj = query_obj.filter(
+            models.transaction.Transaction.account == params["account"]
+        )
     elif params.get("accounts", False):
-        query_obj = query_obj.filter(models.Transaction.account.in_(params["accounts"]))
-    return query_obj.order_by(desc(models.Transaction.date)).all()
+        query_obj = query_obj.filter(
+            models.transaction.Transaction.account.in_(params["accounts"])
+        )
+    return query_obj.order_by(desc(models.transaction.Transaction.date)).all()
 
 
 AggregatedTransaction = collections.namedtuple(
@@ -274,13 +284,17 @@ def amountByMonthField(models):
 
 
 def fetch_transaction_date_range(models):
-    min_txn = models.Transaction.query.order_by(asc(models.Transaction.date)).first()
+    min_txn = models.transaction.Transaction.query.order_by(
+        asc(models.transaction.Transaction.date)
+    ).first()
     if min_txn is None:
         min_ts = 0
     else:
         min_ts = min_txn.date.timestamp()
 
-    max_txn = models.Transaction.query.order_by(desc(models.Transaction.date)).first()
+    max_txn = models.transaction.Transaction.query.order_by(
+        desc(models.transaction.Transaction.date)
+    ).first()
     if max_txn is None:
         max_ts = 0
     else:
@@ -290,13 +304,17 @@ def fetch_transaction_date_range(models):
 
 
 def fetch_transaction_amount_range(models):
-    min_txn = models.Transaction.query.order_by(asc(models.Transaction.amount)).first()
+    min_txn = models.transaction.Transaction.query.order_by(
+        asc(models.transaction.Transaction.amount)
+    ).first()
     if min_txn is None:
         min_amt = 0
     else:
         min_amt = min_txn.amount
 
-    max_txn = models.Transaction.query.order_by(desc(models.Transaction.amount)).first()
+    max_txn = models.transaction.Transaction.query.order_by(
+        desc(models.transaction.Transaction.amount)
+    ).first()
     if max_txn is None:
         max_amt = 0
     else:
@@ -321,8 +339,10 @@ def amountRangeField(models):
 
 def fetch_transaction_accounts(models):
     accounts = (
-        models.Transaction.query.order_by(asc(models.Transaction.account))
-        .distinct(models.Transaction.account)
+        models.transaction.Transaction.query.order_by(
+            asc(models.transaction.Transaction.account)
+        )
+        .distinct(models.transaction.Transaction.account)
         .all()
     )
     return [t.account for t in accounts]
@@ -337,8 +357,10 @@ def accountsField(models):
 
 def fetch_transaction_categories(models):
     categories = (
-        models.Transaction.query.order_by(asc(models.Transaction.category))
-        .distinct(models.Transaction.category)
+        models.transaction.Transaction.query.order_by(
+            asc(models.transaction.Transaction.category)
+        )
+        .distinct(models.transaction.Transaction.category)
         .all()
     )
     return [t.category for t in categories]
@@ -353,8 +375,10 @@ def categoriesField(models):
 
 def fetch_transaction_types(models):
     types = (
-        models.Transaction.query.order_by(asc(models.Transaction.type))
-        .distinct(models.Transaction.type)
+        models.transaction.Transaction.query.order_by(
+            asc(models.transaction.Transaction.type)
+        )
+        .distinct(models.transaction.Transaction.type)
         .all()
     )
     return [t.type for t in types]

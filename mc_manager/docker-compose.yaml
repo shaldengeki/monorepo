@@ -30,6 +30,8 @@ services:
     env_file:
       - env/.frontend.env
     restart: always
+    ports:
+      - "5001:80"
 volumes:
   mc-manager-pg:
     name: mc-manager_mc-manager-pg
