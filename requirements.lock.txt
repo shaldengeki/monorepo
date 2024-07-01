@@ -496,9 +496,9 @@ pathspec==0.12.1 \
     # via
     #   -r requirements.txt
     #   black
-pg8000==1.30.5 \
-    --hash=sha256:072f7ad00cd723695cb2e9fc02c1dfb84c781455e97b8de6f4c4281eea08078c \
-    --hash=sha256:1abf18da652b0ad8e9cbfe57ed841c350b5330c33d8151303555db1fe5ce57f8
+pg8000==1.31.2 \
+    --hash=sha256:1ea46cf09d8eca07fe7eaadefd7951e37bee7fabe675df164f1a572ffb300876 \
+    --hash=sha256:436c771ede71af4d4c22ba867a30add0bc5c942d7ab27fadbb6934a487ecc8f6
     # via -r requirements.txt
 platformdirs==4.2.2 \
     --hash=sha256:2d7a1657e36a80ea911db832a8a6ece5ee53d8de21edd5cc5879af6530b1bfee \
