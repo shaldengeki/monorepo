@@ -8,7 +8,7 @@ import csv
 import datetime
 import sys
 
-from home_api.api.app import db
+from home_api.api.config import db
 from home_api.api.models.transaction import Transaction
 
 
