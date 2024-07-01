@@ -13,10 +13,10 @@ from sqlalchemy import desc
 
 from mc_manager.api.config import db
 from mc_manager.api.gql.types.server_log import serverLogStateEnum
-
 from mc_manager.api.models.server import Server
-from mc_manager.api.models.server_log import ServerLog
 from mc_manager.api.models.server_backup import ServerBackup
+from mc_manager.api.models.server_log import ServerLog
+
 
 def latestBackupResolver(server):
     if not server.backups:
@@ -31,13 +31,9 @@ def latestLogResolver(server):
 
 
 def backupsResolver(server, args):
-    query_obj = ServerBackup.query.filter(
-        ServerBackup.server_id == server.id
-    )
+    query_obj = ServerBackup.query.filter(ServerBackup.server_id == server.id)
     if args.get("after", False):
-        query_obj = query_obj.filter(
-            ServerBackup.id > int(args["after"])
-        )
+        query_obj = query_obj.filter(ServerBackup.id > int(args["after"]))
 
     query_obj = query_obj.order_by(desc(ServerBackup.created))
 
