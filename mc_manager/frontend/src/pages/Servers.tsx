@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   Routes,
   Route,
@@ -85,12 +84,8 @@ function Servers () {
   return (
         <div className="bg-gray-50 rounded overflow-auto p-4">
             <Routes>
-                <Route path={`${pathname}/:name`}>
-                    <Server />
-                </Route>
-                <Route path={pathname}>
-                    <ServerListing />
-                </Route>
+                <Route path={`${pathname}/:name`} element={<Server />} />
+                <Route path={pathname} element={<ServerListing />} />
             </Routes>
         </div>
   )

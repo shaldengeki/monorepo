@@ -10,8 +10,8 @@ from graphql import (
     GraphQLString,
 )
 
-from ....models import User
-from .user_activities import user_activity_type
+from fitbit_challenges.api.gql.types.user_activities import user_activity_type
+from fitbit_challenges.models import User
 
 
 def synced_at_resolver(user: User) -> Optional[int]:
@@ -22,7 +22,7 @@ def synced_at_resolver(user: User) -> Optional[int]:
 
 
 def user_fields() -> dict[str, GraphQLField]:
-    from .challenge import challenge_type
+    from fitbit_challenges.api.gql.types.challenge import challenge_type
 
     return {
         "fitbitUserId": GraphQLField(

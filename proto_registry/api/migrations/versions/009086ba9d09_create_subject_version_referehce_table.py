@@ -33,8 +33,8 @@ def upgrade():
         "subject_versions",
         ["referrer_id"],
         ["id"],
-        "CASCADE",
-        "CASCADE",
+        onupdate="CASCADE",
+        ondelete="CASCADE",
     )
     op.create_foreign_key(
         "subject_version_references_subject_versions_referred_id",
@@ -42,8 +42,8 @@ def upgrade():
         "subject_versions",
         ["referred_id"],
         ["id"],
-        "CASCADE",
-        "CASCADE",
+        onupdate="CASCADE",
+        ondelete="CASCADE",
     )
     op.create_index(
         "subject_version_references_index_referrer_referred",

@@ -12,10 +12,16 @@ from graphql import (
     GraphQLObjectType,
 )
 
-from ....config import app, db
-from ....models import BingoCard, BingoTile, Challenge, UnusedAmounts, User
-from .challenge import ChallengeType, challenge_fields
-from .user import fetch_current_user, user_type
+from fitbit_challenges.api.gql.types.challenge import ChallengeType, challenge_fields
+from fitbit_challenges.api.gql.types.user import fetch_current_user, user_type
+from fitbit_challenges.config import app, db
+from fitbit_challenges.models import (
+    BingoCard,
+    BingoTile,
+    Challenge,
+    UnusedAmounts,
+    User,
+)
 
 
 def flipped_at_resolver(tile: BingoTile) -> Optional[int]:

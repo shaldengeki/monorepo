@@ -15,10 +15,16 @@ from graphql import (
 )
 from sqlalchemy import desc
 
-from ....config import app, db
-from ....models import BingoCard, Challenge, ChallengeMembership, ChallengeType, User
-from .user import fetch_current_user, user_type
-from .user_activities import user_activity_type
+from fitbit_challenges.api.gql.types.user import fetch_current_user, user_type
+from fitbit_challenges.api.gql.types.user_activities import user_activity_type
+from fitbit_challenges.config import app, db
+from fitbit_challenges.models import (
+    BingoCard,
+    Challenge,
+    ChallengeMembership,
+    ChallengeType,
+    User,
+)
 
 
 def winners_resolver(challenge: Challenge) -> list[User]:

@@ -7,9 +7,8 @@ py_library(
     name = "migrate_lib",
     srcs = glob(["**/*.py"]),
     imports = [".."],
-    visibility = ["//home_api/api:__subpackages__"],
+    visibility = ["//:__subpackages__"],
     deps = [
-        "//home_api/api:config_py",
         requirement("alembic"),
         requirement("Flask"),
     ],
@@ -22,7 +21,7 @@ py_binary(
     imports = [".."],
     main = "__main__.py",
     deps = [
-        "//home_api/api:config_py",
+        "//proto_registry/api:config_py",
         "//scripts:wait_for_postgres",
         "@rules_python//python/runfiles",
         requirement("Flask-Migrate"),
@@ -34,8 +33,8 @@ py_oci_image(
     base = "@python3_image",
     binary = ":binary",
     cmd = [
-        "/home_api/api/migrations/binary.runfiles/_main/scripts/wait_for_postgres",
-        "/home_api/api/migrations/binary",
+        "/proto_registry/api/migrations/binary.runfiles/_main/scripts/wait_for_postgres",
+        "/proto_registry/api/migrations/binary",
     ],
     env = {
         "FLASK_APP": "app.py",
@@ -52,12 +51,12 @@ py_oci_image(
     },
 )
 
-# $ bazel run //home_api/api/migrations:image_tarball
-# $ docker run --rm shaldengeki/home-api-migrations:latest
+# $ bazel run //proto_registry/api/migrations:image_tarball
+# $ docker run --rm shaldengeki/proto-registry-api-migrations:latest
 cross_platform_image(
     name = "image",
     image = ":base_image",
-    repo_tags = ["shaldengeki/home-api-api-migrations:latest"],
-    repository = "docker.io/shaldengeki/home-api-api-migrations",
-    visibility = ["//home_api/api/migrations:__subpackages__"],
+    repo_tags = ["shaldengeki/proto-registry-api-migrations:latest"],
+    repository = "docker.io/shaldengeki/proto-registry-api-migrations",
+    visibility = ["//proto_registry/api/migrations:__subpackages__"],
 )

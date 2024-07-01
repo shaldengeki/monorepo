@@ -1,3 +1,4 @@
+load("@py_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_library")
 load("//tools/build_rules:api_image.bzl", "api_image")
 
@@ -17,6 +18,8 @@ py_library(
     visibility = ["//proto_registry:__subpackages__"],
     deps = [
         ":config_py",
+        requirement("pg8000"),
+        requirement("sqlalchemy"),
     ],
 )
 

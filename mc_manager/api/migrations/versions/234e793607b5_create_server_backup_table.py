@@ -39,8 +39,8 @@ def upgrade():
         "servers",
         ["server_id"],
         ["id"],
-        "CASCADE",
-        "CASCADE",
+        onupdate="CASCADE",
+        ondelete="CASCADE",
     )
     op.create_index(
         "server_backups_server_id",
