@@ -47,9 +47,6 @@ dependencies:
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
-  moment:
-    specifier: ^2.24.0
-    version: 2.24.0
   plotly.js:
     specifier: ^2.33.0
     version: 2.33.0(mapbox-gl@1.13.3)
@@ -9475,10 +9472,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dev: true
-
-  /moment@2.24.0:
-    resolution: {integrity: sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==}
-    dev: false
 
   /mouse-change@1.4.0:
     resolution: {integrity: sha512-vpN0s+zLL2ykyyUDh+fayu9Xkor5v/zRD9jhSqjRS1cJTGS0+oakVZzNm5n19JvvEj0you+MXlYTpNxUDQUjkQ==}
