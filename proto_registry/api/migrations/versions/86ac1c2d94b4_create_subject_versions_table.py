@@ -48,8 +48,8 @@ def upgrade():
         "subjects",
         ["subject_id"],
         ["id"],
-        "CASCADE",
-        "CASCADE",
+        onupdate="CASCADE",
+        ondelete="CASCADE",
     )
     op.create_index(
         "subject_versions_subject_id",
