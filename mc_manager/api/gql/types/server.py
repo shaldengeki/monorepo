@@ -14,8 +14,9 @@ from sqlalchemy import desc
 from mc_manager.api.config import db
 from mc_manager.api.gql.types.server_log import serverLogStateEnum
 
-# TODO: remove models.*
-
+from mc_manager.api.models.server import Server
+from mc_manager.api.models.server_log import ServerLog
+from mc_manager.api.models.server_backup import ServerBackup
 
 def latestBackupResolver(server):
     if not server.backups:
@@ -29,16 +30,16 @@ def latestLogResolver(server):
     return server.logs[0]
 
 
-def backupsResolver(server, info, args):
-    query_obj = info.context["models"].ServerBackup.query.filter(
-        info.context["models"].ServerBackup.server_id == server.id
+def backupsResolver(server, args):
+    query_obj = ServerBackup.query.filter(
+        ServerBackup.server_id == server.id
     )
     if args.get("after", False):
         query_obj = query_obj.filter(
-            info.context["models"].ServerBackup.id > int(args["after"])
+            ServerBackup.id > int(args["after"])
         )
 
-    query_obj = query_obj.order_by(desc(info.context["models"].ServerBackup.created))
+    query_obj = query_obj.order_by(desc(ServerBackup.created))
 
     limit = min((100, int(args["limit"])))
     query_obj = query_obj.limit(limit)
@@ -111,7 +112,7 @@ def serverTypeResolver():
                     default_value=100,
                 ),
             },
-            resolve=lambda server, info, **args: backupsResolver(server, info, args),
+            resolve=lambda server, info, **args: backupsResolver(server, args),
         ),
         "latestBackup": GraphQLField(
             serverBackupType,
@@ -128,30 +129,30 @@ serverType = GraphQLObjectType(
 )
 
 
-def fetch_servers(models, params):
-    query_obj = models.Server.query
+def fetch_servers(params):
+    query_obj = Server.query
     if params.get("earliestDate", False):
         query_obj = query_obj.filter(
-            models.Server.created
+            Server.created
             >= datetime.datetime.utcfromtimestamp(int(params["earliestDate"]))
         )
     if params.get("latestDate", False):
         query_obj = query_obj.filter(
-            models.Server.created
+            Server.created
             <= datetime.datetime.utcfromtimestamp(int(params["latestDate"]))
         )
     if params.get("createdBy", False):
-        query_obj = query_obj.filter(models.Server.created_by == params["createdBy"])
+        query_obj = query_obj.filter(Server.created_by == params["createdBy"])
     if params.get("name", False):
-        query_obj = query_obj.filter(models.Server.name == params["name"])
+        query_obj = query_obj.filter(Server.name == params["name"])
     if params.get("port", False):
-        query_obj = query_obj.filter(models.Server.port == int(params["port"]))
+        query_obj = query_obj.filter(Server.port == int(params["port"]))
     if params.get("timezone", False):
-        query_obj = query_obj.filter(models.Server.timezone == params["timezone"])
+        query_obj = query_obj.filter(Server.timezone == params["timezone"])
     if params.get("zipfile", False):
-        query_obj = query_obj.filter(models.Server.zipfile == params["zipfile"])
+        query_obj = query_obj.filter(Server.zipfile == params["zipfile"])
 
-    return query_obj.order_by(desc(models.Server.created)).all()
+    return query_obj.order_by(desc(Server.created)).all()
 
 
 serversFilters = {
@@ -186,16 +187,16 @@ serversFilters = {
 }
 
 
-def serversField(models):
+def serversField():
     return GraphQLField(
         GraphQLList(serverType),
         args=serversFilters,
-        resolve=lambda root, info, **args: fetch_servers(models, args),
+        resolve=lambda root, info, **args: fetch_servers(args),
     )
 
 
-def create_server(models, args):
-    server = models.Server(
+def create_server(args):
+    server = Server(
         created_by=args["createdBy"],
         name=args["name"],
         port=int(args["port"]),
@@ -206,14 +207,14 @@ def create_server(models, args):
     )
     db.session.add(server)
 
-    server_log = models.ServerLog(server=server, state="created")
+    server_log = ServerLog(server=server, state="created")
     db.session.add(server_log)
 
     db.session.commit()
     return server
 
 
-def createServerField(models):
+def createServerField():
     return GraphQLField(
         serverType,
         description="Create a Minecraft server.",
@@ -246,5 +247,5 @@ def createServerField(models):
                 description="Amount of memory to allocate to the server.",
             ),
         },
-        resolve=lambda root, info, **args: create_server(models, args),
+        resolve=lambda root, info, **args: create_server(args),
     )

@@ -9,6 +9,7 @@ py_library(
     imports = [".."],
     visibility = ["//home_api/api:__subpackages__"],
     deps = [
+        "//home_api/api:config_py",
         requirement("alembic"),
         requirement("Flask"),
     ],
@@ -56,7 +57,7 @@ py_oci_image(
 cross_platform_image(
     name = "image",
     image = ":base_image",
-    repo_tags = ["shaldengeki/home-api-migrations:latest"],
-    repository = "docker.io/shaldengeki/home-api-migrations",
+    repo_tags = ["shaldengeki/home-api-api-migrations:latest"],
+    repository = "docker.io/shaldengeki/home-api-api-migrations",
     visibility = ["//home_api/api/migrations:__subpackages__"],
 )

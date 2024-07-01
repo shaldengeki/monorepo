@@ -24,8 +24,8 @@ def upgrade():
         "server_backups",
         ["backup_id"],
         ["id"],
-        "CASCADE",
-        "NO ACTION",
+        onupdate="CASCADE",
+        ondelete="NO ACTION",
     )
 
 
