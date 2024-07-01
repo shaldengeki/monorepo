@@ -8,8 +8,8 @@ We support building & running via OCI-compatible container images (via Bazel) or
 
 ### Bazel
 
-Do `bazel build //api:image`. Run on the container runtime of your choice.
+Do `bazel build //proto_registry/api:api_image_image`. Run on the container runtime of your choice.
 
 ### Docker
 
-Install docker compose on your platform, then do `docker compose --env-file env.development up`.
+Install docker compose on your platform, then do `docker compose up`.
