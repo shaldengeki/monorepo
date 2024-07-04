@@ -22,7 +22,7 @@ py_library(
     srcs = ["compatibility_checker.py"],
     visibility = ["//visibility:public"],
     deps = [
-        ":parser",
+        ":parser_py",
         "//py_proto:proto_file",
         "//py_proto:proto_node",
     ],
