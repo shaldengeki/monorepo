@@ -1,7 +1,7 @@
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 
 py_library(
-    name = "parser",
+    name = "parser_py",
     srcs = ["parser.py"],
     visibility = ["//visibility:public"],
     deps = [
@@ -14,11 +14,11 @@ py_binary(
     srcs = ["parser.py"],
     main = "parser.py",
     visibility = ["//visibility:public"],
-    deps = [":parser"],
+    deps = [":parser_py"],
 )
 
 py_library(
-    name = "compatibility_checker",
+    name = "compatibility_checker_py",
     srcs = ["compatibility_checker.py"],
     visibility = ["//visibility:public"],
     deps = [
@@ -33,5 +33,5 @@ py_binary(
     srcs = ["compatibility_checker.py"],
     main = "compatibility_checker.py",
     visibility = ["//visibility:public"],
-    deps = [":compatibility_checker"],
+    deps = [":compatibility_checker_py"],
 )
