@@ -20,7 +20,7 @@ py_test(
         "//py_proto:proto_service",
         "//py_proto:proto_string_literal",
         "//py_proto:proto_syntax",
-        "//py_proto/util:parser",
+        "//py_proto/util:parser_py",
     ],
 )
 

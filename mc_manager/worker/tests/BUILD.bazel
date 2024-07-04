@@ -8,7 +8,7 @@ _RUNTIME_DEPS = [
 ]
 
 py_test(
-    name = "tests",
+    name = "default_tests",
     srcs = ["worker_test.py"],
     main = "worker_test.py",
     deps = [

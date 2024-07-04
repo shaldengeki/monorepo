@@ -1,6 +1,10 @@
 load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
+load("@gazelle//:def.bzl", "gazelle_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@py_deps//:requirements.bzl", "all_whl_requirements")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
+load("@rules_python_gazelle_plugin//manifest:defs.bzl", "gazelle_python_manifest")
+load("@rules_python_gazelle_plugin//modules_mapping:def.bzl", "modules_mapping")
 
 compile_pip_requirements(
     name = "requirements",
@@ -26,3 +30,43 @@ expand_template(
 # To update pnpm-lock.yaml, run:
 # bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
 npm_link_all_packages(name = "node_modules")
+
+# This rule fetches the metadata for python packages we depend on. That data is
+# required for the gazelle_python_manifest rule to update our manifest file.
+modules_mapping(
+    name = "modules_map",
+    wheels = all_whl_requirements,
+)
+
+# Gazelle python extension needs a manifest file mapping from
+# an import to the installed package that provides it.
+# This macro produces two targets:
+# - //:gazelle_python_manifest.update can be used with `bazel run`
+#   to recalculate the manifest
+# - //:gazelle_python_manifest.test is a test target ensuring that
+#   the manifest doesn't need to be updated
+gazelle_python_manifest(
+    name = "gazelle_python_manifest",
+    modules_mapping = ":modules_map",
+    # This is what we called our `pip_parse` rule, where third-party
+    # python libraries are loaded in BUILD files.
+    pip_repository_name = "py_deps",
+    # This should point to wherever we declare our python dependencies
+    # (the same as what we passed to the modules_mapping rule in WORKSPACE)
+    # This argument is optional. If provided, the `.test` target is very
+    # fast because it just has to check an integrity field. If not provided,
+    # the integrity field is not added to the manifest which can help avoid
+    # merge conflicts in large repos.
+    requirements = "//:requirements.lock.txt",
+)
+
+# gazelle:prefix github.com/shaldengeki/monorepo
+
+gazelle_binary(
+    name = "gazelle",
+    languages = [
+        "@rules_python_gazelle_plugin//python",
+        "@gazelle//language/go",
+        "@gazelle//language/proto",
+    ],
+)
