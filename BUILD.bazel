@@ -1,5 +1,5 @@
 load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
-load("@gazelle//:def.bzl", "gazelle")
+load("@gazelle//:def.bzl", "gazelle_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@py_deps//:requirements.bzl", "all_whl_requirements")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
@@ -60,7 +60,13 @@ gazelle_python_manifest(
     requirements = "//:requirements.lock.txt",
 )
 
-gazelle(
+# gazelle:prefix github.com/shaldengeki/monorepo
+
+gazelle_binary(
     name = "gazelle",
-    gazelle = "@rules_python_gazelle_plugin//python:gazelle_binary",
+    languages = [
+        "@rules_python_gazelle_plugin//python",
+        "@gazelle//language/go",
+        "@gazelle//language/proto",
+    ],
 )
