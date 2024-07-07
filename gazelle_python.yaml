@@ -1458,6 +1458,20 @@ manifest:
     pylint.utils.pragma_parser: pylint
     pylint.utils.utils: pylint
     pytest: pytest
+    qbittorrentapi: qbittorrent_api
+    qbittorrentapi.app: qbittorrent_api
+    qbittorrentapi.auth: qbittorrent_api
+    qbittorrentapi.client: qbittorrent_api
+    qbittorrentapi.definitions: qbittorrent_api
+    qbittorrentapi.exceptions: qbittorrent_api
+    qbittorrentapi.log: qbittorrent_api
+    qbittorrentapi.request: qbittorrent_api
+    qbittorrentapi.rss: qbittorrent_api
+    qbittorrentapi.search: qbittorrent_api
+    qbittorrentapi.sync: qbittorrent_api
+    qbittorrentapi.torrentcreator: qbittorrent_api
+    qbittorrentapi.torrents: qbittorrent_api
+    qbittorrentapi.transfer: qbittorrent_api
     requests: requests
     requests.adapters: requests
     requests.api: requests
@@ -1952,4 +1966,4 @@ manifest:
     zipp.glob: zipp
   pip_repository:
     name: py_deps
-integrity: 16526764fd066787fd0d786c32d5660bbec64890c5fab67edf761c75c301fd4c
+integrity: 67c4059086b8e8369d0be155e56b353e052f80e80da22e3ad1f879ad13b903c5

@@ -61,6 +61,7 @@ gazelle_python_manifest(
 )
 
 # gazelle:prefix github.com/shaldengeki/monorepo
+# gazelle:resolve py python.runfiles @rules_python//python/runfiles
 
 gazelle_binary(
     name = "gazelle",

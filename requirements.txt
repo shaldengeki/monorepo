@@ -31,6 +31,7 @@ pylint
 pysocks
 pytest
 pyyaml
+qbittorrent-api
 requests
 SQLAlchemy>=2.0.16
 SQLAlchemy[mypy]>=2.0.16
