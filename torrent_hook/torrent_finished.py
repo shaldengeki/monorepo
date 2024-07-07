@@ -1,15 +1,31 @@
 #!/usr/bin/env python3
 
 import argparse
+import dataclasses
 import json
 
-# import requests
 import logging
+import requests
 
 import qbittorrentapi
 
 logger = logging.getLogger(__name__)
 
+
+@dataclasses.dataclass
+class TorrentInfo:
+    torrent_name: str
+    category: str
+    tags: list[str]
+    content_path: str
+    root_path: str
+    save_path: str
+    num_files: int
+    torrent_size: int
+    current_tracker: str
+    info_hash_v1: str
+    info_hash_v2: str
+    torrent_id: str
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
@@ -31,27 +47,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def write_log(args: argparse.Namespace):
-    invocation = {
-        "torrent_name": args.torrent_name,
-        "category": args.category,
-        "tags": args.tags,
-        "content_path": args.content_path,
-        "root_path": args.root_path,
-        "save_path": args.save_path,
-        "num_files": args.num_files,
-        "torrent-size": args.torrent_size,
-        "current_tracker": args.current_tracker,
-        "info_hash_v1": args.info_hash_v1,
-        "info_hash_v2": args.info_hash_v2,
-        "torrent_id": args.torrent_id,
-    }
-    logger.info(f"Received completed torrent: {json.dumps(invocation)}")
+def write_log(torrent_info: TorrentInfo):
+    logger.info(f"Received completed torrent: {json.dumps(dataclasses.asdict(torrent_info))}")
 
 
-def notify_consumer(notify_url: str, args: argparse.Namespace) -> None:
-    logger.info(f"Notifying consumer for torrent {args.torrent_id}")
-
+def notify_consumer(notify_url: str, torrent_info: TorrentInfo) -> None:
+    logger.info(f"Notifying consumer at {notify_url} for torrent {torrent_info.torrent_id}")
+    requests.post(notify_url, data=dataclasses.asdict(torrent_info))
 
 def pause_torrent(torrent_id: str) -> None:
     logger.info(f"Pausing torrent {torrent_id}")
@@ -66,16 +68,32 @@ def main() -> int:
     args = parse_args()
     logging.basicConfig(filename=args.log_file, encoding="utf-8", level=logging.INFO)
 
+    torrent_info = TorrentInfo(
+        torrent_name = args.torrent_name,
+        category = args.category,
+        tags = args.tags.split(","),
+        content_path = args.content_path,
+        root_path = args.root_path,
+        save_path = args.save_path,
+        num_files = args.num_files,
+        torrent_size = args.torrent_size,
+        current_tracker = args.current_tracker,
+        info_hash_v1 = args.info_hash_v1,
+        info_hash_v2 = args.info_hash_v2,
+        torrent_id = args.torrent_id,
+    )
+
     # First, write to logfile.
-    write_log(args)
+    write_log(torrent_info)
 
-    # Next, tell the consumer where to pull this.
-    if args.notify_url:
-        notify_consumer(args.notify_url, args)
-
-    # Finally, pause the torrent.
+    # Next, pause the torrent.
     if args.pause:
-        pause_torrent(args.torrent_id)
+        pause_torrent(torrent_info.torrent_id)
+
+    # Finally, tell the consumer where to pull this.
+    if args.notify_url:
+        notify_consumer(args.notify_url, torrent_info)
+
     return 0
 
 

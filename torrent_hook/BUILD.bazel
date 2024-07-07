@@ -4,7 +4,10 @@ py_binary(
     name = "torrent_finished",
     srcs = ["torrent_finished.py"],
     visibility = ["//:__subpackages__"],
-    deps = ["@py_deps//qbittorrent_api"],
+    deps = [
+        "@py_deps//qbittorrent_api",
+        "@py_deps//requests",
+    ],
 )
 
 py_library(
@@ -14,5 +17,8 @@ py_library(
         "torrent_finished.py",
     ],
     visibility = ["//:__subpackages__"],
-    deps = ["@py_deps//qbittorrent_api"],
+    deps = [
+        "@py_deps//qbittorrent_api",
+        "@py_deps//requests",
+    ],
 )
