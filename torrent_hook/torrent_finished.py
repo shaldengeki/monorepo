@@ -3,7 +3,10 @@
 import argparse
 import json
 # import requests
+import logging
 import qbittorrentapi
+
+logger = logging.getLogger(__name__)
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
@@ -19,12 +22,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--info-hash-v1", required=True)
     parser.add_argument("--info-hash-v2", required=True)
     parser.add_argument("--torrent-id", required=True)
-    parser.add_argument("--log-file")
+    parser.add_argument("--log-file", required=True)
     parser.add_argument("--notify-url")
     parser.add_argument("--pause", type=bool, default=False)
     return parser.parse_args()
 
-def write_log(log_file: str, args: argparse.Namespace):
+def write_log(args: argparse.Namespace):
     invocation = {
         "torrent_name": args.torrent_name,
         "category": args.category,
@@ -39,23 +42,24 @@ def write_log(log_file: str, args: argparse.Namespace):
         "info_hash_v2": args.info_hash_v2,
         "torrent_id": args.torrent_id
     }
-    with open(log_file, 'a') as finished_log:
-        finished_log.write(json.dumps(invocation) + "\n")
+    logger.info(f"Received completed torrent: {json.dumps(invocation)}")
+
 
 def notify_consumer(notify_url: str, args: argparse.Namespace) -> None:
-    pass
+    logger.info(f"Notifying consumer for torrent {args.torrent_id}")
 
 
 def pause_torrent(torrent_id: str) -> None:
+    logger.info(f"Pausing torrent {torrent_id}")
     with qbittorrentapi.Client(host="localhost", port=8080) as client:
         client.torrents_pause([torrent_id])
 
 def main() -> int:
     args = parse_args()
+    logging.basicConfig(filename=args.log_file, encoding='utf-8', level=logging.INFO)
     
     # First, write to logfile.
-    if args.log_file:
-        write_log(args.log_file, args)
+    write_log(args)
 
     # Next, tell the consumer where to pull this.
     if args.notify_url:
