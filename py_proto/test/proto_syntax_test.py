@@ -1,8 +1,9 @@
+# type: ignore
+
 import unittest
 
 from py_proto.proto_string_literal import ProtoStringLiteral
 from py_proto.proto_syntax import ProtoSyntax, ProtoSyntaxChanged
-
 
 class SyntaxTest(unittest.TestCase):
     def test_correct_syntax(self):
