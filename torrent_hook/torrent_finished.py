@@ -2,6 +2,7 @@
 
 import argparse
 import json
+# import requests
 import qbittorrentapi
 
 def parse_args() -> argparse.Namespace:
@@ -18,7 +19,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--info-hash-v1")
     parser.add_argument("--info-hash-v2")
     parser.add_argument("--torrent-id")
-    parser.add_argument("--output")
+    parser.add_argument("--output", required=True)
+    parser.add_argument("--consumer-url", required=True)
     return parser.parse_args()
 
 def write_log(args: argparse.Namespace):
@@ -39,10 +41,27 @@ def write_log(args: argparse.Namespace):
     with open(args.output, 'a') as finished_log:
         finished_log.write(json.dumps(invocation) + "\n")
 
+def notify_consumer(args: argparse.Namespace) -> None:
+    pass
+
+
+def pause_torrent(torrent_id: str) -> None:
+    with qbittorrentapi.Client(host="localhost", port=8080) as client:
+        client.torrents_pause([torrent_id])
+
 def main() -> int:
     args = parse_args()
+    
+    # First, write to logfile.
     write_log(args)
+
+    # Next, tell the consumer where to pull this.
+    notify_consumer(args)
+
+    # Finally, pause the torrent.
+    pause_torrent(args.torrent_id)
     return 0
+
 
 if __name__ == '__main__':
     raise SystemExit(main())

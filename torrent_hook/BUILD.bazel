@@ -1,20 +1,13 @@
-load("@py_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
-
-py_library(
-    name = "torrent_finished_py",
-    srcs = ["torrent_finished.py"],
-    visibility = ["//torrent_hook:__subpackages__"],
-    deps = [
-        requirement("qbittorrent-api"),
-    ],
-)
 
 py_binary(
     name = "torrent_finished",
     srcs = ["torrent_finished.py"],
     visibility = ["//:__subpackages__"],
-    deps = ["@py_deps//qbittorrent_api"],
+    deps = [
+        "@py_deps//qbittorrent_api",
+        "@py_deps//requests",
+    ],
 )
 
 py_library(
@@ -24,5 +17,8 @@ py_library(
         "torrent_finished.py",
     ],
     visibility = ["//:__subpackages__"],
-    deps = ["@py_deps//qbittorrent_api"],
+    deps = [
+        "@py_deps//qbittorrent_api",
+        "@py_deps//requests",
+    ],
 )
