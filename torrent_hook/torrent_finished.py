@@ -2,11 +2,14 @@
 
 import argparse
 import json
+
 # import requests
 import logging
+
 import qbittorrentapi
 
 logger = logging.getLogger(__name__)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
@@ -27,6 +30,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pause", type=bool, default=False)
     return parser.parse_args()
 
+
 def write_log(args: argparse.Namespace):
     invocation = {
         "torrent_name": args.torrent_name,
@@ -40,7 +44,7 @@ def write_log(args: argparse.Namespace):
         "current_tracker": args.current_tracker,
         "info_hash_v1": args.info_hash_v1,
         "info_hash_v2": args.info_hash_v2,
-        "torrent_id": args.torrent_id
+        "torrent_id": args.torrent_id,
     }
     logger.info(f"Received completed torrent: {json.dumps(invocation)}")
 
@@ -57,10 +61,11 @@ def pause_torrent(torrent_id: str) -> None:
         except qbittorrentapi.NotFound404Error:
             pass
 
+
 def main() -> int:
     args = parse_args()
-    logging.basicConfig(filename=args.log_file, encoding='utf-8', level=logging.INFO)
-    
+    logging.basicConfig(filename=args.log_file, encoding="utf-8", level=logging.INFO)
+
     # First, write to logfile.
     write_log(args)
 
@@ -74,5 +79,5 @@ def main() -> int:
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     raise SystemExit(main())
