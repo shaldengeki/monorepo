@@ -19,11 +19,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--info-hash-v1")
     parser.add_argument("--info-hash-v2")
     parser.add_argument("--torrent-id")
-    parser.add_argument("--output", required=True)
-    parser.add_argument("--consumer-url", required=True)
+    parser.add_argument("--log-file")
+    parser.add_argument("--notify-url")
+    parser.add_argument("--pause", type=bool, default=False)
     return parser.parse_args()
 
-def write_log(args: argparse.Namespace):
+def write_log(log_file: str, args: argparse.Namespace):
     invocation = {
         "torrent_name": args.torrent_name,
         "category": args.category,
@@ -38,10 +39,10 @@ def write_log(args: argparse.Namespace):
         "info_hash_v2": args.info_hash_v2,
         "torrent_id": args.torrent_id
     }
-    with open(args.output, 'a') as finished_log:
+    with open(log_file, 'a') as finished_log:
         finished_log.write(json.dumps(invocation) + "\n")
 
-def notify_consumer(args: argparse.Namespace) -> None:
+def notify_consumer(notify_url: str, args: argparse.Namespace) -> None:
     pass
 
 
@@ -53,13 +54,16 @@ def main() -> int:
     args = parse_args()
     
     # First, write to logfile.
-    write_log(args)
+    if args.log_file:
+        write_log(args.log_file, args)
 
     # Next, tell the consumer where to pull this.
-    notify_consumer(args)
+    if args.notify_url:
+        notify_consumer(args.notify_url, args)
 
     # Finally, pause the torrent.
-    pause_torrent(args.torrent_id)
+    if args.pause:
+        pause_torrent(args.torrent_id)
     return 0
 
 
