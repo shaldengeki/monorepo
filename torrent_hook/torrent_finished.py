@@ -31,7 +31,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--torrent-name", required=True)
     parser.add_argument("--category", required=True)
-    parser.add_argument("--tags")
+    parser.add_argument("--tags", default="")
     parser.add_argument("--content-path", required=True)
     parser.add_argument("--root-path", required=True)
     parser.add_argument("--save-path", required=True)
@@ -73,10 +73,15 @@ def main() -> int:
     args = parse_args()
     logging.basicConfig(filename=args.log_file, encoding="utf-8", level=logging.INFO)
 
+    if args.tags == "":
+        tags = []
+    else:
+        tags = args.tags.split(",")
+
     torrent_info = TorrentInfo(
         torrent_name=args.torrent_name,
         category=args.category,
-        tags=args.tags.split(","),
+        tags=tags,
         content_path=args.content_path,
         root_path=args.root_path,
         save_path=args.save_path,
