@@ -490,6 +490,7 @@ packaging==24.0 \
     # via
     #   black
     #   pytest
+    #   qbittorrent-api
 pathspec==0.12.1 \
     --hash=sha256:a0d503e138a4c123b27490a4f7beda6a01c6f288df0e4a8b79c7eb0dc7b4cc08 \
     --hash=sha256:a482d51503a1ab33b1c67a6c3813a26953dbdc71c31dacaef9a838c4e29f5712
@@ -603,12 +604,17 @@ pyyaml==6.0.1 \
     # via
     #   -r requirements.txt
     #   pre-commit
+qbittorrent-api==2024.5.63 \
+    --hash=sha256:748b34c7074ba9c1e1bdfcc97b3e7acf9a553fd3b8ffb5fe89ea51b3cfebb375 \
+    --hash=sha256:cd3012f042fb94e9d521c406b6dc522600efd1814d4b2d3c900c6810e9fcbe2c
+    # via -r requirements.txt
 requests==2.32.3 \
     --hash=sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760 \
     --hash=sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6
     # via
     #   -r requirements.txt
     #   docker
+    #   qbittorrent-api
 s3transfer==0.10.2 \
     --hash=sha256:0711534e9356d3cc692fdde846b4a1e4b0cb6519971860796e6bc4c7aea00ef6 \
     --hash=sha256:eca1c20de70a39daee580aef4986996620f365c4e0fda6a86100231d62f1bf69
@@ -716,6 +722,7 @@ urllib3==2.2.2 \
     # via
     #   botocore
     #   docker
+    #   qbittorrent-api
     #   requests
     #   types-requests
 virtualenv==20.26.2 \

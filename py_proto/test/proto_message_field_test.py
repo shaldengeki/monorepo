@@ -1,3 +1,5 @@
+# type: ignore
+
 import unittest
 
 from py_proto.proto_identifier import (
