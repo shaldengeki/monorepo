@@ -15,7 +15,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--torrent-name", required=True)
     parser.add_argument("--category", required=True)
-    parser.add_argument("--tags", required=True)
+    parser.add_argument("--tags")
     parser.add_argument("--content-path", required=True)
     parser.add_argument("--root-path", required=True)
     parser.add_argument("--save-path", required=True)
