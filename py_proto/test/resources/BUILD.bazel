@@ -1,5 +1,16 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
 filegroup(
     name = "all_protos",
     srcs = glob(["*.proto"]),
+    visibility = ["//visibility:public"],
+)
+
+proto_library(
+    name = "resources_proto",
+    srcs = [
+        "empty.proto",
+        "single_message.proto",
+    ],
     visibility = ["//visibility:public"],
 )
