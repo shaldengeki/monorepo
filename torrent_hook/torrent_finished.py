@@ -27,7 +27,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--torrent-id", required=True)
     parser.add_argument("--log-file", required=True)
     parser.add_argument("--notify-url")
-    parser.add_argument("--pause", action='store_true')
+    parser.add_argument("--pause", action="store_true")
     return parser.parse_args()
 
 
