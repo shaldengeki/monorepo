@@ -40,7 +40,7 @@ def test_fetch_expected_servers_empty(monkeypatch):
 
     monkeypatch.setattr(requests, "post", mock_post)
 
-    expected = []
+    expected: list[dict] = []
     actual = fetch_expected_servers("fake-host", 0)
     assert actual == expected
 
