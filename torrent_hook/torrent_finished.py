@@ -3,11 +3,10 @@
 import argparse
 import dataclasses
 import json
-
 import logging
-import requests
 
 import qbittorrentapi
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +25,7 @@ class TorrentInfo:
     info_hash_v1: str
     info_hash_v2: str
     torrent_id: str
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
@@ -48,12 +48,17 @@ def parse_args() -> argparse.Namespace:
 
 
 def write_log(torrent_info: TorrentInfo):
-    logger.info(f"Received completed torrent: {json.dumps(dataclasses.asdict(torrent_info))}")
+    logger.info(
+        f"Received completed torrent: {json.dumps(dataclasses.asdict(torrent_info))}"
+    )
 
 
 def notify_consumer(notify_url: str, torrent_info: TorrentInfo) -> None:
-    logger.info(f"Notifying consumer at {notify_url} for torrent {torrent_info.torrent_id}")
+    logger.info(
+        f"Notifying consumer at {notify_url} for torrent {torrent_info.torrent_id}"
+    )
     requests.post(notify_url, data=dataclasses.asdict(torrent_info))
+
 
 def pause_torrent(torrent_id: str) -> None:
     logger.info(f"Pausing torrent {torrent_id}")
@@ -69,18 +74,18 @@ def main() -> int:
     logging.basicConfig(filename=args.log_file, encoding="utf-8", level=logging.INFO)
 
     torrent_info = TorrentInfo(
-        torrent_name = args.torrent_name,
-        category = args.category,
-        tags = args.tags.split(","),
-        content_path = args.content_path,
-        root_path = args.root_path,
-        save_path = args.save_path,
-        num_files = args.num_files,
-        torrent_size = args.torrent_size,
-        current_tracker = args.current_tracker,
-        info_hash_v1 = args.info_hash_v1,
-        info_hash_v2 = args.info_hash_v2,
-        torrent_id = args.torrent_id,
+        torrent_name=args.torrent_name,
+        category=args.category,
+        tags=args.tags.split(","),
+        content_path=args.content_path,
+        root_path=args.root_path,
+        save_path=args.save_path,
+        num_files=args.num_files,
+        torrent_size=args.torrent_size,
+        current_tracker=args.current_tracker,
+        info_hash_v1=args.info_hash_v1,
+        info_hash_v2=args.info_hash_v2,
+        torrent_id=args.torrent_id,
     )
 
     # First, write to logfile.
