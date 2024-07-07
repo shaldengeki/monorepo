@@ -52,7 +52,10 @@ def notify_consumer(notify_url: str, args: argparse.Namespace) -> None:
 def pause_torrent(torrent_id: str) -> None:
     logger.info(f"Pausing torrent {torrent_id}")
     with qbittorrentapi.Client(host="localhost", port=8080) as client:
-        client.torrents_pause([torrent_id])
+        try:
+            client.torrents_pause([torrent_id])
+        except qbittorrentapi.NotFound404Error:
+            pass
 
 def main() -> int:
     args = parse_args()
