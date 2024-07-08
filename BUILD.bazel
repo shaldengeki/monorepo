@@ -51,13 +51,6 @@ gazelle_python_manifest(
     # This is what we called our `pip_parse` rule, where third-party
     # python libraries are loaded in BUILD files.
     pip_repository_name = "py_deps",
-    # This should point to wherever we declare our python dependencies
-    # (the same as what we passed to the modules_mapping rule in WORKSPACE)
-    # This argument is optional. If provided, the `.test` target is very
-    # fast because it just has to check an integrity field. If not provided,
-    # the integrity field is not added to the manifest which can help avoid
-    # merge conflicts in large repos.
-    requirements = "//:requirements.lock.txt",
 )
 
 # gazelle:prefix github.com/shaldengeki/monorepo
