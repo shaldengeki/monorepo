@@ -1966,4 +1966,4 @@ manifest:
     zipp.glob: zipp
   pip_repository:
     name: py_deps
-integrity: 20bc7552a65cc578157cd699ffae6708bf480dbd3d20562d055eb7e8d4880b49
+integrity: 2a97a2a7aae472cb8fc11a875e50455edfdcdcc20699d70d92c6792f0f8f6d28
