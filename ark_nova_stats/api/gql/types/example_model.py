@@ -13,9 +13,8 @@ from graphql import (
 )
 
 from ark_nova_stats.config import app, db
-from ark_nova_stats.models import (
-    ExampleModel
-)
+from ark_nova_stats.models import ExampleModel
+
 
 def example_model_fields() -> dict[str, GraphQLField]:
     return {
@@ -24,6 +23,7 @@ def example_model_fields() -> dict[str, GraphQLField]:
             description="The id of the example model.",
         ),
     }
+
 
 example_model_type = GraphQLObjectType(
     "ExampleModel",
@@ -35,9 +35,7 @@ example_model_type = GraphQLObjectType(
 def fetch_example_model(
     example_model: Type[ExampleModel], params: dict[str, Any]
 ) -> Optional[ExampleModel]:
-    return (
-        example_model.query.filter(example_model.id == params["id"])
-    ).first()
+    return (example_model.query.filter(example_model.id == params["id"])).first()
 
 
 example_model_filters: dict[str, GraphQLArgument] = {

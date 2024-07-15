@@ -15,6 +15,7 @@ from sqlalchemy.sql.functions import now
 
 from ark_nova_stats.config import db
 
+
 class ExampleModel(db.Model):
     __tablename__ = "example_models"
 
