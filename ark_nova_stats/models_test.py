@@ -2,9 +2,9 @@ import datetime
 import decimal
 from typing import Generator
 
-from ark_nova_stats.models import TestModel
+from ark_nova_stats.models import ExampleModel
 
 
-class TestTestModel:
+class TestExampleModel:
     def test_sample(self):
-        assert TestModel(id=1)
+        assert ExampleModel(id=1)
