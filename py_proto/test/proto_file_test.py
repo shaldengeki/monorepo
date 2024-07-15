@@ -4,7 +4,8 @@ from py_proto.proto_file import ProtoFile
 
 
 class ProtoFileTest(unittest.TestCase):
-    pass
+    def test_noop(self):
+        assert True
 
 
 if __name__ == "__main__":
