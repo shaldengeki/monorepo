@@ -49,6 +49,7 @@ py_oci_image(
         "DATABASE_NAME": "api_development",
         "FLASK_SECRET_KEY": "testing",
     },
+    tags = ["manual"],
 )
 
 # $ bazel run //proto_registry/api/migrations:image_tarball
@@ -58,5 +59,6 @@ cross_platform_image(
     image = ":base_image",
     repo_tags = ["shaldengeki/proto-registry-api-migrations:latest"],
     repository = "docker.io/shaldengeki/proto-registry-api-migrations",
+    tags = ["manual"],
     visibility = ["//proto_registry/api/migrations:__subpackages__"],
 )

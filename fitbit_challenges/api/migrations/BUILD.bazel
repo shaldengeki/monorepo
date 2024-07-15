@@ -52,6 +52,7 @@ py_oci_image(
         "FITBIT_VERIFICATION_CODE": "testing",
         "FLASK_SECRET_KEY": "testing",
     },
+    tags = ["manual"],
 )
 
 # $ bazel run //fitbit_challenges/api/migrations:image_tarball
@@ -61,5 +62,6 @@ cross_platform_image(
     image = ":base_image",
     repo_tags = ["shaldengeki/fitbit-challenges-migrations:latest"],
     repository = "docker.io/shaldengeki/fitbit-challenges-migrations",
+    tags = ["manual"],
     visibility = ["//fitbit_challenges/api/migrations:__subpackages__"],
 )

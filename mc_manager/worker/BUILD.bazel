@@ -44,6 +44,7 @@ py_oci_image(
         "HOST_PATH": "/var/minecraft",
         "S3_BUCKET": "",
     },
+    tags = ["manual"],
 )
 
 # $ bazel run //mc_manager/worker:image_tarball
@@ -53,5 +54,6 @@ cross_platform_image(
     image = ":base_image",
     repo_tags = ["shaldengeki/mc-manager-worker:latest"],
     repository = "docker.io/shaldengeki/mc-manager-worker",
+    tags = ["manual"],
     visibility = ["//mc_manager/worker:__subpackages__"],
 )
