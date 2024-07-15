@@ -81,6 +81,7 @@ def api_image(
         ],
         env = container_env,
         visibility = visibility,
+        tags = ["manual"],
     )
 
     cross_platform_image(

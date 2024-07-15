@@ -1,0 +1,27 @@
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
+
+py_library(
+    name = "models_py",
+    srcs = ["models.py"],
+    visibility = ["//ark_nova_stats:__subpackages__"],
+    deps = [
+        ":config_py",
+        "@py_deps//requests",
+        "@py_deps//sqlalchemy",
+    ],
+)
+
+py_library(
+    name = "config_py",
+    srcs = ["config.py"],
+    visibility = ["//ark_nova_stats:__subpackages__"],
+    deps = [
+        "//base:flask_app_py",
+    ],
+)
+
+py_test(
+    name = "models_test",
+    srcs = ["models_test.py"],
+    deps = [":models_py"],
+)

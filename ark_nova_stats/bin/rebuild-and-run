@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# For development use.
+# Rebuilds all the containers for the app and reloads any running containers.
+
+set -euxo pipefail
+
+bazel run //ark_nova_stats/api:api_image_image_tarball
+bazel run //ark_nova_stats/api/migrations:image_tarball
+
+docker compose -f docker-compose.yaml -f docker-compose.override.yaml up --no-deps -d api migration pg

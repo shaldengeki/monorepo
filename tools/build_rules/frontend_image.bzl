@@ -102,6 +102,7 @@ def frontend_image(
         srcs = [name + "_webpack"],
         package_dir = "/usr/share/nginx/html",
         strip_prefix = name + "_webpack",
+        tags = ["manual"],
         visibility = visibility,
     )
 
@@ -116,6 +117,7 @@ def frontend_image(
         # Intentionally omit cmd/entrypoint to default to the base nginx container's cmd/entrypoint.
         # entrypoint = [],
         # cmd = [],
+        tags = ["manual"],
         visibility = visibility,
     )
 

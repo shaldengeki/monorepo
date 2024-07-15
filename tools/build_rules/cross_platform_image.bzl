@@ -43,6 +43,7 @@ def cross_platform_image(
         image = name,
         repo_tags = repo_tags,
         visibility = visibility,
+        tags = ["manual"],
     )
 
     oci_push(
@@ -51,4 +52,5 @@ def cross_platform_image(
         remote_tags = stamp_file,
         repository = repository,
         visibility = visibility,
+        tags = ["manual"],
     )
