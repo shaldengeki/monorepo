@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -ex
+
+cd api/migrations
+alembic revision -m "$1"

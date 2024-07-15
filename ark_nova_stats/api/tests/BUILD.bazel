@@ -1,0 +1,22 @@
+load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
+
+py_library(
+    name = "fixtures",
+    srcs = ["fixtures.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//ark_nova_stats/api:app",
+        "@py_deps//flask",
+        "@py_deps//pytest",
+    ],
+)
+
+py_test(
+    name = "example_test",
+    srcs = ["example_test.py"],
+    deps = [
+        ":fixtures",
+        "@py_deps//flask",
+    ],
+)

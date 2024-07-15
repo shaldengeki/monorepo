@@ -1,0 +1,38 @@
+load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_library")
+load("//tools/build_rules:api_image.bzl", "api_image")
+
+py_library(
+    name = "api_lib",
+    srcs = glob(["**/*.py"]),
+    imports = [".."],
+    visibility = ["//ark_nova_stats/api:__subpackages__"],
+    deps = [
+        "//ark_nova_stats:config_py",
+        "//ark_nova_stats:models_py",
+        requirement("Flask"),
+        requirement("Flask-Migrate"),
+        requirement("graphql_server"),
+    ],
+)
+
+api_image(
+    name = "api_image",
+    app_package = "ark_nova_stats.api.app",
+    docker_hub_repository = "docker.io/shaldengeki/ark-nova-stats-api",
+    repo_tags = ["shaldengeki/ark-nova-stats-api:latest"],
+    deps = [":api_lib"],
+)
+
+py_library(
+    name = "app",
+    srcs = ["app.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//ark_nova_stats:config_py",
+        "//ark_nova_stats:models_py",
+        "//ark_nova_stats/api/gql:schema",
+        "@py_deps//flask",
+        "@py_deps//graphql_server",
+    ],
+)
