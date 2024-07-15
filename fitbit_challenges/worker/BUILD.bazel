@@ -56,6 +56,5 @@ cross_platform_image(
     image = ":base_image",
     repo_tags = ["shaldengeki/fitbit-challenges-worker:latest"],
     repository = "docker.io/shaldengeki/fitbit-challenges-worker",
-    tags = ["manual"],
     visibility = ["//fitbit_challenges/worker:__subpackages__"],
 )

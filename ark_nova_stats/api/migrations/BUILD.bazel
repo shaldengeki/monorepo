@@ -63,7 +63,6 @@ cross_platform_image(
     image = ":base_image",
     repo_tags = ["shaldengeki/ark-nova-stats-api-migrations:latest"],
     repository = "docker.io/shaldengeki/ark-nova-stats-api-migrations",
-    tags = ["manual"],
     visibility = ["//ark_nova_stats/api/migrations:__subpackages__"],
 )
 

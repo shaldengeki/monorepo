@@ -60,6 +60,5 @@ cross_platform_image(
     image = ":base_image",
     repo_tags = ["shaldengeki/home-api-api-migrations:latest"],
     repository = "docker.io/shaldengeki/home-api-api-migrations",
-    tags = ["manual"],
     visibility = ["//home_api/api/migrations:__subpackages__"],
 )

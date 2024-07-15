@@ -59,6 +59,5 @@ cross_platform_image(
     image = ":base_image",
     repo_tags = ["shaldengeki/mc-manager-api-migrations:latest"],
     repository = "docker.io/shaldengeki/mc-manager-api-migrations",
-    tags = ["manual"],
     visibility = ["//mc_manager/api/migrations:__subpackages__"],
 )
