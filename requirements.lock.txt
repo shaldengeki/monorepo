@@ -206,9 +206,9 @@ flask-cors==4.0.1 \
     --hash=sha256:eeb69b342142fdbf4766ad99357a7f3876a2ceb77689dc10ff912aac06c389e4 \
     --hash=sha256:f2a704e4458665580c074b714c4627dd5a306b333deb9074d0b1794dfa2fb677
     # via -r requirements.txt
-flask-migrate==4.0.5 \
-    --hash=sha256:613a2df703998e78716cace68cd83972960834424457f5b67f56e74fff950aef \
-    --hash=sha256:d3f437a8b5f3849d1bb1b60e1b818efc564c66e3fefe90b62e5db08db295e1b1
+flask-migrate==4.0.7 \
+    --hash=sha256:5c532be17e7b43a223b7500d620edae33795df27c75811ddf32560f7d48ec617 \
+    --hash=sha256:dff7dd25113c210b069af280ea713b883f3840c1e3455274745d7355778c8622
     # via -r requirements.txt
 flask-sqlalchemy==3.1.1 \
     --hash=sha256:4ba4be7f419dc72f4efd8802d69974803c37259dd42f3913b0dcf75c9447e0a0 \
