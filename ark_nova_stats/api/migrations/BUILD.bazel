@@ -23,6 +23,7 @@ py_binary(
     visibility = ["//:__subpackages__"],
     deps = [
         "//ark_nova_stats:config_py",
+        "//scripts:wait_for_postgres",  # keep
         "@py_deps//flask_migrate",
         "@rules_python//python/runfiles",
     ],
@@ -59,8 +60,8 @@ py_oci_image(
 cross_platform_image(
     name = "image",
     image = ":base_image",
-    repo_tags = ["shaldengeki/ark-nova-stats-migrations:latest"],
-    repository = "docker.io/shaldengeki/ark-nova-stats-migrations",
+    repo_tags = ["shaldengeki/ark-nova-stats-api-migrations:latest"],
+    repository = "docker.io/shaldengeki/ark-nova-stats-api-migrations",
     visibility = ["//ark_nova_stats/api/migrations:__subpackages__"],
 )
 
