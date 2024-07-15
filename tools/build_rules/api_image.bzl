@@ -53,6 +53,7 @@ def api_image(
         deps = deps + [
             "@rules_python//python/runfiles",
         ],
+        tags = ["manual"],
     )
 
     if env == None:
