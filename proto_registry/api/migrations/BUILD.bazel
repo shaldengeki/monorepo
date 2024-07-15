@@ -49,6 +49,7 @@ py_oci_image(
         "DATABASE_NAME": "api_development",
         "FLASK_SECRET_KEY": "testing",
     },
+    tags = ["manual"],
 )
 
 # $ bazel run //proto_registry/api/migrations:image_tarball

@@ -53,6 +53,7 @@ py_oci_image(
         "FITBIT_VERIFICATION_CODE": "testing",
         "FLASK_SECRET_KEY": "testing",
     },
+    tags = ["manual"],
 )
 
 # $ bazel run //ark_nova_stats/api/migrations:image_tarball

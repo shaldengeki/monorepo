@@ -52,6 +52,7 @@ py_oci_image(
         "FITBIT_VERIFICATION_CODE": "testing",
         "FLASK_SECRET_KEY": "testing",
     },
+    tags = ["manual"],
 )
 
 # $ bazel run //fitbit_challenges/api/migrations:image_tarball

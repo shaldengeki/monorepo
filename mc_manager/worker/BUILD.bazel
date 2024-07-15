@@ -44,6 +44,7 @@ py_oci_image(
         "HOST_PATH": "/var/minecraft",
         "S3_BUCKET": "",
     },
+    tags = ["manual"],
 )
 
 # $ bazel run //mc_manager/worker:image_tarball
