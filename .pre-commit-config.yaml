@@ -34,7 +34,7 @@ repos:
             -   id: mypy
                 additional_dependencies: [types-requests==2.31.0.20240218]
     -   repo: https://github.com/pre-commit/mirrors-eslint
-        rev: 'v9.6.0'
+        rev: 'v9.7.0'
         hooks:
             -   id: eslint
                 files: \.[jt]sx?$  # *.js, *.jsx, *.ts and *.tsx
