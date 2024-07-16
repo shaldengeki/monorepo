@@ -1,6 +1,6 @@
 from flask.testing import FlaskClient
 
-from ark_nova_stats.api.tests.fixtures import app, client  # noqa
+from skeleton.api.tests.fixtures import app, client  # noqa
 
 
 def test_example_request(client: FlaskClient) -> None:

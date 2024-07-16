@@ -4,7 +4,7 @@ import flask
 import pytest
 from flask.testing import FlaskClient, FlaskCliRunner
 
-from ark_nova_stats.api.app import app as base_app
+from skeleton.api.app import app as base_app
 
 
 @pytest.fixture

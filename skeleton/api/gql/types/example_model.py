@@ -12,8 +12,8 @@ from graphql import (
     GraphQLObjectType,
 )
 
-from ark_nova_stats.config import app, db
-from ark_nova_stats.models import ExampleModel
+from skeleton.config import app, db
+from skeleton.models import ExampleModel
 
 
 def example_model_fields() -> dict[str, GraphQLField]:

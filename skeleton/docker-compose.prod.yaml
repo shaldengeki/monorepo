@@ -7,18 +7,18 @@ services:
       - env/.api.prod.env
   migration:
     <<: *api
-    image: shaldengeki/ark-nova-stats-api-migrations:latest
+    image: shaldengeki/skeleton-api-migrations:latest
     ports: []
   worker:
     <<: *api
-    image: shaldengeki/ark-nova-stats-worker:latest
+    image: shaldengeki/skeleton-worker:latest
     ports: []
   pg:
     restart: always
     env_file:
       - env/.postgres.prod.env
   frontend:
-    image: shaldengeki/ark-nova-stats-frontend:latest
+    image: shaldengeki/skeleton-frontend:latest
     ports:
       - "5001:80"
     env_file:

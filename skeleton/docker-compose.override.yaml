@@ -7,11 +7,11 @@ services:
       - "5000:5000"
   migration:
     <<: *api
-    image: shaldengeki/ark-nova-stats-api-migrations
+    image: shaldengeki/skeleton-api-migrations
     ports: []
   worker:
     <<: *api
-    image: shaldengeki/ark-nova-stats-worker:latest
+    image: shaldengeki/skeleton-worker:latest
     ports: []
     deploy:
       replicas: 0
@@ -19,7 +19,7 @@ services:
     env_file:
       - env/.postgres.env
   frontend:
-    image: shaldengeki/ark-nova-stats-frontend:latest
+    image: shaldengeki/skeleton-frontend:latest
     env_file:
       - env/.frontend.env
     ports:

@@ -29,7 +29,7 @@ ssh $PROD_HOST "
     docker exec \
         -t \
         --env PGPASSFILE=/tmp/.pgpass \
-        ark-nova-stats-api-1 \
+        skeleton-api-1 \
         /bin/sh -c \"
             echo \\\"*:*:*:$PROD_DB_USERNAME:$PROD_DB_PASSWORD\\\" > /tmp/.pgpass ;
             chmod 0600 /tmp/.pgpass ;
@@ -48,7 +48,7 @@ docker compose up -d pg
 sleep 5
 cat pg_dump.sql | docker exec \
     -i \
-    ark-nova-stats-pg-1 \
+    skeleton-pg-1 \
     psql \
     --username $LOCAL_DB_USERNAME \
     --dbname $LOCAL_DATABASE_NAME

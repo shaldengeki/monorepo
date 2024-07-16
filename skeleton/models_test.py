@@ -2,7 +2,7 @@ import datetime
 import decimal
 from typing import Generator
 
-from ark_nova_stats.models import ExampleModel
+from skeleton.models import ExampleModel
 
 
 class TestExampleModel:

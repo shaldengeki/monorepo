@@ -5,7 +5,7 @@ py_library(
     srcs = ["fixtures.py"],
     visibility = ["//:__subpackages__"],
     deps = [
-        "//ark_nova_stats/api:app",
+        "//skeleton/api:app",
         "@py_deps//flask",
         "@py_deps//pytest",
     ],

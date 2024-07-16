@@ -5,8 +5,8 @@ py_library(
     srcs = ["example_model.py"],
     visibility = ["//:__subpackages__"],
     deps = [
-        "//ark_nova_stats:config_py",
-        "//ark_nova_stats:models_py",
+        "//skeleton:config_py",
+        "//skeleton:models_py",
         "@py_deps//flask",
         "@py_deps//graphql_core",
     ],

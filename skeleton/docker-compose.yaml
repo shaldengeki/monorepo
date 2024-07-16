@@ -1,7 +1,7 @@
 version: '3'
 services:
   api: &api
-    image: shaldengeki/ark-nova-stats-api:latest
+    image: shaldengeki/skeleton-api:latest
     env_file:
       - env/.api.env
     restart: always
@@ -9,23 +9,23 @@ services:
       - pg
   migration:
     <<: *api
-    image: shaldengeki/ark-nova-stats-api-migrations:latest
+    image: shaldengeki/skeleton-api-migrations:latest
     restart: no
   worker:
     <<: *api
-    image: shaldengeki/ark-nova-stats-worker:latest
+    image: shaldengeki/skeleton-worker:latest
   pg:
     image: postgres:alpine
     restart: always
     env_file:
       - env/.postgres.env
     volumes:
-      - ark-nova-stats-pg:/var/lib/postgresql/data
+      - skeleton-pg:/var/lib/postgresql/data
   frontend:
-    image: shaldengeki/ark-nova-stats-frontend:latest
+    image: shaldengeki/skeleton-frontend:latest
     env_file:
       - env/.frontend.env
     restart: always
 volumes:
-  ark-nova-stats-pg:
-    name: ark-nova-stats_ark-nova-stats-pg
+  skeleton-pg:
+    name: skeleton_skeleton-pg

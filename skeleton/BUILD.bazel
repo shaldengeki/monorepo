@@ -3,7 +3,7 @@ load("@rules_python//python:defs.bzl", "py_library", "py_test")
 py_library(
     name = "models_py",
     srcs = ["models.py"],
-    visibility = ["//ark_nova_stats:__subpackages__"],
+    visibility = ["//skeleton:__subpackages__"],
     deps = [
         ":config_py",
         "@py_deps//requests",
@@ -14,7 +14,7 @@ py_library(
 py_library(
     name = "config_py",
     srcs = ["config.py"],
-    visibility = ["//ark_nova_stats:__subpackages__"],
+    visibility = ["//skeleton:__subpackages__"],
     deps = [
         "//base:flask_app_py",
     ],

@@ -22,7 +22,7 @@ py_binary(
     main = "__main__.py",
     visibility = ["//:__subpackages__"],
     deps = [
-        "//ark_nova_stats:config_py",
+        "//skeleton:config_py",
         "//scripts:wait_for_postgres",  # keep
         "@py_deps//flask_migrate",
         "@rules_python//python/runfiles",
@@ -34,8 +34,8 @@ py_oci_image(
     base = "@python3_image",
     binary = ":binary",
     cmd = [
-        "/ark_nova_stats/api/migrations/binary.runfiles/_main/scripts/wait_for_postgres",
-        "/ark_nova_stats/api/migrations/binary",
+        "/skeleton/api/migrations/binary.runfiles/_main/scripts/wait_for_postgres",
+        "/skeleton/api/migrations/binary",
     ],
     env = {
         "FLASK_APP": "app.py",
@@ -56,14 +56,14 @@ py_oci_image(
     tags = ["manual"],
 )
 
-# $ bazel run //ark_nova_stats/api/migrations:image_tarball
-# $ docker run --rm shaldengeki/ark-nova-stats-api-migrations:latest
+# $ bazel run //skeleton/api/migrations:image_tarball
+# $ docker run --rm shaldengeki/skeleton-api-migrations:latest
 cross_platform_image(
     name = "image",
     image = ":base_image",
-    repo_tags = ["shaldengeki/ark-nova-stats-api-migrations:latest"],
-    repository = "docker.io/shaldengeki/ark-nova-stats-api-migrations",
-    visibility = ["//ark_nova_stats/api/migrations:__subpackages__"],
+    repo_tags = ["shaldengeki/skeleton-api-migrations:latest"],
+    repository = "docker.io/shaldengeki/skeleton-api-migrations",
+    visibility = ["//skeleton/api/migrations:__subpackages__"],
 )
 
 py_library(

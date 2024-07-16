@@ -6,9 +6,9 @@ py_library(
     srcs = ["app.py"],
     visibility = ["//:__subpackages__"],
     deps = [
-        "//ark_nova_stats:config_py",
-        "//ark_nova_stats:models_py",
-        "//ark_nova_stats/api/gql:schema",
+        "//skeleton:config_py",
+        "//skeleton:models_py",
+        "//skeleton/api/gql:schema",
         "@py_deps//flask",
         "@py_deps//graphql_server",
     ],
@@ -16,8 +16,8 @@ py_library(
 
 api_image(
     name = "api_image",
-    app_package = "ark_nova_stats.api.app",
-    docker_hub_repository = "docker.io/shaldengeki/ark-nova-stats-api",
-    repo_tags = ["shaldengeki/ark-nova-stats-api:latest"],
+    app_package = "skeleton.api.app",
+    docker_hub_repository = "docker.io/shaldengeki/skeleton-api",
+    repo_tags = ["shaldengeki/skeleton-api:latest"],
     deps = [":app"],
 )

@@ -13,7 +13,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from sqlalchemy.sql.functions import now
 
-from ark_nova_stats.config import db
+from skeleton.config import db
 
 
 class ExampleModel(db.Model):
