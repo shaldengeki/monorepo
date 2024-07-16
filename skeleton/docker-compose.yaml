@@ -1,0 +1,31 @@
+version: '3'
+services:
+  api: &api
+    image: shaldengeki/skeleton-api:latest
+    env_file:
+      - env/.api.env
+    restart: always
+    depends_on:
+      - pg
+  migration:
+    <<: *api
+    image: shaldengeki/skeleton-api-migrations:latest
+    restart: no
+  worker:
+    <<: *api
+    image: shaldengeki/skeleton-worker:latest
+  pg:
+    image: postgres:alpine
+    restart: always
+    env_file:
+      - env/.postgres.env
+    volumes:
+      - skeleton-pg:/var/lib/postgresql/data
+  frontend:
+    image: shaldengeki/skeleton-frontend:latest
+    env_file:
+      - env/.frontend.env
+    restart: always
+volumes:
+  skeleton-pg:
+    name: skeleton_skeleton-pg

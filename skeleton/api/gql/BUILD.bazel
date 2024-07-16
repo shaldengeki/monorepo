@@ -1,0 +1,12 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "schema",
+    srcs = ["schema.py"],
+    visibility = ["//skeleton/api:__subpackages__"],
+    deps = [
+        "//skeleton:models_py",
+        "//skeleton/api/gql/types:example_model",
+        "@py_deps//graphql_core",
+    ],
+)
