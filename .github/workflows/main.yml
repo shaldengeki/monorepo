@@ -70,7 +70,7 @@ jobs:
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //home_api/api:api_image_image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //home_api/api/migrations:image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //home_api/frontend:production_cross_platform_image_dockerhub
-  push_fitbit_challenges:
+  push_mc_manager:
     needs: build
     runs-on: ubuntu-latest
     steps:
