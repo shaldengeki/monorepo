@@ -10,29 +10,34 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # # Caches and restores the bazelisk download directory, the bazel build directory.
-      # - name: Cache bazel
-      #   uses: actions/cache@v4
-      #   env:
-      #     cache-name: bazel-cache
-      #   with:
-      #     path: |
-      #       ~/.cache/bazelisk
-      #       ~/.cache/bazel
-      #       ~/.cache/bazel-repo
-      #     key: ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-${{ github.sha }}
-      #     # Pull caches from:
-      #     # - The current sha,
-      #     # - The current branch,
-      #     # - base branch
-      #     restore-keys: |
-      #       ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-${{ github.sha }}
-      #       ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-
-      #       ${{ runner.os }}-${{ env.cache-name }}-refs/heads/${{ github.base_ref }}-
+      # Caches and restores the bazelisk download directory, the bazel build directory.
+      - name: Cache bazel
+        uses: actions/cache@v4
+        env:
+          cache-name: bazel-cache
+        with:
+          path: |
+            ~/.cache/bazelisk
+            ~/.cache/bazel
+            ~/.cache/bazel-repo
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-${{ github.sha }}
+          # Pull caches from:
+          # - The current sha,
+          # - The current branch,
+          # - base branch
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-${{ github.sha }}
+            ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-
+            ${{ runner.os }}-${{ env.cache-name }}-refs/heads/${{ github.base_ref }}-
       - name: Checkout
         uses: actions/checkout@v4
       - name: bazel test //...
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc test //...
+  push_fitbit_challenges:
+    needs: build
+    runs-on: ubuntu-latest
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Login to Docker Hub
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/login-action@v3
@@ -46,9 +51,37 @@ jobs:
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/api/migrations:image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/worker:image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/frontend:production_cross_platform_image_dockerhub
+  push_home_api:
+    needs: build
+    runs-on: ubuntu-latest
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Push to Docker Hub
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //home_api/api:api_image_image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //home_api/api/migrations:image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //home_api/frontend:production_cross_platform_image_dockerhub
+  push_fitbit_challenges:
+    needs: build
+    runs-on: ubuntu-latest
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Push to Docker Hub
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //mc_manager/api:api_image_image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //mc_manager/api/migrations:image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //mc_manager/worker:image_dockerhub
