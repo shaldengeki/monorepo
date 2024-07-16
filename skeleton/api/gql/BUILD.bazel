@@ -1,0 +1,12 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "schema",
+    srcs = ["schema.py"],
+    visibility = ["//ark_nova_stats/api:__subpackages__"],
+    deps = [
+        "//ark_nova_stats:models_py",
+        "//ark_nova_stats/api/gql/types:example_model",
+        "@py_deps//graphql_core",
+    ],
+)
