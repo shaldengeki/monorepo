@@ -18,7 +18,8 @@ def test_submit_game_log(client: FlaskClient) -> None:
             "query": """
                 mutation {
                     submitGameLog(
-                        log: \"""" + urllib.parse.quote(game_log) + """\"
+                        log: \"""" + urllib.parse.quote(game_log) + """\",
+                        source: "BGA"
                     ) {
                         success
                     }
