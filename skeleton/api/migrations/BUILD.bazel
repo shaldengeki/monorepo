@@ -22,8 +22,8 @@ py_binary(
     main = "__main__.py",
     visibility = ["//:__subpackages__"],
     deps = [
-        "//skeleton:config_py",
         "//scripts:wait_for_postgres",  # keep
+        "//skeleton:config_py",
         "@py_deps//flask_migrate",
         "@rules_python//python/runfiles",
     ],
