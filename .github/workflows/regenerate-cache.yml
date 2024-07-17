@@ -54,4 +54,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          BRANCH: refs/heads/main
+          BRANCH: ${{ github.ref }}
