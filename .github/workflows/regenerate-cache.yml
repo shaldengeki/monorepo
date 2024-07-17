@@ -3,7 +3,7 @@ name: Regenerate cache
 on:
   schedule:
     # Daily
-    - cron: '40 * * * *'
+    - cron: '23 4 * * *'
 
 jobs:
   regenerate-cache:
