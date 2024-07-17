@@ -3,10 +3,12 @@ name: Regenerate cache
 on:
   schedule:
     # Daily
-    - cron: '23 1 * * *'
+    - cron: '40 * * * *'
 
 jobs:
-  build:
+  regenerate-cache:
+    permissions:
+      actions: write
     runs-on: ubuntu-latest
     steps:
       # Caches and restores the bazelisk download directory, the bazel build directory.
@@ -34,3 +36,22 @@ jobs:
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc clean --expunge
       - name: bazel test //...
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc test //...
+      - name: Delete prior cache
+        run: |
+          gh extension install actions/gh-actions-cache
+
+          echo "Fetching prior cache keys"
+          cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
+
+          ## Setting this to not fail the workflow while deleting cache keys.
+          set +e
+          echo "Deleting prior caches..."
+          for cacheKey in $cacheKeysForPR
+          do
+              gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
+          done
+          echo "Done"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: refs/heads/main
