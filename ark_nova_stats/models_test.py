@@ -5,12 +5,12 @@ from typing import Generator
 
 import pytest
 
-from ark_nova_stats.models import ExampleModel
+from ark_nova_stats.models import GameLog
 
 
-class TestExampleModel:
+class TestGameLog:
     def test_sample(self):
-        assert ExampleModel(id=1)
+        assert GameLog(id=1)
 
 
 if __name__ == "__main__":

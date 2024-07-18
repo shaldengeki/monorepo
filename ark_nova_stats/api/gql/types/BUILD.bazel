@@ -1,8 +1,8 @@
 load("@rules_python//python:defs.bzl", "py_library")
 
 py_library(
-    name = "example_model",
-    srcs = ["example_model.py"],
+    name = "game_log",
+    srcs = ["game_log.py"],
     visibility = ["//:__subpackages__"],
     deps = [
         "//ark_nova_stats:config_py",
