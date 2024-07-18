@@ -15,9 +15,7 @@ def Schema(app):
         mutation=GraphQLObjectType(
             name="Mutation",
             fields={
-                "submitGameLogs": submit_game_logs_field(
-                    GameLog
-                ),
+                "submitGameLogs": submit_game_logs_field(GameLog),
             },
         ),
     )

@@ -14,6 +14,7 @@ from sqlalchemy.sql.functions import now
 
 from ark_nova_stats.config import db
 
+
 @dataclasses.dataclass
 class GameLogDataLogDataJSON:
     uid: str
@@ -34,7 +35,7 @@ class GameLogDataLogJSON:
     data: list[GameLogDataLogDataJSON]
 
     def __post_init__(self):
-        self.data = [GameLogDataLogDataJSON(**x) for x in self.data]
+        self.data = [GameLogDataLogDataJSON(**x) for x in self.data]  # type: ignore
 
 
 @dataclasses.dataclass
@@ -51,7 +52,7 @@ class GameLogDataJSON:
     players: list[GameLogDataPlayerJSON]
 
     def __post_init__(self):
-        self.players = [GameLogDataPlayerJSON(**x) for x in self.players]
+        self.players = [GameLogDataPlayerJSON(**x) for x in self.players]  # type: ignore
 
 
 @dataclasses.dataclass
@@ -60,7 +61,7 @@ class GameLogContainerJSON:
     data: GameLogDataJSON
 
     def __post_init__(self):
-        self.data = GameLogDataJSON(**self.data)
+        self.data = GameLogDataJSON(**self.data)  # type: ignore
 
 
 class GameLog(db.Model):

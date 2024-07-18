@@ -1,17 +1,17 @@
 """create-game-logs
 
 Revision ID: 2ce11871a414
-Revises: 
+Revises:
 Create Date: 2024-07-18 00:11:53.246321
 
 """
-from alembic import op
+
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.sql.functions import now
 
-
 # revision identifiers, used by Alembic.
-revision = '2ce11871a414'
+revision = "2ce11871a414"
 down_revision = None
 branch_labels = None
 depends_on = None
