@@ -31,12 +31,19 @@ def test_submit_game_logs(client: FlaskClient) -> None:
             """,
             "variables": {
                 "logs": game_log,
-            }
+            },
         },
     )
-    assert response.json.get("data", {}), f"data field not set on response json: {response.json}"
-    assert response.json["data"].get("submitGameLogs", {}), f"submitGameLogs field not set on response json: {response.json['data']}"
-    assert response.json["data"]["submitGameLogs"].get("log", "") == game_log, f"game log was not expected value: {response.json}"
+    assert response.json.get(
+        "data", {}
+    ), f"data field not set on response json: {response.json}"
+    assert response.json["data"].get(
+        "submitGameLogs", {}
+    ), f"submitGameLogs field not set on response json: {response.json['data']}"
+    assert (
+        response.json["data"]["submitGameLogs"].get("log", "") == game_log
+    ), f"game log was not expected value: {response.json}"
+
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__] + sys.argv[1:]))

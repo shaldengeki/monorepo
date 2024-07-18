@@ -56,6 +56,7 @@ def game_log_field(game_log: type[GameLog]) -> GraphQLField:
         resolve=lambda root, info, **args: fetch_game_log(game_log, args),
     )
 
+
 def submit_game_logs(
     game_log_model: Type[GameLog],
     args: dict[str, Any],
@@ -87,7 +88,5 @@ def submit_game_logs_field(
                 description="JSON-encoded representation of game logs.",
             ),
         },
-        resolve=lambda root, info, **args: submit_game_logs(
-            game_log_model, args
-        ),
+        resolve=lambda root, info, **args: submit_game_logs(game_log_model, args),
     )
