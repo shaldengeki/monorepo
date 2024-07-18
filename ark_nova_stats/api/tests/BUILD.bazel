@@ -11,11 +11,21 @@ py_library(
     ],
 )
 
+filegroup(
+    name = "fixture_files",
+    srcs = glob(["fixtures/*"]),
+)
+
 py_test(
-    name = "example_test",
-    srcs = ["example_test.py"],
+    name = "game_log_test",
+    srcs = ["game_log_test.py"],
+    data = [
+        ":fixture_files",
+    ],
     deps = [
         ":fixtures",
         "@py_deps//flask",
+        "@py_deps//pytest",
+        "@rules_python//python/runfiles",
     ],
 )
