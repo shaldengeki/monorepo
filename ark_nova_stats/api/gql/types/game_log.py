@@ -11,8 +11,9 @@ from graphql import (
     GraphQLString,
 )
 
+from ark_nova_stats.bga_log_parser.game_log import GameLogContainerJSON
 from ark_nova_stats.config import app, db
-from ark_nova_stats.models import GameLog, GameLogContainerJSON
+from ark_nova_stats.models import GameLog
 
 
 def game_log_fields() -> dict[str, GraphQLField]:

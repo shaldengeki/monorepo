@@ -1,25 +1,23 @@
 load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
-py_library(
+filegroup(
     name = "fixtures",
-    srcs = ["fixtures.py"],
+    srcs = glob(["fixtures/*"]),
+    visibility = ["//ark_nova_stats:__subpackages__"],
+)
+
+py_library(
+    name = "game_log",
+    srcs = ["game_log.py"],
     visibility = ["//:__subpackages__"],
-    deps = [
-        "//ark_nova_stats/api:app",
-        "@py_deps//flask",
-        "@py_deps//pytest",
-    ],
 )
 
 py_test(
     name = "game_log_test",
     srcs = ["game_log_test.py"],
-    data = [
-        "//ark_nova_stats/bga_log_parser:fixtures",
-    ],
+    data = [":fixtures"],
     deps = [
-        ":fixtures",
-        "@py_deps//flask",
+        ":game_log",
         "@py_deps//pytest",
         "@rules_python//python/runfiles",
     ],

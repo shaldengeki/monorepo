@@ -11,7 +11,7 @@ from ark_nova_stats.api.tests.fixtures import app, client
 def test_submit_game_logs(client: FlaskClient) -> None:
     r = Runfiles.Create()
     sample_game_fixture = r.Rlocation(
-        "_main/ark_nova_stats/api/tests/fixtures/sample_game.log.json"
+        "_main/ark_nova_stats/bga_log_parser/fixtures/sample_game.log.json"
     )
     with open(sample_game_fixture, "r") as sample_game_logfile:
         game_log = sample_game_logfile.read().strip()
