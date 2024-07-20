@@ -11,8 +11,9 @@ from graphql import (
     GraphQLString,
 )
 
+from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import app, db
-from ark_nova_stats.models import GameLog, GameLogContainerJSON
+from ark_nova_stats.models import GameLog
 
 
 def game_log_fields() -> dict[str, GraphQLField]:
@@ -62,7 +63,7 @@ def submit_game_logs(
     args: dict[str, Any],
 ) -> GameLog:
     json_logs = json.loads(args["logs"])
-    parsed_logs = GameLogContainerJSON(**json_logs)
+    parsed_logs = ParsedGameLog(**json_logs)
 
     # For now, just store the literal log string.
     log = GameLog(log=args["logs"])
