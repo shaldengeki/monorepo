@@ -4,10 +4,10 @@ import sys
 import pytest
 from python.runfiles import Runfiles
 
-from ark_nova_stats.bga_log_parser.game_log import GameLogContainerJSON
+from ark_nova_stats.bga_log_parser.game_log import GameLog
 
 
-class TestGameLogContainerJSON:
+class TestGameLog:
     def test_parses_sample_game(self):
         r = Runfiles.Create()
         sample_game_fixture = r.Rlocation(
@@ -16,7 +16,7 @@ class TestGameLogContainerJSON:
         with open(sample_game_fixture, "r") as sample_game_logfile:
             game_log = json.loads(sample_game_logfile.read().strip())
 
-        x = GameLogContainerJSON(**game_log)
+        x = GameLog(**game_log)
 
 
 if __name__ == "__main__":
