@@ -16,14 +16,17 @@ class GameLogEntryData:
 @dataclass
 class GameLogEntry:
     channel: str
-    table_id: str
+    table_id: int
     packet_id: str
     packet_type: str
-    move_id: str
-    time: str
+    move_id: int
+    time: int
     data: list[GameLogEntryData]
 
     def __post_init__(self):
+        self.table_id = int(self.table_id)
+        self.move_id = int(self.move_id)
+        self.time = int(self.time)
         self.data = [GameLogEntryData(**x) for x in self.data]  # type: ignore
 
 
