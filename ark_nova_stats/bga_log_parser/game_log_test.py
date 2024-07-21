@@ -25,6 +25,7 @@ class TestGameLog:
         assert 537650395 == x.data.logs[0].table_id
         assert 1 == x.data.logs[0].move_id
         assert 1721046021 == x.data.logs[0].time
+        assert x.winner is not None and "sorryimlikethis" == x.winner.name
 
 
 if __name__ == "__main__":
