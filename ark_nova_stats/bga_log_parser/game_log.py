@@ -12,6 +12,20 @@ class GameLogEventData:
     synchro: Optional[int] = None
     h: Optional[str] = None
 
+    PLAY_LOGS = [
+        "plays",
+        "supports a conservation project",
+        "and places it in",
+        "buys",
+    ]
+
+    @property
+    def is_play_action(self) -> bool:
+        if "card_name" not in self.args:
+            return False
+
+        return any(play_log in self.log for play_log in self.PLAY_LOGS)
+
 
 @dataclass
 class GameLogEvent:

@@ -1,0 +1,9 @@
+{
+    "uid": "669cd9fd255eb",
+    "type": "chooseActionCard",
+    "log": "${player_name} chooses action card ${action_card_name}${action_card_icon}${action_card_level} with strength ${strength_icon}${strength}",
+    "args": {"actionCard": {"id": 4, "strength": 5, "pId": 93481498, "extraDatas": null, "type": "Association", "status": 1, "level": 1}, "strength": 5, "player_name": "Darcelmaw", "player_id": 93481498, "i18n": ["action_card_name"], "action_card_name": "Association", "action_card_level": "I", "action_card_icon": "", "action_card_type": "Association", "preserve": ["action_card_type"], "strength_icon": ""},
+    "lock_uuid": null,
+    "synchro": null,
+    "h": "939340"
+}

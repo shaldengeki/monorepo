@@ -24,18 +24,7 @@ def main() -> int:
     all_cards: Counter[str] = Counter()
     event_logs: set[str] = set()
     skipped_event_logs: set[str] = set()
-    play_log_actions = [
-        "plays",
-        "gains",
-        "supports a conservation project",
-        "adds",
-        "releases",
-        "and places it in",
-        "gets an extra action",
-        "moves",
-        "places it using",
-        "buys",
-    ]
+
     for p in list_game_datafiles():
         # print(p)
         with open(p, "r") as f:
@@ -44,14 +33,7 @@ def main() -> int:
         game_cards = set()
         for event in log.data.logs:
             for event_data in event.data:
-                # If not a card action, skip.
-                if "card_name" not in event_data.args:
-                    continue
-
-                # If not playing or supporting a card, skip.
-                if not any(
-                    play_action in event_data.log for play_action in play_log_actions
-                ):
+                if not event_data.is_play_action:
                     continue
 
                 game_cards.add(event_data.args["card_name"])
@@ -60,7 +42,7 @@ def main() -> int:
 
     print("Most common cards:")
     for card, count in all_cards.most_common(10):
-        print(f"  - {card}")
+        print(f"  - {card}: {count}")
 
     return 0
 
