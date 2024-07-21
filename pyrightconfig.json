@@ -1,0 +1,13 @@
+{
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/postgres-data",
+    "bazel-bin",
+    "bazel-out",
+    "bazel-monorepo",
+    "bazel-rules",
+    "bazel-testlogs",
+    ".aspect/"
+  ]
+}
