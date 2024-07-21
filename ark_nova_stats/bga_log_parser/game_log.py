@@ -12,6 +12,20 @@ class GameLogEventData:
     synchro: Optional[int] = None
     h: Optional[str] = None
 
+    PLAY_LOGS = [
+        "plays",
+        "supports a conservation project",
+        "and places it in",
+        "buys",
+    ]
+
+    @property
+    def is_play_action(self) -> bool:
+        if "card_name" not in self.args:
+            return False
+
+        return any(play_log in self.log for play_log in self.PLAY_LOGS)
+
 
 @dataclass
 class GameLogEvent:
@@ -19,13 +33,14 @@ class GameLogEvent:
     table_id: int
     packet_id: str
     packet_type: str
-    move_id: int
     time: int
     data: list[GameLogEventData]
+    move_id: Optional[int] = None
 
     def __post_init__(self):
         self.table_id = int(self.table_id)
-        self.move_id = int(self.move_id)
+        if self.move_id is not None:
+            self.move_id = int(self.move_id)
         self.time = int(self.time)
         self.data = [GameLogEventData(**x) for x in self.data]  # type: ignore
 
