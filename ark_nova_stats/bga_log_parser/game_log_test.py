@@ -18,6 +18,14 @@ class TestGameLog:
 
         x = GameLog(**game_log)
 
+        assert 1 == x.status
+        assert 1098 == len(x.data.logs)
+        assert "Baboude" == x.data.players[0].name
+        assert "sorryimlikethis" == x.data.players[1].name
+        assert 537650395 == x.data.logs[0].table_id
+        assert 1 == x.data.logs[0].move_id
+        assert 1721046021 == x.data.logs[0].time
+
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__] + sys.argv[1:]))
