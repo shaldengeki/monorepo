@@ -12,9 +12,9 @@ asn1crypto==1.5.1 \
     --hash=sha256:13ae38502be632115abf8a24cbe5f4da52e3b5231990aff31123c805306ccb9c \
     --hash=sha256:db4e40728b728508912cbb3d44f19ce188f218e9eba635821bb4b68564f8fd67
     # via scramp
-astroid==3.2.3 \
-    --hash=sha256:3eae9ea67c11c858cdd2c91337d2e816bd019ac897ca07d7b346ac10105fceb3 \
-    --hash=sha256:7099b5a60985529d8d46858befa103b82d0d05a5a5e8b816b5303ed96075e1d9
+astroid==3.2.4 \
+    --hash=sha256:0e14202810b30da1b735827f78f5157be2bbd4a7a59b7707ca0bfc2fb4c0063a \
+    --hash=sha256:413658a61eeca6202a59231abb473f932038fbcbf1666587f66d482083413a25
     # via
     #   -r requirements.txt
     #   pylint
@@ -530,9 +530,9 @@ protobuf==5.27.2 \
     --hash=sha256:b848dbe1d57ed7c191dfc4ea64b8b004a3f9ece4bf4d0d80a367b76df20bf36e \
     --hash=sha256:f3ecdef226b9af856075f28227ff2c90ce3a594d092c39bee5513573f25e2714
     # via -r requirements.txt
-pylint==3.2.5 \
-    --hash=sha256:32cd6c042b5004b8e857d727708720c54a676d1e22917cf1a2df9b4d4868abd6 \
-    --hash=sha256:e9b7171e242dcc6ebd0aaa7540481d1a72860748a0a7816b8fe6cf6c80a6fe7e
+pylint==3.2.6 \
+    --hash=sha256:03c8e3baa1d9fb995b12c1dbe00aa6c4bcef210c2a2634374aedeb22fb4a8f8f \
+    --hash=sha256:a5d01678349454806cff6d886fb072294f56a58c4761278c97fb557d708e1eb3
     # via -r requirements.txt
 pysocks==1.7.1 \
     --hash=sha256:08e69f092cc6dbe92a0fdd16eeb9b9ffbc13cadfe5ca4c7bd92ffb078b293299 \
