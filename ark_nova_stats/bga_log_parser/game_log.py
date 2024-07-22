@@ -26,6 +26,18 @@ class GameLogEventData:
 
         return any(play_log in self.log for play_log in self.PLAY_LOGS)
 
+    @property
+    def player(self) -> Optional[dict[str, int | str]]:
+        player_data = {
+            "id": self.args.get("player_id", None),
+            "name": self.args.get("player_name", None),
+        }
+
+        if all(v is None for v in player_data.values()):
+            return None
+
+        return player_data
+
 
 @dataclass
 class GameLogEvent:
@@ -78,9 +90,27 @@ class GameLog:
 
         # Look at the last move.
         last_move = self.data.logs[-1]
-        victory_event = next(
-            e for e in last_move.data if e.type == "simpleNode" and "wins!" in e.log
-        )
+        try:
+            victory_event = next(
+                e for e in last_move.data if e.type == "simpleNode" and "wins!" in e.log
+            )
+        except StopIteration:
+            # No winner.
+            return None
+
         return next(
             p for p in self.data.players if p.name == victory_event.args["player_name"]
+        )
+
+    @property
+    def is_tie(self) -> bool:
+        if not self.data.logs:
+            return False
+
+        # Look at the last move.
+        last_move = self.data.logs[-1]
+
+        return any(
+            e.type == "simpleNode" and "End of game (tie)" in e.log
+            for e in last_move.data
         )
