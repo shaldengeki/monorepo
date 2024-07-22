@@ -1,5 +1,6 @@
 import json
 import sys
+from pathlib import Path
 
 import pytest
 from python.runfiles import Runfiles
@@ -7,15 +8,18 @@ from python.runfiles import Runfiles
 from ark_nova_stats.bga_log_parser.game_log import GameLog, GameLogEventData
 
 
+def load_data_from_fixture_file(filename: str) -> dict:
+    r = Runfiles.Create()
+    fixture_file_path = r.Rlocation(
+        Path("_main") / "ark_nova_stats" / "bga_log_parser" / "fixtures" / filename
+    )
+    with open(fixture_file_path, "r") as fixture_file:
+        return json.loads(fixture_file.read().strip())
+
+
 class TestGameLog:
     def test_parses_sample_game(self):
-        r = Runfiles.Create()
-        sample_game_fixture = r.Rlocation(
-            "_main/ark_nova_stats/bga_log_parser/fixtures/sample_game.log.json"
-        )
-        with open(sample_game_fixture, "r") as sample_game_logfile:
-            game_log = json.loads(sample_game_logfile.read().strip())
-
+        game_log = load_data_from_fixture_file("sample_game.log.json")
         x = GameLog(**game_log)
 
         assert 1 == x.status
@@ -30,24 +34,12 @@ class TestGameLog:
 
 class TestGameLogEventData:
     def test_is_play_event_returns_true_for_play_action(self):
-        r = Runfiles.Create()
-        play_event_fixture = r.Rlocation(
-            "_main/ark_nova_stats/bga_log_parser/fixtures/play_event.log.json"
-        )
-        with open(play_event_fixture, "r") as play_event_logfile:
-            play_log = json.loads(play_event_logfile.read().strip())
-
+        play_log = load_data_from_fixture_file("play_event.log.json")
         x = GameLogEventData(**play_log)
         assert x.is_play_action
 
     def test_is_play_event_returns_false_for_other_actions(self):
-        r = Runfiles.Create()
-        non_play_event_fixture = r.Rlocation(
-            "_main/ark_nova_stats/bga_log_parser/fixtures/non_play_event.log.json"
-        )
-        with open(non_play_event_fixture, "r") as non_play_event_logfile:
-            non_play_log = json.loads(non_play_event_logfile.read().strip())
-
+        non_play_log = load_data_from_fixture_file("non_play_event.log.json")
         x = GameLogEventData(**non_play_log)
         assert not x.is_play_action
 
