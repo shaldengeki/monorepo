@@ -14,17 +14,32 @@ class GameLogEventData:
 
     PLAY_LOGS = [
         "plays",
-        "supports a conservation project",
+        "plays a new conservation project",
         "and places it in",
         "buys",
     ]
 
     @property
     def is_play_action(self) -> bool:
-        if "card_name" not in self.args:
+        if "card_name" not in self.args and "cards" not in self.args:
             return False
 
         return any(play_log in self.log for play_log in self.PLAY_LOGS)
+
+    @property
+    def played_card_names(self) -> Optional[set[str]]:
+        card_names = set()
+        if "card_name" in self.args:
+            card_names.add(self.args["card_name"])
+        elif "card_names" in self.args:
+            # potentially multiple cards are played in this action.
+            for arg_key, arg_val in self.args["card_names"]["args"].items():
+                if "args" in arg_val and "card_name" in arg_val["args"]:
+                    card_names.add(arg_val["args"]["card_name"])
+        else:
+            return None
+
+        return card_names
 
     @property
     def player(self) -> Optional[dict[str, int | str]]:

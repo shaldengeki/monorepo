@@ -35,26 +35,28 @@ def main() -> int:
 
         winner = log.winner
 
-        game_cards = set()
-        game_winner_cards = set()
-        game_loser_cards = set()
+        game_cards: set[str] = set()
+        game_winner_cards: set[str] = set()
+        game_loser_cards: set[str] = set()
         for event in log.data.logs:
             for event_data in event.data:
                 if not event_data.is_play_action:
                     continue
 
-                card_name = event_data.args["card_name"]
-                game_cards.add(card_name)
+                card_names = event_data.played_card_names
+                if card_names is None:
+                    continue
+
+                game_cards = game_cards.union(card_names)
 
                 if log.is_tie:
                     continue
 
                 if event_data.player is not None and winner is not None:
                     if event_data.player["id"] == winner.id:
-                        game_winner_cards.add(card_name)
+                        game_winner_cards = game_winner_cards.union(card_names)
                     else:
-                        game_loser_cards.add(card_name)
-
+                        game_loser_cards = game_loser_cards.union(card_names)
         all_cards.update(game_cards)
         winner_cards.update(game_winner_cards)
         loser_cards.update(game_loser_cards)

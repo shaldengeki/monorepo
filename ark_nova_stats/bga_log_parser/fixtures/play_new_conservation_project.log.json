@@ -1,0 +1,52 @@
+{
+    "uid": "669b91f5aa2de",
+    "type": "moveProjects",
+    "log": "${player_name} plays a new conservation project: ${card_names}",
+    "args": {
+      "cards": [
+        {
+          "id": "P114_ReleaseYosemite",
+          "location": "projects_0",
+          "state": 22,
+          "pId": 0,
+          "extraDatas": null
+        }
+      ],
+      "projects": [
+        {
+          "id": "P114_ReleaseYosemite",
+          "location": "projects_0",
+          "state": 22,
+          "pId": 0,
+          "extraDatas": null
+        }
+      ],
+      "fromDisplay": false,
+      "player_name": "sorryimlikethis",
+      "player_id": 86346298,
+      "card_names": {
+        "log": "${card_name_0}",
+        "args": {
+          "i18n": [
+            "card_name_0"
+          ],
+          "card_name_0": {
+            "log": "${card_name}",
+            "args": {
+              "i18n": [
+                "card_name"
+              ],
+              "card_name": "Yosemite national park",
+              "card_id": "P114_ReleaseYosemite",
+              "preserve": [
+                "card_id"
+              ]
+            }
+          }
+        }
+      },
+      "i18n": [
+        "card_names"
+      ]
+    }
+  }

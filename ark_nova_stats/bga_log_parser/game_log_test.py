@@ -44,10 +44,25 @@ class TestGameLogEventData:
         x = GameLogEventData(**play_log)
         assert x.is_play_action
 
+    def test_is_play_event_returns_true_for_new_conservation_project(self):
+        play_log = load_data_from_fixture_file("play_new_conservation_project.log.json")
+        x = GameLogEventData(**play_log)
+        assert x.is_play_action
+
     def test_is_play_event_returns_false_for_other_actions(self):
         non_play_log = load_data_from_fixture_file("non_play_event.log.json")
         x = GameLogEventData(**non_play_log)
         assert not x.is_play_action
+
+    def test_played_card_names_for_play_action(self):
+        play_log = load_data_from_fixture_file("play_event.log.json")
+        x = GameLogEventData(**play_log)
+        assert set(["Crested Porcupine"]) == x.played_card_names
+
+    def test_played_card_names_for_new_conservation_project(self):
+        play_log = load_data_from_fixture_file("play_new_conservation_project.log.json")
+        x = GameLogEventData(**play_log)
+        assert set(["Yosemite national park"]) == x.played_card_names
 
 
 if __name__ == "__main__":
