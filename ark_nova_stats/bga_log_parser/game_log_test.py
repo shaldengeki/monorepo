@@ -11,7 +11,7 @@ from ark_nova_stats.bga_log_parser.game_log import GameLog, GameLogEventData
 def load_data_from_fixture_file(filename: str) -> dict:
     r = Runfiles.Create()
     fixture_file_path = r.Rlocation(
-        Path("_main") / "ark_nova_stats" / "bga_log_parser" / "fixtures" / filename
+        str(Path("_main") / "ark_nova_stats" / "bga_log_parser" / "fixtures" / filename)
     )
     with open(fixture_file_path, "r") as fixture_file:
         return json.loads(fixture_file.read().strip())
