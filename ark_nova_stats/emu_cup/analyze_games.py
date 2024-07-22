@@ -22,27 +22,54 @@ def list_game_datafiles() -> Iterator[Path]:
 
 def main() -> int:
     all_cards: Counter[str] = Counter()
+    winner_cards: Counter[str] = Counter()
+    loser_cards: Counter[str] = Counter()
+
     event_logs: set[str] = set()
     skipped_event_logs: set[str] = set()
 
     for p in list_game_datafiles():
-        # print(p)
+        print(p)
         with open(p, "r") as f:
             log = GameLog(**json.loads(f.read().strip()))
 
+        winner = log.winner
+
         game_cards = set()
+        game_winner_cards = set()
+        game_loser_cards = set()
         for event in log.data.logs:
             for event_data in event.data:
                 if not event_data.is_play_action:
                     continue
 
-                game_cards.add(event_data.args["card_name"])
+                card_name = event_data.args["card_name"]
+                game_cards.add(card_name)
+
+                if log.is_tie:
+                    continue
+
+                if event_data.player is not None and winner is not None:
+                    if event_data.player["id"] == winner.id:
+                        game_winner_cards.add(card_name)
+                    else:
+                        game_loser_cards.add(card_name)
 
         all_cards.update(game_cards)
+        winner_cards.update(game_winner_cards)
+        loser_cards.update(game_loser_cards)
 
     print("Most common cards:")
     for card, count in all_cards.most_common(10):
-        print(f"  - {card}: {count}")
+        print(f"- {card}: {count}")
+
+    print("Most commonly played by winner:")
+    for card, count in winner_cards.most_common(10):
+        print(f"- {card}: {count}")
+
+    print("Most commonly played by loser:")
+    for card, count in loser_cards.most_common(10):
+        print(f"- {card}: {count}")
 
     return 0
 

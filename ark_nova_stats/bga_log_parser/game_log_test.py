@@ -30,6 +30,12 @@ class TestGameLog:
         assert 1 == x.data.logs[0].move_id
         assert 1721046021 == x.data.logs[0].time
         assert x.winner is not None and "sorryimlikethis" == x.winner.name
+        assert not x.is_tie
+
+    def test_detects_tie(self):
+        game_log = load_data_from_fixture_file("tie.log.json")
+        x = GameLog(**game_log)
+        assert x.is_tie
 
 
 class TestGameLogEventData:
