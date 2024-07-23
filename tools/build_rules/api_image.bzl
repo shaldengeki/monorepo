@@ -15,6 +15,7 @@ def api_image(
         deps,
         repo_tags,
         docker_hub_repository,
+        migration_binary = None,
         env = None,
         stamp_file = "//:stamped",
         base_image = "@python3_image",
@@ -29,6 +30,7 @@ def api_image(
         env (dict[str, str]): Environment variables to set in the image.
         repo_tags (list[str]): List of repo + tag pairs that the container images should be loaded under.
         docker_hub_repository (str): Repository on Docker Hub that the container images should be pushed to.
+        migration_binary (label): Binary target for this API's database migrations. Defaults to //your/api/package/migrations:binary.
         stamp_file (file): File containing image tags that the image should be pushed under.
         base_image (label): Base container image to use.
         visibility (list[str]): Visibility to set on all the targets.
@@ -36,6 +38,9 @@ def api_image(
 
     if visibility == None:
         visibility = ["//visibility:public"]
+
+    if migration_binary == None:
+        migration_binary = Label("//" + native.package_name() + "/migrations:binary")
 
     main_py(
         name = name + "_main_py",
@@ -79,6 +84,7 @@ def api_image(
         binaries = [
             "//scripts:wait_for_postgres",
             name + "_binary",
+            migration_binary,
         ],
         entrypoint = [
             "/scripts/wait_for_postgres",

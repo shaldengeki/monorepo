@@ -9,7 +9,7 @@ services:
       - pg
   migration:
     <<: *api
-    image: shaldengeki/mc-manager-api-migrations:latest
+    command: [ "/mc_manager/api/migrations/binary"]
     restart: no
   worker:
     <<: *api

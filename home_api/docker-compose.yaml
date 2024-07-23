@@ -20,7 +20,7 @@ services:
       - "5000:5000"
   migration:
     <<: *api
-    image: shaldengeki/home-api-api-migrations:latest
+    command: [ "/home_api/api/migrations/binary"]
     restart: no
     depends_on:
       - pg

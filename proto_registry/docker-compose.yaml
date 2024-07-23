@@ -11,7 +11,7 @@ services:
       - pg
   migration:
     <<: *api
-    image: shaldengeki/proto-registry-api-migrations:latest
+    command: [ "/proto_registry/api/migrations/binary"]
     ports: []
     restart: no
   pg:

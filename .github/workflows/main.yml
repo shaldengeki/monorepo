@@ -49,7 +49,6 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/api:api_image_image_dockerhub
-          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/api/migrations:image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/worker:image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/frontend:production_cross_platform_image_dockerhub
   push_home_api:
@@ -68,7 +67,6 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //home_api/api:api_image_image_dockerhub
-          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //home_api/api/migrations:image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //home_api/frontend:production_cross_platform_image_dockerhub
   push_mc_manager:
     needs: build
@@ -86,6 +84,5 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //mc_manager/api:api_image_image_dockerhub
-          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //mc_manager/api/migrations:image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //mc_manager/worker:image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //mc_manager/frontend:production_cross_platform_image_dockerhub

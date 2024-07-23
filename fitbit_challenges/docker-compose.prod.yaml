@@ -7,7 +7,6 @@ services:
       - env/.api.prod.env
   migration:
     <<: *api
-    image: shaldengeki/fitbit-challenges-api-migrations:latest
     ports: []
   worker:
     <<: *api
