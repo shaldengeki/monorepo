@@ -9,7 +9,7 @@ services:
       - pg
   migration:
     <<: *api
-    image: shaldengeki/ark-nova-stats-api-migrations:latest
+    command: [ "/ark_nova_stats/api/migrations/binary"]
     restart: no
   worker:
     <<: *api

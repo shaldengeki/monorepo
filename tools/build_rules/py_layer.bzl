@@ -13,15 +13,15 @@ PY_INTERPRETER_REGEX = "\\.runfiles/.*python.*-.*"
 # match *only* external pip like repositories that contain the string "site-packages"
 SITE_PACKAGES_REGEX = "\\.runfiles/.*/site-packages/.*"
 
-def py_layers(name, binary):
-    """Create three layers for a py_binary target: interpreter, third-party dependencies, and application code.
+def py_layers(name, binaries):
+    """Create three layers for a list of py_binary targets: interpreter, third-party dependencies, and application code.
 
     This allows a container image to have smaller uploads, since the application layer usually changes more
     than the other two.
 
     Args:
         name: prefix for generated targets, to ensure they are unique within the package
-        binary: a py_binary target
+        binaries: a list of py_binary targets
     Returns:
         a list of labels for the layers, which are tar files
     """
@@ -33,7 +33,8 @@ def py_layers(name, binary):
     # into fine-grained layers for better docker performance.
     mtree_spec(
         name = name + ".mf",
-        srcs = [binary],
+        srcs = binaries,
+        tags = ["manual"],
     )
 
     native.genrule(
@@ -41,6 +42,7 @@ def py_layers(name, binary):
         srcs = [name + ".mf"],
         outs = [name + ".interpreter_tar_manifest.spec"],
         cmd = "grep '{}' $< >$@".format(PY_INTERPRETER_REGEX),
+        tags = ["manual"],
     )
 
     native.genrule(
@@ -48,6 +50,7 @@ def py_layers(name, binary):
         srcs = [name + ".mf"],
         outs = [name + ".packages_tar_manifest.spec"],
         cmd = "grep '{}' $< >$@".format(SITE_PACKAGES_REGEX),
+        tags = ["manual"],
     )
 
     # Any lines that didn't match one of the two grep above
@@ -56,6 +59,7 @@ def py_layers(name, binary):
         srcs = [name + ".mf"],
         outs = [name + ".app_tar_manifest.spec"],
         cmd = "grep -v '{}' $< | grep -v '{}' >$@".format(SITE_PACKAGES_REGEX, PY_INTERPRETER_REGEX),
+        tags = ["manual"],
     )
 
     result = []
@@ -64,16 +68,26 @@ def py_layers(name, binary):
         result.append(layer_target)
         tar(
             name = layer_target,
-            srcs = [binary],
+            srcs = binaries,
             mtree = "{}.{}_tar_manifest".format(name, layer),
+            tags = ["manual"],
         )
 
     return result
 
-def py_oci_image(name, binary, tars = [], **kwargs):
-    "Wrapper around oci_image that splits the py_binary into layers."
+def py_oci_image(name, binaries, tars = [], **kwargs):
+    """
+    Wrapper around oci_image that splits the py_binary into layers.
+
+    Args:
+        name: Name that the generated oci_image should have.
+        binaries: list of py_binary targets that should be a part of this image.
+        tars: (optional) list of tar targets to also bundle into this image.
+        **kwargs: Arguments to pass to oci_image.
+    """
+
     oci_image(
         name = name,
-        tars = tars + py_layers(name, binary),
+        tars = tars + py_layers(name, binaries),
         **kwargs
     )

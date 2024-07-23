@@ -10,7 +10,7 @@ services:
     ports: []
   worker:
     <<: *api
-    image: shaldengeki/ark-nova-stats-worker:latest
+    image: shaldengeki/mc-manager-worker:latest
     ports: []
     deploy:
       replicas: 0
@@ -18,7 +18,7 @@ services:
     env_file:
       - env/.postgres.env
   frontend:
-    image: shaldengeki/ark-nova-stats-frontend:latest
+    image: shaldengeki/mc-manager-frontend:latest
     env_file:
       - env/.frontend.env
     ports:

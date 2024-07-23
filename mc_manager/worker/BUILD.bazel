@@ -1,5 +1,5 @@
 load("@py_deps//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load("//tools/build_rules:cross_platform_image.bzl", "cross_platform_image")
 load("//tools/build_rules:py_layer.bzl", "py_oci_image")
 
@@ -19,21 +19,26 @@ py_library(
 
 py_binary(
     name = "binary",
-    srcs = [
-        "__init__.py",
-        "worker.py",
-    ],
+    srcs = ["worker.py"],
     imports = [".."],
     main = "worker.py",
-    deps = DEPS,
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "@py_deps//boto3",
+        "@py_deps//docker",
+        "@py_deps//requests",
+    ],
 )
 
 py_oci_image(
     name = "base_image",
     base = "@python3_image",
-    binary = ":binary",
+    binaries = [
+        "//scripts:wait_for_postgres",
+        ":binary",
+    ],
     cmd = [
-        "/mc_manager/worker/binary.runfiles/_main/scripts/wait_for_postgres",
+        "/scripts/wait_for_postgres",
         "/mc_manager/worker/binary",
     ],
     env = {
