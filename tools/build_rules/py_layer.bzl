@@ -13,15 +13,15 @@ PY_INTERPRETER_REGEX = "\\.runfiles/.*python.*-.*"
 # match *only* external pip like repositories that contain the string "site-packages"
 SITE_PACKAGES_REGEX = "\\.runfiles/.*/site-packages/.*"
 
-def py_layers(name, binary):
-    """Create three layers for a py_binary target: interpreter, third-party dependencies, and application code.
+def py_layers(name, binaries):
+    """Create three layers for a list of py_binary targets: interpreter, third-party dependencies, and application code.
 
     This allows a container image to have smaller uploads, since the application layer usually changes more
     than the other two.
 
     Args:
         name: prefix for generated targets, to ensure they are unique within the package
-        binary: a py_binary target
+        binaries: a list of py_binary targets
     Returns:
         a list of labels for the layers, which are tar files
     """
@@ -33,7 +33,7 @@ def py_layers(name, binary):
     # into fine-grained layers for better docker performance.
     mtree_spec(
         name = name + ".mf",
-        srcs = [binary],
+        srcs = binaries,
     )
 
     native.genrule(
@@ -64,7 +64,7 @@ def py_layers(name, binary):
         result.append(layer_target)
         tar(
             name = layer_target,
-            srcs = [binary],
+            srcs = binaries,
             mtree = "{}.{}_tar_manifest".format(name, layer),
         )
 
@@ -80,14 +80,9 @@ def py_oci_image(name, binaries, tars = [], **kwargs):
         tars: (optional) list of tar targets to also bundle into this image.
         **kwargs: Arguments to pass to oci_image.
     """
-    i = 0
-    oci_layers = list(tars)
-    for binary in binaries:
-        oci_layers.extend(py_layers(name + "_binary_" + str(i), binary))
-        i += 1
 
     oci_image(
         name = name,
-        tars = oci_layers,
+        tars = tars + py_layers(name, binaries),
         **kwargs
     )
