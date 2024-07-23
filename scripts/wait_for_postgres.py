@@ -46,6 +46,7 @@ def wait_for_postgres() -> None:
                 port=int(port),
                 database=database,
                 password=password,
+                ssl_context=False,
             )
         except pg8000.exceptions.InterfaceError:
             print("Postgres is unavailable - sleeping")
