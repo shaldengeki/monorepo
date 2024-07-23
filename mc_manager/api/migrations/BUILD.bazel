@@ -31,9 +31,12 @@ py_binary(
 py_oci_image(
     name = "base_image",
     base = "@python3_image",
-    binary = ":binary",
+    binaries = [
+        "//scripts:wait_for_postgres",
+        ":binary",
+    ],
     cmd = [
-        "/mc_manager/api/migrations/binary.runfiles/_main/scripts/wait_for_postgres",
+        "/scripts/wait_for_postgres",
         "/mc_manager/api/migrations/binary",
     ],
     env = {

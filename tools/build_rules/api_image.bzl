@@ -76,7 +76,13 @@ def api_image(
     py_oci_image(
         name = name + "_base_image",
         base = base_image,
-        binary = name + "_binary",
+        binaries = [
+            "//scripts:wait_for_postgres",
+            name + "_binary",
+        ],
+        entrypoint = [
+            "/scripts/wait_for_postgres",
+        ],
         cmd = [
             "/" + native.package_name() + "/" + name + "_binary",
         ],

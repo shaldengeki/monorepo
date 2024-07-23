@@ -70,10 +70,24 @@ def py_layers(name, binary):
 
     return result
 
-def py_oci_image(name, binary, tars = [], **kwargs):
-    "Wrapper around oci_image that splits the py_binary into layers."
+def py_oci_image(name, binaries, tars = [], **kwargs):
+    """
+    Wrapper around oci_image that splits the py_binary into layers.
+
+    Args:
+        name: Name that the generated oci_image should have.
+        binaries: list of py_binary targets that should be a part of this image.
+        tars: (optional) list of tar targets to also bundle into this image.
+        **kwargs: Arguments to pass to oci_image.
+    """
+    i = 0
+    oci_layers = list(tars)
+    for binary in binaries:
+        oci_layers.extend(py_layers(name + "_binary_" + str(i), binary))
+        i += 1
+
     oci_image(
         name = name,
-        tars = tars + py_layers(name, binary),
+        tars = oci_layers,
         **kwargs
     )
