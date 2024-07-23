@@ -34,6 +34,7 @@ def py_layers(name, binaries):
     mtree_spec(
         name = name + ".mf",
         srcs = binaries,
+        tags = ["manual"],
     )
 
     native.genrule(
@@ -41,6 +42,7 @@ def py_layers(name, binaries):
         srcs = [name + ".mf"],
         outs = [name + ".interpreter_tar_manifest.spec"],
         cmd = "grep '{}' $< >$@".format(PY_INTERPRETER_REGEX),
+        tags = ["manual"],
     )
 
     native.genrule(
@@ -48,6 +50,7 @@ def py_layers(name, binaries):
         srcs = [name + ".mf"],
         outs = [name + ".packages_tar_manifest.spec"],
         cmd = "grep '{}' $< >$@".format(SITE_PACKAGES_REGEX),
+        tags = ["manual"],
     )
 
     # Any lines that didn't match one of the two grep above
@@ -56,6 +59,7 @@ def py_layers(name, binaries):
         srcs = [name + ".mf"],
         outs = [name + ".app_tar_manifest.spec"],
         cmd = "grep -v '{}' $< | grep -v '{}' >$@".format(SITE_PACKAGES_REGEX, PY_INTERPRETER_REGEX),
+        tags = ["manual"],
     )
 
     result = []
@@ -66,6 +70,7 @@ def py_layers(name, binaries):
             name = layer_target,
             srcs = binaries,
             mtree = "{}.{}_tar_manifest".format(name, layer),
+            tags = ["manual"],
         )
 
     return result
