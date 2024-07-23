@@ -5,6 +5,8 @@ from logging.config import fileConfig
 from alembic import context
 from flask import current_app
 
+from base.flask_app import database_uri
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -26,7 +28,7 @@ def get_engine():
 
 def get_engine_url():
     # Set the database URL directly from environment variables.
-    return f"postgresql://{os.environ.get('DB_USERNAME', 'admin')}:{os.environ.get('DB_PASSWORD', 'development')}@{os.environ.get('DB_HOST', 'pg')}/{os.environ.get('DATABASE_NAME', 'api_development')}"
+    return database_uri().replace("postgresql+pg8000://", "postgres://")
     # try:
     #     return get_engine().url.render_as_string(hide_password=False).replace(
     #         '%', '%%')

@@ -7,6 +7,7 @@ py_library(
     imports = [".."],
     visibility = ["//:__subpackages__"],
     deps = [
+        "//base:flask_app_py",
         requirement("alembic"),
         requirement("Flask"),
     ],
@@ -20,6 +21,7 @@ py_binary(
     main = "__main__.py",
     visibility = ["//fitbit_challenges/api:__subpackages__"],
     deps = [
+        "//base:flask_app_py",
         "//fitbit_challenges:config_py",
         "//scripts:wait_for_postgres",
         "@rules_python//python/runfiles",

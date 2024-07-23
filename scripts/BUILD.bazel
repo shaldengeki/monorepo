@@ -6,6 +6,7 @@ py_binary(
     main = "wait_for_postgres.py",
     visibility = ["//visibility:public"],
     deps = [
+        "//base:flask_app_py",
         "@py_deps//pg8000",
     ],
 )
