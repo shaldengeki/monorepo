@@ -10,8 +10,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 def database_uri() -> str:
     if os.getenv("DATABASE_URL", None) is not None:
-        return os.getenv("DATABASE_URL", "").replace(
-            "postgres://", "postgresql+pg8000://"
+        # On fly.io, we trim the sslmode=disable flag, because only psycopg can handle it, and we use pg8000.
+        return (
+            os.getenv("DATABASE_URL", "")
+            .replace("postgres://", "postgresql+pg8000://")
+            .replace("sslmode=disable", "")
         )
     else:
         return "postgresql+pg8000://{user}:{password}@{host}/{db}".format(
@@ -39,6 +42,11 @@ def FlaskApp(name) -> tuple[Flask, CORS, SQLAlchemy, Migrate]:
         FRONTEND_URL=frontend_url,
         SECRET_KEY=os.getenv("FLASK_SECRET_KEY", "testing"),
         SQLALCHEMY_DATABASE_URI=database_uri(),
+        SQLALCHEMY_ENGINE_OPTIONS={
+            "connect_args": {
+                "ssl_context": False,  # Disable this by default, because fly.io requires it.
+            }
+        },
         SESSION_REFRESH_EACH_REQUEST=True,
         PERMANENT_SESSION_LIFETIME=datetime.timedelta(days=365),
     )
