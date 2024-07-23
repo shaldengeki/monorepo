@@ -1,19 +1,11 @@
-load("@py_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_test")
 
-_RUNTIME_DEPS = [
-    requirement("boto3"),
-    requirement("docker"),
-    requirement("requests"),
-]
-
 py_test(
-    name = "default_tests",
+    name = "worker_test",
     srcs = ["worker_test.py"],
-    main = "worker_test.py",
     deps = [
-        requirement("pytest"),
-        requirement("pysocks"),
-        "//mc_manager/worker:library",
-    ] + _RUNTIME_DEPS,
+        "//mc_manager/worker:binary",
+        "@py_deps//pytest",
+        "@py_deps//requests",
+    ],
 )
