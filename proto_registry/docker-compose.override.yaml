@@ -1,0 +1,13 @@
+version: "3"
+services:
+  api: &api
+    env_file:
+      - env/.api.env
+    ports:
+      - "5000:5000"
+  migration:
+    <<: *api
+    ports: []
+  pg:
+    env_file:
+      - env/.postgres.env
