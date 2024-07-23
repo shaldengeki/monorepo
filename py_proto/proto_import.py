@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Iterator, Optional
 
 from py_proto.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
 from py_proto.proto_string_literal import ProtoStringLiteral
@@ -26,18 +26,20 @@ class ProtoImport(ProtoNode):
             and (hasattr(other, "public") and self.public == other.public)
         )
 
+    def __iter__(self) -> Iterator:
+        return iter(
+            {
+                "path": self.path.serialize(),
+                "weak": self.weak,
+                "public": self.public,
+            }
+        )
+
     def __str__(self) -> str:
         return f"<ProtoImport path={self.path.serialize()} weak={self.weak} public={self.public}>"
 
     def __repr__(self) -> str:
         return str(self)
-
-    def __dict__(self):
-        return {
-            "path": self.path.serialize(),
-            "weak": self.weak,
-            "public": self.public,
-        }
 
     def normalize(self) -> "ProtoImport":
         return self

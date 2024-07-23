@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Any, Iterator, Optional
 
 from py_proto.proto_node import ParsedProtoNode, ProtoNode, ProtoNodeDiff
 from py_proto.proto_string_literal import ProtoStringLiteral
@@ -23,14 +23,14 @@ class ProtoSyntax(ProtoNode):
     def __eq__(self, other) -> bool:
         return self.syntax == other.syntax
 
+    def __iter__(self) -> Iterator:
+        return iter({"syntax": self.syntax.serialize()})
+
     def __str__(self) -> str:
         return f"<ProtoSyntax syntax={self.syntax.serialize()}>"
 
     def __repr__(self) -> str:
         return str(self)
-
-    def __dict__(self):
-        return {"syntax": self.syntax.serialize()}
 
     def normalize(self) -> "ProtoSyntax":
         return self
