@@ -8,6 +8,20 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 
+def database_uri() -> str:
+    if os.getenv("DATABASE_URL", None) is not None:
+        return os.getenv("DATABASE_URL", "").replace(
+            "postgres://", "postgresql+pg8000://"
+        )
+    else:
+        return "postgresql+pg8000://{user}:{password}@{host}/{db}".format(
+            user=os.getenv("DB_USERNAME", "admin"),
+            password=os.getenv("DB_PASSWORD", "development"),
+            host=os.getenv("DB_HOST", "pg"),
+            db=os.getenv("DATABASE_NAME", "api_development"),
+        )
+
+
 def FlaskApp(name) -> tuple[Flask, CORS, SQLAlchemy, Migrate]:
     app = Flask(name)
 
@@ -24,12 +38,7 @@ def FlaskApp(name) -> tuple[Flask, CORS, SQLAlchemy, Migrate]:
     app.config.update(
         FRONTEND_URL=frontend_url,
         SECRET_KEY=os.getenv("FLASK_SECRET_KEY", "testing"),
-        SQLALCHEMY_DATABASE_URI="postgresql+pg8000://{user}:{password}@{host}/{db}".format(
-            user=os.getenv("DB_USERNAME", "admin"),
-            password=os.getenv("DB_PASSWORD", "development"),
-            host=os.getenv("DB_HOST", "pg"),
-            db=os.getenv("DATABASE_NAME", "api_development"),
-        ),
+        SQLALCHEMY_DATABASE_URI=database_uri(),
         SESSION_REFRESH_EACH_REQUEST=True,
         PERMANENT_SESSION_LIFETIME=datetime.timedelta(days=365),
     )

@@ -7,6 +7,7 @@ py_library(
     imports = [".."],
     visibility = ["//:__subpackages__"],
     deps = [
+        "//base:flask_app_py",
         requirement("alembic"),
         requirement("Flask"),
     ],
@@ -21,6 +22,7 @@ py_binary(
     visibility = ["//ark_nova_stats/api:__subpackages__"],
     deps = [
         "//ark_nova_stats:config_py",
+        "//base:flask_app_py",
         "//scripts:wait_for_postgres",  # keep
         "@py_deps//flask_migrate",
         "@rules_python//python/runfiles",
