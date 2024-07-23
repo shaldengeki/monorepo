@@ -9,6 +9,9 @@ primary_region = 'ewr'
 [build]
   image = 'shaldengeki/ark-nova-stats-api:latest'
 
+[deploy]
+  release_command = "/ark_nova_stats/api/migrations/binary"
+
 [env]
   API_PORT = '5000'
   FLASK_APP = 'app.py'
