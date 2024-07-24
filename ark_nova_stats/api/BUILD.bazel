@@ -17,7 +17,9 @@ py_library(
 api_image(
     name = "api_image",
     app_package = "ark_nova_stats.api.app",
+    config = "//ark_nova_stats:config_py",
     docker_hub_repository = "docker.io/shaldengeki/ark-nova-stats-api",
+    migrations = True,
     repo_tags = ["shaldengeki/ark-nova-stats-api:latest"],
     deps = [":app"],
 )

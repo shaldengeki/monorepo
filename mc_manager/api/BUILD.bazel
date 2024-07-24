@@ -31,6 +31,7 @@ py_library(
 api_image(
     name = "api_image",
     app_package = "mc_manager.api.app",
+    config = "//mc_manager:config_py",
     docker_hub_repository = "docker.io/shaldengeki/mc-manager-api",
     repo_tags = ["shaldengeki/mc-manager-api:latest"],
     deps = [":api_lib"],

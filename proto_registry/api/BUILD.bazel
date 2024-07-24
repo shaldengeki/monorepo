@@ -26,6 +26,7 @@ py_library(
 api_image(
     name = "api_image",
     app_package = "proto_registry.api.app",
+    config = "//proto_registry:config_py",
     docker_hub_repository = "docker.io/shaldengeki/proto-registry-api",
     repo_tags = ["shaldengeki/proto-registry-api:latest"],
     deps = [":api_lib"],

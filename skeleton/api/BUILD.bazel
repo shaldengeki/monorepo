@@ -17,6 +17,7 @@ py_library(
 api_image(
     name = "api_image",
     app_package = "skeleton.api.app",
+    config = "//skeleton:config_py",
     docker_hub_repository = "docker.io/shaldengeki/skeleton-api",
     repo_tags = ["shaldengeki/skeleton-api:latest"],
     deps = [":app"],
