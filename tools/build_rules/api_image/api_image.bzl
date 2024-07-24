@@ -4,10 +4,10 @@ api_image.bzl
 A macro used to define an API container image.
 """
 
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load("//tools/build_rules:cross_platform_image.bzl", "cross_platform_image")
-load("//tools/build_rules:main_py.bzl", "main_py")
 load("//tools/build_rules:py_layer.bzl", "py_oci_image")
+load("//tools/build_rules/api_image:main_py.bzl", "main_py")
 
 def api_image(
         name,
@@ -19,6 +19,7 @@ def api_image(
         env = None,
         stamp_file = "//:stamped",
         base_image = "@python3_image",
+        migrations = False,
         visibility = None):
     """
     Defines a set of API images for our application.
@@ -33,6 +34,7 @@ def api_image(
         migration_binary (label): Binary target for this API's database migrations. Defaults to //your/api/package/migrations:binary.
         stamp_file (file): File containing image tags that the image should be pushed under.
         base_image (label): Base container image to use.
+        migrations (bool): Whether to generate migration targets.
         visibility (list[str]): Visibility to set on all the targets.
     """
 
@@ -105,3 +107,30 @@ def api_image(
         stamp_file = stamp_file,
         visibility = visibility,
     )
+
+    if migrations:
+        py_library(
+            name = "migrate_lib",
+            srcs = glob(["migrations/**/*.py"]),  # keep
+            imports = ["."],
+            visibility = [":__subpackages__"],
+            deps = [
+                "//base:flask_app_py",
+                "@py_deps//alembic",
+                "@py_deps//flask",
+            ],
+        )
+
+        py_binary(
+            name = "binary",
+            srcs = glob(["migrations/**/*.py"]),  # keep
+            data = ["alembic.ini"],
+            imports = ["."],
+            main = "migrations/__main__.py",
+            visibility = [":__subpackages__"],
+            deps = [
+                ":config_py",
+                "//scripts:wait_for_postgres",  # keep
+                "@py_deps//flask_migrate",
+            ],
+        )

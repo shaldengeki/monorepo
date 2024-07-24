@@ -21,7 +21,7 @@ main_py = rule(
     attrs = {
         "app_package": attr.string(mandatory = True),
         "_main_py_template": attr.label(
-            default = "templates/__main__.py.tpl",
+            default = "__main__.py.tpl",
             allow_single_file = True,
         ),
     },
