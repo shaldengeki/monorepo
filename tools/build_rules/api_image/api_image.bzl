@@ -111,7 +111,7 @@ def api_image(
     if migrations:
         py_library(
             name = "migrate_lib",
-            srcs = glob(["migrations/**/*.py"]),  # keep
+            srcs = native.glob(["migrations/**/*.py"]),  # keep
             imports = ["."],
             visibility = [":__subpackages__"],
             deps = [
@@ -123,7 +123,7 @@ def api_image(
 
         py_binary(
             name = "binary",
-            srcs = glob(["migrations/**/*.py"]),  # keep
+            srcs = native.glob(["migrations/**/*.py"]),  # keep
             data = ["alembic.ini"],
             imports = ["."],
             main = "migrations/__main__.py",
