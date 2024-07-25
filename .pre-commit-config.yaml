@@ -39,7 +39,7 @@ repos:
             -   id: eslint
                 files: \.[jt]sx?$  # *.js, *.jsx, *.ts and *.tsx
                 types: [file]
-                args: ["--fix"]
+                args: ["--fix", "--ignore-pattern", "ark_nova_stats/extension/*"]
                 additional_dependencies:
                     -   eslint@8.38.0
                     -   eslint-config-standard@17.0.0

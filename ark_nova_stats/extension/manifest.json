@@ -1,0 +1,19 @@
+{
+    "manifest_version": 2,
+    "name": "Detective Kookaburra",
+    "version": "1.0",
+
+    "description": "Saves Ark Nova replays and shares them with Ark Nova Stats.",
+
+    "icons": {
+      "48": "icons/icon.png"
+    },
+    "permissions": [
+        "webRequest",
+        "webRequestBlocking",
+        "https://developer.mozilla.org/"
+    ],
+    "background": {
+        "scripts": ["detectivekoala.js"]
+    }
+  }
