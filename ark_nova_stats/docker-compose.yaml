@@ -10,7 +10,7 @@ services:
   migration:
     <<: *api
     command: [ "/ark_nova_stats/api/migrations/binary"]
-    restart: no
+    restart: "no"
   worker:
     <<: *api
     image: shaldengeki/ark-nova-stats-worker:latest
@@ -28,4 +28,3 @@ services:
     restart: always
 volumes:
   ark-nova-stats-pg:
-    name: ark-nova-stats_ark-nova-stats-pg

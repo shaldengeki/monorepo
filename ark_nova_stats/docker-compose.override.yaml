@@ -12,8 +12,6 @@ services:
     <<: *api
     image: shaldengeki/ark-nova-stats-worker:latest
     ports: []
-    deploy:
-      replicas: 0
   pg:
     env_file:
       - env/.postgres.env
