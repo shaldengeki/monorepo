@@ -10,6 +10,7 @@ py_library(
     name = "game_log",
     srcs = ["game_log.py"],
     visibility = ["//:__subpackages__"],
+    deps = [":exceptions"],
 )
 
 py_test(
@@ -17,8 +18,15 @@ py_test(
     srcs = ["game_log_test.py"],
     data = [":fixtures"],
     deps = [
+        ":exceptions",
         ":game_log",
         "@py_deps//pytest",
         "@rules_python//python/runfiles",
     ],
+)
+
+py_library(
+    name = "exceptions",
+    srcs = ["exceptions.py"],
+    visibility = ["//:__subpackages__"],
 )

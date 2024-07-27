@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from ark_nova_stats.bga_log_parser.exceptions import NonArkNovaReplayError
+
 
 @dataclass
 class GameLogEventData:
@@ -88,6 +90,22 @@ class GameLogData:
     def __post_init__(self):
         self.players = [GameLogPlayer(**x) for x in self.players]  # type: ignore
         self.logs = [GameLogEvent(**x) for x in self.logs]  # type: ignore
+        self.validate_is_ark_nova_game()
+
+    def validate_is_ark_nova_game(self) -> None:
+        """
+        Raises an exception if the currently-loaded game log is not for an Ark Nova game.
+        It turns out that the game log itself doesn't contain the game name or ID on BGA.
+        So we have to lossily infer this from what's in the data.
+        """
+
+        # Check to see if there's a scoring card draw in the first few actions.
+        if not any(
+            "from the deck (scoring cards)" in data.log
+            for log in self.logs[:10]
+            for data in log.data
+        ):
+            raise NonArkNovaReplayError()
 
 
 @dataclass

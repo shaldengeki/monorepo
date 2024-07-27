@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from python.runfiles import Runfiles
 
+from ark_nova_stats.bga_log_parser.exceptions import NonArkNovaReplayError
 from ark_nova_stats.bga_log_parser.game_log import GameLog, GameLogEventData
 
 
@@ -36,6 +37,11 @@ class TestGameLog:
         game_log = load_data_from_fixture_file("tie.log.json")
         x = GameLog(**game_log)
         assert x.is_tie
+
+    def test_raises_when_not_ark_nova_replay(self):
+        game_log = load_data_from_fixture_file("non_ark_nova_game.json")
+        with pytest.raises(NonArkNovaReplayError):
+            GameLog(**game_log)
 
 
 class TestGameLogEventData:
