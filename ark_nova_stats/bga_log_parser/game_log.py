@@ -102,7 +102,7 @@ class GameLogData:
         # Check to see if there's a scoring card draw in the first few actions.
         if not any(
             "from the deck (scoring cards)" in data.log
-            for log in self.logs[:10]
+            for log in self.logs[:20]
             for data in log.data
         ):
             raise NonArkNovaReplayError()

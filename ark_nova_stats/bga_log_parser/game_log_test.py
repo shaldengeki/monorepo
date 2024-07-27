@@ -39,9 +39,13 @@ class TestGameLog:
         assert x.is_tie
 
     def test_raises_when_not_ark_nova_replay(self):
-        game_log = load_data_from_fixture_file("non_ark_nova_game.json")
+        game_log = load_data_from_fixture_file("non_ark_nova_game.log.json")
         with pytest.raises(NonArkNovaReplayError):
             GameLog(**game_log)
+
+    def test_parses_4p_game(self):
+        game_log = load_data_from_fixture_file("4p.log.json")
+        GameLog(**game_log)
 
 
 class TestGameLogEventData:
