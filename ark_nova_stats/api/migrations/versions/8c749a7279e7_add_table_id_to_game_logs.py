@@ -7,9 +7,11 @@ Create Date: 2024-07-27 18:20:31.263830
 """
 
 import json
+import logging
 
 import sqlalchemy as sa
 from alembic import op
+from sqlalchemy import orm
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as BGAGameLog
 from ark_nova_stats.models import GameLog as GameLogModel
@@ -31,7 +33,13 @@ def upgrade():
             unique=True,
         ),
     )
-    for log_model in GameLogModel.query.all():
+
+    bind = op.get_bind()
+    session = orm.Session(bind=bind)
+
+    logging.info("Processing pre-existing logs.")
+    for log_model in session.query(GameLogModel):
+        logging.info(f"Processing log: {log_model.id}")
         parsed_log = BGAGameLog(**json.loads(log_model.log))
         table_ids = set(l.table_id for l in parsed_log.data.logs)
         if len(table_ids) != 1:
@@ -39,9 +47,9 @@ def upgrade():
                 f"Log {log_model.id} is invalid: there must be exactly one table_id per game log, found: {table_ids}"
             )
 
-        op.execute(
-            f"update game_logs set bga_table_id={list(table_ids)[0]} where id = {log_model.id} limit 1"
-        )
+        log_model.bga_table_id = list(table_ids)[0]
+
+    session.commit()
 
     op.create_index(
         "game_logs_bga_table_id",

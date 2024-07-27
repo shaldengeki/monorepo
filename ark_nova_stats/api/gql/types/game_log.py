@@ -13,7 +13,7 @@ from graphql import (
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import app, db
-from ark_nova_stats.models import GameLog
+from ark_nova_stats.models import GameLog as GameLogModel
 
 
 def game_log_fields() -> dict[str, GraphQLField]:
@@ -41,8 +41,8 @@ game_log_type = GraphQLObjectType(
 
 
 def fetch_game_log(
-    game_log: Type[GameLog], params: dict[str, Any]
-) -> Optional[GameLog]:
+    game_log: Type[GameLogModel], params: dict[str, Any]
+) -> Optional[GameLogModel]:
     return (game_log.query.filter(game_log.id == params["id"])).first()
 
 
@@ -54,7 +54,7 @@ game_log_filters: dict[str, GraphQLArgument] = {
 }
 
 
-def game_log_field(game_log: type[GameLog]) -> GraphQLField:
+def game_log_field(game_log: type[GameLogModel]) -> GraphQLField:
     return GraphQLField(
         game_log_type,
         args=game_log_filters,
@@ -63,14 +63,19 @@ def game_log_field(game_log: type[GameLog]) -> GraphQLField:
 
 
 def submit_game_logs(
-    game_log_model: Type[GameLog],
+    game_log_model: Type[GameLogModel],
     args: dict[str, Any],
-) -> GameLog:
+) -> GameLogModel:
     json_logs = json.loads(args["logs"])
     parsed_logs = ParsedGameLog(**json_logs)
 
-    # For now, just store the literal log string.
-    log = GameLog(log=args["logs"])
+    table_ids = set(l.table_id for l in parsed_logs.data.logs)
+    if len(table_ids) != 1:
+        raise RuntimeError(
+            f"Log is invalid: there must be exactly one table_id per game log, found: {table_ids}"
+        )
+
+    log = GameLogModel(bga_table_id=list(table_ids)[0], log=args["logs"])
 
     if app.config["TESTING"] == True:
         log.id = 1
@@ -82,7 +87,7 @@ def submit_game_logs(
 
 
 def submit_game_logs_field(
-    game_log_model: Type[GameLog],
+    game_log_model: Type[GameLogModel],
 ) -> GraphQLField:
     return GraphQLField(
         game_log_type,
