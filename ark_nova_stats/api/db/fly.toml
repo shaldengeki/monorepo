@@ -67,3 +67,6 @@ primary_region = 'ewr'
 [[metrics]]
   port = 9187
   path = '/metrics'
+
+[[vm]]
+  memory = '512mb'
