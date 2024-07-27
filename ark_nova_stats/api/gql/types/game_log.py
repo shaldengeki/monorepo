@@ -26,6 +26,10 @@ def game_log_fields() -> dict[str, GraphQLField]:
             GraphQLNonNull(GraphQLString),
             description="The game log.",
         ),
+        "bgaTableId": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="ID of original table on BGA.",
+        ),
     }
 
 
