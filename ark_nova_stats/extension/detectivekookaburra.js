@@ -2,9 +2,7 @@ let pattern = "https://boardgamearena.com/*";
 let apiEndpoint = "https://api.arknova.ouguo.us/graphql";
 
 function handleRequest(requestDetails) {
-  console.log(`Handling: ${requestDetails.url}`);
   if (!requestDetails.url.includes("logs.html")) {
-    console.log("Not logs.html, skipping");
     return;
   }
 
@@ -28,7 +26,6 @@ function handleRequest(requestDetails) {
         str += decoder.decode(data[i], { stream });
       }
     }
-    console.log("Received data", str);
 
     let apiHeaders = new Headers();
     apiHeaders.append("Content-Type", "application/json");
