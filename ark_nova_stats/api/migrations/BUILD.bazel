@@ -21,7 +21,7 @@ py_binary(
     main = "__main__.py",
     visibility = ["//ark_nova_stats/api:__subpackages__"],
     deps = [
-        ":migrate_lib",
+        ":migrate_lib",  # keep
         "//ark_nova_stats:config_py",
         "@py_deps//flask_migrate",
     ],
