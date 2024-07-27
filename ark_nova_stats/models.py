@@ -24,3 +24,4 @@ class GameLog(db.Model):
         db.TIMESTAMP(timezone=True),
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
     )
+    bga_table_id: Mapped[int]

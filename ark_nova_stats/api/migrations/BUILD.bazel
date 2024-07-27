@@ -1,4 +1,3 @@
-load("@py_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 
 py_library(
@@ -7,9 +6,11 @@ py_library(
     imports = [".."],
     visibility = ["//:__subpackages__"],
     deps = [
+        "//ark_nova_stats:models_py",
+        "//ark_nova_stats/bga_log_parser:game_log",
         "//base:flask_app_py",
-        requirement("alembic"),
-        requirement("Flask"),
+        "@py_deps//alembic",
+        "@py_deps//flask",
     ],
 )
 
@@ -17,12 +18,11 @@ py_binary(
     name = "binary",
     srcs = glob(["**/*.py"]),  # keep
     data = ["alembic.ini"],
-    imports = [".."],
     main = "__main__.py",
     visibility = ["//ark_nova_stats/api:__subpackages__"],
     deps = [
+        ":migrate_lib",  # keep
         "//ark_nova_stats:config_py",
-        "//scripts:wait_for_postgres",  # keep
         "@py_deps//flask_migrate",
     ],
 )
