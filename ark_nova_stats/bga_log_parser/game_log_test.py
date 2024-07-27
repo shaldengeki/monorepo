@@ -43,6 +43,10 @@ class TestGameLog:
         with pytest.raises(NonArkNovaReplayError):
             GameLog(**game_log)
 
+    def test_parses_4p_game(self):
+        game_log = load_data_from_fixture_file("4p.log.json")
+        GameLog(**game_log)
+
 
 class TestGameLogEventData:
     def test_is_play_event_returns_true_for_play_action(self):
