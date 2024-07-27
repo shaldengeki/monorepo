@@ -12,8 +12,22 @@ function handleRequest(requestDetails) {
   let decoder = new TextDecoder("utf-8");
   let encoder = new TextEncoder();
 
-  filter.ondata = event => {
-    let str = decoder.decode(event.data, {stream: true});
+  const data = [];
+
+  filter.ondata = (event) => {
+    data.push(event.data);
+  }
+
+  filter.onstop = (event) => {
+    let str = "";
+    if (data.length === 1) {
+      str = decoder.decode(data[0]);
+    } else {
+      for (let i = 0; i < data.length; i++) {
+        const stream = i !== data.length - 1;
+        str += decoder.decode(data[i], { stream });
+      }
+    }
     console.log("Received data", str);
 
     let apiHeaders = new Headers();
