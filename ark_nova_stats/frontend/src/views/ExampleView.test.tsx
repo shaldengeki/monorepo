@@ -11,5 +11,5 @@ it('should render', async () => {
       </MockedProvider>,
       {wrapper: BrowserRouter},
     );
-    expect(await screen.findByText("Page Container")).toBeInTheDocument();
+    expect(await screen.findByText("Hello World!")).toBeInTheDocument();
 });

@@ -8,8 +8,9 @@ type ExampleViewParams = {
 const ExampleView = () => {
     return (
         <PageContainer>
-            <p>Page Container</p>
-            <ExampleComponent />
+            <ExampleComponent>
+                <p>Hello World!</p>
+            </ExampleComponent>
         </PageContainer>
     )
 }

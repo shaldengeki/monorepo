@@ -11,7 +11,6 @@ const ExampleComponent = (props: PropsWithChildren<ExampleComponentProps>) => {
     return (
         <div className={actualClasses}>
             {props.children}
-            <p>Hello World!</p>
         </div>
     );
 };
