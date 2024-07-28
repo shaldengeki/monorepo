@@ -48,6 +48,7 @@ jobs:
       - name: Push to Docker Hub
         run: |
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //ark_nova_stats/api:api_image_image_dockerhub
+          bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //ark_nova_stats/frontend:production_cross_platform_image_dockerhub
   deploy_ark_nova_stats:
     needs: push_ark_nova_stats
     if: ${{ github.ref == 'refs/heads/main' }}
