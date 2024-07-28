@@ -60,6 +60,8 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy
         working-directory: ark_nova_stats/api
+      - run: flyctl deploy
+        working-directory: ark_nova_stats/frontend
   push_fitbit_challenges:
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
