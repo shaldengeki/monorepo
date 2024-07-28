@@ -1,0 +1,31 @@
+{
+  "name": "@monorepo/ark_nova_stats/frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "tailwind:css": "bazel build //ark_nova_stats/frontend:tailwindcss",
+    "start": "PORT=$REACT_APP_PORT react-scripts start",
+    "build": "bazel build //ark_nova_stats/frontend/...",
+    "build-and-start": "npm run tailwind:css && npm run start",
+    "test": "bazel test //ark_nova_stats/frontend/..."
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
