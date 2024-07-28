@@ -10,7 +10,7 @@ primary_region = 'ewr'
   image = 'shaldengeki/ark-nova-stats-api:latest'
 
 [deploy]
-  release_command = "/ark_nova_stats/api/migrations/binary"
+  release_command = "/ark_nova_stats/api/migrations/binary upgrade"
 
 [env]
   API_PORT = '5000'

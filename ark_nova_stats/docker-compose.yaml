@@ -9,7 +9,7 @@ services:
       - pg
   migration:
     <<: *api
-    command: [ "/ark_nova_stats/api/migrations/binary"]
+    command: [ "/ark_nova_stats/api/migrations/binary", "upgrade"]
     restart: "no"
   worker:
     <<: *api

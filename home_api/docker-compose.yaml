@@ -20,7 +20,7 @@ services:
       - "5000:5000"
   migration:
     <<: *api
-    command: [ "/home_api/api/migrations/binary"]
+    command: [ "/home_api/api/migrations/binary", "upgrade"]
     restart: no
     depends_on:
       - pg

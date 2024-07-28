@@ -9,7 +9,7 @@ services:
       - pg
   migration:
     <<: *api
-    command: [ "/mc_manager/api/migrations/binary"]
+    command: [ "/mc_manager/api/migrations/binary", "upgrade"]
     restart: no
   worker:
     <<: *api
