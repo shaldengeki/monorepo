@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from ark_nova_stats.config import db
 
 
-class GameLog(db.Model):  # type: ignore
+class GameLog(db.Model):
     __tablename__ = "game_logs"
 
     id: Mapped[int] = mapped_column(primary_key=True)
