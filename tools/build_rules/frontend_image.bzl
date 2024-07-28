@@ -86,6 +86,7 @@ def frontend_image(
             "//:node_modules/css-loader",
             "//:node_modules/file-loader",
             "//:node_modules/html-webpack-plugin",
+            "//:node_modules/mini-css-extract-plugin",
             "//:node_modules/process",
             "//:node_modules/style-loader",
         ],
