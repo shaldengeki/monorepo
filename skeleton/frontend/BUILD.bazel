@@ -1,0 +1,129 @@
+load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@npm//:tailwindcss/package_json.bzl", tailwindcss_bin = "bin")
+load("//tools/build_rules:frontend_image.bzl", "BUILD_DEPS", "frontend_image")
+
+# Dependencies required to do typechecks.
+TYPE_DEPS = [
+    "//:node_modules/@types/jest",
+    "//:node_modules/@types/lodash",
+    "//:node_modules/@types/node",
+    "//:node_modules/@types/react",
+    "//:node_modules/@types/react-dom",
+]
+
+# Dependencies required to run tests.
+TEST_DEPS = [
+    "//:node_modules/@apollo/react-testing",
+    "//:node_modules/@testing-library/jest-dom",
+    "//:node_modules/@testing-library/react",
+    "//:node_modules/jest-environment-jsdom",
+    "//:node_modules/jsdom",
+]
+
+# Compiles our CSS using Tailwind styles.
+# Uses the tailwindcss binary from npm.
+tailwindcss_bin.tailwindcss(
+    name = "tailwindcss",
+    srcs = [
+        "src/App.src.css",
+        ":tailwind.config.js",
+        ":ts",
+        "//:node_modules/tailwindcss",
+    ],
+    outs = [
+        "src/App.css",
+    ],
+    args = [
+        "--config skeleton/frontend/tailwind.config.js",
+        "-i skeleton/frontend/src/App.src.css",
+        "-o skeleton/frontend/src/App.css",
+    ],
+    log_level = "debug",
+)
+
+# Compiles Typescript to regular old Javascript.
+ts_project(
+    name = "ts",
+    srcs = glob(
+        include = [
+            "src/**/*.tsx",
+            "src/**/*.ts",
+            "src/**/*.jsx",
+            "src/**/*.js",
+            "tsconfig.json",
+        ],
+    ),
+    allow_js = True,
+    assets = [
+        "src/App.src.css",
+        "src/logo.svg",
+        "src/components/logo192.png",
+    ],
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS,
+)
+
+frontend_image(
+    name = "production",
+    srcs = glob(["public/**/*"]) + [
+        ":tailwindcss",
+        ":ts",
+    ],
+    build_env = {
+        "REACT_APP_API_HOST": "api.skeleton.ouguo.us",
+        "REACT_APP_API_PORT": "443",
+        "REACT_APP_API_PROTOCOL": "https",
+    },
+    docker_hub_repository = "docker.io/shaldengeki/skeleton-frontend",
+    node_modules = "//:node_modules",
+    repo_tags = ["shaldengeki/skeleton-frontend:latest"],
+    server_name = "skeleton.ouguo.us",
+    webpack_conf = ":webpack.config.js",
+)
+
+frontend_image(
+    name = "development",
+    srcs = glob(["public/**/*"]) + [
+        ":tailwindcss",
+        ":ts",
+    ],
+    build_env = {
+        "REACT_APP_API_HOST": "localhost",
+        "REACT_APP_API_PORT": "5000",
+        "REACT_APP_API_PROTOCOL": "http",
+    },
+    docker_hub_repository = "docker.io/shaldengeki/skeleton-frontend",
+    node_modules = "//:node_modules",
+    repo_tags = ["shaldengeki/skeleton-frontend:latest"],
+    server_name = "skeleton.ouguo.us",
+    webpack_conf = ":webpack.config.js",
+)
+
+# Runs frontend Jest tests.
+jest_test(
+    name = "test",
+    config = "jest.config.json",
+    data = [
+        "package.json",
+    ] + BUILD_DEPS + TEST_DEPS + [
+        "mocks/fileMock.js",
+        "src/DateUtils.js",
+        "src/DateUtils.test.js",
+        "src/components/ExampleComponent.js",
+        "src/components/ExampleComponent.test.js",
+        "src/components/NavBar.js",
+        "src/components/PageContainer.js",
+        "src/globals.d.ts",
+        "src/setupTests.js",
+        "src/types/ExampleType.js",
+        "src/views/ExampleView.js",
+        "src/views/ExampleView.test.js",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
