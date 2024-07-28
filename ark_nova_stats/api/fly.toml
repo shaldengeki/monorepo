@@ -10,7 +10,7 @@ primary_region = 'ewr'
   image = 'shaldengeki/ark-nova-stats-api:latest'
 
 [deploy]
-  release_command = "/ark_nova_stats/api/migrations/binary upgrade"
+  release_command = "/ark_nova_stats/api/migrations/binary /ark_nova_stats/api/migrations ./binary.runfiles/_main/ark_nova_stats/api/migrations/alembic.ini upgrade"
 
 [env]
   API_PORT = '5000'
