@@ -25,7 +25,7 @@ if __name__ == "__main__":
             downgrade(directory=".")
         if command == "upgrade":
             upgrade(directory=".")
-        elif command == "new":
+        elif command == "revision":
             revision(directory=".", message=sys.argv[4])
         else:
             raise ValueError(

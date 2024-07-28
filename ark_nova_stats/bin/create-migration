@@ -2,4 +2,4 @@
 
 set -ex
 
-bazel run //ark_nova_stats/api/migrations:binary -- "$(pwd)/api/migrations" "./alembic.ini" "new" "$1"
+bazel run //ark_nova_stats/api/migrations:binary -- "$(pwd)/api/migrations" "./alembic.ini" "revision" "$1"
