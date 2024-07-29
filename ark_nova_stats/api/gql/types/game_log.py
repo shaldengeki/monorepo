@@ -15,7 +15,6 @@ from graphql import (
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import app, db
 from ark_nova_stats.models import GameLog as GameLogModel
-from ark_nova_stats.models import GameParticipation as GameParticipationModel
 from ark_nova_stats.models import User as UserModel
 
 
@@ -98,45 +97,8 @@ def submit_game_logs(
     else:
         db.session.add(log)
 
-        # Add users if not present.
-        logging.warn("Finding present users.")
-        present_users = UserModel.query.filter(
-            UserModel.bga_id.in_([user.id for user in parsed_logs.data.players])
-        ).all()
-        bga_id_to_user = {present.bga_id: present for present in present_users}
-        present_user_ids = set(present.bga_id for present in present_users)
-        logging.warn(f"Found present users: {present_user_ids}")
-        logging.warn(f"Users at this point: {bga_id_to_user}")
-
-        users_to_create = [
-            user for user in parsed_logs.data.players if user.id not in present_user_ids
-        ]
-        logging.warn(f"Users to create: {[u.id for u in users_to_create]}")
-
-        for user in users_to_create:
-            bga_id_to_user[user.id] = UserModel(  # type: ignore
-                bga_id=user.id,
-                name=user.name,
-                avatar=user.avatar,
-            )
-            db.session.add(bga_id_to_user[user.id])
-
-        logging.warn(f"Users at this point: {bga_id_to_user}")
-
-        # Now create a game participation for each user.
-        logging.warn("Adding participations.")
-        for bga_user in parsed_logs.data.players:
-            logging.warn(f"Adding participation for: {bga_user.id}")
-            log_user = next(u for u in parsed_logs.data.players if u.id == bga_user.id)
-            logging.warn(f"Found log user with color: {log_user.color}")
-            logging.warn(f"Users at this point: {bga_id_to_user}")
-            db.session.add(
-                GameParticipationModel(  # type: ignore
-                    user=bga_id_to_user[bga_user.id],
-                    color=log_user.color,
-                    game_log=log,
-                )
-            )
+        for obj in log.create_related_objects(parsed_logs):
+            db.session.add(obj)
 
         db.session.commit()
 

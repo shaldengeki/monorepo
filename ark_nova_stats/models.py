@@ -3,6 +3,7 @@ import datetime
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import db
 
 
@@ -40,6 +41,35 @@ class GameLog(db.Model):  # type: ignore
     user_participations: Mapped[list["GameParticipation"]] = relationship(
         back_populates="game_log"
     )
+
+    def create_related_objects(self, parsed_logs: ParsedGameLog) -> db.Model:  # type: ignore
+        # Add users if not present.
+        present_users = User.query.filter(
+            User.bga_id.in_([user.id for user in parsed_logs.data.players])
+        ).all()
+        bga_id_to_user = {present.bga_id: present for present in present_users}
+        present_user_ids = set(present.bga_id for present in present_users)
+
+        users_to_create = [
+            user for user in parsed_logs.data.players if user.id not in present_user_ids
+        ]
+
+        for user in users_to_create:
+            bga_id_to_user[user.id] = User(  # type: ignore
+                bga_id=user.id,
+                name=user.name,
+                avatar=user.avatar,
+            )
+            yield bga_id_to_user[user.id]
+
+        # Now create a game participation for each user.
+        for bga_user in parsed_logs.data.players:
+            log_user = next(u for u in parsed_logs.data.players if u.id == bga_user.id)
+            yield GameParticipation(  # type: ignore
+                user=bga_id_to_user[bga_user.id],
+                color=log_user.color,
+                game_log=self,
+            )
 
 
 class User(db.Model):  # type: ignore
