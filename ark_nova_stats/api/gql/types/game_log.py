@@ -1,7 +1,6 @@
 import json
 from typing import Any, Optional, Type
 
-from flask import Flask
 from graphql import (
     GraphQLArgument,
     GraphQLField,
@@ -14,6 +13,8 @@ from graphql import (
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import app, db
 from ark_nova_stats.models import GameLog as GameLogModel
+from ark_nova_stats.models import GameParticipation as GameParticipationModel
+from ark_nova_stats.models import User as UserModel
 
 
 def game_log_fields() -> dict[str, GraphQLField]:
@@ -82,6 +83,38 @@ def submit_game_logs(
         log.id = 1
     else:
         db.session.add(log)
+
+        # Add users if not present.
+        present_users = UserModel.query.filter(
+            UserModel.bga_id.in_([user.id for user in log.users])
+        ).all()
+
+        users_to_create = (
+            user
+            for user in log.users
+            if not any(present.bga_id == user.bga_id for present in present_users)
+        )
+
+        for user in users_to_create:
+            db.session.add(
+                UserModel(  # type: ignore
+                    bga_id=user.id,
+                    name=user.name,
+                    avatar=user.avatar,
+                )
+            )
+
+        # Now create a game participation for each user.
+        for user in log.users:
+            log_user = next(u for u in parsed_logs.data.players if u.id == user.bga_id)
+            db.session.add(
+                GameParticipationModel(  # type: ignore
+                    user=user,
+                    color=log_user.color,
+                    game_log=log,
+                )
+            )
+
         db.session.commit()
 
     return log
