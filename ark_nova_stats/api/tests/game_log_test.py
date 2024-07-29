@@ -1,5 +1,4 @@
 import sys
-import urllib.parse
 
 import pytest
 from flask.testing import FlaskClient

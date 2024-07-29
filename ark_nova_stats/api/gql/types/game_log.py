@@ -1,10 +1,12 @@
 import json
+import logging
 from typing import Any, Optional, Type
 
 from graphql import (
     GraphQLArgument,
     GraphQLField,
     GraphQLInt,
+    GraphQLList,
     GraphQLNonNull,
     GraphQLObjectType,
     GraphQLString,
@@ -15,6 +17,14 @@ from ark_nova_stats.config import app, db
 from ark_nova_stats.models import GameLog as GameLogModel
 from ark_nova_stats.models import GameParticipation as GameParticipationModel
 from ark_nova_stats.models import User as UserModel
+
+
+def game_log_bga_table_id_resolver(game_log: GameLogModel, info, **args) -> int:
+    return game_log.bga_table_id
+
+
+def game_log_users_resolver(game_log: GameLogModel, info, **args) -> list[UserModel]:
+    return game_log.users
 
 
 def game_log_fields() -> dict[str, GraphQLField]:
@@ -30,7 +40,11 @@ def game_log_fields() -> dict[str, GraphQLField]:
         "bgaTableId": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="ID of original table on BGA.",
-            resolve=lambda game_log, info, **args: game_log.bga_table_id,
+            resolve=game_log_bga_table_id_resolver,
+        ),
+        "users": GraphQLField(
+            GraphQLNonNull(GraphQLList(user_type)),
+            resolve=game_log_users_resolver,
         ),
     }
 
@@ -77,7 +91,7 @@ def submit_game_logs(
             f"Log is invalid: there must be exactly one table_id per game log, found: {table_ids}"
         )
 
-    log = GameLogModel(bga_table_id=list(table_ids)[0], log=args["logs"])
+    log = GameLogModel(bga_table_id=list(table_ids)[0], log=args["logs"])  # type: ignore
 
     if app.config["TESTING"] == True:
         log.id = 1
@@ -85,31 +99,40 @@ def submit_game_logs(
         db.session.add(log)
 
         # Add users if not present.
+        logging.warn("Finding present users.")
         present_users = UserModel.query.filter(
-            UserModel.bga_id.in_([user.id for user in log.users])
+            UserModel.bga_id.in_([user.id for user in parsed_logs.data.players])
         ).all()
+        bga_id_to_user = {present.bga_id: present for present in present_users}
+        present_user_ids = set(present.bga_id for present in present_users)
+        logging.warn(f"Found present users: {present_user_ids}")
+        logging.warn(f"Users at this point: {bga_id_to_user}")
 
-        users_to_create = (
-            user
-            for user in log.users
-            if not any(present.bga_id == user.bga_id for present in present_users)
-        )
+        users_to_create = [
+            user for user in parsed_logs.data.players if user.id not in present_user_ids
+        ]
+        logging.warn(f"Users to create: {[u.id for u in users_to_create]}")
 
         for user in users_to_create:
-            db.session.add(
-                UserModel(  # type: ignore
-                    bga_id=user.id,
-                    name=user.name,
-                    avatar=user.avatar,
-                )
+            bga_id_to_user[user.id] = UserModel(  # type: ignore
+                bga_id=user.id,
+                name=user.name,
+                avatar=user.avatar,
             )
+            db.session.add(bga_id_to_user[user.id])
+
+        logging.warn(f"Users at this point: {bga_id_to_user}")
 
         # Now create a game participation for each user.
-        for user in log.users:
-            log_user = next(u for u in parsed_logs.data.players if u.id == user.bga_id)
+        logging.warn("Adding participations.")
+        for bga_user in parsed_logs.data.players:
+            logging.warn(f"Adding participation for: {bga_user.id}")
+            log_user = next(u for u in parsed_logs.data.players if u.id == bga_user.id)
+            logging.warn(f"Found log user with color: {log_user.color}")
+            logging.warn(f"Users at this point: {bga_id_to_user}")
             db.session.add(
                 GameParticipationModel(  # type: ignore
-                    user=user,
+                    user=bga_id_to_user[bga_user.id],
                     color=log_user.color,
                     game_log=log,
                 )
@@ -134,3 +157,31 @@ def submit_game_logs_field(
         },
         resolve=lambda root, info, **args: submit_game_logs(game_log_model, args),
     )
+
+
+def user_fields() -> dict[str, GraphQLField]:
+    return {
+        "id": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The id of the user.",
+        ),
+        "bgaId": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The BGA id of the user.",
+        ),
+        "name": GraphQLField(
+            GraphQLNonNull(GraphQLString),
+            description="The BGA username of the user.",
+        ),
+        "avatar": GraphQLField(
+            GraphQLNonNull(GraphQLString),
+            description="The avatar of the user.",
+        ),
+    }
+
+
+user_type = GraphQLObjectType(
+    "User",
+    description="A game log entry.",
+    fields=user_fields,
+)

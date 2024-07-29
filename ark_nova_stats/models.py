@@ -6,6 +6,22 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ark_nova_stats.config import db
 
 
+class GameParticipation(db.Model):  # type: ignore
+    __tablename__ = "game_participations"
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.bga_id"), primary_key=True)
+    game_log_id: Mapped[int] = mapped_column(
+        ForeignKey("game_logs.id"), primary_key=True
+    )
+    color: Mapped[str]
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
+    )
+
+    user: Mapped["User"] = relationship(back_populates="game_participations")
+    game_log: Mapped["GameLog"] = relationship(back_populates="user_participations")
+
+
 class GameLog(db.Model):  # type: ignore
     __tablename__ = "game_logs"
 
@@ -44,19 +60,3 @@ class User(db.Model):  # type: ignore
     game_participations: Mapped[list["GameParticipation"]] = relationship(
         back_populates="user"
     )
-
-
-class GameParticipation(db.Model):  # type: ignore
-    __tablename__ = "game_participations"
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    game_log_id: Mapped[int] = mapped_column(
-        ForeignKey("game_logs.id"), primary_key=True
-    )
-    color: Mapped[str]
-    created_at: Mapped[datetime.datetime] = mapped_column(
-        db.TIMESTAMP(timezone=True),
-        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
-    )
-
-    user: Mapped["User"] = relationship(back_populates="game_participations")
-    game_log: Mapped["GameLog"] = relationship(back_populates="user_participations")

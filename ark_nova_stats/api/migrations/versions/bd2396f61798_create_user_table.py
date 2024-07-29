@@ -89,7 +89,7 @@ def upgrade():
 
             session.add(
                 GameParticipationModel(  # type: ignore
-                    user_id=player.id,
+                    user=players[player.id],
                     color=player.color,
                     game_log_id=parsed_log.data.logs[0].table_id,
                 )
