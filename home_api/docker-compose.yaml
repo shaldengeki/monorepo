@@ -20,7 +20,7 @@ services:
       - "5000:5000"
   migration:
     <<: *api
-    command: [ "/home_api/api/migrations/binary"]
+    command: [ "/home_api/api/migrations/binary", "/home_api/api/migrations", "./binary.runfiles/_main/home_api/api/migrations/alembic.ini", "upgrade"]
     restart: no
     depends_on:
       - pg

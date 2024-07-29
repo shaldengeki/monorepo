@@ -1,4 +1,4 @@
-from home_api.api.config import db
+from home_api.config import db
 
 
 class Transaction(db.Model):
