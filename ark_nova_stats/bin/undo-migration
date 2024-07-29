@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -ex
+
+bazel_bin="$(bazel info bazel-bin)"
+runfiles="$bazel_bin/ark_nova_stats/api/migrations/binary.runfiles"
+migrations_runfiles="$runfiles/_main/ark_nova_stats/api/migrations"
+
+docker run --network ark_nova_stats_default shaldengeki/ark-nova-stats-api:latest /ark_nova_stats/api/migrations/binary /ark_nova_stats/api/migrations ./binary.runfiles/_main/ark_nova_stats/api/migrations/alembic.ini downgrade

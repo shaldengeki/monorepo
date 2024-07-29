@@ -23,7 +23,7 @@ if __name__ == "__main__":
     with app.app_context():
         if command == "downgrade":
             downgrade(directory=".")
-        if command == "upgrade":
+        elif command == "upgrade":
             upgrade(directory=".")
         elif command == "revision":
             revision(directory=".", message=sys.argv[4])
