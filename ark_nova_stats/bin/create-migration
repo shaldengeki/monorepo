@@ -7,6 +7,7 @@ runfiles="$bazel_bin/ark_nova_stats/api/migrations/binary.runfiles"
 migrations_runfiles="$runfiles/_main/ark_nova_stats/api/migrations"
 
 # Delete any pre-existing versions in the runfiles.
+bazel clean --expunge
 rm -rf "$migrations_runfiles/versions"
 
 # Create a new version.
