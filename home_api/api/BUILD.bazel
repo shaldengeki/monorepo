@@ -3,15 +3,6 @@ load("@rules_python//python:defs.bzl", "py_library")
 load("//tools/build_rules:api_image.bzl", "api_image")
 
 py_library(
-    name = "config_py",
-    srcs = ["config.py"],
-    visibility = ["//home_api:__subpackages__"],
-    deps = [
-        "//base:flask_app_py",
-    ],
-)
-
-py_library(
     name = "api_lib",
     srcs = glob(["**/*.py"]),
     data = [
@@ -20,7 +11,7 @@ py_library(
     imports = [".."],
     visibility = ["//home_api/api:__subpackages__"],
     deps = [
-        "//home_api/api:config_py",
+        "//home_api:config_py",
         requirement("Flask"),
         requirement("flask_cors"),
         requirement("flask_migrate"),
