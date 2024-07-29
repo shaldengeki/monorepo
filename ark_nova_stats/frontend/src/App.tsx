@@ -6,14 +6,14 @@ import {
   Navigate
 } from "react-router-dom";
 
-import ExampleView from './views/ExampleView';
+import HomeView from './views/HomeView';
 
 function App() {
   return (
     <Router>
         <Routes>
-          <Route path="/" element={<Navigate to="/example" replace />} />
-          <Route path="example" element={<ExampleView />} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="home" element={<HomeView />} />
         </Routes>
     </Router>
   );

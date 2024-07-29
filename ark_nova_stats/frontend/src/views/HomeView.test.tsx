@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import ExampleView from './ExampleView';
+import HomeView from './HomeView';
 import { MockedProvider } from '@apollo/react-testing';
 import {BrowserRouter} from 'react-router-dom'
 import React from 'react';
@@ -7,7 +7,7 @@ import React from 'react';
 it('should render', async () => {
     render(
       <MockedProvider mocks={[]}>
-        <ExampleView />
+        <HomeView />
       </MockedProvider>,
       {wrapper: BrowserRouter},
     );
