@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import ExampleComponent from '../components/ExampleComponent';
-import StatsType from '../types/StatsType';
+import Stats from '../types/Stats';
 import {getDate} from '../DateUtils';
 
 export const FETCH_STATS_QUERY = gql`
@@ -36,7 +36,7 @@ const HomeView = () => {
     else if (data.stats.length < 1) {
         innerContent = <p>Error: stats could not be retrieved!</p>;
     } else {
-        var stats: StatsType = data.stats;
+        var stats: Stats = data.stats;
         var text = `Welcome to the database! There are currently ${stats.numGameLogs} games recorded across ${stats.numPlayers} players.`
         if (stats.mostRecentSubmission !== null) {
             text += ` The most recent game was submitted on ${getDate(stats.mostRecentSubmission)}.`;

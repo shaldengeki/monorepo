@@ -1,7 +1,7 @@
-type StatsType = {
+type Stats = {
     numGameLogs: number;
     numPlayers: number;
     mostRecentSubmission: number | null;
 }
 
-export default StatsType;
+export default Stats;
