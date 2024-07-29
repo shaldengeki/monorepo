@@ -5,5 +5,12 @@ set -ex
 bazel_bin="$(bazel info bazel-bin)"
 runfiles="$bazel_bin/ark_nova_stats/api/migrations/binary.runfiles"
 migrations_runfiles="$runfiles/_main/ark_nova_stats/api/migrations"
+
+# Delete any pre-existing versions in the runfiles.
+rm -rf "$migrations_runfiles/versions"
+
+# Create a new version.
 bazel run //ark_nova_stats/api/migrations:binary -- "$migrations_runfiles" "./alembic.ini" "revision" "$1"
+
+# Copy it back out.
 cp -r "$migrations_runfiles/versions/"*.py "$(pwd)/api/migrations/versions/"
