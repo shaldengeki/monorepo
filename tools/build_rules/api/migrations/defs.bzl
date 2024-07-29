@@ -4,6 +4,7 @@ defs.bzl
 Contains the public interfaces for migrations rules.
 """
 
+load("@rules_python//python:defs.bzl", "py_binary")
 load("//tools/build_rules/api/migrations:migrations_files.bzl", "migrations_files")
 
 def migrations(
