@@ -2,5 +2,4 @@
 
 set -ex
 
-cd src/python/api/migrations
-alembic revision -m "$1"
+bazel run //fitbit_challenges/api/migrations:binary -- "$(pwd)/api/migrations" "./alembic.ini" "revision" "$1"

@@ -9,7 +9,7 @@ services:
       - pg
   migration:
     <<: *api
-    command: [ "/mc_manager/api/migrations/binary"]
+    command: [ "/mc_manager/api/migrations/binary", "/mc_manager/api/migrations", "./binary.runfiles/_main/mc_manager/api/migrations/alembic.ini", "upgrade"]
     restart: no
   worker:
     <<: *api

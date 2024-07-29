@@ -9,7 +9,7 @@ services:
       - pg
   migration:
     <<: *api
-    command: [ "/skeleton/api/migrations/binary"]
+    command: [ "/skeleton/api/migrations/binary", "/skeleton/api/migrations", "./binary.runfiles/_main/skeleton/api/migrations/alembic.ini", "upgrade"]
     restart: no
   worker:
     <<: *api

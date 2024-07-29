@@ -1,38 +1,7 @@
-load("@py_deps//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("//tools/build_rules/api/migrations:defs.bzl", "migrations")
 
-py_library(
-    name = "migrate_lib",
-    srcs = glob(["**/*.py"]),  # keep
-    imports = [".."],
-    visibility = ["//:__subpackages__"],
-    deps = [
-        requirement("alembic"),
-        requirement("Flask"),
-    ],
-)
-
-py_binary(
-    name = "binary",
-    srcs = glob(["**/*.py"]),  # keep
-    data = ["alembic.ini"],
-    imports = [".."],
-    main = "__main__.py",
-    visibility = ["//skeleton/api:__subpackages__"],
-    deps = [
-        "//scripts:wait_for_postgres",  # keep
-        "//skeleton:config_py",
-        "@py_deps//flask_migrate",
-        "@rules_python//python/runfiles",
-    ],
-)
-
-py_library(
-    name = "env",
-    srcs = ["env.py"],
-    visibility = ["//:__subpackages__"],
-    deps = [
-        "@py_deps//alembic",
-        "@py_deps//flask",
-    ],
+migrations(
+    app_config = "//skeleton:config_py",
+    app_package = "skeleton.config",
+    versions = glob(["versions/*.py"]),
 )
