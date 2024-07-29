@@ -136,6 +136,23 @@ def game_logs_field(
     )
 
 
+def fetch_recent_game_logs(game_log_model: Type[GameLogModel]) -> list[GameLogModel]:
+    return (
+        game_log_model.query.order_by(desc(game_log_model.created_at)).limit(10).all()
+    )
+
+
+def recent_game_logs_field(
+    game_log_model: Type[GameLogModel],
+) -> GraphQLField:
+    return GraphQLField(
+        GraphQLNonNull(GraphQLList(game_log_type)),
+        description="List recent game logs.",
+        args={},
+        resolve=lambda root, info, **args: fetch_recent_game_logs(game_log_model),
+    )
+
+
 def user_bga_id_resolver(user: UserModel, info, **args) -> int:
     return user.bga_id
 
