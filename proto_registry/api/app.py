@@ -3,9 +3,9 @@ import json
 from flask import abort, request
 from sqlalchemy import asc
 
-from proto_registry.api.config import app, db
 from proto_registry.api.models.subject import Subject
 from proto_registry.api.models.subject_version import SchemaType, SubjectVersion
+from proto_registry.config import app, db
 
 
 @app.route("/")

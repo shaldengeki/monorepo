@@ -9,7 +9,7 @@ services:
       - pg
   migration:
     <<: *api
-    command: [ "/fitbit_challenges/api/migrations/binary"]
+    command: [ "/fitbit_challenges/api/migrations/binary", "/fitbit_challenges/api/migrations", "./binary.runfiles/_main/fitbit_challenges/api/migrations/alembic.ini", "upgrade"]
     restart: no
   worker:
     <<: *api

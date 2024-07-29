@@ -11,7 +11,7 @@ services:
       - pg
   migration:
     <<: *api
-    command: [ "/proto_registry/api/migrations/binary"]
+    command: [ "/proto_registry/api/migrations/binary", "/proto_registry/api/migrations", "./binary.runfiles/_main/proto_registry/api/migrations/alembic.ini", "upgrade"]
     ports: []
     restart: no
   pg:

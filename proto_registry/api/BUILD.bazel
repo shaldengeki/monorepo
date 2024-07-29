@@ -3,21 +3,12 @@ load("@rules_python//python:defs.bzl", "py_library")
 load("//tools/build_rules:api_image.bzl", "api_image")
 
 py_library(
-    name = "config_py",
-    srcs = ["config.py"],
-    visibility = ["//proto_registry:__subpackages__"],
-    deps = [
-        "//base:flask_app_py",
-    ],
-)
-
-py_library(
     name = "api_lib",
     srcs = glob(["**/*.py"]),
     imports = [".."],
     visibility = ["//proto_registry:__subpackages__"],
     deps = [
-        ":config_py",
+        "//proto_registry:config_py",
         requirement("pg8000"),
         requirement("sqlalchemy"),
     ],
