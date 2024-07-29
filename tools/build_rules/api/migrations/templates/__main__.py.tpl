@@ -4,7 +4,7 @@ import sys
 
 from flask_migrate import downgrade, revision, upgrade
 
-from ark_nova_stats.config import app
+from {app_package} import app
 
 if __name__ == "__main__":
     working_dir = sys.argv[1]

@@ -1,39 +1,11 @@
-load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("//tools/build_rules/api/migrations:defs.bzl", "migrations")
 
-py_library(
-    name = "migrate_lib",
-    srcs = glob(["**/*.py"]),  # keep
-    imports = [".."],
-    visibility = ["//:__subpackages__"],
+migrations(
+    app_config = "//ark_nova_stats:config_py",
+    app_package = "ark_nova_stats.config",
+    versions = glob(["versions/*.py"]),
     deps = [
         "//ark_nova_stats:models_py",
         "//ark_nova_stats/bga_log_parser:game_log",
-        "//base:flask_app_py",
-        "@py_deps//alembic",
-        "@py_deps//flask",
-    ],
-)
-
-py_binary(
-    name = "binary",
-    srcs = glob(["**/*.py"]),  # keep
-    data = ["alembic.ini"],
-    main = "__main__.py",
-    visibility = ["//ark_nova_stats/api:__subpackages__"],
-    deps = [
-        ":migrate_lib",  # keep
-        "//ark_nova_stats:config_py",
-        "@py_deps//flask_migrate",
-    ],
-)
-
-py_library(
-    name = "env",
-    srcs = ["env.py"],
-    visibility = ["//:__subpackages__"],
-    deps = [
-        "//base:flask_app_py",
-        "@py_deps//alembic",
-        "@py_deps//flask",
     ],
 )
