@@ -6,7 +6,6 @@ py_library(
     visibility = ["//ark_nova_stats:__subpackages__"],
     deps = [
         ":config_py",
-        "@py_deps//requests",
         "@py_deps//sqlalchemy",
     ],
 )
