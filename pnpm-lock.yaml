@@ -78,8 +78,8 @@ dependencies:
     specifier: ^5
     version: 5.0.2
   web-vitals:
-    specifier: ^4.2.1
-    version: 4.2.1
+    specifier: ^4.2.2
+    version: 4.2.2
 
 devDependencies:
   '@tsconfig/create-react-app':
@@ -13397,8 +13397,8 @@ packages:
     resolution: {integrity: sha512-lNR9aAefbGPpHO7AEnY0hCFjz1eTkWCXYvkTRrTHs9qv8zJp+SkVYpzfLIFXQQiG3tVvbNFQgVg2bQS8YGgxyw==}
     dev: false
 
-  /web-vitals@4.2.1:
-    resolution: {integrity: sha512-U6bAxeudnhDqcXNl50JC4hLlqox9DZnngxfISZm3DMZnonW35xtJOVUc091L+DOY+6hVZVpKXoiCP0RiT6339Q==}
+  /web-vitals@4.2.2:
+    resolution: {integrity: sha512-nYfoOqb4EmElljyXU2qdeE76KsvoHdftQKY4DzA9Aw8DervCg2bG634pHLrJ/d6+B4mE3nWTSJv8Mo7B2mbZkw==}
     dev: false
 
   /webgl-context@2.2.0:
