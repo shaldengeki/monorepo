@@ -33,15 +33,23 @@ const HomeView = () => {
     let innerContent = <p></p>;
     if (loading) innerContent = <p>Loading...</p>;
     else if (error) innerContent = <p>Error: {error.message}</p>;
-    else if (data.stats.length < 1) {
+    else if (!data.stats || data.stats.length < 1) {
         innerContent = <p>Error: stats could not be retrieved!</p>;
     } else {
         var stats: Stats = data.stats;
-        var text = `Welcome to the database! There are currently ${stats.numGameLogs} games recorded across ${stats.numPlayers} players.`
+        var statsElements = [
+            <li>Games recorded: {stats.numGameLogs}</li>,
+            <li>Players involved: {stats.numPlayers}</li>
+        ];
         if (stats.mostRecentSubmission !== null) {
-            text += ` The most recent game was submitted on ${getDate(stats.mostRecentSubmission)}.`;
+            statsElements.push(<li>The most recent game was submitted on: {getDate(stats.mostRecentSubmission)}</li>)
         }
-        innerContent = <p>{text}</p>
+        innerContent = (<div>
+            <p>Welcome to the database! There are currently:</p>
+            <ul className="list-disc">
+                {statsElements}
+            </ul>
+        </div>);
     }
 
     return (
