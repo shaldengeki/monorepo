@@ -6,7 +6,7 @@
 manifest:
   modules_mapping:
     30fcd23745efe32ce681__mypyc: black
-    7f0197f6d050da244d93__mypyc: mypy
+    3204bda914b7f2c6f497__mypyc: mypy
     alembic: alembic
     alembic.autogenerate: alembic
     alembic.autogenerate.api: alembic
@@ -937,6 +937,7 @@ manifest:
     mypy.dmypy_server: mypy
     mypy.dmypy_util: mypy
     mypy.erasetype: mypy
+    mypy.error_formatter: mypy
     mypy.errorcodes: mypy
     mypy.errors: mypy
     mypy.evalexpr: mypy
@@ -1057,6 +1058,7 @@ manifest:
     mypy.test.testmerge: mypy
     mypy.test.testmodulefinder: mypy
     mypy.test.testmypyc: mypy
+    mypy.test.testoutput: mypy
     mypy.test.testparse: mypy
     mypy.test.testpep561: mypy
     mypy.test.testpythoneval: mypy
