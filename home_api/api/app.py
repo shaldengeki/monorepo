@@ -1,7 +1,7 @@
 from graphql_server.flask import GraphQLView
 
-from home_api.api.config import app
 from home_api.api.graphql.schema import Schema
+from home_api.config import app
 
 app.add_url_rule(
     "/graphql",

@@ -1,0 +1,6 @@
+exports_files(
+    [
+        "migrations_files.bzl",
+        "defs.bzl",
+    ] + glob(["templates/*.tpl"]),
+)

@@ -4,8 +4,8 @@ import json
 
 from sqlalchemy import Enum
 
-from proto_registry.api.config import db
 from proto_registry.api.models.subject import Subject
+from proto_registry.config import db
 
 
 class SchemaType(enum.Enum):

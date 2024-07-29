@@ -1,1 +1,1 @@
-from proto_registry.api.config import app
+from proto_registry.config import app
