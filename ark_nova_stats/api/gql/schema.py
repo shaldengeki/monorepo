@@ -3,6 +3,7 @@ from graphql import GraphQLObjectType, GraphQLSchema
 from ark_nova_stats.api.gql.types.game_log import (
     game_log_field,
     game_logs_field,
+    recent_game_logs_field,
     stats_field,
     submit_game_logs_field,
 )
@@ -16,6 +17,7 @@ def Schema(app):
             fields={
                 "gameLog": game_log_field(GameLog),
                 "gameLogs": game_logs_field(GameLog),
+                "recentGameLogs": recent_game_logs_field(GameLog),
                 "stats": stats_field(GameLog, User),
             },
         ),
