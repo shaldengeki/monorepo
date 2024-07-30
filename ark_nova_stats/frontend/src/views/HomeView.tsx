@@ -6,14 +6,22 @@ import { Link } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import DatabaseStatistics from '../components/DatabaseStatistics';
+import GameLogsTable from '../components/GameLogsTable';
 import Stats from '../types/Stats';
+import GameLog from '../types/GameLog';
 
 export const HOME_VIEW_QUERY = gql`
-    query FetchStats {
+    query FetchHome {
         stats {
             numGameLogs
             numPlayers
             mostRecentSubmission
+        }
+        recentGameLogs {
+            bgaTableId
+            users {
+                name
+            }
         }
     }
 `;
@@ -34,7 +42,16 @@ const HomeView = () => {
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
         var stats: Stats = data.stats;
-        innerContent = <DatabaseStatistics stats={stats} />
+        var gameLogs: GameLog[] = data.recentGameLogs;
+        innerContent = (
+            <div>
+                <DatabaseStatistics stats={stats} />
+                <div>
+                    <h2>Recently-submitted games:</h2>
+                    <GameLogsTable gameLogs={gameLogs} />
+                </div>
+            </div>
+        );
     }
 
     return (
