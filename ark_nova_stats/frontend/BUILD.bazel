@@ -114,6 +114,7 @@ jest_test(
         "src/DateUtils.test.js",
         "src/components/DatabaseStatistics.js",
         "src/components/DatabaseStatistics.test.js",
+        "src/components/GameLogsTable.js",
         "src/components/NavBar.js",
         "src/components/PageContainer.js",
         "src/components/PageTitle.js",

@@ -36,6 +36,9 @@ jobs:
   push_ark_nova_stats:
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
+    concurrency:
+      group: ark_nova_stats_dockerhub
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -52,6 +55,9 @@ jobs:
   deploy_ark_nova_stats:
     needs: push_ark_nova_stats
     if: ${{ github.ref == 'refs/heads/main' }}
+    concurrency:
+      group: ark_nova_stats_production
+      cancel-in-progress: false
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
     runs-on: ubuntu-latest
@@ -65,6 +71,9 @@ jobs:
   push_fitbit_challenges:
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
+    concurrency:
+      group: fitbit_challenges_dockerhub
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -82,6 +91,9 @@ jobs:
   push_home_api:
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
+    concurrency:
+      group: home_api_dockerhub
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -98,6 +110,9 @@ jobs:
   push_mc_manager:
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
+    concurrency:
+      group: mc_manager_dockerhub
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
