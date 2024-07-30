@@ -45,9 +45,13 @@ const HomeView = () => {
         var gameLogs: GameLog[] = data.recentGameLogs;
         innerContent = (
             <div>
-                <DatabaseStatistics stats={stats} />
-                <div>
-                    <h2>Recently-submitted games:</h2>
+                <div className={"py-2"}>
+                    <h2 className={"text-xl"}>Welcome to the database!</h2>
+                    <p>There are currently:</p>
+                    <DatabaseStatistics stats={stats} />
+                </div>
+                <div className={"py-2"}>
+                    <h2 className={"text-xl"}>Recently-submitted games:</h2>
                     <GameLogsTable gameLogs={gameLogs} />
                 </div>
             </div>

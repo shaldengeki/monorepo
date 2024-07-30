@@ -19,12 +19,9 @@ const DatabaseStatistics = ({stats}: DatabaseStatisticsParams) => {
         if (stats.mostRecentSubmission !== null) {
             statsElements.push(<li>The most recent game was submitted on: {getDate(stats.mostRecentSubmission)}</li>)
         }
-        innerContent = (<div>
-            <p>Welcome to the database! There are currently:</p>
-            <ul className="list-disc">
+        innerContent = <ul className="list-disc">
                 {statsElements}
-            </ul>
-        </div>);
+            </ul>;
     }
     return innerContent
 }
