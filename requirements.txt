@@ -1,6 +1,7 @@
 astroid
 black
 boto3
+boto3-stubs
 cfgv
 click
 dill

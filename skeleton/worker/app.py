@@ -1,6 +1,6 @@
 import time
 
-from fitbit_challenges.config import app, db
+from skeleton.config import app, db
 
 max_delay = 10
 

@@ -1,0 +1,21 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+load("//tools/build_rules/worker:defs.bzl", "worker")
+
+py_binary(
+    name = "binary",
+    srcs = ["app.py"],
+    imports = [".."],
+    main = "app.py",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//ark_nova_stats:config_py",
+        "@py_deps//boto3",
+    ],
+)
+
+worker(
+    name = "worker",
+    binary = ":binary",
+    docker_hub_repository = "docker.io/shaldengeki/ark-nova-stats-worker",
+    repo_tags = ["shaldengeki/ark-nova-stats-worker:latest"],
+)
