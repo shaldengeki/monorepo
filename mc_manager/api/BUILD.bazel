@@ -1,5 +1,5 @@
 load("@py_deps//:requirements.bzl", "requirement")
-load("//tools/build_rules:api_image.bzl", "api_image")
+load("//tools/build_rules/api:defs.bzl", "api_image")
 
 py_library(
     name = "api_lib",
