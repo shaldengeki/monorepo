@@ -1,4 +1,4 @@
-load("//tools/build_rules/api/migrations:defs.bzl", "migrations")
+load("//tools/build_rules/api:defs.bzl", migrations = "api_migrations")
 
 migrations(
     app_config = "//ark_nova_stats:config_py",

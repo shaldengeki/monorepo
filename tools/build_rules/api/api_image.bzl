@@ -6,8 +6,8 @@ A macro used to define an API container image.
 
 load("@rules_python//python:defs.bzl", "py_binary")
 load("//tools/build_rules:cross_platform_image.bzl", "cross_platform_image")
-load("//tools/build_rules:main_py.bzl", "main_py")
 load("//tools/build_rules:py_layer.bzl", "py_oci_image")
+load("//tools/build_rules/api:main_py.bzl", "main_py")
 
 def api_image(
         name,
