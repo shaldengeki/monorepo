@@ -90,3 +90,15 @@ class User(db.Model):  # type: ignore
     game_participations: Mapped[list["GameParticipation"]] = relationship(
         back_populates="user"
     )
+
+
+class GameLogArchive(db.Model):  # type: ignore
+    id: Mapped[int] = mapped_column(primary_key=True)
+    url: Mapped[str]
+    num_game_logs: Mapped[int]
+    num_users: Mapped[int]
+    last_game_log_id: Mapped[int]
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
+    )
