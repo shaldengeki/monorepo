@@ -1,0 +1,3 @@
+exports_files([
+    "templates/__main__.py.tpl",
+])
