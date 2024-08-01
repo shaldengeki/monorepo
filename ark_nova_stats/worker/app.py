@@ -23,6 +23,8 @@ logger = logging.getLogger(__name__)
 def archive_logs_to_tigris(
     tigris_client, min_interval: datetime.timedelta = datetime.timedelta(days=1)
 ) -> Optional[GameLogArchive]:
+    # TODO: convert all of these database requests to GraphQL requests over the internal network.
+
     # First, bail if we've uploaded an archive recently.
     last_archive: GameLogArchive = GameLogArchive.query.order_by(
         desc(GameLogArchive.created_at)
