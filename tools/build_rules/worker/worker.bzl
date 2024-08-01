@@ -71,7 +71,7 @@ def worker(
     # $ docker run --rm shaldengeki/skeleton-worker:latest
     cross_platform_image(
         name = name + "_image",
-        image = ":base_image",
+        image = ":" + name + "_base_image",
         repo_tags = repo_tags,
         repository = docker_hub_repository,
         visibility = visibility,

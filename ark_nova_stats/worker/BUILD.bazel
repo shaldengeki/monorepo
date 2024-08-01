@@ -1,0 +1,30 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+load("//tools/build_rules/worker:defs.bzl", "worker")
+
+py_binary(
+    name = "binary",
+    srcs = ["app.py"],
+    imports = [".."],
+    main = "app.py",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//ark_nova_stats:config_py",
+        "@py_deps//boto3",
+    ],
+)
+
+worker(
+    name = "worker",
+    binary = "//ark_nova_stats/worker:binary",
+    docker_hub_repository = "docker.io/shaldengeki/ark-nova-stats-worker",
+    env = {
+        "DATABASE_URL": "test-database-url",
+        "AWS_ACCESS_KEY_ID": "test-aws-access-key-id",
+        "AWS_ENDPOINT_URL_S3": "test-endpoint-url-s3",
+        "AWS_REGION": "test-aws-region",
+        "AWS_SECRET_ACCESS_KEY": "test-aws-secret-access-key",
+        "BUCKET_NAME": "test-bucket-name",
+        "TIGRIS_CUSTOM_DOMAIN_HOST": "test-tigris-custom-domain-host",
+    },
+    repo_tags = ["shaldengeki/ark-nova-stats-worker:latest"],
+)
