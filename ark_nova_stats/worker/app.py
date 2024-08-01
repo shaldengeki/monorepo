@@ -66,6 +66,7 @@ def archive_logs_to_tigris(
         archive_type + "/" + filename,
     )
     url = f"{os.getenv('TIGRIS_CUSTOM_DOMAIN_HOST')}/{filename}"
+    logger.info(f"Uploaded game log archive at: {url} with size: {size_bytes}")
 
     # Record this archive in the database.
     if last_game_log is None:
