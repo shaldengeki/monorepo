@@ -21,7 +21,9 @@ def upgrade():
     op.create_table(
         "game_log_archives",
         sa.Column("id", sa.Integer, primary_key=True, autoincrement=True),
+        sa.Column("archive_type", sa.UnicodeText, nullable=False),
         sa.Column("url", sa.UnicodeText, nullable=False),
+        sa.Column("size_bytes", sa.Integer, nullable=False),
         sa.Column("num_game_logs", sa.Integer, nullable=False),
         sa.Column("num_users", sa.Integer, nullable=False),
         sa.Column("last_game_log_id", sa.Integer),

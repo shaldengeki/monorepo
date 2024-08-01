@@ -1,4 +1,6 @@
 import datetime
+import gzip
+import io
 import logging
 import os
 import time
@@ -8,7 +10,7 @@ import boto3
 from sqlalchemy import desc
 
 from ark_nova_stats.config import app, db
-from ark_nova_stats.models import GameLog, GameLogArchive
+from ark_nova_stats.models import GameLog, GameLogArchive, User
 
 max_delay = 10
 
@@ -32,22 +34,49 @@ def archive_logs_to_tigris(
         )
         return None
 
-    # First, retrieve all the game logs so we can serialize them.
-    all_logs = GameLog.query.all()
+    # Retrieve all the game logs so we can serialize them.
+    all_logs: list[GameLog] = GameLog.query.all()
     users: set[str] = set()
-    last_game_log = None
-    for game_log in all_logs:
-        # TODO: serialize game_log to CSV, then use tigris_client.upload_fileobj()
-        pass
+    last_game_log: Optional[GameLog] = None
+    log_list = []
+    archive_type = "raw_bga_jsonl"
 
-    # Next, record this archive in the database.
+    # Assemble a list of the game logs and compress them using gzip.
+    for game_log in all_logs:
+        log_list.append(game_log.log)
+
+        game_users: list[User] = game_log.users
+        users.update(set([u.name for u in game_users]))
+        if last_game_log is None or last_game_log.created_at < game_log.created_at:
+            last_game_log = game_log
+
+    compressed_jsonl = gzip.compress("\n".join(log_list).encode("utf-8"))
+    size_bytes = len(compressed_jsonl)
+    filename = (
+        archive_type
+        + "_"
+        + datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y_%M_%d")
+        + ".gz"
+    )
+
+    # Upload the compressed gzip jsonl to Tigris.
+    tigris_client.upload_fileobj(
+        io.BytesIO(compressed_jsonl),
+        os.getenv("BUCKET_NAME"),
+        archive_type + "/" + filename,
+    )
+    url = f"{os.getenv('TIGRIS_CUSTOM_DOMAIN_HOST')}/{filename}"
+
+    # Record this archive in the database.
     if last_game_log is None:
         last_game_log_id = None
     else:
         last_game_log_id = last_game_log.id
 
     new_archive = GameLogArchive(
-        url="",
+        url=url,
+        archive_type=archive_type,
+        size_bytes=size_bytes,
         num_game_logs=len(all_logs),
         num_users=len(users),
         last_game_log_id=last_game_log_id,
@@ -55,6 +84,7 @@ def archive_logs_to_tigris(
 
     db.session.add(new_archive)
     db.session.commit()
+    logger.info(f"Recorded a new game log archive at: {url} with {len(all_logs)} games")
     return new_archive
 
 

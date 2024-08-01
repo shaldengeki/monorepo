@@ -94,7 +94,9 @@ class User(db.Model):  # type: ignore
 
 class GameLogArchive(db.Model):  # type: ignore
     id: Mapped[int] = mapped_column(primary_key=True)
+    archive_type: Mapped[str]
     url: Mapped[str]
+    size_bytes: Mapped[int]
     num_game_logs: Mapped[int]
     num_users: Mapped[int]
     last_game_log_id: Mapped[int] = mapped_column(db.INTEGER, nullable=True)
