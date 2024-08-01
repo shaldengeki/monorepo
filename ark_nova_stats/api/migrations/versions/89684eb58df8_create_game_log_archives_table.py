@@ -24,7 +24,7 @@ def upgrade():
         sa.Column("url", sa.UnicodeText, nullable=False),
         sa.Column("num_game_logs", sa.Integer, nullable=False),
         sa.Column("num_users", sa.Integer, nullable=False),
-        sa.Column("last_game_log_id", sa.Integer, nullable=False),
+        sa.Column("last_game_log_id", sa.Integer),
         sa.Column("created_at", sa.DateTime, default=now, nullable=False),
     )
 

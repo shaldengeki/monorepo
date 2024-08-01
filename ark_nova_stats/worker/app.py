@@ -2,6 +2,7 @@ import datetime
 import logging
 import os
 import time
+from typing import Optional
 
 import boto3
 from sqlalchemy import desc
@@ -17,24 +18,44 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def archive_logs_to_tigris(tigris_client) -> None:
+def archive_logs_to_tigris(
+    tigris_client, min_interval: datetime.timedelta = datetime.timedelta(days=1)
+) -> Optional[GameLogArchive]:
     # First, bail if we've uploaded an archive recently.
-    UPLOAD_ARCHIVE_ONCE_EVERY = datetime.timedelta(days=1)
-
     last_archive: GameLogArchive = GameLogArchive.query.order_by(
         desc(GameLogArchive.created_at)
     ).first()
     time_since_last_archive = datetime.datetime.now() - last_archive.created_at
-    if last_archive is not None and time_since_last_archive < UPLOAD_ARCHIVE_ONCE_EVERY:
+    if last_archive is not None and time_since_last_archive < min_interval:
         logger.debug(
             f"Last archive was uploaded at {last_archive.created_at}, which was {time_since_last_archive} ago; skipping."
         )
-        return
+        return None
 
     # First, retrieve all the game logs so we can serialize them.
-    for game_log in GameLog.query.all():
+    all_logs = GameLog.query.all()
+    users: set[str] = set()
+    last_game_log = None
+    for game_log in all_logs:
         # TODO: serialize game_log to CSV, then use tigris_client.upload_fileobj()
         pass
+
+    # Next, record this archive in the database.
+    if last_game_log is None:
+        last_game_log_id = None
+    else:
+        last_game_log_id = last_game_log.id
+
+    new_archive = GameLogArchive(
+        url="",
+        num_game_logs=len(all_logs),
+        num_users=len(users),
+        last_game_log_id=last_game_log_id,
+    )
+
+    db.session.add(new_archive)
+    db.session.commit()
+    return new_archive
 
 
 def main() -> int:

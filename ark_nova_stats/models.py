@@ -97,7 +97,7 @@ class GameLogArchive(db.Model):  # type: ignore
     url: Mapped[str]
     num_game_logs: Mapped[int]
     num_users: Mapped[int]
-    last_game_log_id: Mapped[int]
+    last_game_log_id: Mapped[int] = mapped_column(db.INTEGER, nullable=True)
     created_at: Mapped[datetime.datetime] = mapped_column(
         db.TIMESTAMP(timezone=True),
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
