@@ -43,6 +43,7 @@ def worker(
         "DB_PASSWORD": "development",
         "DATABASE_NAME": "api_development",
         "FLASK_SECRET_KEY": "testing",
+        "API_WORKER_SECRET": "test-api-worker-secret",
     }
     all_env.update(env)
 

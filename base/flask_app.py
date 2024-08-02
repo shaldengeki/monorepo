@@ -41,6 +41,7 @@ def FlaskApp(name) -> tuple[Flask, CORS, SQLAlchemy, Migrate]:
     app.config.update(
         FRONTEND_URL=frontend_url,
         SECRET_KEY=os.getenv("FLASK_SECRET_KEY", "testing"),
+        WORKER_SECRET=os.getenv("API_WORKER_SECRET", "test-api-worker-secret"),
         SQLALCHEMY_DATABASE_URI=database_uri(),
         SQLALCHEMY_ENGINE_OPTIONS={
             "connect_args": {
