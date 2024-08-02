@@ -1,8 +1,11 @@
+import os
 import time
 
 from skeleton.config import app, db
 
 max_delay = 10
+
+API_SECRET_KEY = os.getenv("API_WORKER_SECRET")
 
 
 def main() -> int:
