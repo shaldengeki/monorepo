@@ -91,6 +91,9 @@ def archive_logs_to_tigris(
     return new_archive
 
 
+API_SECRET_KEY = os.getenv("API_WORKER_SECRET")
+
+
 def main() -> int:
     tigris_client = boto3.client("s3", endpoint_url=os.getenv("AWS_ENDPOINT_URL_S3"))
     with app.app_context():
