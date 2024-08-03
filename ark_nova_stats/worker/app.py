@@ -58,7 +58,7 @@ def archive_logs_to_tigris(
     filename = (
         archive_type.name
         + "_"
-        + datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y_%M_%d")
+        + datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y_%m_%d")
         + ".gz"
     )
 
