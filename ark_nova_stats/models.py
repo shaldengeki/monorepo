@@ -99,6 +99,8 @@ class GameLogArchiveType(enum.Enum):
 
 
 class GameLogArchive(db.Model):  # type: ignore
+    __tablename__ = "game_log_archives"
+
     id: Mapped[int] = mapped_column(primary_key=True)
     archive_type: Mapped[GameLogArchiveType] = mapped_column(
         default=GameLogArchiveType.GAME_LOG_ARCHIVE_TYPE_UNKNOWN
