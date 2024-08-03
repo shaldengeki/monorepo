@@ -17,23 +17,24 @@ depends_on = None
 
 
 def upgrade():
-    op.alter_column(
+    op.drop_column("game_log_archives", "archive_type")
+    op.add_column(
         "game_log_archives",
-        "archive_type",
-        type_=sa.Integer,
-        server_default=0,
-        nullable=False,
-        existing_type=sa.UnicodeText,
-        existing_nullable=False,
+        sa.Column(
+            "archive_type",
+            sa.Integer,
+            nullable=False,
+        ),
     )
 
 
 def downgrade():
-    op.alter_column(
+    op.drop_column("game_log_archives", "archive_type")
+    op.add_column(
         "game_log_archives",
-        "archive_type",
-        type_=sa.UnicodeText,
-        nullable=False,
-        existing_type=sa.Integer,
-        existing_nullable=False,
+        sa.Column(
+            "archive_type",
+            sa.UnicodeText,
+            nullable=False,
+        ),
     )

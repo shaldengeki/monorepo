@@ -102,9 +102,7 @@ class GameLogArchive(db.Model):  # type: ignore
     __tablename__ = "game_log_archives"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    archive_type: Mapped[GameLogArchiveType] = mapped_column(
-        default=GameLogArchiveType.GAME_LOG_ARCHIVE_TYPE_UNKNOWN
-    )
+    archive_type: Mapped[int]
     url: Mapped[str]
     size_bytes: Mapped[int]
     num_game_logs: Mapped[int]

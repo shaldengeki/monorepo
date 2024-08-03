@@ -29,12 +29,13 @@ def archive_logs_to_tigris(
     last_archive: GameLogArchive = GameLogArchive.query.order_by(
         desc(GameLogArchive.created_at)
     ).first()
-    time_since_last_archive = datetime.datetime.now() - last_archive.created_at
-    if last_archive is not None and time_since_last_archive < min_interval:
-        logger.debug(
-            f"Last archive was uploaded at {last_archive.created_at}, which was {time_since_last_archive} ago; skipping."
-        )
-        return None
+    if last_archive is not None:
+        time_since_last_archive = datetime.datetime.now() - last_archive.created_at
+        if time_since_last_archive < min_interval:
+            logger.debug(
+                f"Last archive was uploaded at {last_archive.created_at}, which was {time_since_last_archive} ago; skipping."
+            )
+            return None
 
     # Retrieve all the game logs so we can serialize them.
     all_logs: list[GameLog] = GameLog.query.all()
@@ -78,7 +79,7 @@ def archive_logs_to_tigris(
 
     new_archive = GameLogArchive(
         url=url,
-        archive_type=archive_type,
+        archive_type=archive_type.value,
         size_bytes=size_bytes,
         num_game_logs=len(all_logs),
         num_users=len(users),
