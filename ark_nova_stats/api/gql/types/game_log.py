@@ -15,6 +15,7 @@ from sqlalchemy import desc
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import app, db
 from ark_nova_stats.models import GameLog as GameLogModel
+from ark_nova_stats.models import GameLogArchiveType
 from ark_nova_stats.models import User as UserModel
 
 
@@ -238,3 +239,48 @@ def stats_field(
         args={},
         resolve=lambda root, info, **args: fetch_stats(game_log_model, user_model),
     )
+
+
+def game_log_archive_fields() -> dict[str, GraphQLField]:
+    archive_types = set(t.name for t in GameLogArchiveType)
+    return {
+        "id": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="ID of game log archive.",
+        ),
+        "archiveType": GraphQLField(
+            GraphQLNonNull(GraphQLString),
+            description=f"Type of game logs. Possible values are: {', '.join(archive_types)}.",
+        ),
+        "url": GraphQLField(
+            GraphQLNonNull(GraphQLString),
+            description=f"URL of archive.",
+        ),
+        "sizeBytes": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description=f"Size of archive, in bytes.",
+        ),
+        "numGameLogs": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description=f"Number of game logs in this archive.",
+        ),
+        "numUsers": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description=f"Number of users in this archive.",
+        ),
+        "maxGameLog": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description=f"The game log with the highest BGA table ID.",
+        ),
+        "createdAt": GraphQLField(
+            GraphQLInt,
+            description="UNIX timestamp for when this archive was created.",
+        ),
+    }
+
+
+game_log_archive_type = GraphQLObjectType(
+    "GameLogArchive",
+    description="An archive of game logs.",
+    fields=game_log_archive_fields,
+)

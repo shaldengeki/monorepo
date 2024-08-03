@@ -1,4 +1,5 @@
 import datetime
+import enum
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -92,9 +93,16 @@ class User(db.Model):  # type: ignore
     )
 
 
+class GameLogArchiveType(enum.Enum):
+    GAME_LOG_ARCHIVE_TYPE_UNKNOWN = 0
+    RAW_BGA_JSONL = 1
+
+
 class GameLogArchive(db.Model):  # type: ignore
+    __tablename__ = "game_log_archives"
+
     id: Mapped[int] = mapped_column(primary_key=True)
-    archive_type: Mapped[str]
+    archive_type: Mapped[int]
     url: Mapped[str]
     size_bytes: Mapped[int]
     num_game_logs: Mapped[int]

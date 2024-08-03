@@ -10,12 +10,12 @@ import boto3
 from sqlalchemy import desc
 
 from ark_nova_stats.config import app, db
-from ark_nova_stats.models import GameLog, GameLogArchive, User
+from ark_nova_stats.models import GameLog, GameLogArchive, GameLogArchiveType, User
 
-max_delay = 10
+max_delay = 12 * 60 * 60
 
 logging.basicConfig(
-    format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.WARNING
+    format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
@@ -29,19 +29,20 @@ def archive_logs_to_tigris(
     last_archive: GameLogArchive = GameLogArchive.query.order_by(
         desc(GameLogArchive.created_at)
     ).first()
-    time_since_last_archive = datetime.datetime.now() - last_archive.created_at
-    if last_archive is not None and time_since_last_archive < min_interval:
-        logger.debug(
-            f"Last archive was uploaded at {last_archive.created_at}, which was {time_since_last_archive} ago; skipping."
-        )
-        return None
+    if last_archive is not None:
+        time_since_last_archive = datetime.datetime.now() - last_archive.created_at
+        if time_since_last_archive < min_interval:
+            logger.debug(
+                f"Last archive was uploaded at {last_archive.created_at}, which was {time_since_last_archive} ago; skipping."
+            )
+            return None
 
     # Retrieve all the game logs so we can serialize them.
     all_logs: list[GameLog] = GameLog.query.all()
     users: set[str] = set()
     last_game_log: Optional[GameLog] = None
     log_list = []
-    archive_type = "raw_bga_jsonl"
+    archive_type = GameLogArchiveType.RAW_BGA_JSONL
 
     # Assemble a list of the game logs and compress them using gzip.
     for game_log in all_logs:
@@ -55,9 +56,9 @@ def archive_logs_to_tigris(
     compressed_jsonl = gzip.compress("\n".join(log_list).encode("utf-8"))
     size_bytes = len(compressed_jsonl)
     filename = (
-        archive_type
+        archive_type.name
         + "_"
-        + datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y_%M_%d")
+        + datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y_%m_%d")
         + ".gz"
     )
 
@@ -65,7 +66,7 @@ def archive_logs_to_tigris(
     tigris_client.upload_fileobj(
         io.BytesIO(compressed_jsonl),
         os.getenv("BUCKET_NAME"),
-        archive_type + "/" + filename,
+        archive_type.name + "/" + filename,
     )
     url = f"{os.getenv('TIGRIS_CUSTOM_DOMAIN_HOST')}/{filename}"
     logger.info(f"Uploaded game log archive at: {url} with size: {size_bytes}")
@@ -78,7 +79,7 @@ def archive_logs_to_tigris(
 
     new_archive = GameLogArchive(
         url=url,
-        archive_type=archive_type,
+        archive_type=archive_type.value,
         size_bytes=size_bytes,
         num_game_logs=len(all_logs),
         num_users=len(users),
