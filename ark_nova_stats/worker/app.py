@@ -15,7 +15,7 @@ from ark_nova_stats.models import GameLog, GameLogArchive, GameLogArchiveType, U
 max_delay = 12 * 60 * 60
 
 logging.basicConfig(
-    format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.WARNING
+    format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
