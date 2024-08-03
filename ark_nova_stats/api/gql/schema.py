@@ -1,3 +1,4 @@
+import flask
 from graphql import GraphQLObjectType, GraphQLSchema
 
 from ark_nova_stats.api.gql.types.game_log import (
@@ -10,7 +11,7 @@ from ark_nova_stats.api.gql.types.game_log import (
 from ark_nova_stats.models import GameLog, User
 
 
-def Schema(app):
+def Schema(app: flask.Flask):
     return GraphQLSchema(
         query=GraphQLObjectType(
             name="Query",

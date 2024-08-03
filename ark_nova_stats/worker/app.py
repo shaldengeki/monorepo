@@ -10,7 +10,7 @@ import boto3
 from sqlalchemy import desc
 
 from ark_nova_stats.config import app, db
-from ark_nova_stats.models import GameLog, GameLogArchive, User
+from ark_nova_stats.models import GameLog, GameLogArchive, GameLogArchiveType, User
 
 max_delay = 10
 
@@ -41,7 +41,7 @@ def archive_logs_to_tigris(
     users: set[str] = set()
     last_game_log: Optional[GameLog] = None
     log_list = []
-    archive_type = "raw_bga_jsonl"
+    archive_type = GameLogArchiveType.RAW_BGA_JSONL
 
     # Assemble a list of the game logs and compress them using gzip.
     for game_log in all_logs:
@@ -55,7 +55,7 @@ def archive_logs_to_tigris(
     compressed_jsonl = gzip.compress("\n".join(log_list).encode("utf-8"))
     size_bytes = len(compressed_jsonl)
     filename = (
-        archive_type
+        archive_type.name
         + "_"
         + datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y_%M_%d")
         + ".gz"
@@ -65,7 +65,7 @@ def archive_logs_to_tigris(
     tigris_client.upload_fileobj(
         io.BytesIO(compressed_jsonl),
         os.getenv("BUCKET_NAME"),
-        archive_type + "/" + filename,
+        archive_type.name + "/" + filename,
     )
     url = f"{os.getenv('TIGRIS_CUSTOM_DOMAIN_HOST')}/{filename}"
     logger.info(f"Uploaded game log archive at: {url} with size: {size_bytes}")
