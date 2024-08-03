@@ -7,6 +7,7 @@ py_library(
     deps = [
         "//ark_nova_stats:models_py",
         "//ark_nova_stats/api/gql/types:game_log",
+        "@py_deps//flask",
         "@py_deps//graphql_core",
     ],
 )
