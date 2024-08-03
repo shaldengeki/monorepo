@@ -1,0 +1,29 @@
+# fly.toml app configuration file generated for fitbit-challenges-frontend on 2024-08-02T20:27:45-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'fitbit-challenges-frontend'
+primary_region = 'ewr'
+
+[build]
+  image = 'shaldengeki/fitbit-challenges-frontend:latest'
+
+[env]
+  REACT_APP_API_HOST = 'api.fitbit.ouguo.us'
+  REACT_APP_API_PORT = '443'
+  REACT_APP_API_PROTOCOL = 'https'
+  REACT_APP_PORT = '80'
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
