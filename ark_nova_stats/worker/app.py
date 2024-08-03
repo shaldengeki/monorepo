@@ -12,7 +12,7 @@ from sqlalchemy import desc
 from ark_nova_stats.config import app, db
 from ark_nova_stats.models import GameLog, GameLogArchive, GameLogArchiveType, User
 
-max_delay = 10
+max_delay = 12 * 60 * 60
 
 logging.basicConfig(
     format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.WARNING
