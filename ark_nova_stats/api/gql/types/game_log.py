@@ -15,6 +15,7 @@ from sqlalchemy import desc
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import app, db
 from ark_nova_stats.models import GameLog as GameLogModel
+from ark_nova_stats.models import GameLogArchive as GameLogArchiveModel
 from ark_nova_stats.models import GameLogArchiveType
 from ark_nova_stats.models import User as UserModel
 
@@ -139,7 +140,7 @@ def game_logs_field(
 
 def fetch_recent_game_logs(game_log_model: Type[GameLogModel]) -> list[GameLogModel]:
     return (
-        game_log_model.query.order_by(desc(game_log_model.created_at)).limit(10).all()
+        game_log_model.query.order_by(desc(game_log_model.bga_table_id)).limit(10).all()
     )
 
 
@@ -241,6 +242,36 @@ def stats_field(
     )
 
 
+def game_log_archive_archive_type_resolver(
+    game_log_archive: GameLogArchiveModel, info, **args
+) -> str:
+    return GameLogArchiveType(game_log_archive.archive_type).name
+
+
+def game_log_archive_size_bytes_resolver(
+    game_log_archive: GameLogArchiveModel, info, **args
+) -> int:
+    return game_log_archive.size_bytes
+
+
+def game_log_archive_num_game_logs_resolver(
+    game_log_archive: GameLogArchiveModel, info, **args
+) -> int:
+    return game_log_archive.num_game_logs
+
+
+def game_log_archive_num_users_resolver(
+    game_log_archive: GameLogArchiveModel, info, **args
+) -> int:
+    return game_log_archive.num_users
+
+
+def game_log_archive_max_game_log_resolver(
+    game_log_archive: GameLogArchiveModel, info, **args
+) -> Optional[GameLogModel]:
+    return game_log_archive.last_game_log()
+
+
 def game_log_archive_fields() -> dict[str, GraphQLField]:
     archive_types = set(t.name for t in GameLogArchiveType)
     return {
@@ -251,6 +282,7 @@ def game_log_archive_fields() -> dict[str, GraphQLField]:
         "archiveType": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description=f"Type of game logs. Possible values are: {', '.join(archive_types)}.",
+            resolve=game_log_archive_archive_type_resolver,
         ),
         "url": GraphQLField(
             GraphQLNonNull(GraphQLString),
@@ -259,18 +291,22 @@ def game_log_archive_fields() -> dict[str, GraphQLField]:
         "sizeBytes": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description=f"Size of archive, in bytes.",
+            resolve=game_log_archive_size_bytes_resolver,
         ),
         "numGameLogs": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description=f"Number of game logs in this archive.",
+            resolve=game_log_archive_num_game_logs_resolver,
         ),
         "numUsers": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description=f"Number of users in this archive.",
+            resolve=game_log_archive_num_users_resolver,
         ),
         "maxGameLog": GraphQLField(
-            GraphQLNonNull(GraphQLInt),
+            game_log_type,
             description=f"The game log with the highest BGA table ID.",
+            resolve=game_log_archive_max_game_log_resolver,
         ),
         "createdAt": GraphQLField(
             GraphQLInt,
@@ -284,3 +320,26 @@ game_log_archive_type = GraphQLObjectType(
     description="An archive of game logs.",
     fields=game_log_archive_fields,
 )
+
+
+def fetch_recent_game_log_archives(
+    game_log_archive_model: Type[GameLogArchiveModel],
+) -> list[GameLogArchiveModel]:
+    return (
+        game_log_archive_model.query.order_by(desc(game_log_archive_model.created_at))
+        .limit(10)
+        .all()
+    )
+
+
+def recent_game_log_archives_field(
+    game_log_archive_model: Type[GameLogArchiveModel],
+) -> GraphQLField:
+    return GraphQLField(
+        GraphQLNonNull(GraphQLList(game_log_archive_type)),
+        description="List recent game log archives.",
+        args={},
+        resolve=lambda root, info, **args: fetch_recent_game_log_archives(
+            game_log_archive_model
+        ),
+    )

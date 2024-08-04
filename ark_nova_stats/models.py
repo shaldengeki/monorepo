@@ -1,5 +1,6 @@
 import datetime
 import enum
+from typing import Optional
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -93,7 +94,7 @@ class User(db.Model):  # type: ignore
     )
 
 
-class GameLogArchiveType(enum.Enum):
+class GameLogArchiveType(enum.IntEnum):
     GAME_LOG_ARCHIVE_TYPE_UNKNOWN = 0
     RAW_BGA_JSONL = 1
 
@@ -112,3 +113,6 @@ class GameLogArchive(db.Model):  # type: ignore
         db.TIMESTAMP(timezone=True),
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
     )
+
+    def last_game_log(self) -> Optional[GameLog]:
+        return GameLog.query.where(GameLog.id == self.last_game_log_id).first()

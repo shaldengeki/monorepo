@@ -7,8 +7,10 @@ import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import DatabaseStatistics from '../components/DatabaseStatistics';
 import GameLogsTable from '../components/GameLogsTable';
+import GameLogArchivesTable from '../components/GameLogArchivesTable';
 import Stats from '../types/Stats';
 import GameLog from '../types/GameLog';
+import GameLogArchive from '../types/GameLogArchive';
 
 export const HOME_VIEW_QUERY = gql`
     query FetchHome {
@@ -22,6 +24,21 @@ export const HOME_VIEW_QUERY = gql`
             users {
                 name
             }
+        }
+        recentGameLogArchives {
+            id
+            archiveType
+            url
+            sizeBytes
+            numGameLogs
+            numUsers
+            maxGameLog {
+              bgaTableId
+              users {
+                name
+              }
+            }
+            createdAt
         }
     }
 `;
@@ -43,6 +60,7 @@ const HomeView = () => {
     else {
         var stats: Stats = data.stats;
         var gameLogs: GameLog[] = data.recentGameLogs;
+        var gameLogArchives: GameLogArchive[] = data.recentGameLogArchives;
         innerContent = (
             <div>
                 <div className={"py-2"}>
@@ -53,6 +71,10 @@ const HomeView = () => {
                 <div className={"py-2"}>
                     <h2 className={"text-xl"}>Recently-submitted games:</h2>
                     <GameLogsTable gameLogs={gameLogs} />
+                </div>
+                <div className={"py-2"}>
+                    <h2 className={"text-xl"}>Recent game log archives:</h2>
+                    <GameLogArchivesTable gameLogArchives={gameLogArchives} />
                 </div>
             </div>
         );
