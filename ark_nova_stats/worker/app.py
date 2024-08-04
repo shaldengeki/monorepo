@@ -59,7 +59,7 @@ def archive_logs_to_tigris(
         archive_type.name
         + "_"
         + datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y_%m_%d")
-        + ".gz"
+        + ".jsonl.gz"
     )
 
     # Upload the compressed gzip jsonl to Tigris.
