@@ -51,9 +51,10 @@ ts_project(
             "src/**/*.ts",
             "src/**/*.jsx",
             "src/**/*.js",
-            "tsconfig.json",
         ],
-    ),
+    ) + [
+        "tsconfig.json",
+    ],
     allow_js = True,
     assets = [
         "src/App.src.css",
@@ -114,6 +115,7 @@ jest_test(
         "src/DateUtils.test.js",
         "src/components/DatabaseStatistics.js",
         "src/components/DatabaseStatistics.test.js",
+        "src/components/GameLogArchivesTable.js",
         "src/components/GameLogsTable.js",
         "src/components/NavBar.js",
         "src/components/PageContainer.js",
@@ -122,6 +124,7 @@ jest_test(
         "src/globals.d.ts",
         "src/setupTests.js",
         "src/types/GameLog.js",
+        "src/types/GameLogArchive.js",
         "src/types/Stats.js",
         "src/types/User.js",
         "src/views/HomeView.js",

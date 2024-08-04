@@ -59,7 +59,7 @@ def archive_logs_to_tigris(
         archive_type.name
         + "_"
         + datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y_%m_%d")
-        + ".gz"
+        + ".jsonl.gz"
     )
 
     # Upload the compressed gzip jsonl to Tigris.
@@ -68,7 +68,7 @@ def archive_logs_to_tigris(
         os.getenv("BUCKET_NAME"),
         archive_type.name + "/" + filename,
     )
-    url = f"{os.getenv('TIGRIS_CUSTOM_DOMAIN_HOST')}/{filename}"
+    url = f"{os.getenv('TIGRIS_CUSTOM_DOMAIN_HOST')}/{archive_type.name}/{filename}"
     logger.info(f"Uploaded game log archive at: {url} with size: {size_bytes}")
 
     # Record this archive in the database.
