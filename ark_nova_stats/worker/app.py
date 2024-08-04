@@ -37,6 +37,16 @@ def archive_logs_to_tigris(
             )
             return None
 
+        # Next, check to see if we have new logs to include in the archive.
+        new_logs = GameLog.query.where(
+            GameLog.id > last_archive.last_game_log_id
+        ).count()
+        if new_logs == 0:
+            logger.debug(
+                f"No new logs to include since game ID {last_archive.last_game_log_id}; skipping."
+            )
+            return None
+
     # Retrieve all the game logs so we can serialize them.
     all_logs: list[GameLog] = GameLog.query.all()
     users: set[str] = set()
