@@ -5,7 +5,6 @@ import {getDate} from '../DateUtils';
 import GameLogArchive from '../types/GameLogArchive';
 import User from '../types/User';
 import Table from './Table';
-import { round } from 'lodash';
 
 type GameLogArchivesTableParams = {
     gameLogArchives: GameLogArchive[];
@@ -26,7 +25,7 @@ const GameLogArchivesTable = ({gameLogArchives}: GameLogArchivesTableParams) => 
                 "Games": gameLogArchive.numGameLogs,
                 "Users": gameLogArchive.numUsers,
                 "Latest table": latestTableDescription,
-                "Size (MB)": round((gameLogArchive.sizeBytes) / (1024 * 1024), 0),
+                "Size (MB)": Math.round((gameLogArchive.sizeBytes) / (1024 * 1024)),
             }
         });
         innerContent = (
