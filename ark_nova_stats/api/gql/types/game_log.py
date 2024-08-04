@@ -272,6 +272,12 @@ def game_log_archive_max_game_log_resolver(
     return game_log_archive.last_game_log()
 
 
+def game_log_archive_created_at_resolver(
+    game_log_archive: GameLogArchiveModel, info, **args
+) -> int:
+    return int(round(game_log_archive.created_at.timestamp()))
+
+
 def game_log_archive_fields() -> dict[str, GraphQLField]:
     archive_types = set(t.name for t in GameLogArchiveType)
     return {
@@ -311,6 +317,7 @@ def game_log_archive_fields() -> dict[str, GraphQLField]:
         "createdAt": GraphQLField(
             GraphQLInt,
             description="UNIX timestamp for when this archive was created.",
+            resolve=game_log_archive_created_at_resolver,
         ),
     }
 
