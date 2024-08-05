@@ -159,6 +159,10 @@ def user_bga_id_resolver(user: UserModel, info, **args) -> int:
     return user.bga_id
 
 
+def user_game_logs_resolver(user: UserModel, info, **args) -> int:
+    return user.game_logs
+
+
 def user_fields() -> dict[str, GraphQLField]:
     return {
         "id": GraphQLField(
@@ -177,6 +181,11 @@ def user_fields() -> dict[str, GraphQLField]:
         "avatar": GraphQLField(
             GraphQLNonNull(GraphQLString),
             description="The avatar of the user.",
+        ),
+        "gameLogs": GraphQLField(
+            GraphQLNonNull(GraphQLList(game_log_type)),
+            description="This user's game logs.",
+            resolve=user_game_logs_resolver,
         ),
     }
 
@@ -269,7 +278,7 @@ def game_log_archive_num_users_resolver(
 def game_log_archive_max_game_log_resolver(
     game_log_archive: GameLogArchiveModel, info, **args
 ) -> Optional[GameLogModel]:
-    return game_log_archive.last_game_log()
+    return game_log_archive.last_game_log
 
 
 def game_log_archive_created_at_resolver(
