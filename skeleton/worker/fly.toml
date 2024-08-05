@@ -1,0 +1,15 @@
+# fly.toml app configuration file generated for skeleton-worker on 2024-08-03T19:09:45-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'skeleton-worker'
+primary_region = 'ewr'
+
+[build]
+  image = 'shaldengeki/skeleton-worker:latest'
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
