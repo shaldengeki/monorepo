@@ -34,6 +34,8 @@ function handleRequest(requestDetails) {
 
     if (!seenScoringEvent) {
       console.log("No scoring event seen, assuming this isn't an Ark Nova replay and skipping.");
+      filter.write(encoder.encode(str));
+      filter.disconnect();
       return {};
     }
 
