@@ -25,12 +25,12 @@ const GameLogArchivesTable = ({gameLogArchives}: GameLogArchivesTableParams) => 
                 "Games": gameLogArchive.numGameLogs,
                 "Users": gameLogArchive.numUsers,
                 "Latest table": latestTableDescription,
-                "Size (MB)": Math.round((gameLogArchive.sizeBytes) / (1024 * 1024)),
+                "Size in MB": Math.round((gameLogArchive.sizeBytes) / (1024 * 1024)),
             }
         });
         innerContent = (
         <Table
-            cols={["Link", "Date", "Type", "Games", "Users", "Latest table", "Size, MB"]}
+            cols={["Link", "Date", "Type", "Games", "Users", "Latest table", "Size in MB"]}
             rows={rows}
             key="game-log-archives"
             showFilters={false}
