@@ -612,9 +612,9 @@ pyyaml==6.0.1 \
     # via
     #   -r requirements.txt
     #   pre-commit
-qbittorrent-api==2024.5.63 \
-    --hash=sha256:748b34c7074ba9c1e1bdfcc97b3e7acf9a553fd3b8ffb5fe89ea51b3cfebb375 \
-    --hash=sha256:cd3012f042fb94e9d521c406b6dc522600efd1814d4b2d3c900c6810e9fcbe2c
+qbittorrent-api==2024.7.64 \
+    --hash=sha256:569036549c53c8e6960fdbc8f1f0022f75234385c905e075fee4bf6d99f8a910 \
+    --hash=sha256:b476283387fa11f117e8b5e1a875cfbd8b62a9df160c5c30ce4134fc0f02c263
     # via -r requirements.txt
 requests==2.32.3 \
     --hash=sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760 \
