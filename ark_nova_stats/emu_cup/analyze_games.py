@@ -198,18 +198,22 @@ def main() -> int:
     print(f"# Card win rates:")
     print("")
     print(
-        'We define "win rate" as "if a player played this card, did they end up winning the game?"'
+        'We define "win rate" as "if a player played this card, how frequently did they end up winning the game?"'
     )
+    print("")
+    print("Uses the data at https://arknova.ouguo.us.")
     print("")
     print(
         f"The average card has a win rate of {round(average_wins * 1.0 / average_plays * 100)}%, with {round(average_wins, 1)} wins over {round(average_plays, 1)} plays"
     )
-    print("| Card | Win rate | Plays | Win rate (Bayes) |")
-    print("|------|----------|-------|------------------|")
+    print("| Rank | Card | Win rate | Plays | Win rate (Bayes) |")
+    print("|------|------|----------|-------|------------------|")
+    rank = 1
     for card, rate, plays, rate_bayes in sorted(
         win_rates, key=lambda x: x[3], reverse=True
     ):
-        print(f"| {card} | {rate}% | {plays} | {rate_bayes}% |")
+        print(f"| {rank} | {card} | {rate}% | {plays} | {rate_bayes}% |")
+        rank += 1
     print("")
 
     return 0
