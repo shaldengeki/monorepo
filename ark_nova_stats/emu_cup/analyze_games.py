@@ -196,8 +196,13 @@ def main() -> int:
     ]
 
     print(f"# Card win rates:")
+    print("")
     print(
-        f"Average winrate is {round(average_wins * 1.0 / average_plays * 100)}%, with {round(average_wins, 1)} wins over {round(average_plays, 1)} plays"
+        'We define "win rate" as "if a player played this card, did they end up winning the game?"'
+    )
+    print("")
+    print(
+        f"The average card has a win rate of {round(average_wins * 1.0 / average_plays * 100)}%, with {round(average_wins, 1)} wins over {round(average_plays, 1)} plays"
     )
     print("| Card | Win rate | Plays | Win rate (Bayes) |")
     print("|------|----------|-------|------------------|")
