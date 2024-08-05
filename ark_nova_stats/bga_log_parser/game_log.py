@@ -117,6 +117,13 @@ class GameLog:
         self.data = GameLogData(**self.data)  # type: ignore
 
     @property
+    def table_id(self) -> Optional[int]:
+        if not self.data.logs:
+            return None
+
+        return self.data.logs[0].table_id
+
+    @property
     def winner(self) -> Optional[GameLogPlayer]:
         if not self.data.logs:
             return None
