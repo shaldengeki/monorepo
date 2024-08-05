@@ -7,7 +7,6 @@ services:
       - "5000:5000"
   migration:
     <<: *api
-    image: shaldengeki/skeleton-api-migrations
     ports: []
   worker:
     <<: *api
