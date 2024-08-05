@@ -18,13 +18,23 @@ function handleRequest(requestDetails) {
 
   filter.onstop = (event) => {
     let str = "";
+    let seenScoringEvent = false;
+
+    // Decode all the pushed data and assemble a string representing the entire response.
     if (data.length === 1) {
       str = decoder.decode(data[0]);
     } else {
       for (let i = 0; i < data.length; i++) {
         const stream = i !== data.length - 1;
-        str += decoder.decode(data[i], { stream });
+        const decodedChunk = decoder.decode(data[i], { stream });
+        seenScoringEvent = seenScoringEvent || decodedChunk.includes("from the deck (scoring cards)");
+        str += decodedChunk;
       }
+    }
+
+    if (!seenScoringEvent) {
+      console.log("No scoring event seen, assuming this isn't an Ark Nova replay and skipping.");
+      return {};
     }
 
     let apiHeaders = new Headers();
