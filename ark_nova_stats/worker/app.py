@@ -3,8 +3,10 @@ import gzip
 import io
 import logging
 import os
+import tarfile
+import tempfile
 import time
-from typing import Optional
+from typing import Iterator, Optional
 
 import boto3
 from sqlalchemy import desc
@@ -48,37 +50,51 @@ def archive_logs_to_tigris(
             return None
 
     # Retrieve all the game logs so we can serialize them.
-    all_logs: list[GameLog] = GameLog.query.all()
+    all_logs: Iterator[GameLog] = GameLog.query.yield_per(10)  # type: ignore
+    num_game_logs = 0
     users: set[str] = set()
     last_game_log: Optional[GameLog] = None
-    log_list = []
     archive_type = GameLogArchiveType.RAW_BGA_JSONL
-
-    # Assemble a list of the game logs and compress them using gzip.
-    for game_log in all_logs:
-        log_list.append(game_log.log)
-
-        game_users: list[User] = game_log.users
-        users.update(set([u.name for u in game_users]))
-        if last_game_log is None or last_game_log.created_at < game_log.created_at:
-            last_game_log = game_log
-
-    compressed_jsonl = gzip.compress("\n".join(log_list).encode("utf-8"))
-    size_bytes = len(compressed_jsonl)
     filename = (
         archive_type.name
         + "_"
         + datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y_%m_%d")
-        + ".jsonl.gz"
+        + ".tar.gz"
     )
 
-    # Upload the compressed gzip jsonl to Tigris.
-    tigris_client.upload_fileobj(
-        io.BytesIO(compressed_jsonl),
-        os.getenv("BUCKET_NAME"),
-        archive_type.name + "/" + filename,
-    )
-    url = f"{os.getenv('TIGRIS_CUSTOM_DOMAIN_HOST')}/{archive_type.name}/{filename}"
+    # For each batch, write a logfile.
+    with tempfile.NamedTemporaryFile(suffix=filename) as archive_tempfile:
+        with tarfile.open(archive_tempfile.name, "w:gz") as archive_tarfile:
+            for game_log in all_logs:
+                num_game_logs += 1
+                user_names = "_".join([u.name for u in game_log.users])
+                log_tempfile_name = f"{game_log.bga_table_id}_{user_names}.json"
+                with tempfile.NamedTemporaryFile(
+                    suffix=log_tempfile_name, mode="w"
+                ) as log_tempfile:
+                    log_tempfile.write(game_log.log)
+                    log_tempfile.flush()
+                    os.fsync(log_tempfile)
+
+                    archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
+
+                game_users: list[User] = game_log.users
+                users.update(set([u.name for u in game_users]))
+                if (
+                    last_game_log is None
+                    or last_game_log.created_at < game_log.created_at
+                ):
+                    last_game_log = game_log
+
+        # Upload the compressed gzip jsonl to Tigris.
+        tigris_client.upload_file(
+            archive_tempfile.name,
+            os.getenv("BUCKET_NAME"),
+            archive_type.name + "/" + filename,
+        )
+        url = f"{os.getenv('TIGRIS_CUSTOM_DOMAIN_HOST')}/{archive_type.name}/{filename}"
+        size_bytes = os.path.getsize(archive_tempfile.name)
+
     logger.info(f"Uploaded game log archive at: {url} with size: {size_bytes}")
 
     # Record this archive in the database.
@@ -91,14 +107,14 @@ def archive_logs_to_tigris(
         url=url,
         archive_type=archive_type.value,
         size_bytes=size_bytes,
-        num_game_logs=len(all_logs),
+        num_game_logs=num_game_logs,
         num_users=len(users),
         last_game_log_id=last_game_log_id,
     )
 
     db.session.add(new_archive)
     db.session.commit()
-    logger.info(f"Recorded a new game log archive at: {url} with {len(all_logs)} games")
+    logger.info(f"Recorded a new game log archive at: {url} with {num_game_logs} games")
     return new_archive
 
 
