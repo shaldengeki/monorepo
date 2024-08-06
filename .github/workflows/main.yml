@@ -112,9 +112,9 @@ jobs:
       - name: Deploy frontend
         run: flyctl deploy
         working-directory: fitbit_challenges/frontend
-      - name: Deploy worker
-        run: flyctl deploy
-        working-directory: fitbit_challenges/worker
+      # - name: Deploy worker
+      #   run: flyctl deploy
+      #   working-directory: fitbit_challenges/worker
   push_home_api:
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
