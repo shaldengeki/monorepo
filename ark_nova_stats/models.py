@@ -11,7 +11,7 @@ from ark_nova_stats.config import db
 
 class GameParticipation(db.Model):  # type: ignore
     __tablename__ = "game_participations"
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.bga_id"), primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.bga_id"), primary_key=True)
     game_log_id: Mapped[int] = mapped_column(
         ForeignKey("game_logs.id"), primary_key=True
     )
@@ -42,6 +42,10 @@ class GameLog(db.Model):  # type: ignore
 
     user_participations: Mapped[list["GameParticipation"]] = relationship(
         back_populates="game_log"
+    )
+
+    archives: Mapped[list["GameLogArchive"]] = relationship(
+        back_populates="last_game_log",
     )
 
     def create_related_objects(self, parsed_logs: ParsedGameLog) -> db.Model:  # type: ignore
@@ -108,11 +112,12 @@ class GameLogArchive(db.Model):  # type: ignore
     size_bytes: Mapped[int]
     num_game_logs: Mapped[int]
     num_users: Mapped[int]
-    last_game_log_id: Mapped[int] = mapped_column(db.INTEGER, nullable=True)
+    last_game_log_id: Mapped[int] = mapped_column(
+        ForeignKey("game_logs.id"), primary_key=True
+    )
     created_at: Mapped[datetime.datetime] = mapped_column(
         db.TIMESTAMP(timezone=True),
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
     )
 
-    def last_game_log(self) -> Optional[GameLog]:
-        return GameLog.query.where(GameLog.id == self.last_game_log_id).first()
+    last_game_log: Mapped[GameLog] = relationship(back_populates="archives")
