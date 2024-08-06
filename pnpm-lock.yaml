@@ -134,8 +134,8 @@ devDependencies:
     specifier: ^4.0.0
     version: 4.0.0(webpack@5.93.0)
   tailwindcss:
-    specifier: ^3.4.4
-    version: 3.4.4
+    specifier: ^3.4.7
+    version: 3.4.7
   webpack:
     specifier: ^5.93.0
     version: 5.93.0(webpack-cli@5.1.4)
@@ -4515,7 +4515,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001649
-      electron-to-chromium: 1.5.4
+      electron-to-chromium: 1.5.5
       node-releases: 2.0.18
       update-browserslist-db: 1.1.0(browserslist@4.23.3)
 
@@ -5839,8 +5839,8 @@ packages:
       jake: 10.9.2
     dev: false
 
-  /electron-to-chromium@1.5.4:
-    resolution: {integrity: sha512-orzA81VqLyIGUEA77YkVA1D+N+nNfl2isJVjjmOyrlxuooZ19ynb+dOlaDTqd/idKRS9lDCSBmtzM+kyCsMnkA==}
+  /electron-to-chromium@1.5.5:
+    resolution: {integrity: sha512-QR7/A7ZkMS8tZuoftC/jfqNkZLQO779SSW3YuZHP4eXpj3EffGLFcB/Xu9AAZQzLccTiCV+EmUo3ha4mQ9wnlA==}
 
   /element-size@1.1.1:
     resolution: {integrity: sha512-eaN+GMOq/Q+BIWy0ybsgpcYImjGIdNLyjLFJU4XsLHXYQao5jCNb36GyN6C2qwmDDYSfIBmKpPpr4VnBdLCsPQ==}
@@ -11525,7 +11525,7 @@ packages:
       semver: 7.6.3
       source-map-loader: 3.0.2(webpack@5.93.0)
       style-loader: 3.3.4(webpack@5.93.0)
-      tailwindcss: 3.4.4
+      tailwindcss: 3.4.7
       terser-webpack-plugin: 5.3.10(webpack@5.93.0)
       typescript: 5.0.2
       webpack: 5.93.0(webpack-cli@5.1.4)
@@ -12775,8 +12775,8 @@ packages:
     resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
     dev: false
 
-  /tailwindcss@3.4.4:
-    resolution: {integrity: sha512-ZoyXOdJjISB7/BcLTR6SEsLgKtDStYyYZVLsUtWChO4Ps20CBad7lfJKVDiejocV4ME1hLmyY0WJE3hSDcmQ2A==}
+  /tailwindcss@3.4.7:
+    resolution: {integrity: sha512-rxWZbe87YJb4OcSopb7up2Ba4U82BoiSGUdoDr3Ydrg9ckxFS/YWsvhN323GMcddgU65QRy7JndC7ahhInhvlQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:
