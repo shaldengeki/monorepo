@@ -1,11 +1,69 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python
 
 # For development use.
 # Rebuilds all the containers for the app and reloads any running containers.
 
-set -euxo pipefail
+import subprocess
+from pathlib import Path
 
-bazel run api:api_image_image_tarball
-bazel run frontend:development_cross_platform_image_tarball
 
-docker compose -f docker-compose.yaml -f docker-compose.override.yaml up --no-deps -d api migration pg frontend
+def build_api() -> None:
+    subprocess.run(
+        [
+            "bazel",
+            "run",
+            "api:api_image_image_tarball",
+        ]
+    )
+
+
+def build_frontend() -> None:
+    subprocess.run(
+        [
+            "bazel",
+            "run",
+            "frontend:development_cross_platform_image_tarball",
+        ]
+    )
+
+
+def build_worker() -> None:
+    subprocess.run(
+        [
+            "bazel",
+            "run",
+            "worker:worker_image_tarball",
+        ]
+    )
+
+
+def reload_services() -> None:
+    subprocess.run(
+        [
+            "docker",
+            "compose",
+            "-f",
+            "docker-compose.yaml",
+            "-f",
+            "docker-compose.override.yaml",
+            "up",
+            "-d",
+        ]
+    )
+
+
+def main() -> int:
+    build_api()
+
+    if Path("./frontend").exists():
+        build_frontend()
+
+    if Path("./worker").exists():
+        build_worker()
+
+    reload_services()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

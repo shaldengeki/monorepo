@@ -12,7 +12,7 @@ py_binary(
 
 worker(
     name = "worker",
-    binary = ":binary",
+    binary = "//skeleton/worker:binary",
     docker_hub_repository = "docker.io/shaldengeki/skeleton-worker",
     repo_tags = ["shaldengeki/skeleton-worker:latest"],
 )
