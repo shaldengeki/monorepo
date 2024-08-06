@@ -10,6 +10,6 @@ primary_region = 'ewr'
   image = 'shaldengeki/ark-nova-stats-worker:latest'
 
 [[vm]]
-  memory = '1gb'
+  memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
