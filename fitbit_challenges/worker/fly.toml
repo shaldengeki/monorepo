@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for fitbit-challenges-worker on 2024-08-03T19:09:45-04:00
+# fly.toml app configuration file generated for fitbit-challenges-worker on 2024-08-06T04:39:51-04:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -10,6 +10,6 @@ primary_region = 'ewr'
   image = 'shaldengeki/fitbit-challenges-worker:latest'
 
 [[vm]]
-  memory = '1gb'
+  memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
