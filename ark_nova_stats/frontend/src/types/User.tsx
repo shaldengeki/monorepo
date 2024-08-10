@@ -1,8 +1,12 @@
+import GameLog from './GameLog';
+
 type User = {
     id: number;
     bgaId: number;
     name: string;
     avatar: string;
+    gameLogs: GameLog[];
+    numGameLogs: number;
 }
 
 export const emptyUser: User = {
@@ -10,6 +14,8 @@ export const emptyUser: User = {
     bgaId: 0,
     name: "",
     avatar: "",
+    gameLogs: [],
+    numGameLogs: 0,
 }
 
 export default User;
