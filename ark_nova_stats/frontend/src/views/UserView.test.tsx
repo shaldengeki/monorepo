@@ -24,5 +24,5 @@ it('should render view when empty data is returned', async () => {
       </MockedProvider>,
       {wrapper: BrowserRouter},
   );
-  expect(await screen.findByText("User: ")).toBeInTheDocument();
+  expect(await screen.findByText("User:")).toBeInTheDocument();
 });
