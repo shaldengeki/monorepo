@@ -196,6 +196,31 @@ user_type = GraphQLObjectType(
     fields=user_fields,
 )
 
+fetch_user_filters: dict[str, GraphQLArgument] = {
+    "name": GraphQLArgument(
+        GraphQLNonNull(GraphQLString),
+        description="BGA username of the user.",
+    ),
+}
+
+
+def fetch_user(
+    user_model: Type[UserModel],
+    params: dict[str, Any],
+) -> Optional[UserModel]:
+    return user_model.query.where(user_model.name == params["name"]).first()
+
+
+def fetch_user_field(
+    user_model: Type[UserModel],
+) -> GraphQLField:
+    return GraphQLField(
+        GraphQLNonNull(user_type),
+        description="Fetch information about a single user.",
+        args=fetch_user_filters,
+        resolve=lambda root, info, **args: fetch_user(user_model, args),
+    )
+
 
 def stats_fields() -> dict[str, GraphQLField]:
     return {
