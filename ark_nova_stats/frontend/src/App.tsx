@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import HomeView from './views/HomeView';
+import UserView from './views/UserView';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="home" element={<HomeView />} />
+          <Route path="user/:name" element={<UserView />} />
         </Routes>
     </Router>
   );

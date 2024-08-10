@@ -121,6 +121,7 @@ jest_test(
         "src/components/PageContainer.js",
         "src/components/PageTitle.js",
         "src/components/Table.js",
+        "src/components/UserInfoBox.js",
         "src/globals.d.ts",
         "src/setupTests.js",
         "src/types/GameLog.js",
@@ -129,6 +130,8 @@ jest_test(
         "src/types/User.js",
         "src/views/HomeView.js",
         "src/views/HomeView.test.js",
+        "src/views/UserView.js",
+        "src/views/UserView.test.js",
     ],
     node_modules = "//:node_modules",
     node_options = [

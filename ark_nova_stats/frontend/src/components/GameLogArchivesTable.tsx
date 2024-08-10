@@ -16,8 +16,10 @@ const GameLogArchivesTable = ({gameLogArchives}: GameLogArchivesTableParams) => 
         innerContent = <p>Error: game log archives could not be retrieved!</p>;
     } else {
         var rows = gameLogArchives.map((gameLogArchive: GameLogArchive) => {
-            let latestTablePlayers = gameLogArchive.maxGameLog.users.map((u: User) => { return u.name }).join(', ');
-            let latestTableDescription = <Link to={"https://boardgamearena.com/table?table=" + gameLogArchive.maxGameLog.bgaTableId}>{gameLogArchive.maxGameLog.bgaTableId}, between {latestTablePlayers}</Link>;
+            let latestTablePlayers = gameLogArchive.maxGameLog.users.map((u: User) => { return <Link to={`/user/${u.name}`}>u.name</Link> }).join(', ');
+            let latestTableDescription = <Link to={"https://boardgamearena.com/table?table=" + gameLogArchive.maxGameLog.bgaTableId}>
+                {gameLogArchive.maxGameLog.bgaTableId}, between {latestTablePlayers}
+            </Link>;
             return {
                 "Link": <Link to={gameLogArchive.url}>Download</Link>,
                 "Date": getDate(gameLogArchive.createdAt),

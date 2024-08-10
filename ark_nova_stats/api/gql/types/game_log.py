@@ -159,8 +159,12 @@ def user_bga_id_resolver(user: UserModel, info, **args) -> int:
     return user.bga_id
 
 
-def user_game_logs_resolver(user: UserModel, info, **args) -> int:
+def user_game_logs_resolver(user: UserModel, info, **args) -> list[GameLogModel]:
     return user.game_logs
+
+
+def user_num_game_logs_resolver(user: UserModel, info, **args) -> int:
+    return len(user.game_logs)
 
 
 def user_fields() -> dict[str, GraphQLField]:
@@ -187,6 +191,11 @@ def user_fields() -> dict[str, GraphQLField]:
             description="This user's game logs.",
             resolve=user_game_logs_resolver,
         ),
+        "numGameLogs": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="Number of game logs for this user.",
+            resolve=user_num_game_logs_resolver,
+        ),
     }
 
 
@@ -195,6 +204,31 @@ user_type = GraphQLObjectType(
     description="A game log entry.",
     fields=user_fields,
 )
+
+fetch_user_filters: dict[str, GraphQLArgument] = {
+    "name": GraphQLArgument(
+        GraphQLNonNull(GraphQLString),
+        description="BGA username of the user.",
+    ),
+}
+
+
+def fetch_user(
+    user_model: Type[UserModel],
+    params: dict[str, Any],
+) -> Optional[UserModel]:
+    return user_model.query.where(user_model.name == params["name"]).first()
+
+
+def fetch_user_field(
+    user_model: Type[UserModel],
+) -> GraphQLField:
+    return GraphQLField(
+        GraphQLNonNull(user_type),
+        description="Fetch information about a single user.",
+        args=fetch_user_filters,
+        resolve=lambda root, info, **args: fetch_user(user_model, args),
+    )
 
 
 def stats_fields() -> dict[str, GraphQLField]:
