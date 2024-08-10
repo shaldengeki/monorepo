@@ -18,7 +18,7 @@ const GameLogsTable = ({gameLogs}: GameLogsTableParams) => {
         var rows = gameLogs.map((gameLog: GameLog) => {
             return {
                 "BGA table": <Link to={"https://boardgamearena.com/table?table=" + gameLog.bgaTableId}>{gameLog.bgaTableId}</Link>,
-                "Players": gameLog.users.map((user: User) => {return user.name}).sort().join(", ")
+                "Players": gameLog.users.map((user: User) => {return <Link to={`/user/${user.name}`}>user.name</Link>}).sort().join(", ")
             }
         });
         innerContent = (
