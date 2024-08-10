@@ -5,7 +5,7 @@ type User = {
     bgaId: number;
     name: string;
     avatar: string;
-    gameLogs: GameLog[];
+    recentGameLogs: GameLog[];
     numGameLogs: number;
 }
 
@@ -14,7 +14,7 @@ export const emptyUser: User = {
     bgaId: 0,
     name: "",
     avatar: "",
-    gameLogs: [],
+    recentGameLogs: [],
     numGameLogs: 0,
 }
 

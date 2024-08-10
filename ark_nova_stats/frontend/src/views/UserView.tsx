@@ -15,9 +15,11 @@ export const USER_VIEW_QUERY = gql`
             bgaId
             name
             avatar
-            gameLogs {
-                bgaTableid
-                users
+            recentGameLogs {
+                bgaTableId
+                users {
+                    name
+                }
             }
             numGameLogs
         }
@@ -50,8 +52,8 @@ const UserView = () => {
                     <UserInfoBox user={user} />
                 </div>
                 <div className={"py-2"}>
-                    <h2 className={"text-xl"}>Game logs:</h2>
-                    <GameLogsTable gameLogs={user.gameLogs} />
+                    <h2 className={"text-xl"}>Recent game logs:</h2>
+                    <GameLogsTable gameLogs={user.recentGameLogs} />
                 </div>
             </div>
         );

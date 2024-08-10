@@ -159,12 +159,12 @@ def user_bga_id_resolver(user: UserModel, info, **args) -> int:
     return user.bga_id
 
 
-def user_game_logs_resolver(user: UserModel, info, **args) -> list[GameLogModel]:
-    return user.game_logs
+def user_recent_game_logs_resolver(user: UserModel, info, **args) -> list[GameLogModel]:
+    return user.recent_game_logs
 
 
 def user_num_game_logs_resolver(user: UserModel, info, **args) -> int:
-    return len(user.game_logs)
+    return user.num_game_logs
 
 
 def user_fields() -> dict[str, GraphQLField]:
@@ -186,10 +186,10 @@ def user_fields() -> dict[str, GraphQLField]:
             GraphQLNonNull(GraphQLString),
             description="The avatar of the user.",
         ),
-        "gameLogs": GraphQLField(
+        "recentGameLogs": GraphQLField(
             GraphQLNonNull(GraphQLList(game_log_type)),
-            description="This user's game logs.",
-            resolve=user_game_logs_resolver,
+            description="This user's recent game logs.",
+            resolve=user_recent_game_logs_resolver,
         ),
         "numGameLogs": GraphQLField(
             GraphQLNonNull(GraphQLInt),
