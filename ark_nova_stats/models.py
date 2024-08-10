@@ -2,7 +2,7 @@ import datetime
 import enum
 from typing import Optional
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, desc
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
@@ -96,6 +96,24 @@ class User(db.Model):  # type: ignore
     game_participations: Mapped[list["GameParticipation"]] = relationship(
         back_populates="user"
     )
+
+    @property
+    def num_game_logs(self) -> int:
+        return GameParticipation.query.where(
+            GameParticipation.user_id == self.bga_id
+        ).count()
+
+    @property
+    def recent_game_logs(self) -> list["GameLog"]:
+        return [
+            p.game_log
+            for p in GameParticipation.query.where(
+                GameParticipation.user_id == self.bga_id
+            )
+            .order_by(desc(GameParticipation.game_log_id))
+            .limit(10)
+            .all()
+        ]
 
 
 class GameLogArchiveType(enum.IntEnum):
