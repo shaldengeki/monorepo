@@ -485,6 +485,7 @@ manifest:
     docker.version: docker
     exceptiongroup: exceptiongroup
     filelock: filelock
+    filelock.asyncio: filelock
     filelock.version: filelock
     flask: flask
     flask.app: flask
