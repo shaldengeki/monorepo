@@ -4,3 +4,7 @@ class BGALogParserError(BaseException):
 
 class NonArkNovaReplayError(BGALogParserError):
     pass
+
+
+class PlayerNotFoundError(BGALogParserError):
+    pass

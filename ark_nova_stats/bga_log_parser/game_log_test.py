@@ -47,6 +47,13 @@ class TestGameLog:
         game_log = load_data_from_fixture_file("4p.log.json")
         GameLog(**game_log)
 
+    def test_card_plays_for_4p_game(self):
+        game_log = load_data_from_fixture_file("4p.log.json")
+        plays = list(GameLog(**game_log).data.card_plays)
+        assert 58 == len(plays)
+        assert "Baboon Rock" == plays[0].card.name
+        assert "Victory Column" == plays[-1].card.name
+
 
 class TestGameLogEventData:
     def test_is_play_event_returns_true_for_play_action(self):
@@ -73,6 +80,24 @@ class TestGameLogEventData:
         play_log = load_data_from_fixture_file("play_new_conservation_project.log.json")
         x = GameLogEventData(**play_log)
         assert set(["Yosemite national park"]) == x.played_card_names
+
+    def test_played_card_for_play_action(self):
+        play_log = load_data_from_fixture_file("play_event.log.json")
+        x = GameLogEventData(**play_log)
+        cards = x.played_cards
+        assert cards is not None
+        assert 1 == len(cards)
+        assert cards[0].id == "A445_CrestedPorcupine"
+        assert cards[0].name == "Crested Porcupine"
+
+    def test_played_card_for_new_conservation_project(self):
+        play_log = load_data_from_fixture_file("play_new_conservation_project.log.json")
+        x = GameLogEventData(**play_log)
+        cards = x.played_cards
+        assert cards is not None
+        assert 1 == len(cards)
+        assert cards[0].id == "P114_ReleaseYosemite"
+        assert cards[0].name == "Yosemite national park"
 
 
 if __name__ == "__main__":
