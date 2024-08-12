@@ -1965,6 +1965,7 @@ manifest:
     yaml.tokens: PyYAML
     zipp: zipp
     zipp.compat: zipp
+    zipp.compat.overlay: zipp
     zipp.compat.py310: zipp
     zipp.glob: zipp
   pip_repository:
