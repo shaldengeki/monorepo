@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Iterator, Optional
 
 from ark_nova_stats.bga_log_parser.exceptions import (
+    MoveNotSetError,
     NonArkNovaReplayError,
     PlayerNotFoundError,
 )
@@ -119,7 +120,7 @@ class GameLogPlayer:
 class GameLogCardPlay:
     card: GameLogEventDataCard
     player: GameLogPlayer
-    move: Optional[int] = None
+    move: int
 
 
 @dataclass
@@ -155,6 +156,9 @@ class GameLogData:
                     continue
 
                 for c in d.played_cards:
+                    if log.move_id is None:
+                        raise MoveNotSetError()
+
                     if d.player is None:
                         raise PlayerNotFoundError()
 
