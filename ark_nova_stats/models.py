@@ -139,3 +139,15 @@ class GameLogArchive(db.Model):  # type: ignore
     )
 
     last_game_log: Mapped[GameLog] = relationship(back_populates="archives")
+
+
+class Card(db.Model):  # type: ignore
+    __tablename__ = "cards"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    bga_id: Mapped[str] = mapped_column(unique=True)
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
+    )
