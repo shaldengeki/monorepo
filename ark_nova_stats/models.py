@@ -83,6 +83,8 @@ class GameLog(db.Model):  # type: ignore
                 game_log=self,
             )
 
+        # TODO: create card & card play models.
+
 
 class User(db.Model):  # type: ignore
     __tablename__ = "users"
