@@ -55,6 +55,8 @@ class GameLog(db.Model):  # type: ignore
     card_plays: Mapped[list["CardPlay"]] = relationship(back_populates="game_log")
 
     def create_related_objects(self, parsed_logs: ParsedGameLog) -> db.Model:  # type: ignore
+        cards = {}
+
         # Add users if not present.
         present_users = User.query.filter(
             User.bga_id.in_([user.id for user in parsed_logs.data.players])
@@ -83,7 +85,27 @@ class GameLog(db.Model):  # type: ignore
                 game_log=self,
             )
 
-        # TODO: create card & card play models.
+        # Now create a card & card play.
+        for play in parsed_logs.data.card_plays:
+            if play.card.id not in cards:
+                # Check to see if it exists.
+                find_card = Card.query.where(Card.bga_id == play.card.id).limit(1).all()
+                if not find_card:
+                    card = Card(  # type: ignore
+                        name=play.card.name, bga_id=play.card.id
+                    )
+                    yield card
+                else:
+                    card = find_card[0]
+
+                cards[card.bga_id] = card
+
+            yield CardPlay(  # type: ignore
+                game_log=self,
+                card=cards[play.card.id],
+                user_id=play.player.id,
+                move=play.move,
+            )
 
 
 class User(db.Model):  # type: ignore
