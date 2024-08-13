@@ -2,11 +2,69 @@
     "uid": "669cd3629ee68",
     "type": "buyAnimal",
     "log": "${player_name} plays ${card_name} for ${amount_money} and places it in ${building_name}",
-    "args": {"card": {"id": "A445_CrestedPorcupine", "location": "inPlay", "state": 19, "pId": 94929538, "extraDatas": null}, "amount": 8, "amount_money": 8, "total": 5, "building": {"id": 8, "location": "board", "state": 1, "pId": 94929538, "type": "size-1", "x": 1, "y": 8, "rotation": 0}, "icons": {"Bird": 1, "Predator": 1, "Herbivore": 1, "Bear": 1, "Reptile": 1, "Pet": 0, "Primate": 0, "Africa": 0, "Europe": 1, "Asia": 1, "Americas": 1, "Australia": 0, "Partner-Zoo": 0, "AnimalsII": 0, "CardsII": 0, "Science": 1, "Fac": 0, "Rock": 2, "Water": 2, "SeaAnimal": 0}, "fromDisplay": false, "player_name": "Duci9", "player_id": 94929538, "i18n": ["building_name", "card_name"], "building_name": {"log": "a size-${n} enclosure", "args": {"n": 1}},
-    "card_id": "A445_CrestedPorcupine",
-    "card_name": "Crested Porcupine",
-    "preserve": ["card_id"]},
+    "args": {
+      "card": {
+        "id": "A445_CrestedPorcupine",
+        "location": "inPlay",
+        "state": 19,
+        "pId": 94929538,
+        "extraDatas": null
+      },
+      "amount": 8,
+      "amount_money": 8,
+      "total": 5,
+      "building": {
+        "id": 8,
+        "location": "board",
+        "state": 1,
+        "pId": 94929538,
+        "type": "size-1",
+        "x": 1,
+        "y": 8,
+        "rotation": 0
+      },
+      "icons": {
+        "Bird": 1,
+        "Predator": 1,
+        "Herbivore": 1,
+        "Bear": 1,
+        "Reptile": 1,
+        "Pet": 0,
+        "Primate": 0,
+        "Africa": 0,
+        "Europe": 1,
+        "Asia": 1,
+        "Americas": 1,
+        "Australia": 0,
+        "Partner-Zoo": 0,
+        "AnimalsII": 0,
+        "CardsII": 0,
+        "Science": 1,
+        "Fac": 0,
+        "Rock": 2,
+        "Water": 2,
+        "SeaAnimal": 0
+      },
+      "fromDisplay": false,
+      "player_name": "Duci9",
+      "player_id": 94929538,
+      "i18n": [
+        "building_name",
+        "card_name"
+      ],
+      "building_name": {
+        "log": "a size-${n} enclosure",
+        "args": {
+          "n": 1
+        }
+      },
+      "card_id": "A445_CrestedPorcupine",
+      "card_name": "Crested Porcupine",
+      "preserve": [
+        "card_id"
+      ]
+    },
     "lock_uuid": "one",
     "synchro": "one",
     "h": "08137c"
-}
+  }

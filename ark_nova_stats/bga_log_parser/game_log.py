@@ -1,7 +1,17 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Iterator, Optional
 
-from ark_nova_stats.bga_log_parser.exceptions import NonArkNovaReplayError
+from ark_nova_stats.bga_log_parser.exceptions import (
+    MoveNotSetError,
+    NonArkNovaReplayError,
+    PlayerNotFoundError,
+)
+
+
+@dataclass
+class GameLogEventDataCard:
+    name: str
+    id: str
 
 
 @dataclass
@@ -44,6 +54,30 @@ class GameLogEventData:
         return card_names
 
     @property
+    def played_cards(self) -> Optional[list[GameLogEventDataCard]]:
+        cards = []
+        if "card_name" in self.args:
+            cards = [
+                GameLogEventDataCard(
+                    name=self.args["card_name"], id=self.args["card_id"]
+                )
+            ]
+        elif "card_names" in self.args:
+            # potentially multiple cards are played in this action.
+            for arg_key, arg_val in self.args["card_names"]["args"].items():
+                if "args" in arg_val and "card_name" in arg_val["args"]:
+                    cards.append(
+                        GameLogEventDataCard(
+                            name=arg_val["args"]["card_name"],
+                            id=arg_val["args"]["card_id"],
+                        )
+                    )
+        else:
+            return None
+
+        return cards
+
+    @property
     def player(self) -> Optional[dict[str, int | str]]:
         player_data = {
             "id": self.args.get("player_id", None),
@@ -83,6 +117,13 @@ class GameLogPlayer:
 
 
 @dataclass
+class GameLogCardPlay:
+    card: GameLogEventDataCard
+    player: GameLogPlayer
+    move: int
+
+
+@dataclass
 class GameLogData:
     logs: list[GameLogEvent]
     players: list[GameLogPlayer]
@@ -106,6 +147,30 @@ class GameLogData:
             for data in log.data
         ):
             raise NonArkNovaReplayError()
+
+    @property
+    def card_plays(self) -> Iterator[GameLogCardPlay]:
+        for log in self.logs:
+            for d in log.data:
+                if d.played_cards is None:
+                    continue
+
+                for c in d.played_cards:
+                    if log.move_id is None:
+                        raise MoveNotSetError()
+
+                    if d.player is None:
+                        raise PlayerNotFoundError()
+
+                    find_player = [p for p in self.players if p.id == d.player["id"]]
+                    if not find_player:
+                        raise PlayerNotFoundError()
+
+                    yield GameLogCardPlay(
+                        card=c,
+                        move=log.move_id,
+                        player=find_player[0],
+                    )
 
 
 @dataclass

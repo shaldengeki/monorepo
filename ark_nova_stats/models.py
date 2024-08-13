@@ -48,6 +48,12 @@ class GameLog(db.Model):  # type: ignore
         back_populates="last_game_log",
     )
 
+    # cards: Mapped[list["Card"]] = relationship(
+    #     secondary="game_log_cards", back_populates="game_logs", viewonly=True
+    # )
+
+    # card_plays: Mapped[list["CardPlay"]] = relationship(back_populates="game_log")
+
     def create_related_objects(self, parsed_logs: ParsedGameLog) -> db.Model:  # type: ignore
         # Add users if not present.
         present_users = User.query.filter(
@@ -77,6 +83,8 @@ class GameLog(db.Model):  # type: ignore
                 game_log=self,
             )
 
+        # TODO: create card & card play models.
+
 
 class User(db.Model):  # type: ignore
     __tablename__ = "users"
@@ -96,6 +104,11 @@ class User(db.Model):  # type: ignore
     game_participations: Mapped[list["GameParticipation"]] = relationship(
         back_populates="user"
     )
+    # card_plays: Mapped[list["CardPlay"]] = relationship(back_populates="user")
+
+    # cards: Mapped[list["Card"]] = relationship(
+    #     secondary="game_log_cards", back_populates="users", viewonly=True
+    # )
 
     @property
     def num_game_logs(self) -> int:
@@ -139,3 +152,44 @@ class GameLogArchive(db.Model):  # type: ignore
     )
 
     last_game_log: Mapped[GameLog] = relationship(back_populates="archives")
+
+
+class Card(db.Model):  # type: ignore
+    __tablename__ = "cards"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    bga_id: Mapped[str] = mapped_column(unique=True)
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
+    )
+
+    # plays: Mapped[list["CardPlay"]] = relationship(back_populates="card")
+
+    # game_logs: Mapped[list["GameLog"]] = relationship(
+    #     secondary="game_log_cards", back_populates="cards", viewonly=True
+    # )
+
+    # users: Mapped[list["User"]] = relationship(
+    #     secondary="game_log_cards", back_populates="cards", viewonly=True
+    # )
+
+
+# class CardPlay(db.Model):  # type: ignore
+#     __tablename__ = "game_log_cards"
+
+#     game_log_id: Mapped[int] = mapped_column(
+#         ForeignKey("game_logs.id"), primary_key=True
+#     )
+#     card_id: Mapped[int] = mapped_column(ForeignKey("cards.id"), primary_key=True)
+#     user_id: Mapped[int] = mapped_column(ForeignKey("users.bga_id"), primary_key=True)
+#     move: Mapped[int]
+#     created_at: Mapped[datetime.datetime] = mapped_column(
+#         db.TIMESTAMP(timezone=True),
+#         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
+#     )
+
+#     user: Mapped["User"] = relationship(back_populates="card_plays")
+#     game_log: Mapped["GameLog"] = relationship(back_populates="card_plays")
+#     card: Mapped["Card"] = relationship(back_populates="plays")
