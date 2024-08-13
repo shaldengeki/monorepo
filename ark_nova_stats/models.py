@@ -2,7 +2,7 @@ import datetime
 import enum
 from typing import Optional
 
-from sqlalchemy import ForeignKey, desc
+from sqlalchemy import ForeignKey, desc, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
@@ -153,6 +153,16 @@ class User(db.Model):  # type: ignore
             .all()
         ]
 
+    def commonly_played_cards(self, num=10) -> list[tuple["Card", int]]:
+        return (
+            CardPlay.query(CardPlay.card, func.count())
+            .where(CardPlay.user_id == self.id)
+            .group_by(CardPlay.card)
+            .order_by(func.count())
+            .limit(num)
+            .all()
+        )
+
 
 class GameLogArchiveType(enum.IntEnum):
     GAME_LOG_ARCHIVE_TYPE_UNKNOWN = 0
@@ -199,6 +209,23 @@ class Card(db.Model):  # type: ignore
     users: Mapped[list["User"]] = relationship(
         secondary="game_log_cards", back_populates="cards", viewonly=True
     )
+
+    @property
+    def recent_plays(self) -> list["CardPlay"]:
+        return (
+            CardPlay.query.where(CardPlay.card_id == self.id)
+            .order_by(desc(CardPlay.game_log_id))
+            .limit(10)
+            .all()
+        )
+
+    @property
+    def recent_game_logs(self) -> list["GameLog"]:
+        return [cp.game_log for cp in self.recent_plays]
+
+    @property
+    def recent_users(self) -> list["User"]:
+        return [cp.user for cp in self.recent_plays]
 
 
 class CardPlay(db.Model):  # type: ignore

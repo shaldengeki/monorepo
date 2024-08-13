@@ -14,6 +14,7 @@ from sqlalchemy import desc
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import app, db
+from ark_nova_stats.models import Card as CardModel
 from ark_nova_stats.models import GameLog as GameLogModel
 from ark_nova_stats.models import GameLogArchive as GameLogArchiveModel
 from ark_nova_stats.models import GameLogArchiveType
@@ -22,10 +23,6 @@ from ark_nova_stats.models import User as UserModel
 
 def game_log_bga_table_id_resolver(game_log: GameLogModel, info, **args) -> int:
     return game_log.bga_table_id
-
-
-def game_log_users_resolver(game_log: GameLogModel, info, **args) -> list[UserModel]:
-    return game_log.users
 
 
 def game_log_fields() -> dict[str, GraphQLField]:
@@ -45,7 +42,9 @@ def game_log_fields() -> dict[str, GraphQLField]:
         ),
         "users": GraphQLField(
             GraphQLNonNull(GraphQLList(user_type)),
-            resolve=game_log_users_resolver,
+        ),
+        "cards": GraphQLField(
+            GraphQLNonNull(GraphQLList(card_type)),
         ),
     }
 
@@ -73,7 +72,7 @@ game_log_filters: dict[str, GraphQLArgument] = {
 
 def game_log_field(game_log: type[GameLogModel]) -> GraphQLField:
     return GraphQLField(
-        GraphQLNonNull(game_log_type),
+        game_log_type,
         args=game_log_filters,
         resolve=lambda root, info, **args: fetch_game_log(game_log, args),
     )
@@ -167,6 +166,32 @@ def user_num_game_logs_resolver(user: UserModel, info, **args) -> int:
     return user.num_game_logs
 
 
+def user_play_count_fields() -> dict[str, GraphQLField]:
+    return {
+        "card": GraphQLField(
+            GraphQLNonNull(card_type),
+            description="The card played by the user.",
+        ),
+        "count": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of times played by the user.",
+        ),
+    }
+
+
+user_play_count_type = GraphQLObjectType(
+    "UserPlayCount",
+    description="The number of times a user played a card.",
+    fields=user_play_count_fields,
+)
+
+
+def user_commonly_played_cards_resolver(user: UserModel, info, **args) -> list[dict]:
+    return [
+        {"card": card, "count": count} for card, count in user.commonly_played_cards()
+    ]
+
+
 def user_fields() -> dict[str, GraphQLField]:
     return {
         "id": GraphQLField(
@@ -196,6 +221,11 @@ def user_fields() -> dict[str, GraphQLField]:
             description="Number of game logs for this user.",
             resolve=user_num_game_logs_resolver,
         ),
+        "commonlyPlayedCards": GraphQLField(
+            GraphQLNonNull(GraphQLList(user_play_count_type)),
+            description="Most commonly played cards by the user.",
+            resolve=user_commonly_played_cards_resolver,
+        ),
     }
 
 
@@ -224,7 +254,7 @@ def fetch_user_field(
     user_model: Type[UserModel],
 ) -> GraphQLField:
     return GraphQLField(
-        GraphQLNonNull(user_type),
+        user_type,
         description="Fetch information about a single user.",
         args=fetch_user_filters,
         resolve=lambda root, info, **args: fetch_user(user_model, args),
@@ -392,4 +422,86 @@ def recent_game_log_archives_field(
         resolve=lambda root, info, **args: fetch_recent_game_log_archives(
             game_log_archive_model
         ),
+    )
+
+
+def card_bga_id_resolver(card: CardModel, info, **args) -> str:
+    return card.bga_id
+
+
+def card_recent_game_logs_resolver(card: CardModel, info, **args) -> list[GameLogModel]:
+    return card.recent_game_logs
+
+
+def card_recent_users_resolver(card: CardModel, info, **args) -> list[UserModel]:
+    return card.recent_users
+
+
+def card_created_at_resolver(card: CardModel, info, **args) -> int:
+    return int(round(card.created_at.timestamp()))
+
+
+def card_fields() -> dict[str, GraphQLField]:
+    return {
+        "id": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="ID of card.",
+        ),
+        "name": GraphQLField(
+            GraphQLNonNull(GraphQLString),
+            description="Name of card.",
+        ),
+        "bgaId": GraphQLField(
+            GraphQLNonNull(GraphQLString),
+            description="Card ID on BGA.",
+            resolve=card_bga_id_resolver,
+        ),
+        "recentGameLogs": GraphQLField(
+            GraphQLNonNull(GraphQLList(game_log_type)),
+            description="Recent game logs where this card was played.",
+            resolve=card_recent_game_logs_resolver,
+        ),
+        "recentUsers": GraphQLField(
+            GraphQLNonNull(GraphQLList(user_type)),
+            description="Players who played this in a recent game.",
+            resolve=card_recent_game_logs_resolver,
+        ),
+        "createdAt": GraphQLField(
+            GraphQLInt,
+            description="UNIX timestamp for when this archive was created.",
+            resolve=card_created_at_resolver,
+        ),
+    }
+
+
+card_type = GraphQLObjectType(
+    "Card",
+    description="An archive of game logs.",
+    fields=card_fields,
+)
+
+
+def fetch_card(
+    card_model: Type[CardModel],
+    params: dict[str, Any],
+) -> Optional[CardModel]:
+    return card_model.query.where(card_model.bga_id == params["id"]).first()
+
+
+fetch_card_filters: dict[str, GraphQLArgument] = {
+    "id": GraphQLArgument(
+        GraphQLNonNull(GraphQLString),
+        description="BGA ID of the card.",
+    ),
+}
+
+
+def fetch_card_field(
+    card_model: Type[CardModel],
+) -> GraphQLField:
+    return GraphQLField(
+        card_type,
+        description="Fetch information about a single card.",
+        args=fetch_card_filters,
+        resolve=lambda root, info, **args: fetch_card(card_model, args),
     )
