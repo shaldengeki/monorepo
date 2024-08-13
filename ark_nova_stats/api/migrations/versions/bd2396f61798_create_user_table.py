@@ -81,13 +81,13 @@ def upgrade():
         parsed_log = BGAGameLog(**json.loads(log_model.log))
         for player in parsed_log.data.players:
             if player.id not in players:
-                players[player.id] = UserModel(  # type: ignore
+                players[player.id] = UserModel(
                     bga_id=player.id, name=player.name, avatar=player.avatar
                 )
                 session.add(players[player.id])
 
             session.add(
-                GameParticipationModel(  # type: ignore
+                GameParticipationModel(
                     user=players[player.id],
                     color=player.color,
                     game_log_id=parsed_log.data.logs[0].table_id,
