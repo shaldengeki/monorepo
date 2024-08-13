@@ -48,9 +48,9 @@ class GameLog(db.Model):  # type: ignore
         back_populates="last_game_log",
     )
 
-    cards: Mapped[list["Card"]] = relationship(
-        secondary="game_log_cards", back_populates="game_logs", viewonly=True
-    )
+    # cards: Mapped[list["Card"]] = relationship(
+    #     secondary="game_log_cards", back_populates="game_logs", viewonly=True
+    # )
 
     # card_plays: Mapped[list["CardPlay"]] = relationship(back_populates="game_log")
 
@@ -106,9 +106,9 @@ class User(db.Model):  # type: ignore
     )
     # card_plays: Mapped[list["CardPlay"]] = relationship(back_populates="user")
 
-    cards: Mapped[list["Card"]] = relationship(
-        secondary="game_log_cards", back_populates="users", viewonly=True
-    )
+    # cards: Mapped[list["Card"]] = relationship(
+    #     secondary="game_log_cards", back_populates="users", viewonly=True
+    # )
 
     @property
     def num_game_logs(self) -> int:
@@ -167,13 +167,13 @@ class Card(db.Model):  # type: ignore
 
     # plays: Mapped[list["CardPlay"]] = relationship(back_populates="card")
 
-    game_logs: Mapped[list["GameLog"]] = relationship(
-        secondary="game_log_cards", back_populates="cards", viewonly=True
-    )
+    # game_logs: Mapped[list["GameLog"]] = relationship(
+    #     secondary="game_log_cards", back_populates="cards", viewonly=True
+    # )
 
-    users: Mapped[list["User"]] = relationship(
-        secondary="game_log_cards", back_populates="cards", viewonly=True
-    )
+    # users: Mapped[list["User"]] = relationship(
+    #     secondary="game_log_cards", back_populates="cards", viewonly=True
+    # )
 
 
 # class CardPlay(db.Model):  # type: ignore
