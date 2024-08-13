@@ -196,7 +196,7 @@ def main() -> int:
             start = time.time()
             # Do work here.
             archive_logs_to_tigris(tigris_client)
-            populate_card_play_actions()
+            # populate_card_play_actions()
             delay = (start + max_delay) - time.time()
             if delay > 0:
                 time.sleep(delay)
