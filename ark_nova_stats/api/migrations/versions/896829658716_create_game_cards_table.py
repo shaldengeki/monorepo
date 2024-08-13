@@ -17,8 +17,6 @@ from ark_nova_stats.bga_log_parser.game_log import GameLog as BGAGameLog
 from ark_nova_stats.models import Card as CardModel
 from ark_nova_stats.models import CardPlay as CardPlayModel
 from ark_nova_stats.models import GameLog as GameLogModel
-from ark_nova_stats.models import GameParticipation as GameParticipationModel
-from ark_nova_stats.models import User as UserModel
 
 # revision identifiers, used by Alembic.
 revision = "896829658716"
