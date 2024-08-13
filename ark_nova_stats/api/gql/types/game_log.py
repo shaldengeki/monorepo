@@ -167,6 +167,10 @@ def user_num_game_logs_resolver(user: UserModel, info, **args) -> int:
 
 def user_play_count_fields() -> dict[str, GraphQLField]:
     return {
+        "user": GraphQLField(
+            GraphQLNonNull(user_type),
+            description="The user playing the card.",
+        ),
         "card": GraphQLField(
             GraphQLNonNull(card_type),
             description="The card played by the user.",
@@ -187,7 +191,7 @@ user_play_count_type = GraphQLObjectType(
 
 def user_commonly_played_cards_resolver(user: UserModel, info, **args) -> list[dict]:
     return [
-        {"card": card, "count": count}
+        {"user": user, "card": card, "count": count}
         for card, count in db.session.execute(user.commonly_played_cards()).all()
     ]
 
@@ -439,6 +443,13 @@ def card_recent_users_resolver(card: CardModel, info, **args) -> Sequence[UserMo
     return db.session.scalars(card.recent_users()).all()
 
 
+def card_most_played_by_resolver(card: CardModel, info, **args) -> list[dict]:
+    return [
+        {"user": user, "card": card, "count": count}
+        for user, count in db.session.execute(card.most_played_by()).all()
+    ]
+
+
 def card_created_at_resolver(card: CardModel, info, **args) -> int:
     return int(round(card.created_at.timestamp()))
 
@@ -467,6 +478,11 @@ def card_fields() -> dict[str, GraphQLField]:
             GraphQLNonNull(GraphQLList(user_type)),
             description="Players who played this in a recent game.",
             resolve=card_recent_game_logs_resolver,
+        ),
+        "mostPlayedBy": GraphQLField(
+            GraphQLNonNull(GraphQLList(user_play_count_type)),
+            description="Players who play this card most often.",
+            resolve=card_most_played_by_resolver,
         ),
         "createdAt": GraphQLField(
             GraphQLInt,

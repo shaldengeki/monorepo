@@ -233,6 +233,16 @@ class Card(db.Model):
             .limit(num)
         )
 
+    def most_played_by(self, num=10) -> Select[tuple["User", int]]:
+        return (
+            select(User, func.count())
+            .join(CardPlay, CardPlay.user_id == User.bga_id)
+            .where(CardPlay.card_id == self.id)
+            .group_by(User)
+            .order_by(desc(func.count()))
+            .limit(num)
+        )
+
 
 class CardPlay(db.Model):
     __tablename__ = "game_log_cards"
