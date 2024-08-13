@@ -27,7 +27,7 @@ class GameParticipation(db.Model):
 class GameLog(db.Model):
     __tablename__ = "game_logs"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     log: Mapped[str]
     created_at: Mapped[datetime.datetime] = mapped_column(
         db.TIMESTAMP(timezone=True),
@@ -111,7 +111,7 @@ class GameLog(db.Model):
 class User(db.Model):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     bga_id: Mapped[int]
     name: Mapped[str]
     avatar: Mapped[str]
@@ -169,7 +169,7 @@ class GameLogArchiveType(enum.IntEnum):
 class GameLogArchive(db.Model):
     __tablename__ = "game_log_archives"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     archive_type: Mapped[int]
     url: Mapped[str]
     size_bytes: Mapped[int]
@@ -189,7 +189,7 @@ class GameLogArchive(db.Model):
 class Card(db.Model):
     __tablename__ = "cards"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
     bga_id: Mapped[str] = mapped_column(unique=True)
     created_at: Mapped[datetime.datetime] = mapped_column(
