@@ -1,8 +1,7 @@
 import datetime
 import enum
-from typing import Optional
 
-from sqlalchemy import ForeignKey, desc, func
+from sqlalchemy import ForeignKey, Select, desc, func, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
@@ -151,14 +150,14 @@ class User(db.Model):
             .all()
         ]
 
-    def commonly_played_cards(self, num=10) -> list[tuple["Card", int]]:
+    def commonly_played_cards(self, num=10) -> Select[tuple["Card", int]]:
         return (
-            CardPlay.query(CardPlay.card, func.count())
-            .where(CardPlay.user_id == self.id)
-            .group_by(CardPlay.card)
-            .order_by(func.count())
+            select(Card, func.count())
+            .join(CardPlay, CardPlay.card_id == Card.id)
+            .where(CardPlay.user_id == self.bga_id)
+            .group_by(Card)
+            .order_by(desc(func.count()))
             .limit(num)
-            .all()
         )
 
 
@@ -208,22 +207,31 @@ class Card(db.Model):
         secondary="game_log_cards", back_populates="cards", viewonly=True
     )
 
-    @property
-    def recent_plays(self) -> list["CardPlay"]:
+    def recent_plays(self, num=10) -> Select[tuple["CardPlay"]]:
         return (
-            CardPlay.query.where(CardPlay.card_id == self.id)
+            select(CardPlay)
+            .where(CardPlay.card_id == self.id)
             .order_by(desc(CardPlay.game_log_id))
-            .limit(10)
-            .all()
+            .limit(num)
         )
 
-    @property
-    def recent_game_logs(self) -> list["GameLog"]:
-        return [cp.game_log for cp in self.recent_plays]
+    def recent_game_logs(self, num=10) -> Select[tuple["GameLog"]]:
+        return (
+            select(GameLog)
+            .join(CardPlay, CardPlay.game_log_id == GameLog.id)
+            .where(CardPlay.card_id == self.id)
+            .order_by(desc(CardPlay.game_log_id))
+            .limit(num)
+        )
 
-    @property
-    def recent_users(self) -> list["User"]:
-        return [cp.user for cp in self.recent_plays]
+    def recent_users(self, num=10) -> Select[tuple["User"]]:
+        return (
+            select(User)
+            .join(CardPlay, CardPlay.user_id == User.bga_id)
+            .where(CardPlay.card_id == self.id)
+            .order_by(desc(CardPlay.game_log_id))
+            .limit(num)
+        )
 
 
 class CardPlay(db.Model):

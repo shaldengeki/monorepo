@@ -1,5 +1,5 @@
 import json
-from typing import Any, Optional, Type
+from typing import Any, Optional, Sequence, Type
 
 from graphql import (
     GraphQLArgument,
@@ -187,7 +187,8 @@ user_play_count_type = GraphQLObjectType(
 
 def user_commonly_played_cards_resolver(user: UserModel, info, **args) -> list[dict]:
     return [
-        {"card": card, "count": count} for card, count in user.commonly_played_cards()
+        {"card": card, "count": count}
+        for card, count in db.session.execute(user.commonly_played_cards()).all()
     ]
 
 
@@ -428,12 +429,14 @@ def card_bga_id_resolver(card: CardModel, info, **args) -> str:
     return card.bga_id
 
 
-def card_recent_game_logs_resolver(card: CardModel, info, **args) -> list[GameLogModel]:
-    return card.recent_game_logs
+def card_recent_game_logs_resolver(
+    card: CardModel, info, **args
+) -> Sequence[GameLogModel]:
+    return db.session.scalars(card.recent_game_logs()).all()
 
 
-def card_recent_users_resolver(card: CardModel, info, **args) -> list[UserModel]:
-    return card.recent_users
+def card_recent_users_resolver(card: CardModel, info, **args) -> Sequence[UserModel]:
+    return db.session.scalars(card.recent_users()).all()
 
 
 def card_created_at_resolver(card: CardModel, info, **args) -> int:
