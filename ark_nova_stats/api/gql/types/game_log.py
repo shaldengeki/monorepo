@@ -25,10 +25,6 @@ def game_log_bga_table_id_resolver(game_log: GameLogModel, info, **args) -> int:
     return game_log.bga_table_id
 
 
-def game_log_users_resolver(game_log: GameLogModel, info, **args) -> list[UserModel]:
-    return game_log.users
-
-
 def game_log_fields() -> dict[str, GraphQLField]:
     return {
         "id": GraphQLField(
@@ -46,7 +42,9 @@ def game_log_fields() -> dict[str, GraphQLField]:
         ),
         "users": GraphQLField(
             GraphQLNonNull(GraphQLList(user_type)),
-            resolve=game_log_users_resolver,
+        ),
+        "cards": GraphQLField(
+            GraphQLNonNull(GraphQLList(card_type)),
         ),
     }
 
@@ -168,6 +166,32 @@ def user_num_game_logs_resolver(user: UserModel, info, **args) -> int:
     return user.num_game_logs
 
 
+def user_play_count_fields() -> dict[str, GraphQLField]:
+    return {
+        "card": GraphQLField(
+            GraphQLNonNull(card_type),
+            description="The card played by the user.",
+        ),
+        "count": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of times played by the user.",
+        ),
+    }
+
+
+user_play_count_type = GraphQLObjectType(
+    "UserPlayCount",
+    description="The number of times a user played a card.",
+    fields=user_play_count_fields,
+)
+
+
+def user_commonly_played_cards_resolver(user: UserModel, info, **args) -> list[dict]:
+    return [
+        {"card": card, "count": count} for card, count in user.commonly_played_cards()
+    ]
+
+
 def user_fields() -> dict[str, GraphQLField]:
     return {
         "id": GraphQLField(
@@ -196,6 +220,11 @@ def user_fields() -> dict[str, GraphQLField]:
             GraphQLNonNull(GraphQLInt),
             description="Number of game logs for this user.",
             resolve=user_num_game_logs_resolver,
+        ),
+        "commonlyPlayedCards": GraphQLField(
+            GraphQLNonNull(GraphQLList(user_play_count_type)),
+            description="Most commonly played cards by the user.",
+            resolve=user_commonly_played_cards_resolver,
         ),
     }
 
