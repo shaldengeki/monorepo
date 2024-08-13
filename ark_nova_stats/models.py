@@ -9,7 +9,7 @@ from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import db
 
 
-class GameParticipation(db.Model):  # type: ignore
+class GameParticipation(db.Model):
     __tablename__ = "game_participations"
     user_id: Mapped[int] = mapped_column(ForeignKey("users.bga_id"), primary_key=True)
     game_log_id: Mapped[int] = mapped_column(
@@ -25,7 +25,7 @@ class GameParticipation(db.Model):  # type: ignore
     game_log: Mapped["GameLog"] = relationship(back_populates="user_participations")
 
 
-class GameLog(db.Model):  # type: ignore
+class GameLog(db.Model):
     __tablename__ = "game_logs"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -54,7 +54,7 @@ class GameLog(db.Model):  # type: ignore
 
     card_plays: Mapped[list["CardPlay"]] = relationship(back_populates="game_log")
 
-    def create_related_objects(self, parsed_logs: ParsedGameLog) -> db.Model:  # type: ignore
+    def create_related_objects(self, parsed_logs: ParsedGameLog) -> db.Model:
         # Add users if not present.
         present_users = User.query.filter(
             User.bga_id.in_([user.id for user in parsed_logs.data.players])
@@ -67,7 +67,7 @@ class GameLog(db.Model):  # type: ignore
         ]
 
         for user in users_to_create:
-            bga_id_to_user[user.id] = User(  # type: ignore
+            bga_id_to_user[user.id] = User(
                 bga_id=user.id,
                 name=user.name,
                 avatar=user.avatar,
@@ -77,7 +77,7 @@ class GameLog(db.Model):  # type: ignore
         # Now create a game participation for each user.
         for bga_user in parsed_logs.data.players:
             log_user = next(u for u in parsed_logs.data.players if u.id == bga_user.id)
-            yield GameParticipation(  # type: ignore
+            yield GameParticipation(
                 user=bga_id_to_user[bga_user.id],
                 color=log_user.color,
                 game_log=self,
@@ -86,7 +86,7 @@ class GameLog(db.Model):  # type: ignore
         for c in self.create_card_and_plays(parsed_logs):
             yield c
 
-    def create_card_and_plays(self, parsed_logs: ParsedGameLog) -> db.Model:  # type: ignore
+    def create_card_and_plays(self, parsed_logs: ParsedGameLog) -> db.Model:
         cards = {}
         # Now create a card & card play.
         for play in parsed_logs.data.card_plays:
@@ -94,16 +94,14 @@ class GameLog(db.Model):  # type: ignore
                 # Check to see if it exists.
                 find_card = Card.query.where(Card.bga_id == play.card.id).limit(1).all()
                 if not find_card:
-                    card = Card(  # type: ignore
-                        name=play.card.name, bga_id=play.card.id
-                    )
+                    card = Card(name=play.card.name, bga_id=play.card.id)
                     yield card
                 else:
                     card = find_card[0]
 
                 cards[card.bga_id] = card
 
-            yield CardPlay(  # type: ignore
+            yield CardPlay(
                 game_log=self,
                 card=cards[play.card.id],
                 user_id=play.player.id,
@@ -111,7 +109,7 @@ class GameLog(db.Model):  # type: ignore
             )
 
 
-class User(db.Model):  # type: ignore
+class User(db.Model):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -169,7 +167,7 @@ class GameLogArchiveType(enum.IntEnum):
     RAW_BGA_JSONL = 1
 
 
-class GameLogArchive(db.Model):  # type: ignore
+class GameLogArchive(db.Model):
     __tablename__ = "game_log_archives"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -189,7 +187,7 @@ class GameLogArchive(db.Model):  # type: ignore
     last_game_log: Mapped[GameLog] = relationship(back_populates="archives")
 
 
-class Card(db.Model):  # type: ignore
+class Card(db.Model):
     __tablename__ = "cards"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -228,7 +226,7 @@ class Card(db.Model):  # type: ignore
         return [cp.user for cp in self.recent_plays]
 
 
-class CardPlay(db.Model):  # type: ignore
+class CardPlay(db.Model):
     __tablename__ = "game_log_cards"
 
     game_log_id: Mapped[int] = mapped_column(

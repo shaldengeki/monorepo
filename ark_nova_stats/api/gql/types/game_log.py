@@ -91,8 +91,7 @@ def submit_game_logs(
             f"Log is invalid: there must be exactly one table_id per game log, found: {table_ids}"
         )
 
-    log = GameLogModel(bga_table_id=list(table_ids)[0], log=args["logs"])  # type: ignore
-
+    log = GameLogModel(bga_table_id=list(table_ids)[0], log=args["logs"])
     if app.config["TESTING"] == True:
         log.id = 1
     else:
