@@ -200,6 +200,23 @@ class Card(db.Model):  # type: ignore
         secondary="game_log_cards", back_populates="cards", viewonly=True
     )
 
+    @property
+    def recent_plays(self) -> list["CardPlay"]:
+        return (
+            CardPlay.query.where(CardPlay.card_id == self.id)
+            .order_by(desc(CardPlay.game_log_id))
+            .limit(10)
+            .all()
+        )
+
+    @property
+    def recent_game_logs(self) -> list["GameLog"]:
+        return [cp.game_log for cp in self.recent_plays]
+
+    @property
+    def recent_users(self) -> list["User"]:
+        return [cp.user for cp in self.recent_plays]
+
 
 class CardPlay(db.Model):  # type: ignore
     __tablename__ = "game_log_cards"
