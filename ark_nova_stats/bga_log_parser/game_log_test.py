@@ -50,9 +50,10 @@ class TestGameLog:
     def test_card_plays_for_4p_game(self):
         game_log = load_data_from_fixture_file("4p.log.json")
         plays = list(GameLog(**game_log).data.card_plays)
-        assert 58 == len(plays)
-        assert "Baboon Rock" == plays[0].card.name
-        assert "Victory Column" == plays[-1].card.name
+        assert 1 == len(plays)
+        assert "Dusky-leaf Monkey" == plays[0].card.name
+        card_ids = [play.card.id for play in plays]
+        assert len(set(card_ids)) == len(card_ids)
 
 
 class TestGameLogEventData:

@@ -152,7 +152,7 @@ class GameLogData:
     def card_plays(self) -> Iterator[GameLogCardPlay]:
         for log in self.logs:
             for d in log.data:
-                if d.played_cards is None:
+                if not d.is_play_action or d.played_cards is None:
                     continue
 
                 for c in d.played_cards:
