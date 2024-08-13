@@ -135,16 +135,17 @@ def populate_card_play_actions() -> None:
         # First, create underlying card models.
         for play in parsed_log.data.card_plays:
             # Check to see if it exists.
-
             if play.card.id in card_ids:
                 continue
 
-            find_card = Card.query.where(Card.bga_id == play.card.id).limit(1).all()
-            if not find_card:
-                card = Card(name=play.card.name, bga_id=play.card.id)  # type: ignore
-                logger.info(f"Staging card creation for: {play.card.id}")
-                db.session.add(card)
-                card_ids.add(play.card.id)
+            find_card = Card.query.where(Card.bga_id == play.card.id).count()
+            if find_card > 0:
+                continue
+
+            card = Card(name=play.card.name, bga_id=play.card.id)  # type: ignore
+            logger.info(f"Staging card creation for: {play.card.id}")
+            db.session.add(card)
+            card_ids.add(play.card.id)
 
     logger.info("Committing all the new cards.")
     db.session.commit()
@@ -154,9 +155,6 @@ def populate_card_play_actions() -> None:
     for log_model in GameLog.query.yield_per(10):  # type: ignore
         parsed_log = BGAGameLog(**json.loads(log_model.log))
         for play in parsed_log.data.card_plays:
-            find_card = Card.query.where(Card.bga_id == play.card.id).limit(1).all()
-            card = find_card[0]
-
             find_play = CardPlay.query.where(
                 CardPlay.game_log_id == log_model.id
                 and CardPlay.card_id == card.id
@@ -166,6 +164,8 @@ def populate_card_play_actions() -> None:
             if find_play > 0:
                 continue
 
+            find_card = Card.query.where(Card.bga_id == play.card.id).limit(1).all()
+            card = find_card[0]
             logger.info(
                 f"Staging card play creation for game ID {log_model.id}, card {card.id}"
             )
