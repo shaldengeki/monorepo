@@ -1,8 +1,7 @@
 import datetime
 import enum
-from typing import Optional
 
-from sqlalchemy import ForeignKey, desc, func
+from sqlalchemy import ForeignKey, desc, func, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
@@ -152,14 +151,14 @@ class User(db.Model):
         ]
 
     def commonly_played_cards(self, num=10) -> list[tuple["Card", int]]:
-        return (
-            CardPlay.query(CardPlay.card, func.count())
-            .where(CardPlay.user_id == self.id)
-            .group_by(CardPlay.card)
-            .order_by(func.count())
+        return db.session.execute(
+            select(Card, func.count())
+            .join(CardPlay, CardPlay.card_id == Card.id)
+            .where(CardPlay.user_id == self.bga_id)
+            .group_by(Card)
+            .order_by(desc(func.count()))
             .limit(num)
-            .all()
-        )
+        ).all()
 
 
 class GameLogArchiveType(enum.IntEnum):
