@@ -140,6 +140,7 @@ def populate_card_play_actions() -> None:
 
             find_card = Card.query.where(Card.bga_id == play.card.id).count()
             if find_card > 0:
+                card_ids.add(play.card.id)
                 continue
 
             card = Card(name=play.card.name, bga_id=play.card.id)  # type: ignore
