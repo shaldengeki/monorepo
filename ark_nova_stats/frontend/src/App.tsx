@@ -6,6 +6,7 @@ import {
   Navigate
 } from "react-router-dom";
 
+import CardView from './views/CardView';
 import HomeView from './views/HomeView';
 import UserView from './views/UserView';
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="home" element={<HomeView />} />
           <Route path="user/:name" element={<UserView />} />
+          <Route path="card/:id" element={<CardView />} />
         </Routes>
     </Router>
   );

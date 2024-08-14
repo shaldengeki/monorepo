@@ -5,32 +5,32 @@ import { Link, useParams } from 'react-router-dom';
 
 import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
-import UserInfoBox from '../components/UserInfoBox';
+import CardInfoBox from '../components/CardInfoBox';
 import GameLogsTable from '../components/GameLogsTable';
+import Card from '../types/Card';
 import GameLog from '../types/GameLog';
-import User from '../types/User';
 import UserPlayCount from '../types/UserPlayCount';
 
 export const USER_VIEW_QUERY = gql`
-    query FetchUser($name: String!) {
-        user(name: $name) {
+    query FetchCard($id: String!) {
+        card(id: $id) {
+            id
             bgaId
             name
-            avatar
-            recentGameLogs {
-                bgaTableId
-                users {
-                    name
-                }
-            }
-            numGameLogs
-            commonlyPlayedCards {
-                card {
+            createdAt
+            mostPlayedBy {
+                user {
                     id
                     bgaId
                     name
                 }
                 count
+            }
+            recentGameLogs {
+                bgaTableId
+                users {
+                    name
+                }
             }
         }
     }
@@ -38,15 +38,15 @@ export const USER_VIEW_QUERY = gql`
 
 
 
-type UserViewParams = {
-    name: string,
+type CardViewParams = {
+    id: string,
 }
 
-const UserView = () => {
-    let { name } = useParams<UserViewParams>();
+const CardView = () => {
+    let { id } = useParams<CardViewParams>();
     const { loading, error, data } = useQuery(
         USER_VIEW_QUERY,
-        {variables: {name}},
+        {variables: {id}},
     );
 
 
@@ -54,14 +54,14 @@ const UserView = () => {
     if (loading) innerContent = <p>Loading...</p>;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
-        const user: User = data.user;
-        const commonlyPlayedCards: UserPlayCount[] = data.user.commonlyPlayedCards;
-        const recentGameLogs: GameLog[] = data.user.recentGameLogs;
+        const card: Card = data.card;
+        const mostPlayedBy: UserPlayCount[] = data.card.mostPlayedBy;
+        const recentGameLogs: GameLog[] = data.card.recentGameLogs;
         innerContent = (
             <div>
-                <PageTitle><Link to={`/user/${user.name}`} >User: {user.name}</Link></PageTitle>
+                <PageTitle><Link to={`/card/${card.bgaId}`} >Card: {card.name}</Link></PageTitle>
                 <div className={"py-2"}>
-                    <UserInfoBox user={user} commonlyPlayedCards={commonlyPlayedCards} />
+                    <CardInfoBox card={card} mostPlayedBy={mostPlayedBy} />
                 </div>
                 <div className={"py-2"}>
                     <h2 className={"text-xl"}>Recent game logs:</h2>
@@ -78,4 +78,4 @@ const UserView = () => {
     )
 }
 
-export default UserView;
+export default CardView;
