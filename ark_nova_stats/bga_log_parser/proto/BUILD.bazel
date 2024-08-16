@@ -1,0 +1,14 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@rules_python//python:proto.bzl", "py_proto_library")
+
+proto_library(
+    name = "game_proto",
+    srcs = ["game.proto"],
+    visibility = ["//visibility:public"],
+)
+
+py_proto_library(
+    name = "game_proto_py_pb2",
+    visibility = ["//visibility:public"],
+    deps = [":game_proto"],
+)
