@@ -33,6 +33,11 @@ class TestGameLog:
         assert x.winner is not None and "sorryimlikethis" == x.winner.name
         assert not x.is_tie
 
+    def test_winner_is_none_when_tie(self):
+        game_log = load_data_from_fixture_file("tie.log.json")
+        x = GameLog(**game_log)
+        assert x.winner is None
+
     def test_detects_tie(self):
         game_log = load_data_from_fixture_file("tie.log.json")
         x = GameLog(**game_log)
