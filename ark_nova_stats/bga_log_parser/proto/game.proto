@@ -2,6 +2,12 @@ syntax = "proto3";
 
 enum ActionCard {
     // todo build etc
+    ACTIONCARD_UNKNOWN = 0;
+    ACTIONCARD_ANIMALS = 1;
+    ACTIONCARD_ASSOCIATION = 2;
+    ACTIONCARD_BUILD = 3;
+    ACTIONCARD_CARDS = 4;
+    ACTIONCARD_SPONSORS = 5;
 }
 
 message PlayAnimal {
@@ -22,11 +28,11 @@ message BuildingCoordinate {
 
 enum BuildingType {
     BUILDINGTYPE_UNKNOWN = 0;
-    PAVILION = 1;
-    KIOSK = 2;
-    ENCLOSURE = 3;
-    REPTILE_HOUSE = 4;
-    AVIARY = 5;
+    BUILDINGTYPE_PAVILION = 1;
+    BUILDINGTYPE_KIOSK = 2;
+    BUILDINGTYPE_ENCLOSURE = 3;
+    BUILDINGTYPE_REPTILE_HOUSE = 4;
+    BUILDINGTYPE_AVIARY = 5;
     // TODO: unique buildings
 }
 
@@ -64,11 +70,11 @@ message AssociateReputation {}
 
 enum PartnerZoo {
     PARTNERZOO_UNKNOWN = 0;
-    AFRICA = 1;
-    AMERICAS = 2;
-    ASIA = 3;
-    AUSTRALIA = 4;
-    EUROPE = 5;
+    PARTNERZOO_AFRICA = 1;
+    PARTNERZOO_AMERICAS = 2;
+    PARTNERZOO_ASIA = 3;
+    PARTNERZOO_AUSTRALIA = 4;
+    PARTNERZOO_EUROPE = 5;
 }
 
 enum University {
@@ -91,27 +97,27 @@ message AssociateUniversity {
 // like snapping, clever, university, buildings, etc
 enum ConservationProjectRecurringReward {
     CONSERVATIONPROJECTRECURRINGREWARD_UNKNOWN = 0;
-    SNAPPING = 1;
-    BUILD_TWO_SIZE = 2;
-    FIVE_INCOME = 3;
-    TWO_CLEVERS = 4;
-    TWO_POUCH = 5;
-    ONE_CONSERVATION_POINT = 6;
-    BUY_SPONSOR = 7;
+    CONSERVATIONPROJECTRECURRINGREWARD_SNAPPING = 1;
+    CONSERVATIONPROJECTRECURRINGREWARD_BUILD_TWO_SIZE = 2;
+    CONSERVATIONPROJECTRECURRINGREWARD_FIVE_INCOME = 3;
+    CONSERVATIONPROJECTRECURRINGREWARD_TWO_CLEVERS = 4;
+    CONSERVATIONPROJECTRECURRINGREWARD_TWO_POUCH = 5;
+    CONSERVATIONPROJECTRECURRINGREWARD_ONE_CONSERVATION_POINT = 6;
+    CONSERVATIONPROJECTRECURRINGREWARD_BUY_SPONSOR = 7;
 }
 
 enum ConservationProjectOneTimeReward {
     CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN = 0;
-    ASSOCIATION_WORKER = 1;
-    TWELVE_MONEY = 2;
-    THREE_X = 3;
-    UNIVERSITY = 4;
-    AVIARY_REPTILE_HOUSE = 5;
-    DETERMINATION = 6;
-    TWO_REPUTATION = 7;
-    ONE_CONSERVATION_POINT = 8;
-    PARTNER_ZOO = 9;
-    GEOGRAPHICAL_BONUS = 10; // TODO: this introduces new choices
+    CONSERVATIONPROJECTONETIMEREWARD_ASSOCIATION_WORKER = 1;
+    CONSERVATIONPROJECTONETIMEREWARD_TWELVE_MONEY = 2;
+    CONSERVATIONPROJECTONETIMEREWARD_THREE_X = 3;
+    CONSERVATIONPROJECTONETIMEREWARD_UNIVERSITY = 4;
+    CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE = 5;
+    CONSERVATIONPROJECTONETIMEREWARD_DETERMINATION = 6;
+    CONSERVATIONPROJECTONETIMEREWARD_TWO_REPUTATION = 7;
+    CONSERVATIONPROJECTONETIMEREWARD_ONE_CONSERVATION_POINT = 8;
+    CONSERVATIONPROJECTONETIMEREWARD_PARTNER_ZOO = 9;
+    CONSERVATIONPROJECTONETIMEREWARD_GEOGRAPHICAL_BONUS = 10; // TODO: this introduces new choices
 }
 
 message ExtraWorker {}
@@ -143,18 +149,18 @@ message BuySponsorFromHand {
 message ConservationTrackReward {
     int32 track_position = 1;
     oneof reward {
-        ActionCard upgrade_action = 1;
-        ExtraWorker extra_worker = 2;
-        University university = 3;
-        PartnerZoo partner_zoo = 4;
-        ThreeSizeEnclosure three_size_enclosure = 5;
-        TwoReputation two_reputation = 6;
-        FiveMoney five_money = 7;
-        TenMoney ten_money = 8;
-        ThreeX three_x = 9;
-        DrawThree draw_three = 10;
-        TimesTwoMultiplier times_two_multiplier = 11;
-        BuySponsorFromHand buy_sponsor_from_hand = 12;
+        ActionCard upgrade_action = 2;
+        ExtraWorker extra_worker = 3;
+        University university = 4;
+        PartnerZoo partner_zoo = 5;
+        ThreeSizeEnclosure three_size_enclosure = 6;
+        TwoReputation two_reputation = 7;
+        FiveMoney five_money = 8;
+        TenMoney ten_money = 9;
+        ThreeX three_x = 10;
+        DrawThree draw_three = 11;
+        TimesTwoMultiplier times_two_multiplier = 12;
+        BuySponsorFromHand buy_sponsor_from_hand = 13;
     }
 }
 
