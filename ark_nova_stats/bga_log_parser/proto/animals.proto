@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package ark_nova_stats.bga_log_parser.proto;
+
+import "ark_nova_stats/bga_log_parser/proto/build.proto";
+
+message PlayAnimal {
+    int32 card_id = 1;
+    PlayBuilding enclosure = 2;
+}
+
+message AnimalsAction {
+    repeated PlayAnimal animals = 1;
+}

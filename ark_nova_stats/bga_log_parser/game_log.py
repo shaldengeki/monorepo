@@ -6,6 +6,7 @@ from ark_nova_stats.bga_log_parser.exceptions import (
     NonArkNovaReplayError,
     PlayerNotFoundError,
 )
+from ark_nova_stats.bga_log_parser.proto.game_pb2 import Game
 
 
 @dataclass
@@ -180,6 +181,8 @@ class GameLog:
 
     def __post_init__(self):
         self.data = GameLogData(**self.data)  # type: ignore
+        # TODO: populate this from self.data.
+        self.game = Game()
 
     @property
     def table_id(self) -> Optional[int]:
