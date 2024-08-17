@@ -124,7 +124,7 @@ message AssociateConservationProject {
     repeated ConservationTrackReward track_rewards = 5;
 }
 
-message AssociationAction {
+message AssociationSubAction {
     int32 workers = 1;
 
     oneof action {
@@ -133,4 +133,8 @@ message AssociationAction {
         AssociateUniversity university = 4;
         AssociateConservationProject conservation_project = 5;
     }
+}
+
+message AssociationAction {
+    repeated AssociationSubAction subaction = 1;
 }
