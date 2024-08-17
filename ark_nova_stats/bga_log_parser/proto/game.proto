@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+enum ActionCard {
+    // todo build etc
+}
+
 message PlayAnimal {
     int32 card_id = 1;
 
@@ -90,8 +94,10 @@ enum ConservationProjectRecurringReward {
     SNAPPING = 1;
     BUILD_TWO_SIZE = 2;
     FIVE_INCOME = 3;
-    CLEVER = 4;
-    // TODO: fill these out.
+    TWO_CLEVERS = 4;
+    TWO_POUCH = 5;
+    ONE_CONSERVATION_POINT = 6;
+    BUY_SPONSOR = 7;
 }
 
 enum ConservationProjectOneTimeReward {
@@ -102,12 +108,54 @@ enum ConservationProjectOneTimeReward {
     UNIVERSITY = 4;
     AVIARY_REPTILE_HOUSE = 5;
     DETERMINATION = 6;
-    // TODO: fill these out.
+    TWO_REPUTATION = 7;
+    ONE_CONSERVATION_POINT = 8;
+    PARTNER_ZOO = 9;
+    GEOGRAPHICAL_BONUS = 10; // TODO: this introduces new choices
+}
+
+message ExtraWorker {}
+
+message ThreeSizeEnclosure {
+    repeated BuildingCoordinate coordinates = 3;
+}
+
+message TwoReputation {}
+
+message FiveMoney {}
+
+message TenMoney {}
+
+message ThreeX {}
+
+message DrawThree {
+    repeated DrawCard = 1;
+}
+
+message TimesTwoMultiplier {
+    ActionCard action = 1;
+}
+
+message BuySponsorFromHand {
+    int32 card_id = 1;
 }
 
 message ConservationTrackReward {
     int32 track_position = 1;
-
+    oneof reward {
+        ActionCard upgrade_action = 1;
+        ExtraWorker extra_worker = 2;
+        University university = 3;
+        PartnerZoo partner_zoo = 4;
+        ThreeSizeEnclosure three_size_enclosure = 5;
+        TwoReputation two_reputation = 6;
+        FiveMoney five_money = 7;
+        TenMoney ten_money = 8;
+        ThreeX three_x = 9;
+        DrawThree draw_three = 10;
+        TimesTwoMultiplier times_two_multiplier = 11;
+        BuySponsorFromHand buy_sponsor_from_hand = 12;
+    }
 }
 
 message AssociateConservationProject {
@@ -182,6 +230,11 @@ message Action {
     }
 
     repeated ExtraAction extra_actions = 10;
+}
+
+message Round {
+    repeated Action actions = 1;
+    repeated BreakReward
 }
 
 message GameAbandon {}
