@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package ark_nova_stats.bga_log_parser.proto;
+
+message DrawCardFromDeck {}
+
+message DrawCardFromDisplay {
+    int32 display_position = 1;
+    int32 card_id = 2;
+}
+
+message DrawCard {
+    oneof action {
+        DrawCardFromDeck deck_draw = 1;
+        DrawCardFromDisplay display_draw = 2;
+    }
+}
+
+message DiscardCard {
+    int32 card_id = 3;
+}
+
+message CardsAction {
+    repeated DrawCard draws = 1;
+    repeated DiscardCard discards = 2;
+}

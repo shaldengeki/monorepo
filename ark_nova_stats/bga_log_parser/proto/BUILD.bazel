@@ -1,14 +1,57 @@
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@rules_python//python:proto.bzl", "py_proto_library")
 
-proto_library(
-    name = "game_proto",
-    srcs = ["game.proto"],
-    visibility = ["//visibility:public"],
-)
-
 py_proto_library(
     name = "game_proto_py_pb2",
     visibility = ["//visibility:public"],
     deps = [":game_proto"],
+)
+
+proto_library(
+    name = "animals_proto",
+    srcs = ["animals.proto"],
+    visibility = ["//visibility:public"],
+    deps = [":build_proto"],
+)
+
+proto_library(
+    name = "associate_proto",
+    srcs = ["associate.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":build_proto",
+        ":cards_proto",
+    ],
+)
+
+proto_library(
+    name = "build_proto",
+    srcs = ["build.proto"],
+    visibility = ["//visibility:public"],
+)
+
+proto_library(
+    name = "cards_proto",
+    srcs = ["cards.proto"],
+    visibility = ["//visibility:public"],
+)
+
+proto_library(
+    name = "game_proto",
+    srcs = ["game.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":animals_proto",
+        ":associate_proto",
+        ":build_proto",
+        ":cards_proto",
+        ":sponsors_proto",
+    ],
+)
+
+proto_library(
+    name = "sponsors_proto",
+    srcs = ["sponsors.proto"],
+    visibility = ["//visibility:public"],
+    deps = [":build_proto"],
 )

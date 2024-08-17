@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package ark_nova_stats.bga_log_parser.proto;
+
+import "ark_nova_stats/bga_log_parser/proto/build.proto";
+
+message BreakSponsor {}
+
+message PlaySponsor {
+    int32 card_id = 1;
+    optional PlayBuilding building = 2;
+}
+
+message PlaySponsors {
+    repeated PlaySponsor play_sponsor = 1;
+}
+
+message SponsorsAction {
+    oneof action {
+        BreakSponsor break = 1;
+        PlaySponsors play_sponsors = 2;
+    }
+}

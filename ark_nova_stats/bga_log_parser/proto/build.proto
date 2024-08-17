@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package ark_nova_stats.bga_log_parser.proto;
+
+message BuildingCoordinate {
+    int32 x = 1;
+    int32 y = 2;
+}
+
+enum BuildingType {
+    BUILDINGTYPE_UNKNOWN = 0;
+    BUILDINGTYPE_PAVILION = 1;
+    BUILDINGTYPE_KIOSK = 2;
+    BUILDINGTYPE_ENCLOSURE = 3;
+    BUILDINGTYPE_REPTILE_HOUSE = 4;
+    BUILDINGTYPE_AVIARY = 5;
+    // TODO: unique buildings
+}
+
+message PlayBuilding {
+    int32 size = 1;
+    BuildingType type = 2;
+    repeated BuildingCoordinate coordinates = 3;
+}
+
+message BuildAction {
+    repeated PlayBuilding builds = 2;
+}
