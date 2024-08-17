@@ -1,7 +1,6 @@
 syntax = "proto3";
 
 enum ActionCard {
-    // todo build etc
     ACTIONCARD_UNKNOWN = 0;
     ACTIONCARD_ANIMALS = 1;
     ACTIONCARD_ASSOCIATION = 2;
@@ -12,9 +11,7 @@ enum ActionCard {
 
 message PlayAnimal {
     int32 card_id = 1;
-
-    // TODO: handle enclosure
-    // extra actions, effects from map or animals
+    PlayBuilding enclosure = 2;
 }
 
 message AnimalsAction {
@@ -40,7 +37,6 @@ message PlayBuilding {
     int32 size = 1;
     BuildingType type = 2;
     repeated BuildingCoordinate coordinates = 3;
-    // TODO: extra actions, effects from map
 }
 
 message BuildAction {
@@ -52,7 +48,6 @@ message BreakSponsor {}
 message PlaySponsor {
     int32 card_id = 1;
     optional PlayBuilding building = 2;
-    // TODO: extra actions, effects from sponsor
 }
 
 message PlaySponsors {
@@ -117,7 +112,7 @@ enum ConservationProjectOneTimeReward {
     CONSERVATIONPROJECTONETIMEREWARD_TWO_REPUTATION = 7;
     CONSERVATIONPROJECTONETIMEREWARD_ONE_CONSERVATION_POINT = 8;
     CONSERVATIONPROJECTONETIMEREWARD_PARTNER_ZOO = 9;
-    CONSERVATIONPROJECTONETIMEREWARD_GEOGRAPHICAL_BONUS = 10; // TODO: this introduces new choices
+    CONSERVATIONPROJECTONETIMEREWARD_GEOGRAPHICAL_BONUS = 10;
 }
 
 message ExtraWorker {}
