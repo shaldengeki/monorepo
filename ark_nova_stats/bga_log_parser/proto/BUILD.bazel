@@ -40,13 +40,7 @@ proto_library(
     name = "game_proto",
     srcs = ["game.proto"],
     visibility = ["//visibility:public"],
-    deps = [
-        ":animals_proto",
-        ":associate_proto",
-        ":build_proto",
-        ":cards_proto",
-        ":sponsors_proto",
-    ],
+    deps = [":action_proto"],
 )
 
 proto_library(
@@ -54,4 +48,17 @@ proto_library(
     srcs = ["sponsors.proto"],
     visibility = ["//visibility:public"],
     deps = [":build_proto"],
+)
+
+proto_library(
+    name = "action_proto",
+    srcs = ["action.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":animals_proto",
+        ":associate_proto",
+        ":build_proto",
+        ":cards_proto",
+        ":sponsors_proto",
+    ],
 )
