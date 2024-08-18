@@ -2,42 +2,7 @@ syntax = "proto3";
 
 package ark_nova_stats.bga_log_parser.proto;
 
-import "ark_nova_stats/bga_log_parser/proto/animals.proto";
-import "ark_nova_stats/bga_log_parser/proto/associate.proto";
-import "ark_nova_stats/bga_log_parser/proto/build.proto";
-import "ark_nova_stats/bga_log_parser/proto/cards.proto";
-import "ark_nova_stats/bga_log_parser/proto/sponsors.proto";
-
-message XAction {}
-
-message SellCard {
-    int32 card_id = 1;
-}
-
-message ExtraAction {
-    oneof action {
-        SellCard sell_card = 1;
-    }
-}
-
-message Action {
-    // Corresponds to a single player turn.
-
-    int32 break_num = 1;
-    int64 player_id = 2;
-    int32 strength = 3;
-
-    oneof action {
-        XAction x = 4;
-        AnimalsAction animals = 5;
-        BuildAction build = 6;
-        SponsorsAction sponsors = 7;
-        AssociationAction associate = 8;
-        CardsAction cards = 9;
-    }
-
-    repeated ExtraAction extra_actions = 10;
-}
+import "ark_nova_stats/bga_log_parser/proto/action.proto";
 
 message Round {
     // Corresponds to the actions taken up to a break.
