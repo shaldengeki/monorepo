@@ -5,6 +5,7 @@ from ark_nova_stats.bga_log_parser.exceptions import (
     MoveNotSetError,
     NonArkNovaReplayError,
     PlayerNotFoundError,
+    StatsNotSetError,
 )
 from ark_nova_stats.bga_log_parser.proto.game_pb2 import Game
 from ark_nova_stats.bga_log_parser.proto.stats_pb2 import PlayerStats, Stats
@@ -225,5 +226,14 @@ class GameLog:
             for e in last_move.data
         )
 
+    def parse_player_stats(self) -> list[PlayerStats]:
+        # Player stats are in last event.
+        if not self.data.logs:
+            raise StatsNotSetError()
+
+        print(self.data.logs[-1])
+
+        return []
+
     def parse_game_stats(self) -> Stats:
-        return Stats()
+        return Stats(player_stats=self.parse_player_stats())

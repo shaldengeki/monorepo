@@ -61,7 +61,7 @@ class TestGameLog:
         assert len(set(card_ids)) == len(card_ids)
 
     def test_parses_game_stats(self):
-        game_log = load_data_from_fixture_file("sample_game.log.json")
+        game_log = load_data_from_fixture_file("533468391_darcelmaw_hardyzhao.json")
         x = GameLog(**game_log)
 
         stats = x.stats
