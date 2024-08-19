@@ -327,7 +327,6 @@ class GameLog:
                 break
 
         if stats is None:
-            print(self.data.logs[-10:])
             raise StatsNotSetError()
 
         return Stats(
