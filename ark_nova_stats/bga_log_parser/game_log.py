@@ -315,21 +315,16 @@ class GameLog:
         # so we search for it.
         stats = None
         for l in self.data.logs[-10:]:
-            if any(
-                e.args
-                and "args" in e.args
-                and e.args["args"]
-                and "result" in e.args["args"]
-                for e in l.data
-            ):
-                stats = next(
-                    e.args["args"]["result"]
-                    for e in l.data
-                    if e.args
+            for e in l.data:
+                if (
+                    e.args
                     and "args" in e.args
                     and e.args["args"]
                     and "result" in e.args["args"]
-                )
+                ):
+                    stats = e.args["args"]["result"]
+                    break
+            if stats is not None:
                 break
 
         if stats is None:
