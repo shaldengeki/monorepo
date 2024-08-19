@@ -318,9 +318,8 @@ class GameLog:
             for e in l.data:
                 if (
                     e.args
-                    and "args" in e.args
-                    and e.args["args"]
-                    and "result" in e.args["args"]
+                    and e.args.get("args", {})
+                    and e.args.get("args", {}).get("result", {})
                 ):
                     stats = e.args["args"]["result"]
                     break
