@@ -227,6 +227,8 @@ class GameLog:
         )
 
     def parse_player_stats(self, stats: dict[str, Any]) -> PlayerStats:
+        # The int keys here come from BGA's own format in replays;
+        # I expect these to change / break over time as BGA changes its own format.
         return PlayerStats(
             player_id=int(stats["player"]),
             score=int(stats["score"]),
