@@ -115,11 +115,12 @@ def main() -> int:
     game_card_records: dict[str, CardRecord] = {}
 
     for p in list_game_datafiles():
+        path_parts = p.name.split("_")
+        if int(path_parts[0]) not in EMU_CUP_GAME_TABLE_IDS:
+            continue
+
         with open(p, "r") as f:
             log = GameLog(**json.loads(f.read().strip()))
-
-        if not log.table_id in EMU_CUP_GAME_TABLE_IDS:
-            continue
 
         print(p)
         winner = log.winner
