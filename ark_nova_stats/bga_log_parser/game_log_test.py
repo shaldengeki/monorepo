@@ -113,7 +113,7 @@ class TestGameLog:
         assert 3 == darcelmaw.built_unique_buildings
         assert 43 == darcelmaw.hexes_covered
         assert 0 == darcelmaw.hexes_empty
-        assert 3 == darcelmaw.upgraded_actions
+        assert 3 == darcelmaw.upgraded_action_cards
         assert darcelmaw.upgraded_animals
         assert darcelmaw.upgraded_build
         assert not darcelmaw.upgraded_cards
@@ -182,7 +182,7 @@ class TestGameLog:
         assert 0 == hardyzhao.built_unique_buildings
         assert 34 == hardyzhao.hexes_covered
         assert 9 == hardyzhao.hexes_empty
-        assert 3 == hardyzhao.upgraded_actions
+        assert 3 == hardyzhao.upgraded_action_cards
         assert hardyzhao.upgraded_animals
         assert hardyzhao.upgraded_build
         assert hardyzhao.upgraded_cards
