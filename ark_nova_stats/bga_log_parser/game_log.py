@@ -227,8 +227,6 @@ class GameLog:
         )
 
     def parse_player_stats(self, stats: dict[str, Any]) -> PlayerStats:
-        print(stats)
-
         return PlayerStats(
             player_id=int(stats["player"]),
             score=int(stats["score"]),
