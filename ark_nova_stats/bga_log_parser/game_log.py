@@ -199,14 +199,18 @@ class GameLog:
         if not self.data.logs:
             return None
 
-        # Look at the last move.
-        last_move = self.data.logs[-1]
-        try:
-            victory_event = next(
-                e for e in last_move.data if e.type == "simpleNode" and "wins!" in e.log
-            )
-        except StopIteration:
-            # No winner.
+        # Look at the last few moves.
+        victory_event = None
+        for move in self.data.logs[-10:]:
+            for e in move.data:
+                if e.type == "simpleNode" and "wins" in e.log:
+                    victory_event = e
+                    break
+
+            if victory_event is not None:
+                break
+
+        if victory_event is None:
             return None
 
         return next(
@@ -218,17 +222,17 @@ class GameLog:
         if not self.data.logs:
             return False
 
-        # Look at the last move.
-        last_move = self.data.logs[-1]
-
+        # Look at the last few moves.
         return any(
             e.type == "simpleNode" and "End of game (tie)" in e.log
-            for e in last_move.data
+            for move in self.data.logs[-10:]
+            for e in move.data
         )
 
     def parse_player_stats(self, stats: dict[str, Any]) -> PlayerStats:
         # The int keys here come from BGA's own format in replays;
         # I expect these to change / break over time as BGA changes its own format.
+        # TODO: look into .get() instead; maybe we can set these to optional to make it more resilient?
         return PlayerStats(
             player_id=int(stats["player"]),
             score=int(stats["score"]),
