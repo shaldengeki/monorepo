@@ -13,6 +13,7 @@ py_library(
     deps = [
         ":exceptions",
         "//ark_nova_stats/bga_log_parser/proto:game_proto_py_pb2",
+        "//ark_nova_stats/bga_log_parser/proto:stats_proto_py_pb2",
     ],
 )
 

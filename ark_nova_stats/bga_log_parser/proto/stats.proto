@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package ark_nova_stats.bga_log_parser.proto;
+
+message PlayerStats {
+    int64 player_id = 1;
+    int32 score = 2;
+    int32 rank = 3;
+    int32 thinking_time = 4;
+    int32 starting_position = 5;
+    int32 turns = 6;
+    int32 breaks_triggered = 7;
+    bool triggered_end = 8;
+    int32 map_id = 9;
+    int32 appeal = 10;
+    int32 conservation = 11;
+    int32 reputation = 12;
+    int32 actions_build = 13;
+    int32 actions_animals = 14;
+    int32 actions_cards = 15;
+    int32 actions_sponsors = 16;
+    int32 x_token_gained = 17;
+    int32 x_actions = 18;
+    int32 x_tokens_used = 19;
+    int32 money_gained = 20;
+    int32 money_gained_through_incomme = 21;
+    int32 money_spent_on_animals = 22;
+    int32 money_spent_on_enclosures = 23;
+    int32 money_spent_on_donations = 24;
+    int32 money_spent_on_playing_cards_from_reputation_range = 25;
+    int32 cards_drawn_from_deck = 26;
+    int32 cards_drawn_from_reputation_range = 27;
+    int32 cards_snapped = 28;
+    int32 cards_discarded = 29;
+    int32 played_sponsors = 30;
+    int32 played_animals = 31;
+    int32 release_animals = 32;
+    int32 association_workers = 33;
+    int32 association_donations = 34;
+    int32 association_reputation_actions = 35;
+    int32 association_partner_zoo_actions = 36;
+    int32 association_university_actions = 37;
+    int32 association_conservation_project_actions = 38;
+    int32 built_enclosures = 39;
+    int32 built_kiosks = 40;
+    int32 built_pavilions = 41;
+    int32 built_unique_buildings = 42;
+    int32 hexes_covered = 43;
+    int32 hexes_empty = 44;
+    int32 upgraded_action_cards = 45;
+    bool upgraded_animals = 46;
+    bool upgraded_build = 47;
+    bool upgraded_cards = 48;
+    bool upgraded_sponsors = 49;
+    bool upgraded_association = 50;
+    int32 icons_africa = 51;
+    int32 icons_europe = 52;
+    int32 icons_asia = 53;
+    int32 icons_australia = 54;
+    int32 icons_americas = 55;
+    int32 icons_bird = 56;
+    int32 icons_predator = 57;
+    int32 icons_herbivore = 58;
+    int32 icons_bear = 59;
+    int32 icons_reptile = 60;
+    int32 icons_primate = 61;
+    int32 icons_petting_zoo = 62;
+    int32 icons_sea_animal = 63;
+    int32 icons_water = 64;
+    int32 icons_rock = 65;
+    int32 icons_science = 66;
+}
+
+message Stats {
+    repeated PlayerStats player_stats = 1;
+}

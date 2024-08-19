@@ -7,6 +7,7 @@ from ark_nova_stats.bga_log_parser.exceptions import (
     PlayerNotFoundError,
 )
 from ark_nova_stats.bga_log_parser.proto.game_pb2 import Game
+from ark_nova_stats.bga_log_parser.proto.stats_pb2 import PlayerStats, Stats
 
 
 @dataclass
@@ -183,6 +184,7 @@ class GameLog:
         self.data = GameLogData(**self.data)  # type: ignore
         # TODO: populate this from self.data.
         self.game = Game()
+        self.stats = self.parse_game_stats()
 
     @property
     def table_id(self) -> Optional[int]:
@@ -222,3 +224,6 @@ class GameLog:
             e.type == "simpleNode" and "End of game (tie)" in e.log
             for e in last_move.data
         )
+
+    def parse_game_stats(self) -> Stats:
+        return Stats()
