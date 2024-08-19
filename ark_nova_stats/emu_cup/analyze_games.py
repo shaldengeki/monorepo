@@ -75,7 +75,7 @@ def list_game_datafiles() -> Iterator[Path]:
     r = Runfiles.Create()
     known_game = Path(
         r.Rlocation(
-            "_main/ark_nova_stats/emu_cup/data/531081985_sorryimlikethis_Sirhk_Awesometothemax_Pogstar.json"
+            "_main/ark_nova_stats/emu_cup/data/531081985_Sirhk_sorryimlikethis_Awesometothemax_Pogstar.json"
         )
     )
     return known_game.parent.glob("*.json")

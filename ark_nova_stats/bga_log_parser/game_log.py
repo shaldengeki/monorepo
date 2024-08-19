@@ -304,20 +304,32 @@ class GameLog:
         if not self.data.logs:
             raise StatsNotSetError()
 
-        event_data = self.data.logs[-1].data
-        find_stats = [
-            e
-            for e in event_data
-            if e.args
-            and "args" in e.args
-            and e.args["args"]
-            and "result" in e.args["args"]
-        ]
+        # The stats are in a log that's close to the end.
+        # It doesn't get deterministically emitted in any given position,
+        # so we search for it.
+        stats = None
+        for l in self.data.logs[-10:]:
+            if any(
+                e.args
+                and "args" in e.args
+                and e.args["args"]
+                and "result" in e.args["args"]
+                for e in l.data
+            ):
+                stats = next(
+                    e.args["args"]["result"]
+                    for e in l.data
+                    if e.args
+                    and "args" in e.args
+                    and e.args["args"]
+                    and "result" in e.args["args"]
+                )
+                break
 
-        if not find_stats:
+        if stats is None:
+            print(self.data.logs[-10:])
             raise StatsNotSetError()
 
-        stats = find_stats[0].args["args"]["result"]
         return Stats(
             player_stats=[
                 self.parse_player_stats(player_stats) for player_stats in stats
