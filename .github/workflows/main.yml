@@ -94,27 +94,27 @@ jobs:
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/api:api_image_image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/worker:worker_image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/frontend:production_cross_platform_image_dockerhub
-  deploy_fitbit_challenges:
-    needs: push_fitbit_challenges
-    if: ${{ github.ref == 'refs/heads/main' }}
-    concurrency:
-      group: fitbit_challenges_production
-      cancel-in-progress: false
-    env:
-      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - name: Deploy API
-        run: flyctl deploy
-        working-directory: fitbit_challenges/api
-      - name: Deploy frontend
-        run: flyctl deploy
-        working-directory: fitbit_challenges/frontend
-      # - name: Deploy worker
-      #   run: flyctl deploy
-      #   working-directory: fitbit_challenges/worker
+  # deploy_fitbit_challenges:
+  #   needs: push_fitbit_challenges
+  #   if: ${{ github.ref == 'refs/heads/main' }}
+  #   concurrency:
+  #     group: fitbit_challenges_production
+  #     cancel-in-progress: false
+  #   env:
+  #     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: superfly/flyctl-actions/setup-flyctl@master
+  #     - name: Deploy API
+  #       run: flyctl deploy
+  #       working-directory: fitbit_challenges/api
+  #     - name: Deploy frontend
+  #       run: flyctl deploy
+  #       working-directory: fitbit_challenges/frontend
+  #     - name: Deploy worker
+  #       run: flyctl deploy
+  #       working-directory: fitbit_challenges/worker
   push_home_api:
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
