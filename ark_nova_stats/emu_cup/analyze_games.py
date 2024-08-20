@@ -75,7 +75,7 @@ def list_game_datafiles() -> Iterator[Path]:
     r = Runfiles.Create()
     known_game = Path(
         r.Rlocation(
-            "_main/ark_nova_stats/emu_cup/data/531081985_sorryimlikethis_Sirhk_Awesometothemax_Pogstar.json"
+            "_main/ark_nova_stats/emu_cup/data/531081985_Sirhk_sorryimlikethis_Awesometothemax_Pogstar.json"
         )
     )
     return known_game.parent.glob("*.json")
@@ -115,11 +115,12 @@ def main() -> int:
     game_card_records: dict[str, CardRecord] = {}
 
     for p in list_game_datafiles():
+        path_parts = p.name.split("_")
+        if int(path_parts[0]) not in EMU_CUP_GAME_TABLE_IDS:
+            continue
+
         with open(p, "r") as f:
             log = GameLog(**json.loads(f.read().strip()))
-
-        if not log.table_id in EMU_CUP_GAME_TABLE_IDS:
-            continue
 
         print(p)
         winner = log.winner

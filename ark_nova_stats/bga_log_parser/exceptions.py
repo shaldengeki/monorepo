@@ -6,6 +6,10 @@ class MoveNotSetError(BGALogParserError):
     pass
 
 
+class StatsNotSetError(BGALogParserError):
+    pass
+
+
 class NonArkNovaReplayError(BGALogParserError):
     pass
 

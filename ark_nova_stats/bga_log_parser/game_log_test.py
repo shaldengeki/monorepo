@@ -60,6 +60,151 @@ class TestGameLog:
         card_ids = [play.card.id for play in plays]
         assert len(set(card_ids)) == len(card_ids)
 
+    def test_parses_game_stats(self):
+        game_log = load_data_from_fixture_file("533468391_darcelmaw_hardyzhao.json")
+        x = GameLog(**game_log)
+
+        stats = x.stats
+        assert 2 == len(stats.player_stats)
+
+        darcelmaw = stats.player_stats[0]
+        assert 93481498 == darcelmaw.player_id
+        assert 123 == darcelmaw.score
+        assert 1 == darcelmaw.rank
+        assert 769 == darcelmaw.thinking_time
+        assert 1 == darcelmaw.starting_position
+        assert 32 == darcelmaw.turns
+        assert 1 == darcelmaw.breaks_triggered
+        assert darcelmaw.triggered_end
+        assert 5 == darcelmaw.map_id
+        assert 72 == darcelmaw.appeal
+        assert 25 == darcelmaw.conservation
+        assert 9 == darcelmaw.reputation
+        assert 6 == darcelmaw.actions_build
+        assert 6 == darcelmaw.actions_animals
+        assert 4 == darcelmaw.actions_cards
+        assert 8 == darcelmaw.actions_association
+        assert 8 == darcelmaw.actions_sponsors
+        assert 7 == darcelmaw.x_tokens_gained
+        assert 1 == darcelmaw.x_actions
+        assert 4 == darcelmaw.x_tokens_used
+        assert 190 == darcelmaw.money_gained
+        assert 147 == darcelmaw.money_gained_through_income
+        assert 100 == darcelmaw.money_spent_on_animals
+        assert 44 == darcelmaw.money_spent_on_enclosures
+        assert 0 == darcelmaw.money_spent_on_donations
+        assert 0 == darcelmaw.money_spent_on_playing_cards_from_reputation_range
+        assert 3 == darcelmaw.cards_drawn_from_deck
+        assert 5 == darcelmaw.cards_drawn_from_reputation_range
+        assert 8 == darcelmaw.cards_snapped
+        assert 1 == darcelmaw.cards_discarded
+        assert 7 == darcelmaw.played_sponsors
+        assert 9 == darcelmaw.played_animals
+        assert 2 == darcelmaw.release_animals
+        assert 4 == darcelmaw.association_workers
+        assert 0 == darcelmaw.association_donations
+        assert 1 == darcelmaw.association_reputation_actions
+        assert 1 == darcelmaw.association_partner_zoo_actions
+        assert 2 == darcelmaw.association_university_actions
+        assert 4 == darcelmaw.association_conservation_project_actions
+        assert 9 == darcelmaw.built_enclosures
+        assert 2 == darcelmaw.built_kiosks
+        assert 6 == darcelmaw.built_pavilions
+        assert 3 == darcelmaw.built_unique_buildings
+        assert 43 == darcelmaw.hexes_covered
+        assert 0 == darcelmaw.hexes_empty
+        assert 3 == darcelmaw.upgraded_action_cards
+        assert darcelmaw.upgraded_animals
+        assert darcelmaw.upgraded_build
+        assert not darcelmaw.upgraded_cards
+        assert darcelmaw.upgraded_sponsors
+        assert not darcelmaw.upgraded_association
+        assert 0 == darcelmaw.icons_africa
+        assert 2 == darcelmaw.icons_europe
+        assert 5 == darcelmaw.icons_asia
+        assert 0 == darcelmaw.icons_australia
+        assert 1 == darcelmaw.icons_americas
+        assert 1 == darcelmaw.icons_bird
+        assert 1 == darcelmaw.icons_predator
+        assert 1 == darcelmaw.icons_herbivore
+        assert 0 == darcelmaw.icons_bear
+        assert 3 == darcelmaw.icons_reptile
+        assert 1 == darcelmaw.icons_primate
+        assert 1 == darcelmaw.icons_petting_zoo
+        assert 0 == darcelmaw.icons_sea_animal
+        assert 6 == darcelmaw.icons_water
+        assert 4 == darcelmaw.icons_rock
+        assert 2 == darcelmaw.icons_science
+
+        hardyzhao = stats.player_stats[1]
+        assert 92147740 == hardyzhao.player_id
+        assert 118 == hardyzhao.score
+        assert 2 == hardyzhao.rank
+        assert 1430 == hardyzhao.thinking_time
+        assert 2 == hardyzhao.starting_position
+        assert 32 == hardyzhao.turns
+        assert 4 == hardyzhao.breaks_triggered
+        assert not hardyzhao.triggered_end
+        assert 5 == hardyzhao.map_id
+        assert 76 == hardyzhao.appeal
+        assert 22 == hardyzhao.conservation
+        assert 15 == hardyzhao.reputation
+        assert 7 == hardyzhao.actions_build
+        assert 6 == hardyzhao.actions_animals
+        assert 5 == hardyzhao.actions_cards
+        assert 7 == hardyzhao.actions_association
+        assert 7 == hardyzhao.actions_sponsors
+        assert 9 == hardyzhao.x_tokens_gained
+        assert 1 == hardyzhao.x_actions
+        assert 4 == hardyzhao.x_tokens_used
+        assert 204 == hardyzhao.money_gained
+        assert 130 == hardyzhao.money_gained_through_income
+        assert 114 == hardyzhao.money_spent_on_animals
+        assert 60 == hardyzhao.money_spent_on_enclosures
+        assert 0 == hardyzhao.money_spent_on_donations
+        assert 0 == hardyzhao.money_spent_on_playing_cards_from_reputation_range
+        assert 19 == hardyzhao.cards_drawn_from_deck
+        assert 6 == hardyzhao.cards_drawn_from_reputation_range
+        assert 4 == hardyzhao.cards_snapped
+        assert 2 == hardyzhao.cards_discarded
+        assert 4 == hardyzhao.played_sponsors
+        assert 12 == hardyzhao.played_animals
+        assert 1 == hardyzhao.release_animals
+        assert 3 == hardyzhao.association_workers
+        assert 0 == hardyzhao.association_donations
+        assert 0 == hardyzhao.association_reputation_actions
+        assert 2 == hardyzhao.association_partner_zoo_actions
+        assert 0 == hardyzhao.association_university_actions
+        assert 5 == hardyzhao.association_conservation_project_actions
+        assert 12 == hardyzhao.built_enclosures
+        assert 4 == hardyzhao.built_kiosks
+        assert 2 == hardyzhao.built_pavilions
+        assert 0 == hardyzhao.built_unique_buildings
+        assert 34 == hardyzhao.hexes_covered
+        assert 9 == hardyzhao.hexes_empty
+        assert 3 == hardyzhao.upgraded_action_cards
+        assert hardyzhao.upgraded_animals
+        assert hardyzhao.upgraded_build
+        assert hardyzhao.upgraded_cards
+        assert not hardyzhao.upgraded_sponsors
+        assert not hardyzhao.upgraded_association
+        assert 9 == hardyzhao.icons_africa
+        assert 4 == hardyzhao.icons_europe
+        assert 0 == hardyzhao.icons_asia
+        assert 0 == hardyzhao.icons_australia
+        assert 1 == hardyzhao.icons_americas
+        assert 1 == hardyzhao.icons_bird
+        assert 4 == hardyzhao.icons_predator
+        assert 1 == hardyzhao.icons_herbivore
+        assert 0 == hardyzhao.icons_bear
+        assert 2 == hardyzhao.icons_reptile
+        assert 4 == hardyzhao.icons_primate
+        assert 0 == hardyzhao.icons_petting_zoo
+        assert 0 == hardyzhao.icons_sea_animal
+        assert 1 == hardyzhao.icons_water
+        assert 2 == hardyzhao.icons_rock
+        assert 3 == hardyzhao.icons_science
+
 
 class TestGameLogEventData:
     def test_is_play_event_returns_true_for_play_action(self):

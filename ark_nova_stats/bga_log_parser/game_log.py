@@ -1,12 +1,14 @@
 from dataclasses import dataclass
-from typing import Iterator, Optional
+from typing import Any, Iterator, Optional
 
 from ark_nova_stats.bga_log_parser.exceptions import (
     MoveNotSetError,
     NonArkNovaReplayError,
     PlayerNotFoundError,
+    StatsNotSetError,
 )
 from ark_nova_stats.bga_log_parser.proto.game_pb2 import Game
+from ark_nova_stats.bga_log_parser.proto.stats_pb2 import PlayerStats, Stats
 
 
 @dataclass
@@ -183,6 +185,7 @@ class GameLog:
         self.data = GameLogData(**self.data)  # type: ignore
         # TODO: populate this from self.data.
         self.game = Game()
+        self.stats = self.parse_game_stats()
 
     @property
     def table_id(self) -> Optional[int]:
@@ -196,14 +199,18 @@ class GameLog:
         if not self.data.logs:
             return None
 
-        # Look at the last move.
-        last_move = self.data.logs[-1]
-        try:
-            victory_event = next(
-                e for e in last_move.data if e.type == "simpleNode" and "wins!" in e.log
-            )
-        except StopIteration:
-            # No winner.
+        # Look at the last few moves.
+        victory_event = None
+        for move in self.data.logs[-10:]:
+            for e in move.data:
+                if e.type == "simpleNode" and "wins" in e.log:
+                    victory_event = e
+                    break
+
+            if victory_event is not None:
+                break
+
+        if victory_event is None:
             return None
 
         return next(
@@ -215,10 +222,115 @@ class GameLog:
         if not self.data.logs:
             return False
 
-        # Look at the last move.
-        last_move = self.data.logs[-1]
-
+        # Look at the last few moves.
         return any(
             e.type == "simpleNode" and "End of game (tie)" in e.log
-            for e in last_move.data
+            for move in self.data.logs[-10:]
+            for e in move.data
+        )
+
+    def parse_player_stats(self, stats: dict[str, Any]) -> PlayerStats:
+        # The int keys here come from BGA's own format in replays;
+        # I expect these to change / break over time as BGA changes its own format.
+        # TODO: look into .get() instead; maybe we can set these to optional to make it more resilient?
+        return PlayerStats(
+            player_id=int(stats["player"]),
+            score=int(stats["score"]),
+            rank=int(stats["rank"]),
+            thinking_time=int(stats["stats"]["1"]),
+            starting_position=int(stats["stats"]["11"]),
+            turns=int(stats["stats"]["12"]),
+            breaks_triggered=int(stats["stats"]["13"]),
+            triggered_end=bool(int(stats["stats"]["14"])),
+            map_id=int(stats["stats"]["15"]),
+            appeal=int(stats["stats"]["16"]),
+            conservation=int(stats["stats"]["17"]),
+            reputation=int(stats["stats"]["19"]),
+            actions_build=int(stats["stats"]["20"]),
+            actions_animals=int(stats["stats"]["21"]),
+            actions_cards=int(stats["stats"]["22"]),
+            actions_association=int(stats["stats"]["23"]),
+            actions_sponsors=int(stats["stats"]["24"]),
+            x_tokens_gained=int(stats["stats"]["25"]),
+            x_actions=int(stats["stats"]["26"]),
+            x_tokens_used=int(stats["stats"]["27"]),
+            money_gained=int(stats["stats"]["30"]),
+            money_gained_through_income=int(stats["stats"]["31"]),
+            money_spent_on_animals=int(stats["stats"]["32"]),
+            money_spent_on_enclosures=int(stats["stats"]["33"]),
+            money_spent_on_donations=int(stats["stats"]["34"]),
+            money_spent_on_playing_cards_from_reputation_range=int(
+                stats["stats"]["35"]
+            ),
+            cards_drawn_from_deck=int(stats["stats"]["40"]),
+            cards_drawn_from_reputation_range=int(stats["stats"]["41"]),
+            cards_snapped=int(stats["stats"]["42"]),
+            cards_discarded=int(stats["stats"]["43"]),
+            played_sponsors=int(stats["stats"]["44"]),
+            played_animals=int(stats["stats"]["45"]),
+            release_animals=int(stats["stats"]["46"]),
+            association_workers=int(stats["stats"]["50"]),
+            association_donations=int(stats["stats"]["51"]),
+            association_reputation_actions=int(stats["stats"]["52"]),
+            association_partner_zoo_actions=int(stats["stats"]["53"]),
+            association_university_actions=int(stats["stats"]["54"]),
+            association_conservation_project_actions=int(stats["stats"]["55"]),
+            built_enclosures=int(stats["stats"]["60"]),
+            built_kiosks=int(stats["stats"]["61"]),
+            built_pavilions=int(stats["stats"]["62"]),
+            built_unique_buildings=int(stats["stats"]["63"]),
+            hexes_covered=int(stats["stats"]["64"]),
+            hexes_empty=int(stats["stats"]["65"]),
+            upgraded_action_cards=int(stats["stats"]["70"]),
+            upgraded_animals=bool(int(stats["stats"]["71"])),
+            upgraded_build=bool(int(stats["stats"]["72"])),
+            upgraded_cards=bool(int(stats["stats"]["73"])),
+            upgraded_sponsors=bool(int(stats["stats"]["74"])),
+            upgraded_association=bool(int(stats["stats"]["75"])),
+            icons_africa=int(stats["stats"]["76"]),
+            icons_europe=int(stats["stats"]["77"]),
+            icons_asia=int(stats["stats"]["78"]),
+            icons_australia=int(stats["stats"]["79"]),
+            icons_americas=int(stats["stats"]["80"]),
+            icons_bird=int(stats["stats"]["81"]),
+            icons_predator=int(stats["stats"]["82"]),
+            icons_herbivore=int(stats["stats"]["83"]),
+            icons_bear=int(stats["stats"]["84"]),
+            icons_reptile=int(stats["stats"]["85"]),
+            icons_primate=int(stats["stats"]["86"]),
+            icons_petting_zoo=int(stats["stats"]["97"]),
+            icons_sea_animal=int(stats["stats"]["91"]),
+            icons_water=int(stats["stats"]["88"]),
+            icons_rock=int(stats["stats"]["89"]),
+            icons_science=int(stats["stats"]["90"]),
+        )
+
+    def parse_game_stats(self) -> Stats:
+        # Player stats are in last event.
+        if not self.data.logs:
+            raise StatsNotSetError()
+
+        # The stats are in a log that's close to the end.
+        # It doesn't get deterministically emitted in any given position,
+        # so we search for it.
+        stats = None
+        for l in self.data.logs[-10:]:
+            for e in l.data:
+                if (
+                    e.args
+                    and e.args.get("args", {})
+                    and e.args.get("args", {}).get("result", {})
+                ):
+                    stats = e.args["args"]["result"]
+                    break
+            if stats is not None:
+                break
+
+        if stats is None:
+            raise StatsNotSetError()
+
+        return Stats(
+            player_stats=[
+                self.parse_player_stats(player_stats) for player_stats in stats
+            ]
         )

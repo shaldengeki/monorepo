@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package ark_nova_stats.bga_log_parser.proto;
+
+message PlayerStats {
+    int64 player_id = 1;
+    int32 score = 2;
+    int32 rank = 3;
+    int32 thinking_time = 4;
+    int32 starting_position = 5;
+    int32 turns = 6;
+    int32 breaks_triggered = 7;
+    bool triggered_end = 8;
+    int32 map_id = 9;
+    int32 appeal = 10;
+    int32 conservation = 11;
+    int32 reputation = 12;
+    int32 actions_build = 13;
+    int32 actions_animals = 14;
+    int32 actions_cards = 15;
+    int32 actions_association = 16;
+    int32 actions_sponsors = 17;
+    int32 x_tokens_gained = 18;
+    int32 x_actions = 19;
+    int32 x_tokens_used = 20;
+    int32 money_gained = 21;
+    int32 money_gained_through_income = 22;
+    int32 money_spent_on_animals = 23;
+    int32 money_spent_on_enclosures = 24;
+    int32 money_spent_on_donations = 25;
+    int32 money_spent_on_playing_cards_from_reputation_range = 26;
+    int32 cards_drawn_from_deck = 27;
+    int32 cards_drawn_from_reputation_range = 28;
+    int32 cards_snapped = 29;
+    int32 cards_discarded = 30;
+    int32 played_sponsors = 31;
+    int32 played_animals = 32;
+    int32 release_animals = 33;
+    int32 association_workers = 34;
+    int32 association_donations = 35;
+    int32 association_reputation_actions = 36;
+    int32 association_partner_zoo_actions = 37;
+    int32 association_university_actions = 38;
+    int32 association_conservation_project_actions = 39;
+    int32 built_enclosures = 40;
+    int32 built_kiosks = 41;
+    int32 built_pavilions = 42;
+    int32 built_unique_buildings = 43;
+    int32 hexes_covered = 44;
+    int32 hexes_empty = 45;
+    int32 upgraded_action_cards = 46;
+    bool upgraded_animals = 47;
+    bool upgraded_build = 48;
+    bool upgraded_cards = 49;
+    bool upgraded_sponsors = 50;
+    bool upgraded_association = 51;
+    int32 icons_africa = 52;
+    int32 icons_europe = 53;
+    int32 icons_asia = 54;
+    int32 icons_australia = 55;
+    int32 icons_americas = 56;
+    int32 icons_bird = 57;
+    int32 icons_predator = 58;
+    int32 icons_herbivore = 59;
+    int32 icons_bear = 60;
+    int32 icons_reptile = 61;
+    int32 icons_primate = 62;
+    int32 icons_petting_zoo = 63;
+    int32 icons_sea_animal = 64;
+    int32 icons_water = 65;
+    int32 icons_rock = 66;
+    int32 icons_science = 67;
+}
+
+message Stats {
+    repeated PlayerStats player_stats = 1;
+}

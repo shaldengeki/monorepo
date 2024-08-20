@@ -7,6 +7,12 @@ py_proto_library(
     deps = [":game_proto"],
 )
 
+py_proto_library(
+    name = "stats_proto_py_pb2",
+    visibility = ["//visibility:public"],
+    deps = [":stats_proto"],
+)
+
 proto_library(
     name = "animals_proto",
     srcs = ["animals.proto"],
@@ -61,4 +67,16 @@ proto_library(
         ":cards_proto",
         ":sponsors_proto",
     ],
+)
+
+proto_library(
+    name = "map_proto",
+    srcs = ["map.proto"],
+    visibility = ["//visibility:public"],
+)
+
+proto_library(
+    name = "stats_proto",
+    srcs = ["stats.proto"],
+    visibility = ["//visibility:public"],
 )

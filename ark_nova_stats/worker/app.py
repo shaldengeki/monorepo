@@ -75,7 +75,9 @@ def archive_logs_to_tigris(
         with tarfile.open(archive_tempfile.name, "w:gz") as archive_tarfile:
             for game_log in all_logs:
                 num_game_logs += 1
-                user_names = "_".join([u.name for u in game_log.users])
+                user_names = "_".join(
+                    [u.name.replace(" ", "_") for u in game_log.users]
+                )
                 log_tempfile_name = f"{game_log.bga_table_id}_{user_names}.json"
                 with tempfile.NamedTemporaryFile(
                     suffix=log_tempfile_name, mode="w"
