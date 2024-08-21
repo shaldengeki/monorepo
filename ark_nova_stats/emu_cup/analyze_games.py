@@ -8,6 +8,7 @@ from typing import Iterator, Optional
 
 from python.runfiles import Runfiles
 
+from ark_nova_stats.bga_log_parser.exceptions import StatsNotSetError
 from ark_nova_stats.bga_log_parser.game_log import GameLog
 
 EMU_CUP_GAME_TABLE_IDS = set(
@@ -116,13 +117,17 @@ def main() -> int:
 
     for p in list_game_datafiles():
         path_parts = p.name.split("_")
-        if int(path_parts[0]) not in EMU_CUP_GAME_TABLE_IDS:
-            continue
+        # if int(path_parts[0]) not in EMU_CUP_GAME_TABLE_IDS:
+        #     continue
 
         with open(p, "r") as f:
-            log = GameLog(**json.loads(f.read().strip()))
+            try:
+                log = GameLog(**json.loads(f.read().strip()))
+            except StatsNotSetError:
+                print(f"{p} doesn't have stats set!")
+                continue
 
-        print(p)
+        # print(p)
         winner = log.winner
 
         game_cards: set[str] = set()
