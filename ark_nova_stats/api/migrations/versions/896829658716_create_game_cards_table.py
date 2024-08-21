@@ -20,6 +20,7 @@ depends_on = None
 def upgrade():
     op.create_table(
         "game_log_cards",
+        sa.Column("id", sa.Integer, primary_key=True, autoincrement=True),
         sa.Column("game_log_id", sa.Integer, nullable=False),
         sa.Column("card_id", sa.Integer, nullable=False),
         sa.Column("user_id", sa.Integer, nullable=False),
@@ -31,7 +32,6 @@ def upgrade():
         "game_log_cards_card_id_game_log_id_move",
         "game_log_cards",
         ["card_id", "game_log_id", "move"],
-        unique=True,
     )
 
     op.create_index(
