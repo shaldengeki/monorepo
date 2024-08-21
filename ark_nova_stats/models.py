@@ -245,11 +245,10 @@ class Card(db.Model):
 class CardPlay(db.Model):
     __tablename__ = "game_log_cards"
 
-    game_log_id: Mapped[int] = mapped_column(
-        ForeignKey("game_logs.id"), primary_key=True
-    )
-    card_id: Mapped[int] = mapped_column(ForeignKey("cards.id"), primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.bga_id"), primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    game_log_id: Mapped[int] = mapped_column(ForeignKey("game_logs.id"))
+    card_id: Mapped[int] = mapped_column(ForeignKey("cards.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.bga_id"))
     move: Mapped[int] = mapped_column(primary_key=True)
     created_at: Mapped[datetime.datetime] = mapped_column(
         db.TIMESTAMP(timezone=True),
