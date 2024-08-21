@@ -249,7 +249,7 @@ class CardPlay(db.Model):
     game_log_id: Mapped[int] = mapped_column(ForeignKey("game_logs.id"))
     card_id: Mapped[int] = mapped_column(ForeignKey("cards.id"))
     user_id: Mapped[int] = mapped_column(ForeignKey("users.bga_id"))
-    move: Mapped[int] = mapped_column(primary_key=True)
+    move: Mapped[int]
     created_at: Mapped[datetime.datetime] = mapped_column(
         db.TIMESTAMP(timezone=True),
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
