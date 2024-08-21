@@ -175,9 +175,7 @@ class GameLogArchive(db.Model):
     size_bytes: Mapped[int]
     num_game_logs: Mapped[int]
     num_users: Mapped[int]
-    last_game_log_id: Mapped[int] = mapped_column(
-        ForeignKey("game_logs.id"), primary_key=True
-    )
+    last_game_log_id: Mapped[int] = mapped_column(ForeignKey("game_logs.id"))
     created_at: Mapped[datetime.datetime] = mapped_column(
         db.TIMESTAMP(timezone=True),
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
