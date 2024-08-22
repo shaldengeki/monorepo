@@ -770,7 +770,6 @@ manifest:
     importlib_resources.compat: importlib_resources
     importlib_resources.compat.py38: importlib_resources
     importlib_resources.compat.py39: importlib_resources
-    importlib_resources.functional: importlib_resources
     importlib_resources.future: importlib_resources
     importlib_resources.future.adapters: importlib_resources
     importlib_resources.readers: importlib_resources
@@ -779,11 +778,6 @@ manifest:
     importlib_resources.tests.compat: importlib_resources
     importlib_resources.tests.compat.py312: importlib_resources
     importlib_resources.tests.compat.py39: importlib_resources
-    importlib_resources.tests.data01: importlib_resources
-    importlib_resources.tests.data01.subdirectory: importlib_resources
-    importlib_resources.tests.data02: importlib_resources
-    importlib_resources.tests.data02.one: importlib_resources
-    importlib_resources.tests.data02.two: importlib_resources
     importlib_resources.tests.test_compatibilty_files: importlib_resources
     importlib_resources.tests.test_contents: importlib_resources
     importlib_resources.tests.test_custom: importlib_resources
