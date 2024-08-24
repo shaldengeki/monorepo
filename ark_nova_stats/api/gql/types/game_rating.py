@@ -4,7 +4,6 @@ from google.protobuf.json_format import Parse
 from graphql import (
     GraphQLArgument,
     GraphQLField,
-    GraphQLFloat,
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
@@ -27,25 +26,25 @@ def game_rating_game_log_resolver(
 
 def game_rating_prior_elo_resolver(
     game_rating: GameRatingModel, info, **args
-) -> Optional[float]:
+) -> Optional[int]:
     return game_rating.prior_elo
 
 
 def game_rating_new_elo_resolver(
     game_rating: GameRatingModel, info, **args
-) -> Optional[float]:
+) -> Optional[int]:
     return game_rating.new_elo
 
 
 def game_rating_prior_arena_elo_resolver(
     game_rating: GameRatingModel, info, **args
-) -> Optional[float]:
+) -> Optional[int]:
     return game_rating.prior_arena_elo
 
 
 def game_rating_new_arena_elo_resolver(
     game_rating: GameRatingModel, info, **args
-) -> Optional[float]:
+) -> Optional[int]:
     return game_rating.new_arena_elo
 
 
@@ -65,22 +64,22 @@ def game_rating_fields() -> dict[str, GraphQLField]:
             description="User that this rating change corresponds to.",
         ),
         "priorElo": GraphQLField(
-            GraphQLFloat,
+            GraphQLInt,
             description="User's ELO before this match.",
             resolve=game_rating_prior_elo_resolver,
         ),
         "newElo": GraphQLField(
-            GraphQLFloat,
+            GraphQLInt,
             description="User's ELO after this match.",
             resolve=game_rating_new_elo_resolver,
         ),
         "priorArenaElo": GraphQLField(
-            GraphQLFloat,
+            GraphQLInt,
             description="User's Arena ELO before this match.",
             resolve=game_rating_prior_arena_elo_resolver,
         ),
         "newArenaElo": GraphQLField(
-            GraphQLFloat,
+            GraphQLInt,
             description="User's Arena ELO after this match.",
             resolve=game_rating_new_arena_elo_resolver,
         ),
@@ -118,10 +117,10 @@ def submit_game_ratings(
         rating = game_rating_model(
             bga_table_id=table_id,
             user_id=player_id,
-            prior_elo=(
+            prior_elo=round(
                 elo_rating_update.new_elo_rating - elo_rating_update.tot_elo_delta
             ),
-            new_elo=elo_rating_update.new_elo_rating,
+            new_elo=round(elo_rating_update.new_elo_rating),
         )
 
         if player_id in parsed_ratings.data.players_arena_rating_update:
@@ -130,8 +129,8 @@ def submit_game_ratings(
             ]
             new_arena_elo = 10_000 * (arena_rating_update.new_arena_rating - 501)
             arena_elo_delta = arena_rating_update.real_arena_elo_delta
-            rating.prior_arena_elo = new_arena_elo - arena_elo_delta
-            rating.new_arena_elo = new_arena_elo
+            rating.prior_arena_elo = round(new_arena_elo - arena_elo_delta)
+            rating.new_arena_elo = round(new_arena_elo)
 
         if app.config["TESTING"] == True:
             rating.id = 1

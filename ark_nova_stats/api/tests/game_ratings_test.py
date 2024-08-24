@@ -51,16 +51,16 @@ def test_submit_game_ratings(client: FlaskClient) -> None:
     ), f"Two ratings should have been created: {response.json['data']}"
 
     # GushenTale
-    assert 1943 == round(data[0]["priorElo"])
-    assert 1937 == round(data[0]["newElo"])
-    assert 1922 == round(data[0]["priorArenaElo"])
-    assert 1907 == round(data[0]["newArenaElo"])
+    assert 1943 == data[0]["priorElo"]
+    assert 1937 == data[0]["newElo"]
+    assert 1922 == data[0]["priorArenaElo"]
+    assert 1907 == data[0]["newArenaElo"]
 
     # sorryimlikethis
-    assert 2093 == round(data[1]["priorElo"])
-    assert 2099 == round(data[1]["newElo"])
-    assert 2019 == round(data[1]["priorArenaElo"])
-    assert 2034 == round(data[1]["newArenaElo"])
+    assert 2093 == data[1]["priorElo"]
+    assert 2099 == data[1]["newElo"]
+    assert 2019 == data[1]["priorArenaElo"]
+    assert 2034 == data[1]["newArenaElo"]
 
 
 if __name__ == "__main__":

@@ -270,10 +270,10 @@ class GameRating(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     bga_table_id: Mapped[int] = mapped_column(ForeignKey("game_logs.bga_table_id"))
     user_id: Mapped[int] = mapped_column(ForeignKey("users.bga_id"))
-    prior_elo: Mapped[Optional[float]]
-    new_elo: Mapped[Optional[float]]
-    prior_arena_elo: Mapped[Optional[float]]
-    new_arena_elo: Mapped[Optional[float]]
+    prior_elo: Mapped[Optional[int]]
+    new_elo: Mapped[Optional[int]]
+    prior_arena_elo: Mapped[Optional[int]]
+    new_arena_elo: Mapped[Optional[int]]
     created_at: Mapped[datetime.datetime] = mapped_column(
         db.TIMESTAMP(timezone=True),
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
