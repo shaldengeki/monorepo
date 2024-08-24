@@ -1,6 +1,7 @@
+import json
 from typing import Any, Optional, Type
 
-from google.protobuf.json_format import Parse
+from google.protobuf.json_format import ParseDict
 from graphql import (
     GraphQLArgument,
     GraphQLField,
@@ -98,7 +99,27 @@ def submit_game_ratings(
     args: dict[str, Any],
 ) -> list[GameRatingModel]:
     table_id = int(args["tableId"])
-    parsed_ratings = Parse(args["ratings"], GameRatings(), ignore_unknown_fields=True)
+    json_ratings = json.loads(args["ratings"])
+
+    # Normally, for Arena games, we expect the rating update field to be a map.
+    # Unfortunately, in the case of non-Arena games, BGA sends along a totally different type (a list).
+    # This breaks our parsing, so we have to delete the field entirely.
+    # Similar for friendly games!
+    if (
+        "data" in json_ratings
+        and "players_elo_rating_update" in json_ratings["data"]
+        and isinstance(json_ratings["data"]["players_elo_rating_update"], list)
+    ):
+        del json_ratings["data"]["players_elo_rating_update"]
+
+    if (
+        "data" in json_ratings
+        and "players_arena_rating_update" in json_ratings["data"]
+        and isinstance(json_ratings["data"]["players_arena_rating_update"], list)
+    ):
+        del json_ratings["data"]["players_arena_rating_update"]
+
+    parsed_ratings = ParseDict(json_ratings, GameRatings(), ignore_unknown_fields=True)
 
     # id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     # bga_table_id: Mapped[int] = mapped_column(ForeignKey("game_logs.bga_table_id"))
