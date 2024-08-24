@@ -80,3 +80,15 @@ proto_library(
     srcs = ["stats.proto"],
     visibility = ["//visibility:public"],
 )
+
+proto_library(
+    name = "ratings_proto",
+    srcs = ["ratings.proto"],
+    visibility = ["//visibility:public"],
+)
+
+py_proto_library(
+    name = "ratings_proto_py_pb2",
+    visibility = ["//visibility:public"],
+    deps = [":ratings_proto"],
+)

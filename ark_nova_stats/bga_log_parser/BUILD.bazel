@@ -34,3 +34,23 @@ py_library(
     srcs = ["exceptions.py"],
     visibility = ["//:__subpackages__"],
 )
+
+py_library(
+    name = "game_ratings",
+    srcs = ["game_ratings.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+    ],
+)
+
+py_test(
+    name = "game_ratings_test",
+    srcs = ["game_ratings_test.py"],
+    data = [":fixtures"],
+    deps = [
+        ":game_ratings",
+        "//ark_nova_stats/bga_log_parser/proto:ratings_proto_py_pb2",
+        "@py_deps//pytest",
+        "@rules_python//python/runfiles",
+    ],
+)

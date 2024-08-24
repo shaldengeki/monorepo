@@ -32,7 +32,9 @@ repos:
         rev: v1.11.1
         hooks:
             -   id: mypy
-                additional_dependencies: [types-requests==2.31.0.20240218]
+                additional_dependencies:
+                    - types-requests==2.31.0.20240218
+                    - types-protobuf==5.27.0.20240626
     -   repo: https://github.com/pre-commit/mirrors-eslint
         rev: 'v9.9.0'
         hooks:
