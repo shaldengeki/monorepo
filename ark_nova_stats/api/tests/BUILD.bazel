@@ -24,3 +24,17 @@ py_test(
         "@rules_python//python/runfiles",
     ],
 )
+
+py_test(
+    name = "game_ratings_test",
+    srcs = ["game_ratings_test.py"],
+    data = [
+        "//ark_nova_stats/bga_log_parser:fixtures",
+    ],
+    deps = [
+        ":fixtures",
+        "@py_deps//flask",
+        "@py_deps//pytest",
+        "@rules_python//python/runfiles",
+    ],
+)

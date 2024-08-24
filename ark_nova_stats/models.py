@@ -1,5 +1,6 @@
 import datetime
 import enum
+from typing import Optional
 
 from sqlalchemy import ForeignKey, Select, desc, func, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -52,6 +53,8 @@ class GameLog(db.Model):
     )
 
     card_plays: Mapped[list["CardPlay"]] = relationship(back_populates="game_log")
+
+    game_ratings: Mapped[list["GameRating"]] = relationship(back_populates="game_log")
 
     def create_related_objects(self, parsed_logs: ParsedGameLog) -> db.Model:
         # Add users if not present.
@@ -131,6 +134,7 @@ class User(db.Model):
     cards: Mapped[list["Card"]] = relationship(
         secondary="game_log_cards", back_populates="users", viewonly=True
     )
+    game_ratings: Mapped[list["GameRating"]] = relationship(back_populates="user")
 
     @property
     def num_game_logs(self) -> int:
@@ -258,3 +262,22 @@ class CardPlay(db.Model):
     user: Mapped["User"] = relationship(back_populates="card_plays")
     game_log: Mapped["GameLog"] = relationship(back_populates="card_plays")
     card: Mapped["Card"] = relationship(back_populates="plays")
+
+
+class GameRating(db.Model):
+    __tablename__ = "game_ratings"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    bga_table_id: Mapped[int] = mapped_column(ForeignKey("game_logs.bga_table_id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.bga_id"))
+    prior_elo: Mapped[Optional[int]]
+    new_elo: Mapped[Optional[int]]
+    prior_arena_elo: Mapped[Optional[int]]
+    new_arena_elo: Mapped[Optional[int]]
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
+    )
+
+    user: Mapped["User"] = relationship(back_populates="game_ratings")
+    game_log: Mapped["GameLog"] = relationship(back_populates="game_ratings")

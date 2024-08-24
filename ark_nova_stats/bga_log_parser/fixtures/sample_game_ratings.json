@@ -1,0 +1,199 @@
+{
+    "status": 1,
+    "data": {
+      "players_results": {
+        "86346298": {
+          "id": "86346298",
+          "name": "sorryimlikethis",
+          "rank": "1",
+          "score": "96",
+          "score_aux": "0",
+          "zombie": "0",
+          "tie": "0"
+        },
+        "96392781": {
+          "id": "96392781",
+          "name": "GushenTale",
+          "rank": "2",
+          "score": "73",
+          "score_aux": "0",
+          "zombie": "0",
+          "tie": "0"
+        }
+      },
+      "players_current_ratings": {
+        "86346298": {
+          "id": "86346298",
+          "elo": "2093.05",
+          "arena": {
+            "arena_rating": "501.2019",
+            "league": 5,
+            "league_points": 1,
+            "arena_elo": 2019
+          },
+          "games_played": "1786"
+        },
+        "96392781": {
+          "id": "96392781",
+          "elo": "1943.40",
+          "arena": {
+            "arena_rating": "501.1922",
+            "league": 5,
+            "league_points": 1,
+            "arena_elo": 1922
+          },
+          "games_played": "86"
+        }
+      },
+      "players_elo_rating_update": {
+        "86346298": {
+          "player_id": 86346298,
+          "global_modifiers": {
+            "p_factor": 1,
+            "n_factor": 1,
+            "e_factor": 0.5
+          },
+          "duels": {
+            "96392781": {
+              "expected_result": 0.7029644823614407,
+              "duel_result": 1,
+              "k_factor": 20,
+              "elo_delta": 5.940710352771186,
+              "duel_modifiers": [
+                {
+                  "value": 1,
+                  "id": "T",
+                  "name": "Teammate",
+                  "type": "nullifier",
+                  "description": "",
+                  "description_args": {
+                    "{perc}": {
+                      "text": "-100%",
+                      "properties": [
+                        "highlight"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "value": 1,
+                  "id": "S",
+                  "name": "Streak Malus",
+                  "type": "malus",
+                  "description": "",
+                  "description_args": []
+                }
+              ],
+              "opponent_id": 96392781
+            }
+          },
+          "tot_elo_delta": 5.940710352771186,
+          "avg_elo_delta": 5.940710352771186,
+          "real_elo_delta": 5.94,
+          "elo_delta_adjust_desc": "",
+          "new_elo_rating": 2098.9900000000002
+        },
+        "96392781": {
+          "player_id": 96392781,
+          "global_modifiers": {
+            "p_factor": 1,
+            "n_factor": 1,
+            "e_factor": 0.5
+          },
+          "duels": {
+            "86346298": {
+              "expected_result": 0.29703551763855923,
+              "duel_result": 0,
+              "k_factor": 20,
+              "elo_delta": -5.940710352771185,
+              "duel_modifiers": [
+                {
+                  "value": 1,
+                  "id": "T",
+                  "name": "Teammate",
+                  "type": "nullifier",
+                  "description": "",
+                  "description_args": {
+                    "{perc}": {
+                      "text": "-100%",
+                      "properties": [
+                        "highlight"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "value": 1,
+                  "id": "S",
+                  "name": "Streak Malus",
+                  "type": "malus",
+                  "description": "",
+                  "description_args": []
+                }
+              ],
+              "opponent_id": 86346298
+            }
+          },
+          "tot_elo_delta": -5.940710352771185,
+          "avg_elo_delta": -5.940710352771185,
+          "real_elo_delta": -5.94,
+          "elo_delta_adjust_desc": "",
+          "new_elo_rating": 1937.46
+        }
+      },
+      "players_arena_rating_update": {
+        "86346298": {
+          "player_id": 86346298,
+          "duels": {
+            "96392781": {
+              "opponent_id": 96392781,
+              "league_points_duel": {
+                "duel_result": 1,
+                "leagues_diff": 0,
+                "league_points_delta": 3
+              },
+              "arena_elo_duel": {
+                "expected_result": 0.6360768996878818,
+                "duel_result": 1,
+                "k_factor": 40,
+                "elo_delta": 14.556924012484727
+              }
+            }
+          },
+          "avg_league_points_delta": 3,
+          "real_league_points_delta": 0,
+          "promotion_to_league": null,
+          "avg_arena_elo_delta": 14.556924012484727,
+          "real_arena_elo_delta": 15,
+          "arena_rating_delta": 0.0015,
+          "new_arena_rating": 501.2034
+        },
+        "96392781": {
+          "player_id": 96392781,
+          "duels": {
+            "86346298": {
+              "opponent_id": 86346298,
+              "league_points_duel": {
+                "duel_result": -1,
+                "leagues_diff": 0,
+                "league_points_delta": -3
+              },
+              "arena_elo_duel": {
+                "expected_result": 0.36392310031211805,
+                "duel_result": 0,
+                "k_factor": 40,
+                "elo_delta": -14.556924012484721
+              }
+            }
+          },
+          "avg_league_points_delta": -3,
+          "real_league_points_delta": 0,
+          "promotion_to_league": null,
+          "avg_arena_elo_delta": -14.556924012484721,
+          "real_arena_elo_delta": -15,
+          "arena_rating_delta": -0.0015,
+          "new_arena_rating": 501.1907
+        }
+      }
+    }
+  }

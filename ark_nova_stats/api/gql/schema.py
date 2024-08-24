@@ -11,7 +11,8 @@ from ark_nova_stats.api.gql.types.game_log import (
     stats_field,
     submit_game_logs_field,
 )
-from ark_nova_stats.models import Card, GameLog, GameLogArchive, User
+from ark_nova_stats.api.gql.types.game_rating import submit_game_ratings_field
+from ark_nova_stats.models import Card, GameLog, GameLogArchive, GameRating, User
 
 
 def Schema(app: flask.Flask):
@@ -32,6 +33,7 @@ def Schema(app: flask.Flask):
             name="Mutation",
             fields={
                 "submitGameLogs": submit_game_logs_field(GameLog),
+                "submitGameRatings": submit_game_ratings_field(GameRating),
             },
         ),
     )

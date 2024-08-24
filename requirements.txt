@@ -41,6 +41,7 @@ tomli
 tomlkit
 types-Flask-Cors
 types-Flask-Migrate
+types-protobuf
 types-requests
 typing-extensions
 virtualenv

@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package ark_nova_stats.bga_log_parser.proto;
+
+message PlayerResult {
+    int64 id = 1;
+    string name = 2;
+    int32 rank = 3;
+    int32 score = 4;
+    int32 score_aux = 5;
+    string zombie = 6;
+    string tie = 7;
+}
+
+message PlayerArenaRating {
+    float arena_rating = 1;
+    int32 league = 2;
+    int32 league_points = 3;
+    int64 arena_elo = 4;
+}
+
+message PlayerCurrentRating {
+    int64 id = 1;
+    float elo = 2;
+    PlayerArenaRating arena = 3;
+    int64 games_played = 4;
+}
+
+message PlayerEloGlobalModifiers {
+    int64 p_factor = 1;
+    int64 n_factor = 2;
+    float e_factor = 3;
+}
+
+message PlayerEloDuel {
+    float expected_result = 1;
+    int32 duel_result = 2;
+    int32 k_factor = 3;
+    float elo_delta = 4;
+    int64 opponent_id = 5;
+}
+
+message PlayerEloRatingUpdate {
+    int64 player_id = 1;
+    PlayerEloGlobalModifiers global_modifiers = 2;
+    map<int64, PlayerEloDuel> duels = 3;
+    float tot_elo_delta = 4;
+    float avg_elo_delta = 5;
+    float real_elo_delta = 6;
+    string elo_delta_adjust_desc = 7;
+    float new_elo_rating = 8;
+}
+
+message PlayerArenaRatingUpdate {
+    int64 player_id = 1;
+    int64 avg_league_points_delta = 2;
+    int64 real_league_points_delta = 3;
+    optional bool promotion_to_league = 4;
+    float avg_arena_elo_delta = 5;
+    int64 real_arena_elo_delta = 6;
+    float arena_rating_delta = 7;
+    float new_arena_rating= 8;
+}
+
+message GameRatingsData {
+    map<int64, PlayerResult> players_results = 1;
+    map<int64, PlayerCurrentRating> players_current_ratings = 2;
+    map<int64, PlayerEloRatingUpdate> players_elo_rating_update = 3;
+    map<int64, PlayerArenaRatingUpdate> players_arena_rating_update = 4;
+}
+
+enum GameStatus {
+    GAMESTATUS_UNKNOWN = 0;
+    GAMESTATUS_FINISHED = 1;
+}
+
+message GameRatings {
+    GameStatus status = 1;
+    GameRatingsData data = 2;
+}
