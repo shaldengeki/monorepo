@@ -66,7 +66,7 @@ message GameRatingsData {
     map<int64, PlayerResult> players_results = 1;
     map<int64, PlayerCurrentRating> players_current_ratings = 2;
     map<int64, PlayerEloRatingUpdate> players_elo_rating_update = 3;
-    map<int64, PlayerArenaRatingUpdate>players_arena_rating_update = 4;
+    map<int64, PlayerArenaRatingUpdate> players_arena_rating_update = 4;
 }
 
 enum GameStatus {

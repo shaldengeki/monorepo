@@ -19,16 +19,22 @@ def test_submit_game_ratings(client: FlaskClient) -> None:
         "/graphql",
         json={
             "query": """
-                mutation($ratings: String!) {
+                mutation($ratings: String!, $tableId: Int!) {
                     submitGameRatings(
                         ratings: $ratings,
+                        tableId: $tableId,
                     ) {
                         id
+                        newElo
+                        priorElo
+                        newArenaElo
+                        priorArenaElo
                     }
                 }
             """,
             "variables": {
                 "ratings": ratings_fixture_content,
+                "tableId": 1,
             },
         },
     )
@@ -38,9 +44,23 @@ def test_submit_game_ratings(client: FlaskClient) -> None:
     assert response.json["data"].get(
         "submitGameRatings", {}
     ), f"submitGameRatings field not set on response json: {response.json['data']}"
-    assert response.json["data"]["submitGameRatings"].get(
-        "id", ""
-    ), f"rating ids were not set: {response.json}"
+
+    data = response.json["data"]["submitGameRatings"]
+    assert 2 == len(
+        data
+    ), f"Two ratings should have been created: {response.json['data']}"
+
+    # GushenTale
+    assert 1943 == round(data[0]["priorElo"])
+    assert 1937 == round(data[0]["newElo"])
+    assert 1922 == round(data[0]["priorArenaElo"])
+    assert 1907 == round(data[0]["newArenaElo"])
+
+    # sorryimlikethis
+    assert 2093 == round(data[1]["priorElo"])
+    assert 2099 == round(data[1]["newElo"])
+    assert 2019 == round(data[1]["priorArenaElo"])
+    assert 2034 == round(data[1]["newArenaElo"])
 
 
 if __name__ == "__main__":

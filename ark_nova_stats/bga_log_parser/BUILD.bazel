@@ -39,8 +39,7 @@ py_library(
     name = "game_ratings",
     srcs = ["game_ratings.py"],
     visibility = ["//:__subpackages__"],
-    deps = [
-    ],
+    deps = [],
 )
 
 py_test(
