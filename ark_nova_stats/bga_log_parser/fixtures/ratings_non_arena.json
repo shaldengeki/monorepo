@@ -1,0 +1,134 @@
+{
+    "status": 1,
+    "data": {
+      "players_results": {
+        "86346298": {
+          "id": "86346298",
+          "name": "sorryimlikethis",
+          "rank": "1",
+          "score": "132",
+          "score_aux": "5",
+          "zombie": "0",
+          "tie": "0"
+        },
+        "94569606": {
+          "id": "94569606",
+          "name": "rudaZz",
+          "rank": "2",
+          "score": "114",
+          "score_aux": "5",
+          "zombie": "0",
+          "tie": "0"
+        }
+      },
+      "players_current_ratings": {
+        "86346298": {
+          "id": "86346298",
+          "elo": "2111.82",
+          "games_played": "1812"
+        },
+        "94569606": {
+          "id": "94569606",
+          "elo": "1889.56",
+          "games_played": "1023"
+        }
+      },
+      "players_elo_rating_update": {
+        "86346298": {
+          "player_id": 86346298,
+          "global_modifiers": {
+            "p_factor": 1,
+            "n_factor": 1,
+            "e_factor": 0.5
+          },
+          "duels": {
+            "94569606": {
+              "expected_result": 0.7823529737580205,
+              "duel_result": 1,
+              "k_factor": 20,
+              "elo_delta": 4.352940524839591,
+              "duel_modifiers": [
+                {
+                  "value": 1,
+                  "id": "T",
+                  "name": "Teammate",
+                  "type": "nullifier",
+                  "description": "",
+                  "description_args": {
+                    "{perc}": {
+                      "text": "-100%",
+                      "properties": [
+                        "highlight"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "value": 1,
+                  "id": "S",
+                  "name": "Streak Malus",
+                  "type": "malus",
+                  "description": "",
+                  "description_args": []
+                }
+              ],
+              "opponent_id": 94569606
+            }
+          },
+          "tot_elo_delta": 4.352940524839591,
+          "avg_elo_delta": 4.352940524839591,
+          "real_elo_delta": 4.35,
+          "elo_delta_adjust_desc": "",
+          "new_elo_rating": 2116.17
+        },
+        "94569606": {
+          "player_id": 94569606,
+          "global_modifiers": {
+            "p_factor": 1,
+            "n_factor": 1,
+            "e_factor": 0.5
+          },
+          "duels": {
+            "86346298": {
+              "expected_result": 0.2176470262419795,
+              "duel_result": 0,
+              "k_factor": 20,
+              "elo_delta": -4.352940524839591,
+              "duel_modifiers": [
+                {
+                  "value": 1,
+                  "id": "T",
+                  "name": "Teammate",
+                  "type": "nullifier",
+                  "description": "",
+                  "description_args": {
+                    "{perc}": {
+                      "text": "-100%",
+                      "properties": [
+                        "highlight"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "value": 1,
+                  "id": "S",
+                  "name": "Streak Malus",
+                  "type": "malus",
+                  "description": "",
+                  "description_args": []
+                }
+              ],
+              "opponent_id": 86346298
+            }
+          },
+          "tot_elo_delta": -4.352940524839591,
+          "avg_elo_delta": -4.352940524839591,
+          "real_elo_delta": -4.35,
+          "elo_delta_adjust_desc": "",
+          "new_elo_rating": 1885.21
+        }
+      },
+      "players_arena_rating_update": []
+    }
+  }
