@@ -91,11 +91,20 @@ def submit_game_logs(
             f"Log is invalid: there must be exactly one table_id per game log, found: {table_ids}"
         )
 
-    log = GameLogModel(bga_table_id=list(table_ids)[0], log=args["logs"])
+    log: GameLogModel = game_log_model(
+        bga_table_id=list(table_ids)[0], log=args["logs"]
+    )
     if app.config["TESTING"] == True:
         log.id = 1
     else:
-        db.session.add(log)
+        # Only create the log if it doesn't already exist.
+        existing_log: GameLogModel | None = game_log_model.query.filter(
+            game_log_model.bga_table_id == log.bga_table_id
+        ).first()
+        if existing_log is None:
+            db.session.add(log)
+        else:
+            log = existing_log
 
         for obj in log.create_related_objects(parsed_logs):
             db.session.add(obj)

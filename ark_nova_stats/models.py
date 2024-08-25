@@ -79,8 +79,9 @@ class GameLog(db.Model):
         # Now create a game participation for each user.
         for bga_user in parsed_logs.data.players:
             log_user = next(u for u in parsed_logs.data.players if u.id == bga_user.id)
+            user = bga_id_to_user[bga_user.id]
             yield GameParticipation(
-                user=bga_id_to_user[bga_user.id],
+                user=user,
                 color=log_user.color,
                 game_log=self,
             )
