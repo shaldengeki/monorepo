@@ -124,6 +124,7 @@ def submit_game_ratings(
 
         if app.config["TESTING"] == True:
             rating.id = 1
+            ratings.append(rating)
         else:
             # Only try to create this if it doesn't already exist.
             if (
@@ -135,8 +136,7 @@ def submit_game_ratings(
                 == 0
             ):
                 db.session.add(rating)
-
-        ratings.append(rating)
+                ratings.append(rating)
 
     if app.config["TESTING"] != True:
         db.session.commit()
