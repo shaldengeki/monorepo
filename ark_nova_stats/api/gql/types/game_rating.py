@@ -1,7 +1,5 @@
-import json
 from typing import Any, Optional, Type
 
-from google.protobuf.json_format import ParseDict
 from graphql import (
     GraphQLArgument,
     GraphQLField,
@@ -13,7 +11,7 @@ from graphql import (
 )
 
 from ark_nova_stats.api.gql.types.game_log import game_log_type, user_type
-from ark_nova_stats.bga_log_parser.proto.ratings_pb2 import GameRatings
+from ark_nova_stats.bga_log_parser.game_ratings import parse_ratings
 from ark_nova_stats.config import app, db
 from ark_nova_stats.models import GameLog as GameLogModel
 from ark_nova_stats.models import GameRating as GameRatingModel
@@ -99,36 +97,7 @@ def submit_game_ratings(
     args: dict[str, Any],
 ) -> list[GameRatingModel]:
     table_id = int(args["tableId"])
-    json_ratings = json.loads(args["ratings"])
-
-    # Normally, for Arena games, we expect the rating update field to be a map.
-    # Unfortunately, in the case of non-Arena games, BGA sends along a totally different type (a list).
-    # This breaks our parsing, so we have to delete the field entirely.
-    # Similar for friendly games!
-    if (
-        "data" in json_ratings
-        and "players_elo_rating_update" in json_ratings["data"]
-        and isinstance(json_ratings["data"]["players_elo_rating_update"], list)
-    ):
-        del json_ratings["data"]["players_elo_rating_update"]
-
-    if (
-        "data" in json_ratings
-        and "players_arena_rating_update" in json_ratings["data"]
-        and isinstance(json_ratings["data"]["players_arena_rating_update"], list)
-    ):
-        del json_ratings["data"]["players_arena_rating_update"]
-
-    parsed_ratings = ParseDict(json_ratings, GameRatings(), ignore_unknown_fields=True)
-
-    # id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    # bga_table_id: Mapped[int] = mapped_column(ForeignKey("game_logs.bga_table_id"))
-    # user_id: Mapped[int] = mapped_column(ForeignKey("users.bga_id"))
-    # prior_elo: Mapped[Optional[float]]
-    # new_elo: Mapped[Optional[float]]
-    # prior_arena_elo: Mapped[Optional[float]]
-    # new_arena_elo: Mapped[Optional[float]]
-    # expected_result: Mapped[Optional[float]]
+    parsed_ratings = parse_ratings(args["ratings"])
 
     ratings = []
     for (
