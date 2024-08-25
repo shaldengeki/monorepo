@@ -18,11 +18,10 @@ py_library(
     srcs = ["game_rating.py"],
     visibility = ["//:__subpackages__"],
     deps = [
+        ":game_log",
         "//ark_nova_stats:config_py",
         "//ark_nova_stats:models_py",
-        "//ark_nova_stats/bga_log_parser:game_log",
-        "//ark_nova_stats/bga_log_parser/proto:ratings_proto_py_pb2",
+        "//ark_nova_stats/bga_log_parser:game_ratings",
         "@py_deps//graphql_core",
-        "@py_deps//sqlalchemy",
     ],
 )
