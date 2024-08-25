@@ -156,7 +156,16 @@ def submit_game_ratings(
         if app.config["TESTING"] == True:
             rating.id = 1
         else:
-            db.session.add(rating)
+            # Only try to create this if it doesn't already exist.
+            if (
+                game_rating_model.query.filter(
+                    game_rating_model.bga_table_id == table_id
+                )
+                .filter(game_rating_model.user_id == player_id)
+                .count()
+                == 0
+            ):
+                db.session.add(rating)
 
         ratings.append(rating)
 
