@@ -1,4 +1,4 @@
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load("//tools/build_rules/worker:defs.bzl", "worker")
 
 py_binary(
@@ -8,6 +8,7 @@ py_binary(
     main = "app.py",
     visibility = ["//:__subpackages__"],
     deps = [
+        ":archives",
         "//ark_nova_stats:config_py",
         "//ark_nova_stats:models_py",
         "//ark_nova_stats/bga_log_parser:game_log",
@@ -30,4 +31,15 @@ worker(
         "TIGRIS_CUSTOM_DOMAIN_HOST": "test-tigris-custom-domain-host",
     },
     repo_tags = ["shaldengeki/ark-nova-stats-worker:latest"],
+)
+
+py_library(
+    name = "archives",
+    srcs = ["archives.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//ark_nova_stats:config_py",
+        "//ark_nova_stats:models_py",
+        "@py_deps//sqlalchemy",
+    ],
 )
