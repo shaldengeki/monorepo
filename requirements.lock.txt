@@ -308,9 +308,9 @@ importlib-metadata==8.2.0 \
     --hash=sha256:11901fa0c2f97919b288679932bb64febaeacf289d18ac84dd68cb2e74213369 \
     --hash=sha256:72e8d4399996132204f9a16dcc751af254a48f8d1b20b9ff0f98d4a8f901e73d
     # via -r requirements.txt
-importlib-resources==6.4.3 \
-    --hash=sha256:2d6dfe3b9e055f72495c2085890837fc8c758984e209115c8792bddcb762cd93 \
-    --hash=sha256:4a202b9b9d38563b46da59221d77bb73862ab5d79d461307bcb826d725448b98
+importlib-resources==6.4.4 \
+    --hash=sha256:20600c8b7361938dc0bb2d5ec0297802e575df486f5a544fa414da65e13721f7 \
+    --hash=sha256:dda242603d1c9cd836c3368b1174ed74cb4049ecd209e7a1a0104620c18c5c11
     # via -r requirements.txt
 iniconfig==2.0.0 \
     --hash=sha256:2d91e135bf72d31a410b17c16da610a82cb55f6b0477d1a902134b24a455b8b3 \
