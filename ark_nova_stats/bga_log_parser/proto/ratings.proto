@@ -35,7 +35,7 @@ message PlayerEloGlobalModifiers {
 message PlayerEloDuel {
     float expected_result = 1;
     int32 duel_result = 2;
-    int32 k_factor = 3;
+    float k_factor = 3;
     float elo_delta = 4;
     int64 opponent_id = 5;
 }
