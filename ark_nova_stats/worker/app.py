@@ -2,13 +2,10 @@ import datetime
 import json
 import logging
 import os
-import tarfile
-import tempfile
 import time
 from typing import Optional
 
 import boto3
-from sqlalchemy import desc
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as BGAGameLog
 from ark_nova_stats.config import app, db
