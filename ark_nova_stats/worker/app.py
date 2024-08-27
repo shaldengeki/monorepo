@@ -10,7 +10,10 @@ import boto3
 from ark_nova_stats.bga_log_parser.game_log import GameLog as BGAGameLog
 from ark_nova_stats.config import app, db
 from ark_nova_stats.models import Card, CardPlay, GameLog, GameLogArchive
-from ark_nova_stats.worker.archives import RawBGALogArchiveCreator
+from ark_nova_stats.worker.archives import (
+    BGAWithELOArchiveCreator,
+    RawBGALogArchiveCreator,
+)
 
 max_delay = 12 * 60 * 60
 
@@ -22,13 +25,19 @@ logger = logging.getLogger(__name__)
 
 def archive_logs_to_tigris(
     tigris_client, min_interval: datetime.timedelta = datetime.timedelta(days=1)
-) -> Optional[GameLogArchive]:
+) -> list[GameLogArchive]:
     # TODO: convert all of these database requests to GraphQL requests over the internal network.
-    return RawBGALogArchiveCreator(
-        logger=logger,
-        tigris_client=tigris_client,
-        min_interval=min_interval,
-    ).create_archive()
+    archives = []
+    for archive_creator in (RawBGALogArchiveCreator, BGAWithELOArchiveCreator):
+        archive = archive_creator(
+            logger=logger,
+            tigris_client=tigris_client,
+            min_interval=min_interval,
+        ).create_archive()
+        if archive is not None:
+            archives.append(archive)
+
+    return archives
 
 
 def populate_card_play_actions() -> None:
