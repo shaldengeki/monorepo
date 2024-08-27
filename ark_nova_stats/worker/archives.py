@@ -64,6 +64,7 @@ class GameLogArchiveCreator:
                 return None
 
         filename = self.filename()
+        self.logger.info(f"Creating archive at: {filename}")
 
         # For each batch, write a logfile.
         with tempfile.NamedTemporaryFile(suffix=filename) as archive_tempfile:
