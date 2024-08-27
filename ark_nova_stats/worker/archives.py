@@ -1,9 +1,10 @@
 import datetime
+import json
 import logging
 import os
 import tarfile
 import tempfile
-from typing import Iterator, Optional
+from typing import Optional
 
 from sqlalchemy import desc
 
@@ -114,9 +115,6 @@ class GameLogArchiveCreator:
 
 
 class RawBGALogArchiveCreator(GameLogArchiveCreator):
-    def __init__(self, *args, **kwargs):
-        super(RawBGALogArchiveCreator, self).__init__(*args, **kwargs)
-
     @property
     def archive_type(self) -> GameLogArchiveType:
         return GameLogArchiveType.RAW_BGA_JSONL
@@ -128,6 +126,46 @@ class RawBGALogArchiveCreator(GameLogArchiveCreator):
             suffix=log_tempfile_name, mode="w"
         ) as log_tempfile:
             log_tempfile.write(game_log.log)
+            log_tempfile.flush()
+            os.fsync(log_tempfile)
+
+            archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
+
+
+class BGAWithELOArchiveCreator(GameLogArchiveCreator):
+    def __init__(self, *args, **kwargs):
+        super(BGAWithELOArchiveCreator, self).__init__(*args, **kwargs)
+        self.user_bga_id_to_name = self.initialize_users()
+
+    @property
+    def archive_type(self) -> GameLogArchiveType:
+        return GameLogArchiveType.BGA_JSONL_WITH_ELO
+
+    def initialize_users(self) -> dict[int, str]:
+        return {user.bga_id: user.name for user in User.query.all()}
+
+    def process_game_log(self, game_log: GameLog, archive_tarfile: tarfile.TarFile):
+        user_names = "_".join([u.name.replace(" ", "_") for u in game_log.users])
+
+        ratings = game_log.game_ratings
+        payload = {}
+        if ratings is not None:
+            payload["elos"] = {
+                self.user_bga_id_to_name[rating.user_id]: {
+                    "prior_elo": rating.prior_elo,
+                    "new_elo": rating.new_elo,
+                    "prior_arena_elo": rating.prior_arena_elo,
+                    "new_arena_elo": rating.new_arena_elo,
+                }
+                for rating in ratings
+            }
+
+        log_tempfile_name = f"{game_log.bga_table_id}_{user_names}.json"
+        with tempfile.NamedTemporaryFile(
+            suffix=log_tempfile_name, mode="w"
+        ) as log_tempfile:
+            payload["log"] = json.loads(game_log.log)
+            log_tempfile.write(json.dumps(payload))
             log_tempfile.flush()
             os.fsync(log_tempfile)
 
