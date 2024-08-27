@@ -42,9 +42,13 @@ class GameLogArchiveCreator:
 
     def create_archive(self) -> Optional[GameLogArchive]:
         # First, bail if we've uploaded an archive recently.
-        last_archive: GameLogArchive = GameLogArchive.query.order_by(
-            desc(GameLogArchive.created_at)
-        ).first()
+        last_archive: GameLogArchive = (
+            GameLogArchive.query.filter(
+                GameLogArchive.archive_type == self.archive_type
+            )
+            .order_by(desc(GameLogArchive.created_at))
+            .first()
+        )
         if last_archive is not None:
             time_since_last_archive = datetime.datetime.now() - last_archive.created_at
             if time_since_last_archive < self.min_interval:
