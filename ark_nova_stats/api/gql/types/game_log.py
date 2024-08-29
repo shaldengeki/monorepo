@@ -10,7 +10,7 @@ from graphql import (
     GraphQLObjectType,
     GraphQLString,
 )
-from sqlalchemy import desc
+from sqlalchemy import asc, desc
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import app, db
@@ -531,4 +531,19 @@ def fetch_card_field(
         description="Fetch information about a single card.",
         args=fetch_card_filters,
         resolve=lambda root, info, **args: fetch_card(card_model, args),
+    )
+
+
+def fetch_cards(card_model: Type[CardModel]) -> list[CardModel]:
+    return card_model.query.order_by(asc(card_model.name)).all()
+
+
+def fetch_cards_field(
+    card_model: Type[CardModel],
+) -> GraphQLField:
+    return GraphQLField(
+        GraphQLNonNull(GraphQLList(card_type)),
+        description="List cards.",
+        args={},
+        resolve=lambda root, info, **args: fetch_cards(card_model),
     )

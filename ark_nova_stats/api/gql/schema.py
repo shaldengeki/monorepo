@@ -3,6 +3,7 @@ from graphql import GraphQLObjectType, GraphQLSchema
 
 from ark_nova_stats.api.gql.types.game_log import (
     fetch_card_field,
+    fetch_cards_field,
     fetch_user_field,
     game_log_field,
     game_logs_field,
@@ -27,6 +28,7 @@ def Schema(app: flask.Flask):
                 "stats": stats_field(GameLog, User),
                 "user": fetch_user_field(User),
                 "card": fetch_card_field(Card),
+                "cards": fetch_cards_field(Card),
             },
         ),
         mutation=GraphQLObjectType(
