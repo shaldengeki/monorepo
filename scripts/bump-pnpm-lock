@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euxo pipefail
+
+bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
+git add pnpm-lock.yaml
+git commit -m "bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only"
+git push
