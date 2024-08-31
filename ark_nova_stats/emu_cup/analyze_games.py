@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 
+import csv
 import dataclasses
+import datetime
 import json
+import os
+import sys
 from collections import Counter
 from pathlib import Path
-from typing import Generator, Iterator, Optional
+from typing import Iterator, Optional
 
 from python.runfiles import Runfiles
 
@@ -106,12 +110,23 @@ class CardRecord:
         )
 
 
+@dataclasses.dataclass
+class CardRawWinRateOutput:
+    rank: int
+    card: str
+    rate: int
+    plays: int
+    rate_bayes: int
+
+
 class CardRawWinRate:
     def __init__(self):
         self.all_cards: Counter[str] = Counter()
         self.winner_cards: Counter[str] = Counter()
         self.loser_cards: Counter[str] = Counter()
         self.game_card_records: dict[str, CardRecord] = {}
+        self.global_stats = None
+        self.outputs = None
 
     def process_game(self, log: GameLog) -> None:
         game_cards: set[str] = set()
@@ -152,41 +167,35 @@ class CardRawWinRate:
         for card in game_loser_cards:
             self.game_card_records[card].losses += 1
 
-    def output(self) -> Generator[str, None, None]:
-        global_stats = [
-            (record.wins, record.wins + record.losses)
-            for _, record in self.game_card_records.items()
-        ]
-        total_wins = sum(wins for wins, _ in global_stats)
-        average_wins = total_wins * 1.0 / len(global_stats)
-        total_plays = sum(plays for _, plays in global_stats)
-        average_plays = total_plays * 1.0 / len(global_stats)
-        win_rates = [
-            (
-                card,
-                round(record.win_rate * 100),
-                record.wins + record.losses,
-                round(record.bayesian_win_rate(average_wins, average_plays) * 100),  # type: ignore
+    def output(self, card) -> CardRawWinRateOutput:
+        if self.global_stats is None:
+            global_stats = [
+                (record.wins, record.wins + record.losses)
+                for _, record in self.game_card_records.items()
+            ]
+            self.global_stats = {}
+            self.global_stats["total_wins"] = sum(wins for wins, _ in global_stats)
+            self.global_stats["average_wins"] = (
+                self.global_stats["total_wins"] * 1.0 / len(global_stats)
             )
-            for card, record in self.game_card_records.items()
-            if record.win_rate is not None
-        ]
+            self.global_stats["total_plays"] = sum(plays for _, plays in global_stats)
+            self.global_stats["average_plays"] = (
+                self.global_stats["total_plays"] * 1.0 / len(global_stats)
+            )
 
-        yield f"# Card win rates:"
-        yield ""
-        yield 'We define "win rate" as "if a player played this card, how frequently did they end up winning the game?"'
-        yield ""
-        yield "Uses the data at https://arknova.ouguo.us."
-        yield ""
-        yield f"The average card has a win rate of {round(average_wins * 1.0 / average_plays * 100)}%, with {round(average_wins, 1)} wins over {round(average_plays, 1)} plays"
-        yield "| Rank | Card | Win rate | Plays | Win rate (Bayes) |"
-        yield "|------|------|----------|-------|------------------|"
-        rank = 1
-        for card, rate, plays, rate_bayes in sorted(
-            win_rates, key=lambda x: x[3], reverse=True
-        ):
-            yield f"| {rank} | {card} | {rate}% | {plays} | {rate_bayes}% |"
-            rank += 1
+        if self.outputs is None:
+            self.outputs = {
+                card: CardRawWinRateOutput(
+                    rank=rank + 1,
+                    card=card,
+                    rate=0 if record.win_rate is None else round(record.win_rate * 100),
+                    plays=record.wins + record.losses,
+                    rate_bayes=round(record.bayesian_win_rate(self.global_stats["average_wins"], self.global_stats["average_plays"]) * 100),  # type: ignore
+                )
+                for rank, (card, record) in enumerate(self.game_card_records.items())
+            }
+
+        return self.outputs[card]
 
 
 @dataclasses.dataclass
@@ -228,10 +237,21 @@ def probability_of_win(elo_1: int, elo_2: int) -> float:
     return 1.0 / (1 + pow(10, ((elo_2 - elo_1) / 400.0)))
 
 
+@dataclasses.dataclass
+class CardWinRateELOAdjustedOutput:
+    rank: int
+    card: str
+    rate: float
+    plays: int
+    rate_bayes: float
+
+
 class CardWinRateELOAdjusted:
     def __init__(self):
         self.all_cards: Counter[str] = Counter()
         self.game_card_records: dict[str, CardELORecord] = {}
+        self.average_plays = None
+        self.outputs = None
 
     def process_game(self, log: GameLog, elos: dict[str, PlayerELOs]) -> None:
         game_cards: set[str] = set()
@@ -291,44 +311,34 @@ class CardWinRateELOAdjusted:
             else:
                 self.game_card_records[card].add_points(0 - loser_winrate)
 
-    def output(self) -> Generator[str, None, None]:
-        average_plays = (
-            1.0
-            * sum(record.games for record in self.game_card_records.values())
-            / len(self.game_card_records)
-        )
-        wins_above_replacement = [
-            (
-                card,
-                round(record.avg_points * 100, 2),
-                record.games,
-                round(record.bayesian_avg_points(0, average_plays) * 100, 2),  # type: ignore
+    def output(self, card: str) -> CardWinRateELOAdjustedOutput:
+        if self.average_plays is None:
+            self.average_plays = (
+                1.0
+                * sum(record.games for record in self.game_card_records.values())
+                / len(self.game_card_records)
             )
-            for card, record in self.game_card_records.items()
-            if record.avg_points is not None
-        ]
 
-        yield f"# Card wins above replacement:"
-        yield ""
-        yield 'We define wins above replacement (WAR) as "if a player played this card, how much did they win a game more often than would be expected based on their ELO alone?"'
-        yield "This is calculated by adding up (actual win/loss - expected winrate) for each card, in every game it was played, then dividing by the number of games it was played in."
-        yield ""
-        yield "The last column is the card's WAR, with Bayesian smoothing applied. Basically, we mix in the average card's WAR (which is zero) into each card's data, which helps compensate for rarely-played cards."
-        yield ""
-        yield "Uses the data at https://arknova.ouguo.us."
-        yield ""
-        yield f"The average card was played {round(average_plays, 1)} times."
-        yield "| Rank | Card | Wins above replacement | Games | WAR (Bayes) |"
-        yield "|------|------|------------------------|-------|-------------|"
-        rank = 1
-        for card, rate, plays, rate_bayes in sorted(
-            wins_above_replacement, key=lambda x: x[3], reverse=True
-        ):
-            yield f"| {rank} | {card} | {rate}% | {plays} | {rate_bayes}% |"
-            rank += 1
+        if self.outputs is None:
+            self.outputs = {
+                card: CardWinRateELOAdjustedOutput(
+                    rank=rank + 1,
+                    card=card,
+                    rate=(
+                        0
+                        if record.avg_points is None
+                        else round(record.avg_points * 100, 2)
+                    ),
+                    plays=record.games,
+                    rate_bayes=round(record.bayesian_avg_points(0, self.average_plays) * 100, 2),  # type: ignore
+                )
+                for rank, (card, record) in enumerate(self.game_card_records.items())
+            }
+
+        return self.outputs[card]
 
 
-def main() -> int:
+def main(working_dir: str) -> int:
     raw_win_rates = CardRawWinRate()
     elo_win_rates = CardWinRateELOAdjusted()
 
@@ -359,14 +369,39 @@ def main() -> int:
             print(f"Failed to process {p}: {e}")
             continue
 
-    for l in raw_win_rates.output():
-        print(l)
+    os.chdir(working_dir)
 
-    for l in elo_win_rates.output():
-        print(l)
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
+    with open(f"ark-card-war-{date}.csv", "w") as csvfile:
+        fieldnames = [
+            "card",
+            "play_count_raw",
+            "win_rate_raw",
+            "win_rate_raw_bayes",
+            "play_count_wae",
+            "wins_above_expected",
+            "wins_above_expected_bayes",
+        ]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for card in raw_win_rates.all_cards:
+            raw_output = raw_win_rates.output(card)
+            elo_output = elo_win_rates.output(card)
+
+            writer.writerow(
+                {
+                    "card": card,
+                    "play_count_raw": raw_output.plays,
+                    "win_rate_raw": raw_output.rate,
+                    "win_rate_raw_bayes": raw_output.rate_bayes,
+                    "play_count_wae": elo_output.plays,
+                    "wins_above_expected": elo_output.rate,
+                    "wins_above_expected_bayes": elo_output.rate_bayes,
+                }
+            )
 
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1]))
