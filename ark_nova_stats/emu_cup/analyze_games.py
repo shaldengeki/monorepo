@@ -234,10 +234,6 @@ class CardWinRateELOAdjusted:
         self.game_card_records: dict[str, CardELORecord] = {}
 
     def process_game(self, log: GameLog, elos: dict[str, PlayerELOs]) -> None:
-        if log.is_tie:
-            print(f"Skipping log, is a tie")
-            return
-
         game_cards: set[str] = set()
         game_winner_cards: set[str] = set()
         game_loser_cards: set[str] = set()
@@ -290,7 +286,10 @@ class CardWinRateELOAdjusted:
         for card in game_winner_cards:
             self.game_card_records[card].add_points(1 - winner_winrate)
         for card in game_loser_cards:
-            self.game_card_records[card].add_points(0 - loser_winrate)
+            if log.is_tie:
+                self.game_card_records[card].add_points(0.5 - loser_winrate)
+            else:
+                self.game_card_records[card].add_points(0 - loser_winrate)
 
     def output(self) -> Generator[str, None, None]:
         average_plays = (
@@ -312,13 +311,14 @@ class CardWinRateELOAdjusted:
         yield f"# Card wins above replacement:"
         yield ""
         yield 'We define wins above replacement (WAR) as "if a player played this card, how much did they win a game more often than would be expected based on their ELO alone?"'
+        yield "This is calculated by adding up (actual win/loss - expected winrate) for each card, in every game it was played, then dividing by the number of games it was played in."
         yield ""
         yield "The last column is the card's WAR, with Bayesian smoothing applied. Basically, we mix in the average card's WAR (which is zero) into each card's data, which helps compensate for rarely-played cards."
         yield ""
         yield "Uses the data at https://arknova.ouguo.us."
         yield ""
         yield f"The average card was played {round(average_plays, 1)} times."
-        yield "| Rank | Card | Wins above replacement | Plays | WAR (Bayes) |"
+        yield "| Rank | Card | Wins above replacement | Games | WAR (Bayes) |"
         yield "|------|------|------------------------|-------|-------------|"
         rank = 1
         for card, rate, plays, rate_bayes in sorted(
@@ -337,6 +337,7 @@ def main() -> int:
         # if int(path_parts[0]) not in EMU_CUP_GAME_TABLE_IDS:
         #     continue
 
+        print(p)
         with open(p, "r") as f:
             parsed_file = json.loads(f.read().strip())
             try:
@@ -345,11 +346,18 @@ def main() -> int:
                 print(f"{p} doesn't have stats set!")
                 continue
             elos: dict[str, PlayerELOs] = {
-                name: PlayerELOs(**vals) for name, vals in parsed_file["elos"].items()
+                name: PlayerELOs(name=name, **vals)
+                for name, vals in parsed_file["elos"].items()
             }
 
         raw_win_rates.process_game(log)
-        elo_win_rates.process_game(log, elos)
+        if not elos:
+            continue
+        try:
+            elo_win_rates.process_game(log, elos)
+        except Exception as e:
+            print(f"Failed to process {p}: {e}")
+            continue
 
     for l in raw_win_rates.output():
         print(l)
