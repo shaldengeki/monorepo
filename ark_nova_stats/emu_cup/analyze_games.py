@@ -6,9 +6,9 @@ import datetime
 import json
 import os
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
-from typing import Iterator, Optional
+from typing import Optional
 
 from python.runfiles import Runfiles
 
@@ -76,14 +76,14 @@ EMU_CUP_GAME_TABLE_IDS = set(
 )
 
 
-def list_game_datafiles() -> Iterator[Path]:
+def list_game_datafiles() -> list[Path]:
     r = Runfiles.Create()
     known_game = Path(
         r.Rlocation(
             "_main/ark_nova_stats/emu_cup/data/531081985_Sirhk_sorryimlikethis_Awesometothemax_Pogstar.json"
         )
     )
-    return known_game.parent.glob("*.json")
+    return sorted(known_game.parent.glob("*.json"))
 
 
 @dataclasses.dataclass
@@ -127,13 +127,35 @@ class CardRawWinRate:
         self.game_card_records: dict[str, CardRecord] = {}
         self.global_stats = None
         self.outputs = None
+        self.player_cards: defaultdict[int, set[str]] = defaultdict(lambda: set())
 
     def process_game(self, log: GameLog) -> None:
-        game_cards: set[str] = set()
-        game_winner_cards: set[str] = set()
-        game_loser_cards: set[str] = set()
         winner = log.winner
 
+        game_cards = self.game_log_cards(log)
+
+        winner = log.winner
+        for player_id, player_cards in game_cards.items():
+            self.all_cards.update(player_cards)
+
+            self.player_cards[player_id] = self.player_cards[player_id].union(
+                player_cards
+            )
+
+            for card in player_cards:
+                if card not in self.game_card_records:
+                    self.game_card_records[card] = CardRecord(card_name=card)
+
+                if winner is not None and player_id == winner.id:
+                    self.game_card_records[card].wins += 1
+                elif log.is_tie:
+                    self.game_card_records[card].wins += 1
+                    self.game_card_records[card].losses += 1
+                else:
+                    self.game_card_records[card].losses += 1
+
+    def game_log_cards(self, log: GameLog) -> dict[int, set[str]]:
+        game_cards: defaultdict[int, set[str]] = defaultdict(lambda: set())
         for event in log.data.logs:
             for event_data in event.data:
                 if not event_data.is_play_action:
@@ -143,29 +165,14 @@ class CardRawWinRate:
                 if card_names is None:
                     continue
 
-                game_cards = game_cards.union(card_names)
-
                 if log.is_tie:
                     continue
 
-                if event_data.player is not None and winner is not None:
-                    if event_data.player["id"] == winner.id:
-                        game_winner_cards = game_winner_cards.union(card_names)
-                    else:
-                        game_loser_cards = game_loser_cards.union(card_names)
+                if event_data.player is not None:
+                    player_id: int = int(event_data.player["id"])
+                    game_cards[player_id] = game_cards[player_id].union(card_names)
 
-        self.all_cards.update(game_cards)
-        self.winner_cards.update(game_winner_cards)
-        self.loser_cards.update(game_loser_cards)
-
-        for card in game_cards:
-            if card not in self.game_card_records:
-                self.game_card_records[card] = CardRecord(card_name=card)
-
-        for card in game_winner_cards:
-            self.game_card_records[card].wins += 1
-        for card in game_loser_cards:
-            self.game_card_records[card].losses += 1
+        return game_cards
 
     def output(self, card) -> CardRawWinRateOutput:
         if self.global_stats is None:
@@ -196,6 +203,16 @@ class CardRawWinRate:
             }
 
         return self.outputs[card]
+
+
+class OpeningHandRawWinRate(CardRawWinRate):
+    def game_log_cards(self, log: GameLog) -> dict[int, set[str]]:
+        game_cards: defaultdict[int, set[str]] = defaultdict(lambda: set())
+        for player_id, hand_cards in log.data.opening_hands.items():
+            hand_card_names = [card.name for card in hand_cards]
+            game_cards[player_id] = game_cards[player_id].union(hand_card_names)
+
+        return game_cards
 
 
 @dataclasses.dataclass
@@ -252,17 +269,9 @@ class CardWinRateELOAdjusted:
         self.game_card_records: dict[str, CardELORecord] = {}
         self.average_plays = None
         self.outputs = None
+        self.player_cards: defaultdict[int, set[str]] = defaultdict(lambda: set())
 
     def process_game(self, log: GameLog, elos: dict[str, PlayerELOs]) -> None:
-        game_cards: set[str] = set()
-        game_winner_cards: set[str] = set()
-        game_loser_cards: set[str] = set()
-        winner = log.winner
-
-        if winner is None:
-            print(f"Skpping log, no winner")
-            return
-
         if len(log.data.players) != 2:
             print(f"Skipping log, not a two-player game")
 
@@ -277,9 +286,32 @@ class CardWinRateELOAdjusted:
             ),
         }
 
-        winner_winrate = winrates_by_id[winner.id]
-        loser_winrate = 1 - winner_winrate
+        game_cards = self.game_log_cards(log)
 
+        winner = log.winner
+        for player_id, player_cards in game_cards.items():
+            self.all_cards.update(player_cards)
+            self.player_cards[player_id] = self.player_cards[player_id].union(
+                player_cards
+            )
+
+            for card in player_cards:
+                if card not in self.game_card_records:
+                    self.game_card_records[card] = CardELORecord(card_name=card)
+
+                result: int | float
+                if winner is not None and player_id == winner.id:
+                    result = 1
+                elif log.is_tie:
+                    result = 0.5
+                else:
+                    result = 0
+                self.game_card_records[card].add_points(
+                    result - winrates_by_id[player_id]
+                )
+
+    def game_log_cards(self, log: GameLog) -> dict[int, set[str]]:
+        game_cards: defaultdict[int, set[str]] = defaultdict(lambda: set())
         for event in log.data.logs:
             for event_data in event.data:
                 if not event_data.is_play_action:
@@ -289,27 +321,11 @@ class CardWinRateELOAdjusted:
                 if card_names is None:
                     continue
 
-                game_cards = game_cards.union(card_names)
+                if event_data.player is not None:
+                    player_id: int = int(event_data.player["id"])
+                    game_cards[player_id] = game_cards[player_id].union(card_names)
 
-                if event_data.player is not None and winner is not None:
-                    if event_data.player["id"] == winner.id:
-                        game_winner_cards = game_winner_cards.union(card_names)
-                    else:
-                        game_loser_cards = game_loser_cards.union(card_names)
-
-        self.all_cards.update(game_cards)
-
-        for card in game_cards:
-            if card not in self.game_card_records:
-                self.game_card_records[card] = CardELORecord(card_name=card)
-
-        for card in game_winner_cards:
-            self.game_card_records[card].add_points(1 - winner_winrate)
-        for card in game_loser_cards:
-            if log.is_tie:
-                self.game_card_records[card].add_points(0.5 - loser_winrate)
-            else:
-                self.game_card_records[card].add_points(0 - loser_winrate)
+        return game_cards
 
     def output(self, card: str) -> CardWinRateELOAdjustedOutput:
         if self.average_plays is None:
@@ -338,9 +354,21 @@ class CardWinRateELOAdjusted:
         return self.outputs[card]
 
 
+class OpeningHandWinRateELOAdjusted(CardWinRateELOAdjusted):
+    def game_log_cards(self, log: GameLog) -> dict[int, set[str]]:
+        game_cards: defaultdict[int, set[str]] = defaultdict(lambda: set())
+        for player_id, hand_cards in log.data.opening_hands.items():
+            hand_card_names = [card.name for card in hand_cards]
+            game_cards[player_id] = game_cards[player_id].union(hand_card_names)
+
+        return game_cards
+
+
 def main(working_dir: str) -> int:
     raw_win_rates = CardRawWinRate()
+    opening_hand_raw_win_rates = OpeningHandRawWinRate()
     elo_win_rates = CardWinRateELOAdjusted()
+    opening_hand_elo_win_rates = OpeningHandWinRateELOAdjusted()
 
     for p in list_game_datafiles():
         # path_parts = p.name.split("_")
@@ -361,10 +389,13 @@ def main(working_dir: str) -> int:
             }
 
         raw_win_rates.process_game(log)
+        opening_hand_raw_win_rates.process_game(log)
+
         if not elos:
             continue
         try:
             elo_win_rates.process_game(log, elos)
+            opening_hand_elo_win_rates.process_game(log, elos)
         except Exception as e:
             print(f"Failed to process {p}: {e}")
             continue
@@ -378,27 +409,56 @@ def main(working_dir: str) -> int:
             "play_count_raw",
             "win_rate_raw",
             "win_rate_raw_bayes",
+            "opening_hand_count_raw",
+            "opening_hand_win_rate_raw",
+            "opening_hand_win_rate_raw_bayes",
             "play_count_wae",
             "wins_above_expected",
             "wins_above_expected_bayes",
+            "opening_hand_count_wae",
+            "opening_hand_wins_above_expected",
+            "opening_hand_wins_above_expected_bayes",
         ]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for card in raw_win_rates.all_cards:
             raw_output = raw_win_rates.output(card)
             elo_output = elo_win_rates.output(card)
+            row = {
+                "card": card,
+                "play_count_raw": raw_output.plays,
+                "win_rate_raw": raw_output.rate,
+                "win_rate_raw_bayes": raw_output.rate_bayes,
+            }
+            if card in opening_hand_raw_win_rates.all_cards:
+                opening_hand_raw_output = opening_hand_raw_win_rates.output(card)
+                row.update(
+                    {
+                        "opening_hand_count_raw": opening_hand_raw_output.plays,
+                        "opening_hand_win_rate_raw": opening_hand_raw_output.rate,
+                        "opening_hand_win_rate_raw_bayes": opening_hand_raw_output.rate_bayes,
+                    }
+                )
 
-            writer.writerow(
+            row.update(
                 {
-                    "card": card,
-                    "play_count_raw": raw_output.plays,
-                    "win_rate_raw": raw_output.rate,
-                    "win_rate_raw_bayes": raw_output.rate_bayes,
                     "play_count_wae": elo_output.plays,
                     "wins_above_expected": elo_output.rate,
                     "wins_above_expected_bayes": elo_output.rate_bayes,
                 }
             )
+
+            if card in opening_hand_elo_win_rates.all_cards:
+                opening_hand_elo_output = opening_hand_elo_win_rates.output(card)
+                row.update(
+                    {
+                        "opening_hand_count_wae": opening_hand_elo_output.plays,
+                        "opening_hand_wins_above_expected": opening_hand_elo_output.rate,
+                        "opening_hand_wins_above_expected_bayes": opening_hand_elo_output.rate_bayes,
+                    }
+                )
+
+            writer.writerow(row)
 
     return 0
 
