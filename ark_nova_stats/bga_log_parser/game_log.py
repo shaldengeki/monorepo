@@ -177,7 +177,34 @@ class GameLogData:
 
     @property
     def opening_hands(self) -> dict[int, list[GameLogEventDataCard]]:
-        return {}
+        # Look in the first few events, up to the first discard event.
+        hands = {}
+        for log in self.logs:
+            if any(d.type == "pDiscardCards" for d in log.data):
+                break
+
+            for d in log.data:
+                if (
+                    d.type == "pDrawCards"
+                    and "cards" in d.args
+                    and len(d.args["cards"]) == 8
+                ):
+                    # This is an opening draw action.
+                    player_id = int(d.args["player_id"])
+                    cards = [
+                        GameLogEventDataCard(
+                            id=d.args["card_names"]["args"][f"card_name_{i}"]["args"][
+                                "card_id"
+                            ],
+                            name=d.args["card_names"]["args"][f"card_name_{i}"]["args"][
+                                "card_name"
+                            ],
+                        )
+                        for i in range(8)
+                    ]
+                    hands[player_id] = cards
+
+        return hands
 
 
 @dataclass
