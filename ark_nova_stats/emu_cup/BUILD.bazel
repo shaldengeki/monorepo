@@ -1,4 +1,4 @@
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_test")
 
 filegroup(
     name = "game_data",
@@ -11,7 +11,17 @@ py_binary(
     data = [":game_data"],
     visibility = ["//:__subpackages__"],
     deps = [
+        "//ark_nova_stats/bga_log_parser:exceptions",
         "//ark_nova_stats/bga_log_parser:game_log",
         "@rules_python//python/runfiles",
+    ],
+)
+
+py_test(
+    name = "analyze_games_test",
+    srcs = ["analyze_games_test.py"],
+    deps = [
+        ":analyze_games",
+        "@py_deps//pytest",
     ],
 )

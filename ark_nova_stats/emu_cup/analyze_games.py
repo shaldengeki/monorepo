@@ -313,11 +313,14 @@ class CardWinRateELOAdjusted:
 
     def output(self, card: str) -> CardWinRateELOAdjustedOutput:
         if self.average_plays is None:
-            self.average_plays = (
-                1.0
-                * sum(record.games for record in self.game_card_records.values())
-                / len(self.game_card_records)
-            )
+            if len(self.game_card_records) > 0:
+                self.average_plays = (
+                    1.0
+                    * sum(record.games for record in self.game_card_records.values())
+                    / len(self.game_card_records)
+                )
+            else:
+                self.average_plays = 0
 
         if self.outputs is None:
             self.outputs = {
