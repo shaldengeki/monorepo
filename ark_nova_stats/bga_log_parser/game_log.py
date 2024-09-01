@@ -175,6 +175,10 @@ class GameLogData:
                         player=find_player[0],
                     )
 
+    @property
+    def opening_hands(self) -> dict[int, list[GameLogEventDataCard]]:
+        return {}
+
 
 @dataclass
 class GameLog:

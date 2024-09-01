@@ -52,14 +52,6 @@ class TestGameLog:
         game_log = load_data_from_fixture_file("4p.log.json")
         GameLog(**game_log)
 
-    def test_card_plays_for_4p_game(self):
-        game_log = load_data_from_fixture_file("4p.log.json")
-        plays = list(GameLog(**game_log).data.card_plays)
-        assert 1 == len(plays)
-        assert "Dusky-leaf Monkey" == plays[0].card.name
-        card_ids = [play.card.id for play in plays]
-        assert len(set(card_ids)) == len(card_ids)
-
     def test_parses_game_stats(self):
         game_log = load_data_from_fixture_file("533468391_darcelmaw_hardyzhao.json")
         x = GameLog(**game_log)
@@ -204,6 +196,210 @@ class TestGameLog:
         assert 1 == hardyzhao.icons_water
         assert 2 == hardyzhao.icons_rock
         assert 3 == hardyzhao.icons_science
+
+
+class TestGameLogData:
+    def test_card_plays_for_4p_game(self):
+        game_log = load_data_from_fixture_file("4p.log.json")
+        plays = list(GameLog(**game_log).data.card_plays)
+        assert 1 == len(plays)
+        assert "Dusky-leaf Monkey" == plays[0].card.name
+        card_ids = [play.card.id for play in plays]
+        assert len(set(card_ids)) == len(card_ids)
+
+    def test_opening_hands_for_2p_game(self):
+        game_log = GameLog(**load_data_from_fixture_file("sample_game.log.json"))
+        opening_hands = game_log.data.opening_hands
+        assert 2 == len(opening_hands)
+        for hand in opening_hands.values():
+            assert 8 == len(hand)
+
+        # Baboude
+        assert 91196162 in opening_hands
+        baboude_hand = opening_hands[91196162]
+        assert all(
+            card_name in [card.name for card in baboude_hand]
+            for card_name in [
+                "Sea Turtle Tank",
+                "Guinea Pig",
+                "Yosemite national park",
+                "Siberian Tiger",
+                "Expert On Europe",
+                "Science Library",
+                "Okapi Stable",
+                "Dugong",
+            ]
+        )
+        assert all(
+            card_id in [card.id for card in baboude_hand]
+            for card_id in [
+                "S250_SeaTurtleTank",
+                "A525_GuineaPig",
+                "P114_ReleaseYosemite",
+                "A406_SiberianTiger",
+                "S211_ExpertOnEurope",
+                "S208_ScienceLibrary",
+                "S253_OkapiStable",
+                "A446_Dugong",
+            ]
+        )
+
+        # sorryimlikethis
+        assert 86346298 in opening_hands
+        sorryimlikethis_hand = opening_hands[86346298]
+        assert all(
+            card_name in [card.name for card in sorryimlikethis_hand]
+            for card_name in [
+                "Explorer",
+                "Cinereous Vulture",
+                "Sheep",
+                "Expert In Predators",
+                "Diversity Researcher",
+                "Greater Rhea",
+                "Cougar",
+                "Sponsorship: Primates",
+            ]
+        )
+        assert all(
+            card_id in [card.id for card in sorryimlikethis_hand]
+            for card_id in [
+                "S262_Explorer",
+                "A499_CinereousVulture",
+                "A520_Sheep",
+                "S239_ExpertInPredators",
+                "S219_DiversityResearcher",
+                "A507_GreaterRhea",
+                "A413_Cougar",
+                "S231_SponsorshipPrimates",
+            ]
+        )
+
+    def test_opening_hands_for_4p_game(self):
+        game_log = GameLog(**load_data_from_fixture_file("4p.log.json"))
+        opening_hands = game_log.data.opening_hands
+        assert 4 == len(opening_hands)
+        for hand in opening_hands.values():
+            assert 8 == len(hand)
+
+        # PropagandaPanda
+        assert 94936862 in opening_hands
+        pp_hand = opening_hands[94936862]
+        assert all(
+            card_name in [card.name for card in pp_hand]
+            for card_name in [
+                "Baboon Rock",
+                "Indian Cobra",
+                "Sun Bear",
+                "Expert In Predators",
+                "Nile Crocodile",
+                "Federal Grants",
+                "Leopard",
+                "Science Lab",
+            ]
+        )
+        assert all(
+            card_id in [card.id for card in pp_hand]
+            for card_id in [
+                "S247_BaboonRock",
+                "A475_IndianCobra",
+                "A409_SunBear",
+                "S239_ExpertInPredators",
+                "A469_NileCrocodile",
+                "S220_FederalGrants",
+                "A403_Leopard",
+                "S201_ScienceLab",
+            ]
+        )
+
+        # randale_und_hurra
+        assert 92600865 in opening_hands
+        randale_hand = opening_hands[92600865]
+        assert all(
+            card_name in [card.name for card in randale_hand]
+            for card_name in [
+                "Sponsorship: Reptiles",
+                "African Bush Elephant",
+                "Bald Eagle",
+                "Sheep",
+                "Science Museum",
+                "Brown Spider Monkey",
+                "Mangalica",
+                "Angthong national park",
+            ]
+        )
+        assert all(
+            card_id in [card.id for card in randale_hand]
+            for card_id in [
+                "S232_SponsorshipReptiles",
+                "A426_AfricanBushElephant",
+                "A505_BaldEagle",
+                "A520_Sheep",
+                "S204_ScienceMuseum",
+                "A464_BrownSpiderMonkey",
+                "A524_Mangalica",
+                "P115_ReleaseAngthong",
+            ]
+        )
+
+        # dwarvintime
+        assert 94276826 in opening_hands
+        dwarvintime_hand = opening_hands[94276826]
+        assert all(
+            card_name in [card.name for card in dwarvintime_hand]
+            for card_name in [
+                "Grizzly Bear",
+                "Penguin Pool",
+                "Koala",
+                "Alpine Ibex",
+                "Proboscis Monkey",
+                "Giant Panda",
+                "Common Wall Lizard",
+                "Sloth Bear",
+            ]
+        )
+        assert all(
+            card_id in [card.id for card in dwarvintime_hand]
+            for card_id in [
+                "A411_GrizzlyBear",
+                "S244_PenguinPool",
+                "A448_Koala",
+                "A444_AlpineIbex",
+                "A451_ProboscisMonkey",
+                "A433_GiantPanda",
+                "A486_CommonWallLizard",
+                "A408_SlothBear",
+            ]
+        )
+
+        # Duci
+        assert 94929538 in opening_hands
+        duci_hand = opening_hands[94929538]
+        assert all(
+            card_name in [card.name for card in duci_hand]
+            for card_name in [
+                "Llama",
+                "Dugong",
+                "Red-shanked Douc",
+                "European Badger",
+                "Diversity Researcher",
+                "Herpetologist",
+                "Slow Worm",
+                "Coconut Lorikeet",
+            ]
+        )
+        assert all(
+            card_id in [card.id for card in duci_hand]
+            for card_id in [
+                "A439_Llama",
+                "A446_Dugong",
+                "A459_RedshankedDouc",
+                "A419_EuropeanBadger",
+                "S219_DiversityResearcher",
+                "S237_Herpetologist",
+                "A488_SlowWorm",
+                "A527_CoconutLorikeet",
+            ]
+        )
 
 
 class TestGameLogEventData:
