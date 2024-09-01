@@ -13,7 +13,7 @@ from typing import Iterator, Optional
 from python.runfiles import Runfiles
 
 from ark_nova_stats.bga_log_parser.exceptions import StatsNotSetError
-from ark_nova_stats.bga_log_parser.game_log import GameLog
+from ark_nova_stats.bga_log_parser.game_log import GameLog, GameLogEvent
 
 EMU_CUP_GAME_TABLE_IDS = set(
     [
@@ -256,8 +256,6 @@ class CardWinRateELOAdjusted:
 
     def process_game(self, log: GameLog, elos: dict[str, PlayerELOs]) -> None:
         game_cards: set[str] = set()
-        game_winner_cards: set[str] = set()
-        game_loser_cards: set[str] = set()
         winner = log.winner
 
         if winner is None:
@@ -281,21 +279,7 @@ class CardWinRateELOAdjusted:
         winner_winrate = winrates_by_id[winner.id]
         loser_winrate = 1 - winner_winrate
 
-        for event in log.data.logs:
-            for event_data in event.data:
-                if not event_data.is_play_action:
-                    continue
-
-                card_names = event_data.played_card_names
-                if card_names is None:
-                    continue
-
-                game_cards = game_cards.union(card_names)
-                if event_data.player is not None:
-                    player_id: int = int(event_data.player["id"])
-                    self.player_cards[player_id] = self.player_cards[player_id].union(
-                        card_names
-                    )
+        game_cards = self.game_log_cards(log)
 
         self.all_cards.update(game_cards)
 
@@ -311,6 +295,27 @@ class CardWinRateELOAdjusted:
                     self.game_card_records[card].add_points(0.5 - loser_winrate)
                 else:
                     self.game_card_records[card].add_points(0 - loser_winrate)
+
+    def game_log_cards(self, log: GameLog) -> set[str]:
+        game_cards: set[str] = set()
+        for event in log.data.logs:
+            for event_data in event.data:
+                if not event_data.is_play_action:
+                    continue
+
+                card_names = event_data.played_card_names
+                if card_names is None:
+                    continue
+
+                if event_data.player is not None:
+                    player_id: int = int(event_data.player["id"])
+                    self.player_cards[player_id] = self.player_cards[player_id].union(
+                        card_names
+                    )
+
+                game_cards = game_cards.union(card_names)
+
+        return game_cards
 
     def output(self, card: str) -> CardWinRateELOAdjustedOutput:
         if self.average_plays is None:
