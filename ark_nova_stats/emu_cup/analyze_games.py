@@ -8,12 +8,12 @@ import os
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
-from typing import Iterator, Optional
+from typing import Optional
 
 from python.runfiles import Runfiles
 
 from ark_nova_stats.bga_log_parser.exceptions import StatsNotSetError
-from ark_nova_stats.bga_log_parser.game_log import GameLog, GameLogEvent
+from ark_nova_stats.bga_log_parser.game_log import GameLog
 
 EMU_CUP_GAME_TABLE_IDS = set(
     [
@@ -409,13 +409,13 @@ def main(working_dir: str) -> int:
             "play_count_raw",
             "win_rate_raw",
             "win_rate_raw_bayes",
-            "opening_hand_play_count_raw",
+            "opening_hand_count_raw",
             "opening_hand_win_rate_raw",
             "opening_hand_win_rate_raw_bayes",
             "play_count_wae",
             "wins_above_expected",
             "wins_above_expected_bayes",
-            "opening_hand_play_count_wae",
+            "opening_hand_count_wae",
             "opening_hand_wins_above_expected",
             "opening_hand_wins_above_expected_bayes",
         ]
@@ -434,7 +434,7 @@ def main(working_dir: str) -> int:
                 opening_hand_raw_output = opening_hand_raw_win_rates.output(card)
                 row.update(
                     {
-                        "opening_hand_play_count_raw": opening_hand_raw_output.plays,
+                        "opening_hand_count_raw": opening_hand_raw_output.plays,
                         "opening_hand_win_rate_raw": opening_hand_raw_output.rate,
                         "opening_hand_win_rate_raw_bayes": opening_hand_raw_output.rate_bayes,
                     }
@@ -452,7 +452,7 @@ def main(working_dir: str) -> int:
                 opening_hand_elo_output = opening_hand_elo_win_rates.output(card)
                 row.update(
                     {
-                        "opening_hand_play_count_wae": opening_hand_elo_output.plays,
+                        "opening_hand_count_wae": opening_hand_elo_output.plays,
                         "opening_hand_wins_above_expected": opening_hand_elo_output.rate,
                         "opening_hand_wins_above_expected_bayes": opening_hand_elo_output.rate_bayes,
                     }
