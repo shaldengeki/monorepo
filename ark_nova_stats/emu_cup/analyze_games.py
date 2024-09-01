@@ -6,7 +6,7 @@ import datetime
 import json
 import os
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Iterator, Optional
 
@@ -252,6 +252,7 @@ class CardWinRateELOAdjusted:
         self.game_card_records: dict[str, CardELORecord] = {}
         self.average_plays = None
         self.outputs = None
+        self.player_cards: defaultdict[int, set[str]] = defaultdict(lambda: set())
 
     def process_game(self, log: GameLog, elos: dict[str, PlayerELOs]) -> None:
         game_cards: set[str] = set()
@@ -290,12 +291,11 @@ class CardWinRateELOAdjusted:
                     continue
 
                 game_cards = game_cards.union(card_names)
-
-                if event_data.player is not None and winner is not None:
-                    if event_data.player["id"] == winner.id:
-                        game_winner_cards = game_winner_cards.union(card_names)
-                    else:
-                        game_loser_cards = game_loser_cards.union(card_names)
+                if event_data.player is not None:
+                    player_id: int = int(event_data.player["id"])
+                    self.player_cards[player_id] = self.player_cards[player_id].union(
+                        card_names
+                    )
 
         self.all_cards.update(game_cards)
 
@@ -303,13 +303,14 @@ class CardWinRateELOAdjusted:
             if card not in self.game_card_records:
                 self.game_card_records[card] = CardELORecord(card_name=card)
 
-        for card in game_winner_cards:
-            self.game_card_records[card].add_points(1 - winner_winrate)
-        for card in game_loser_cards:
-            if log.is_tie:
-                self.game_card_records[card].add_points(0.5 - loser_winrate)
-            else:
-                self.game_card_records[card].add_points(0 - loser_winrate)
+        for player_id, player_cards in self.player_cards.items():
+            for card in player_cards:
+                if player_id == winner.id:
+                    self.game_card_records[card].add_points(1 - winner_winrate)
+                elif log.is_tie:
+                    self.game_card_records[card].add_points(0.5 - loser_winrate)
+                else:
+                    self.game_card_records[card].add_points(0 - loser_winrate)
 
     def output(self, card: str) -> CardWinRateELOAdjustedOutput:
         if self.average_plays is None:
