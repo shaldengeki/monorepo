@@ -8,7 +8,7 @@
         "home_api/frontend/*"
     ],
     "dependencies": {
-        "@apollo/client": "^3.11.4",
+        "@apollo/client": "^3.11.5",
         "@apollo/react-testing": "^4.0.0",
         "@headlessui/react": "^2.1.3",
         "@heroicons/react": "^2.1.5",
