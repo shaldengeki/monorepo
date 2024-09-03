@@ -1,4 +1,4 @@
-load("@rules_python//python:defs.bzl", "py_binary", "py_test")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
 filegroup(
     name = "game_data",
@@ -11,8 +11,11 @@ py_binary(
     data = [":game_data"],
     visibility = ["//:__subpackages__"],
     deps = [
+        ":player_elos",
         "//ark_nova_stats/bga_log_parser:exceptions",
         "//ark_nova_stats/bga_log_parser:game_log",
+        "//ark_nova_stats/emu_cup/analyses:elo_adjusted",
+        "//ark_nova_stats/emu_cup/analyses:win_rates",
         "@rules_python//python/runfiles",
     ],
 )
@@ -24,4 +27,10 @@ py_test(
         ":analyze_games",
         "@py_deps//pytest",
     ],
+)
+
+py_library(
+    name = "player_elos",
+    srcs = ["player_elos.py"],
+    visibility = ["//:__subpackages__"],
 )
