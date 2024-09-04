@@ -6,6 +6,7 @@ import tarfile
 import tempfile
 from typing import Optional
 
+import sqlalchemy
 from sqlalchemy import desc
 
 from ark_nova_stats.config import db
@@ -22,80 +23,101 @@ class GameLogArchiveCreator:
         self.num_logs = 0
         self.users: set[str] = set()
         self.last_log: Optional[GameLog] = None
+        self._filename: Optional[str] = None
+        self.archive_tempfile: Optional[tempfile._TemporaryFileWrapper[bytes]] = None
+        self.archive_tarfile: Optional[tarfile.TarFile] = None
 
     @property
     def archive_type(self) -> GameLogArchiveType:
         raise NotImplementedError
 
-    def process_game_log(
-        self, game_log: GameLog, archive_tarfile: tarfile.TarFile
-    ) -> GameLog:
-        raise NotImplementedError
+    def process_game_log(self, game_log: GameLog) -> None:
+        self.num_logs += 1
+        game_users: list[User] = game_log.users
+        self.users.update(set([u.name for u in game_users]))
+        if self.last_log is None or self.last_log.created_at < game_log.created_at:
+            self.last_log = game_log
 
+    @property
     def filename(self) -> str:
-        return (
-            self.archive_type.name
-            + "_"
-            + datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y_%m_%d")
-            + ".tar.gz"
-        )
+        if self._filename is None:
+            self._filename = (
+                self.archive_type.name
+                + "_"
+                + datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y_%m_%d")
+                + ".tar.gz"
+            )
 
-    def create_archive(self) -> Optional[GameLogArchive]:
+        return self._filename
+
+    def should_create_archive(self) -> bool:
         # First, bail if we've uploaded an archive recently.
-        last_archive: GameLogArchive = (
+        last_archive: Optional[GameLogArchive] = (
             GameLogArchive.query.filter(
                 GameLogArchive.archive_type == self.archive_type
             )
             .order_by(desc(GameLogArchive.created_at))
             .first()
         )
-        if last_archive is not None:
-            time_since_last_archive = datetime.datetime.now() - last_archive.created_at
-            if time_since_last_archive < self.min_interval:
-                self.logger.debug(
-                    f"Last archive was uploaded at {last_archive.created_at}, which was {time_since_last_archive} ago; skipping."
-                )
-                return None
+        if last_archive is None:
+            return True
 
-            # Next, check to see if we have new logs to include in the archive.
-            new_logs = GameLog.query.where(
-                GameLog.id > last_archive.last_game_log_id
-            ).count()
-            if new_logs == 0:
-                self.logger.debug(
-                    f"No new logs to include since game ID {last_archive.last_game_log_id}; skipping."
-                )
-                return None
-
-        filename = self.filename()
-        self.logger.info(f"Creating archive at: {filename}")
-
-        # For each batch, write a logfile.
-        with tempfile.NamedTemporaryFile(suffix=filename) as archive_tempfile:
-            with tarfile.open(archive_tempfile.name, "w:gz") as archive_tarfile:
-                for game_log in GameLog.query.yield_per(10):
-                    self.process_game_log(game_log, archive_tarfile)
-                    self.num_logs += 1
-                    game_users: list[User] = game_log.users
-                    self.users.update(set([u.name for u in game_users]))
-                    if (
-                        self.last_log is None
-                        or self.last_log.created_at < game_log.created_at
-                    ):
-                        self.last_log = game_log
-
-            # Upload the compressed gzip jsonl to Tigris.
-            self.tigris_client.upload_file(
-                archive_tempfile.name,
-                os.getenv("BUCKET_NAME"),
-                self.archive_type.name + "/" + filename,
+        time_since_last_archive = datetime.datetime.now() - last_archive.created_at
+        if time_since_last_archive < self.min_interval:
+            self.logger.debug(
+                f"Last archive was uploaded at {last_archive.created_at}, which was {time_since_last_archive} ago; skipping."
             )
-            url = f"{os.getenv('TIGRIS_CUSTOM_DOMAIN_HOST')}/{self.archive_type.name}/{filename}"
-            size_bytes = os.path.getsize(archive_tempfile.name)
+            return False
 
-        self.logger.info(f"Uploaded game log archive at: {url} with size: {size_bytes}")
+        # Next, check to see if we have new logs to include in the archive.
+        new_logs = GameLog.query.where(
+            GameLog.id > last_archive.last_game_log_id
+        ).count()
+        if new_logs == 0:
+            self.logger.debug(
+                f"No new logs to include since game ID {last_archive.last_game_log_id}; skipping."
+            )
+            return False
 
+        return True
+
+    def game_logs(self) -> "sqlalchemy.orm.query.Query[GameLog]":
+        return GameLog.query.yield_per(10)
+
+    def create_archive_tempfile(self, directory: str) -> tarfile.TarFile:
+        self.logger.info(f"Creating archive at: {self.filename}")
+        self.archive_tempfile = tempfile.NamedTemporaryFile(
+            suffix=self.filename, dir=directory, delete=False
+        )
+        self.archive_tarfile = tarfile.open(self.archive_tempfile.name, "w:gz")
+        return self.archive_tarfile
+
+    def upload_archive(self) -> None:
+        # Upload the compressed gzip jsonl to Tigris.
+        if self.archive_tempfile is None:
+            raise ValueError(
+                f"Cannot call upload_archive before we've created the tempfile."
+            )
+
+        key = self.archive_type.name + "/" + self.filename
+        size_bytes = os.path.getsize(self.archive_tempfile.name)
+        self.tigris_client.upload_file(
+            self.archive_tempfile.name,
+            os.getenv("BUCKET_NAME"),
+            key,
+        )
+        self.logger.info(f"Uploaded game log archive at: {key} with size: {size_bytes}")
+
+    def record_archive(self) -> GameLogArchive:
         # Record this archive in the database.
+        if self.archive_tempfile is None:
+            raise ValueError(
+                "Cannot call record_archive before we've created the tempfile."
+            )
+
+        url = f"{os.getenv('TIGRIS_CUSTOM_DOMAIN_HOST')}/{self.archive_type.name}/{self.filename}"
+        size_bytes = os.path.getsize(self.archive_tempfile.name)
+
         if self.last_log is None:
             last_game_log_id = None
         else:
@@ -124,7 +146,14 @@ class RawBGALogArchiveCreator(GameLogArchiveCreator):
     def archive_type(self) -> GameLogArchiveType:
         return GameLogArchiveType.RAW_BGA_JSONL
 
-    def process_game_log(self, game_log: GameLog, archive_tarfile: tarfile.TarFile):
+    def process_game_log(self, game_log: GameLog) -> None:
+        if self.archive_tarfile is None:
+            raise ValueError(
+                "Cannot call process_game_log before creating the archive tarfile."
+            )
+
+        super(RawBGALogArchiveCreator, self).process_game_log(game_log)
+
         user_names = "_".join([u.name.replace(" ", "_") for u in game_log.users])
         log_tempfile_name = f"{game_log.bga_table_id}_{user_names}.json"
         with tempfile.NamedTemporaryFile(
@@ -134,7 +163,7 @@ class RawBGALogArchiveCreator(GameLogArchiveCreator):
             log_tempfile.flush()
             os.fsync(log_tempfile)
 
-            archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
+            self.archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
 
 
 class BGAWithELOArchiveCreator(GameLogArchiveCreator):
@@ -149,7 +178,14 @@ class BGAWithELOArchiveCreator(GameLogArchiveCreator):
     def initialize_users(self) -> dict[int, str]:
         return {user.bga_id: user.name for user in User.query.all()}
 
-    def process_game_log(self, game_log: GameLog, archive_tarfile: tarfile.TarFile):
+    def process_game_log(self, game_log: GameLog) -> None:
+        if self.archive_tarfile is None:
+            raise ValueError(
+                "Cannot call process_game_log before creating the archive tarfile."
+            )
+
+        super(BGAWithELOArchiveCreator, self).process_game_log(game_log)
+
         user_names = "_".join([u.name.replace(" ", "_") for u in game_log.users])
 
         ratings = game_log.game_ratings
@@ -174,4 +210,4 @@ class BGAWithELOArchiveCreator(GameLogArchiveCreator):
             log_tempfile.flush()
             os.fsync(log_tempfile)
 
-            archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
+            self.archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)

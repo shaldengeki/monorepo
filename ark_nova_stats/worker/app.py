@@ -2,8 +2,8 @@ import datetime
 import json
 import logging
 import os
+import tempfile
 import time
-from typing import Optional
 
 import boto3
 
@@ -28,14 +28,34 @@ def archive_logs_to_tigris(
 ) -> list[GameLogArchive]:
     # TODO: convert all of these database requests to GraphQL requests over the internal network.
     archives = []
-    for archive_creator in (RawBGALogArchiveCreator, BGAWithELOArchiveCreator):
-        archive = archive_creator(
+    archive_types = [
+        archive_type(
             logger=logger,
             tigris_client=tigris_client,
             min_interval=min_interval,
-        ).create_archive()
-        if archive is not None:
-            archives.append(archive)
+        )
+        for archive_type in (RawBGALogArchiveCreator, BGAWithELOArchiveCreator)
+    ]
+    archive_types_to_create = [
+        archive_type
+        for archive_type in archive_types
+        if archive_type.should_create_archive()
+    ]
+
+    if not archive_types_to_create:
+        return []
+
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        for archive_type in archive_types_to_create:
+            archive_type.create_archive_tempfile(tmpdirname)
+
+        for game_log in archive_types_to_create[0].game_logs():
+            for archive_type in archive_types_to_create:
+                archive_type.process_game_log(game_log)
+
+        for archive_type in archive_types_to_create:
+            archive_type.upload_archive()
+            archives.append(archive_type.record_archive())
 
     return archives
 
