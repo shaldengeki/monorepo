@@ -210,9 +210,9 @@ flask==3.0.3 \
     #   graphql-server
     #   types-flask-cors
     #   types-flask-migrate
-flask-cors==4.0.1 \
-    --hash=sha256:eeb69b342142fdbf4766ad99357a7f3876a2ceb77689dc10ff912aac06c389e4 \
-    --hash=sha256:f2a704e4458665580c074b714c4627dd5a306b333deb9074d0b1794dfa2fb677
+flask-cors==5.0.0 \
+    --hash=sha256:5aadb4b950c4e93745034594d9f3ea6591f734bb3662e16e255ffbf5e89c88ef \
+    --hash=sha256:b9e307d082a9261c100d8fb0ba909eec6a228ed1b60a8315fd85f783d61910bc
     # via -r requirements.txt
 flask-migrate==4.0.7 \
     --hash=sha256:5c532be17e7b43a223b7500d620edae33795df27c75811ddf32560f7d48ec617 \
