@@ -45,13 +45,22 @@ def archive_logs_to_tigris(
     if not archive_types_to_create:
         return []
 
+    logger.info(
+        f"Creating archives for types: {[str(t.archive_type) for t in archive_types_to_create]}"
+    )
+    logs_processed = 0
+
     with tempfile.TemporaryDirectory() as tmpdirname:
         for archive_type in archive_types_to_create:
             archive_type.create_archive_tempfile(tmpdirname)
 
         for game_log in archive_types_to_create[0].game_logs():
+            logs_processed += 1
             for archive_type in archive_types_to_create:
                 archive_type.process_game_log(game_log)
+
+            if logs_processed % 100 == 0:
+                logger.info(f"Processed {logs_processed} game logs for archive...")
 
         for archive_type in archive_types_to_create:
             archive_type.upload_archive()
