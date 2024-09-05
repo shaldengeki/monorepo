@@ -734,7 +734,7 @@
     },
     "@@aspect_rules_ts~//ts:extensions.bzl%ext": {
       "general": {
-        "bzlTransitiveDigest": "1X9STUnwmBLzzWERVX6QAHTZVHXkhVNUNaw1KokzY/Q=",
+        "bzlTransitiveDigest": "ih8NNHbL9x82jWgxv2H9LOcvfWQ4Mi/2ekPCsez/lNc=",
         "usagesDigest": "KrtIXYD5SXmhBL7naWSZw66Aw5PQXls8A800FfZmhcg=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -745,7 +745,7 @@
             "ruleClassName": "http_archive_version",
             "attributes": {
               "bzlmod": true,
-              "version": "5.4.5",
+              "version": "5.5.4",
               "integrity": "",
               "build_file": "@@aspect_rules_ts~//ts:BUILD.typescript",
               "build_file_substitutions": {
@@ -855,8 +855,8 @@
     },
     "@@rules_nodejs~//nodejs:extensions.bzl%node": {
       "general": {
-        "bzlTransitiveDigest": "liNCpme8abwnUcdsL6FZlbuEqQRiO4GmDTZyX6QuOH4=",
-        "usagesDigest": "tNbapk4XU/ruMfFbyR8m4sHB03wSP8sbhRQEmIv/gqo=",
+        "bzlTransitiveDigest": "0IJr1Jg3Dns9QKY65MtauFLtHjjP3n1DgN0+ZAjFYXo=",
+        "usagesDigest": "QaaCjO0WbxbalX+3ei3mvAH3DxI2biGkZ5h5rxhaOwk=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -870,57 +870,93 @@
           },
           "nodejs_linux_s390x": {
             "bzlFile": "@@rules_nodejs~//nodejs:repositories.bzl",
-            "ruleClassName": "node_repositories",
+            "ruleClassName": "_nodejs_repositories",
             "attributes": {
-              "platform": "linux_s390x",
-              "node_version": "16.19.0"
+              "node_download_auth": {},
+              "node_repositories": {},
+              "node_urls": [
+                "https://nodejs.org/dist/v{version}/{filename}"
+              ],
+              "node_version": "18.20.3",
+              "include_headers": false,
+              "platform": "linux_s390x"
             }
           },
           "nodejs_windows_amd64": {
             "bzlFile": "@@rules_nodejs~//nodejs:repositories.bzl",
-            "ruleClassName": "node_repositories",
+            "ruleClassName": "_nodejs_repositories",
             "attributes": {
-              "platform": "windows_amd64",
-              "node_version": "16.19.0"
+              "node_download_auth": {},
+              "node_repositories": {},
+              "node_urls": [
+                "https://nodejs.org/dist/v{version}/{filename}"
+              ],
+              "node_version": "18.20.3",
+              "include_headers": false,
+              "platform": "windows_amd64"
             }
           },
           "nodejs_toolchains": {
-            "bzlFile": "@@rules_nodejs~//nodejs/private:toolchains_repo.bzl",
-            "ruleClassName": "toolchains_repo",
+            "bzlFile": "@@rules_nodejs~//nodejs/private:nodejs_toolchains_repo.bzl",
+            "ruleClassName": "nodejs_toolchains_repo",
             "attributes": {
               "user_node_repository_name": "nodejs"
             }
           },
           "nodejs_linux_amd64": {
             "bzlFile": "@@rules_nodejs~//nodejs:repositories.bzl",
-            "ruleClassName": "node_repositories",
+            "ruleClassName": "_nodejs_repositories",
             "attributes": {
-              "platform": "linux_amd64",
-              "node_version": "16.19.0"
+              "node_download_auth": {},
+              "node_repositories": {},
+              "node_urls": [
+                "https://nodejs.org/dist/v{version}/{filename}"
+              ],
+              "node_version": "18.20.3",
+              "include_headers": false,
+              "platform": "linux_amd64"
             }
           },
           "nodejs_linux_ppc64le": {
             "bzlFile": "@@rules_nodejs~//nodejs:repositories.bzl",
-            "ruleClassName": "node_repositories",
+            "ruleClassName": "_nodejs_repositories",
             "attributes": {
-              "platform": "linux_ppc64le",
-              "node_version": "16.19.0"
+              "node_download_auth": {},
+              "node_repositories": {},
+              "node_urls": [
+                "https://nodejs.org/dist/v{version}/{filename}"
+              ],
+              "node_version": "18.20.3",
+              "include_headers": false,
+              "platform": "linux_ppc64le"
             }
           },
           "nodejs_darwin_amd64": {
             "bzlFile": "@@rules_nodejs~//nodejs:repositories.bzl",
-            "ruleClassName": "node_repositories",
+            "ruleClassName": "_nodejs_repositories",
             "attributes": {
-              "platform": "darwin_amd64",
-              "node_version": "16.19.0"
+              "node_download_auth": {},
+              "node_repositories": {},
+              "node_urls": [
+                "https://nodejs.org/dist/v{version}/{filename}"
+              ],
+              "node_version": "18.20.3",
+              "include_headers": false,
+              "platform": "darwin_amd64"
             }
           },
           "nodejs_linux_arm64": {
             "bzlFile": "@@rules_nodejs~//nodejs:repositories.bzl",
-            "ruleClassName": "node_repositories",
+            "ruleClassName": "_nodejs_repositories",
             "attributes": {
-              "platform": "linux_arm64",
-              "node_version": "16.19.0"
+              "node_download_auth": {},
+              "node_repositories": {},
+              "node_urls": [
+                "https://nodejs.org/dist/v{version}/{filename}"
+              ],
+              "node_version": "18.20.3",
+              "include_headers": false,
+              "platform": "linux_arm64"
             }
           },
           "nodejs": {
@@ -932,31 +968,26 @@
           },
           "nodejs_darwin_arm64": {
             "bzlFile": "@@rules_nodejs~//nodejs:repositories.bzl",
-            "ruleClassName": "node_repositories",
+            "ruleClassName": "_nodejs_repositories",
             "attributes": {
-              "platform": "darwin_arm64",
-              "node_version": "16.19.0"
+              "node_download_auth": {},
+              "node_repositories": {},
+              "node_urls": [
+                "https://nodejs.org/dist/v{version}/{filename}"
+              ],
+              "node_version": "18.20.3",
+              "include_headers": false,
+              "platform": "darwin_arm64"
             }
           }
         },
-        "recordedRepoMappingEntries": [
-          [
-            "rules_nodejs~",
-            "bazel_skylib",
-            "bazel_skylib~"
-          ],
-          [
-            "rules_nodejs~",
-            "bazel_tools",
-            "bazel_tools"
-          ]
-        ]
+        "recordedRepoMappingEntries": []
       }
     },
     "@@rules_oci~//oci:extensions.bzl%oci": {
       "general": {
-        "bzlTransitiveDigest": "tD+SFENvOPcKVT3au+nAbtKfFVzD0+MbFp/tbFgKTs4=",
-        "usagesDigest": "WA7xKqmHzGyAHRlytaTEU7pxZEmAMMxpCGcCqRochxc=",
+        "bzlTransitiveDigest": "+UObPSehBvY4JgsKrrCNmKYw5WtXA0jtnDvu8EcROcc=",
+        "usagesDigest": "JSb+WSrIZeQ0DfOYfsTSb5/JUdgoMYDJWZfnoZUwvSY=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -985,7 +1016,8 @@
               "repository": "library/python",
               "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
               "platform": "linux/s390x",
-              "target_name": "python3_image_linux_s390x"
+              "target_name": "python3_image_linux_s390x",
+              "bazel_tags": []
             }
           },
           "jq_darwin_amd64": {
@@ -1005,7 +1037,8 @@
               "repository": "library/ubuntu",
               "identifier": "sha256:67211c14fa74f070d27cc59d69a7fa9aeff8e28ea118ef3babc295a0428a6d21",
               "platform": "linux/amd64",
-              "target_name": "ubuntu_image_linux_amd64"
+              "target_name": "ubuntu_image_linux_amd64",
+              "bazel_tags": []
             }
           },
           "copy_to_directory_freebsd_amd64": {
@@ -1024,7 +1057,8 @@
               "repository": "library/nginx",
               "identifier": "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
               "platform": "linux/arm64/v8",
-              "target_name": "nginx_debian_slim_linux_arm64_v8"
+              "target_name": "nginx_debian_slim_linux_arm64_v8",
+              "bazel_tags": []
             }
           },
           "ubuntu_image": {
@@ -1145,7 +1179,8 @@
               "repository": "library/python",
               "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
               "platform": "linux/ppc64le",
-              "target_name": "python3_image_linux_ppc64le"
+              "target_name": "python3_image_linux_ppc64le",
+              "bazel_tags": []
             }
           },
           "oci_crane_linux_i386": {
@@ -1165,7 +1200,8 @@
               "repository": "library/ubuntu",
               "identifier": "sha256:67211c14fa74f070d27cc59d69a7fa9aeff8e28ea118ef3babc295a0428a6d21",
               "platform": "linux/arm64/v8",
-              "target_name": "ubuntu_image_linux_arm64_v8"
+              "target_name": "ubuntu_image_linux_arm64_v8",
+              "bazel_tags": []
             }
           },
           "oci_crane_windows_armv6": {
@@ -1200,7 +1236,8 @@
               "repository": "library/nginx",
               "identifier": "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
               "platform": "linux/386",
-              "target_name": "nginx_debian_slim_linux_386"
+              "target_name": "nginx_debian_slim_linux_386",
+              "bazel_tags": []
             }
           },
           "nginx_debian_slim_linux_ppc64le": {
@@ -1212,7 +1249,8 @@
               "repository": "library/nginx",
               "identifier": "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
               "platform": "linux/ppc64le",
-              "target_name": "nginx_debian_slim_linux_ppc64le"
+              "target_name": "nginx_debian_slim_linux_ppc64le",
+              "bazel_tags": []
             }
           },
           "yq_toolchains": {
@@ -1247,7 +1285,8 @@
               "repository": "library/python",
               "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
               "platform": "linux/amd64",
-              "target_name": "python3_image_linux_amd64"
+              "target_name": "python3_image_linux_amd64",
+              "bazel_tags": []
             }
           },
           "python3_image_linux_386": {
@@ -1259,7 +1298,8 @@
               "repository": "library/python",
               "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
               "platform": "linux/386",
-              "target_name": "python3_image_linux_386"
+              "target_name": "python3_image_linux_386",
+              "bazel_tags": []
             }
           },
           "jq": {
@@ -1336,7 +1376,8 @@
               "repository": "library/python",
               "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
               "platform": "linux/arm64/v8",
-              "target_name": "python3_image_linux_arm64_v8"
+              "target_name": "python3_image_linux_arm64_v8",
+              "bazel_tags": []
             }
           },
           "copy_to_directory_darwin_arm64": {
@@ -1362,7 +1403,8 @@
               "repository": "library/nginx",
               "identifier": "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
               "platform": "linux/arm/v5",
-              "target_name": "nginx_debian_slim_linux_arm_v5"
+              "target_name": "nginx_debian_slim_linux_arm_v5",
+              "bazel_tags": []
             }
           },
           "nginx_debian_slim_linux_arm_v7": {
@@ -1374,7 +1416,8 @@
               "repository": "library/nginx",
               "identifier": "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
               "platform": "linux/arm/v7",
-              "target_name": "nginx_debian_slim_linux_arm_v7"
+              "target_name": "nginx_debian_slim_linux_arm_v7",
+              "bazel_tags": []
             }
           },
           "python3_image_linux_arm_v5": {
@@ -1386,7 +1429,8 @@
               "repository": "library/python",
               "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
               "platform": "linux/arm/v5",
-              "target_name": "python3_image_linux_arm_v5"
+              "target_name": "python3_image_linux_arm_v5",
+              "bazel_tags": []
             }
           },
           "python3_image_linux_arm_v7": {
@@ -1398,7 +1442,8 @@
               "repository": "library/python",
               "identifier": "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
               "platform": "linux/arm/v7",
-              "target_name": "python3_image_linux_arm_v7"
+              "target_name": "python3_image_linux_arm_v7",
+              "bazel_tags": []
             }
           },
           "jq_linux_amd64": {
@@ -1418,7 +1463,8 @@
               "repository": "library/nginx",
               "identifier": "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
               "platform": "linux/amd64",
-              "target_name": "nginx_debian_slim_linux_amd64"
+              "target_name": "nginx_debian_slim_linux_amd64",
+              "bazel_tags": []
             }
           },
           "nginx_debian_slim": {
@@ -1505,7 +1551,8 @@
               "repository": "library/nginx",
               "identifier": "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
               "platform": "linux/s390x",
-              "target_name": "nginx_debian_slim_linux_s390x"
+              "target_name": "nginx_debian_slim_linux_s390x",
+              "bazel_tags": []
             }
           },
           "yq_linux_arm64": {
