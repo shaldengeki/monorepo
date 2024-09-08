@@ -123,9 +123,7 @@ function handleRatingsRequest(requestDetails) {
 
 function handleRequest(requestDetails) {
   // Only do more work if the user has enabled this feature.
-  console.log("in handleRequest");
   browser.storage.sync.get(['recordGameLog']).then((result) => {
-    console.log("got user prefs", result);
     if (result !== undefined && result.recordGameLog) {
       if (requestDetails.url.includes("logs.html")) {
         return handleLogsRequest(requestDetails);
