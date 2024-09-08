@@ -34,7 +34,7 @@ const names2 = [
 ];
 
 let disablePlayers;
-browser.storage.sync.get(['disablePlayers'], result => {
+browser.storage.sync.get('disablePlayers').then((result) => {
   if (result.disablePlayers) {
     disablePlayers = true;
     observe();
@@ -141,7 +141,7 @@ const countOccurrences2 = () => {
   return cnt;
 };
 
-browser.storage.sync.get(['displayTimer'], result => {
+browser.storage.sync.get('displayTimer').then((result) => {
   displayTimer = result.displayTimer;
 });
 
@@ -176,7 +176,7 @@ setInterval(() => {
 /// DISPLAY ELO
 
 let displayElo;
-browser.storage.sync.get(['displayElo'], result => {
+browser.storage.sync.get('displayElo').then((result) => {
   if (result.displayElo) {
     displayElo = true;
   }

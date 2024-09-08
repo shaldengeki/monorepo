@@ -1,5 +1,5 @@
 var browser = (browser) ? browser : chrome;
-let pattern = "https://boardgamearena.com/*";
+let pattern = "https://*.boardgamearena.com/*";
 let apiEndpoint = "https://api.arknova.ouguo.us/graphql";
 
 function readEntireResponse(data) {
@@ -122,18 +122,22 @@ function handleRatingsRequest(requestDetails) {
 }
 
 function handleRequest(requestDetails) {
-  if (requestDetails.url.includes("logs.html")) {
-    return handleLogsRequest(requestDetails);
-  } else if (requestDetails.url.includes("tableratingsupdate.html")) {
-    return handleRatingsRequest(requestDetails);
-  }
+  // Only do more work if the user has enabled this feature.
+  browser.storage.sync.get("recordGameLog").then((result) => {
+    if (result !== undefined && result.recordGameLog) {
+      if (requestDetails.url.includes("logs.html")) {
+        return handleLogsRequest(requestDetails);
+      } else if (requestDetails.url.includes("tableratingsupdate.html")) {
+        return handleRatingsRequest(requestDetails);
+      }
+    }
+  });
+
+  return {};
 }
 
-browser.storage.sync.get(['recordGameLog'], result => {
-  if (result !== undefined && result.recordGameLog) {
-    browser.webRequest.onBeforeRequest.addListener(
-      handleRequest,
-      { urls: [pattern] },
-    );
-  }
-});
+browser.webRequest.onBeforeRequest.addListener(
+  handleRequest,
+  { urls: [pattern] },
+  ["blocking"],
+);
