@@ -123,7 +123,7 @@ function handleRatingsRequest(requestDetails) {
 
 function handleRequest(requestDetails) {
   // Only do more work if the user has enabled this feature.
-  browser.storage.sync.get(['recordGameLog']).then((result) => {
+  browser.storage.sync.get("recordGameLog").then((result) => {
     if (result !== undefined && result.recordGameLog) {
       if (requestDetails.url.includes("logs.html")) {
         return handleLogsRequest(requestDetails);

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const displayTimerControl = document.getElementById('displayTimer');
   const recordGameLog = document.getElementById('recordGameLog');
 
-  browser.storage.sync.get(['disablePlayers'], function (result) {
+  browser.storage.sync.get('disablePlayers').then((result) => {
     const checked = result.disablePlayers || false;
     disablePlayersControl.checked = checked;
 
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // });
   });
 
-  browser.storage.sync.get(['displayElo'], function (result) {
+  browser.storage.sync.get('displayElo').then((result) => {
     const checked = result.displayElo || false;
     displayEloControl.checked = checked;
 
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // });
   });
 
-  browser.storage.sync.get(['displayTimer'], function (result) {
+  browser.storage.sync.get('displayTimer').then((result) => {
     const checked = result.displayTimer || false;
     displayTimerControl.checked = checked;
 
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // });
   });
 
-  browser.storage.sync.get(['recordGameLog'], function (result) {
+  browser.storage.sync.get('recordGameLog').then((result) => {
     const checked = result.recordGameLog || false;
     recordGameLog.checked = checked;
   });
