@@ -1,3 +1,4 @@
+var browser = (browser) ? browser : chrome;
 let pattern = "https://boardgamearena.com/*";
 let apiEndpoint = "https://api.arknova.ouguo.us/graphql";
 

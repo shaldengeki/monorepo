@@ -1,3 +1,5 @@
+var browser = (browser) ? browser : chrome;
+
 document.addEventListener('DOMContentLoaded', function () {
   const disablePlayersControl = document.getElementById('hidePlayers');
   const displayEloControl = document.getElementById('displayElo');
