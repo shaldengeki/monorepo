@@ -29,10 +29,12 @@
     ],
     "host_permissions": [
         "https://api.arknova.ouguo.us/*",
-        "https://boardgamearena.com/*"
+        "https://*.boardgamearena.com/*"
     ],
     "permissions": [
         "webRequest",
+        "webRequestBlocking",
+        "webRequestFilterResponse",
         "activeTab",
         "scripting",
         "storage"
