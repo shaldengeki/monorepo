@@ -128,8 +128,11 @@ function handleRequest(requestDetails) {
   }
 }
 
-browser.webRequest.onBeforeRequest.addListener(
-  handleRequest,
-  { urls: [pattern] },
-  ["blocking"],
-);
+browser.storage.sync.get(['recordGameLog'], result => {
+  if (result !== undefined && result.recordGameLog) {
+    browser.webRequest.onBeforeRequest.addListener(
+      handleRequest,
+      { urls: [pattern] },
+    );
+  }
+});
