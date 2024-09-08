@@ -1,3 +1,4 @@
+var browser = (browser) ? browser : chrome;
 const seed = window.location.href.split('table=')[1].split('&')[0];
 const replay = window.location.href.includes('/replay');
 let arkNova = () => document.title.includes('Ark Nova');
