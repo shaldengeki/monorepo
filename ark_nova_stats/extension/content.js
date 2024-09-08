@@ -191,3 +191,24 @@ const id2 = setInterval(() => {
     });
   }
 }, 500);
+
+/// PLAYER ORDER FIX
+fixPlayerOrdering = (intervalId) => {
+  const playerBoards = document.getElementsByClassName('ark-player-board-resizable');
+  var idOrder = [];
+  for (i = 0; i < playerBoards.length; i++) {
+    idOrder.push(playerBoards[i].id.replace("player-board-resizable-", ""));
+  }
+
+  const playerBoardsContainer = document.getElementById("player_boards");
+  const playerBoardConfig = document.getElementById("player_board_config");
+  const newBoardOrder = [
+    playerBoardConfig,
+  ].concat(idOrder.map((playerId) => { return document.getElementById("overall_player_board_" + playerId) }));
+  newBoardOrder.forEach((elt) => { playerBoardsContainer.appendChild(elt); })
+
+  clearInterval(intervalId);
+}
+const fixPlayerOrderingInterval = setInterval(() => {
+  fixPlayerOrdering(fixPlayerOrderingInterval);
+}, 500);
