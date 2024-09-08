@@ -4,14 +4,21 @@
     "version": "1.0",
     "description": "Saves Ark Nova replays and shares them with Ark Nova Stats.",
     "icons": {
-      "48": "icons/icon.png"
+      "96": "icons/icon.png"
     },
     "action": {
       "default_popup": "index.html",
       "default_icon": "./icons/icon.png"
     },
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "detectivekookaburra@arknova.ouguo.us",
+        "strict_min_version": "109.0"
+      }
+    },
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["background.js"],
+        "service_worker": "background.js"
     },
     "content_scripts": [
       {
@@ -26,9 +33,9 @@
     ],
     "permissions": [
         "webRequest",
-        "webRequestBlocking",
         "activeTab",
         "scripting",
         "storage"
     ]
+
   }

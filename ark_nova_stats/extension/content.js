@@ -33,7 +33,7 @@ const names2 = [
 ];
 
 let disablePlayers;
-chrome.storage.sync.get(['disablePlayers'], result => {
+browser.storage.sync.get(['disablePlayers'], result => {
   if (result.disablePlayers) {
     disablePlayers = true;
     observe();
@@ -140,7 +140,7 @@ const countOccurrences2 = () => {
   return cnt;
 };
 
-chrome.storage.sync.get(['displayTimer'], result => {
+browser.storage.sync.get(['displayTimer'], result => {
   displayTimer = result.displayTimer;
 });
 
@@ -175,7 +175,7 @@ setInterval(() => {
 /// DISPLAY ELO
 
 let displayElo;
-chrome.storage.sync.get(['displayElo'], result => {
+browser.storage.sync.get(['displayElo'], result => {
   if (result.displayElo) {
     displayElo = true;
   }
@@ -202,6 +202,10 @@ fixPlayerOrdering = (intervalId) => {
 
   const playerBoardsContainer = document.getElementById("player_boards");
   const playerBoardConfig = document.getElementById("player_board_config");
+  if (playerBoardConfig === null) {
+    return;
+  }
+
   const newBoardOrder = [
     playerBoardConfig,
   ].concat(idOrder.map((playerId) => { return document.getElementById("overall_player_board_" + playerId) }));
