@@ -94,10 +94,14 @@ class GameLogArchiveCreator:
 
     def upload_archive(self) -> None:
         # Upload the compressed gzip jsonl to Tigris.
-        if self.archive_tempfile is None:
+        if self.archive_tarfile is None or self.archive_tempfile is None:
             raise ValueError(
                 f"Cannot call upload_archive before we've created the tempfile."
             )
+
+        os.fsync(self.archive_tempfile)
+        self.archive_tarfile.close()
+        self.archive_tempfile.close()
 
         key = self.archive_type.name + "/" + self.filename
         size_bytes = os.path.getsize(self.archive_tempfile.name)
@@ -147,7 +151,7 @@ class RawBGALogArchiveCreator(GameLogArchiveCreator):
         return GameLogArchiveType.RAW_BGA_JSONL
 
     def process_game_log(self, game_log: GameLog) -> None:
-        if self.archive_tarfile is None:
+        if self.archive_tarfile is None or self.archive_tempfile is None:
             raise ValueError(
                 "Cannot call process_game_log before creating the archive tarfile."
             )
@@ -164,6 +168,7 @@ class RawBGALogArchiveCreator(GameLogArchiveCreator):
             os.fsync(log_tempfile)
 
             self.archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
+            os.fsync(self.archive_tempfile)
 
 
 class BGAWithELOArchiveCreator(GameLogArchiveCreator):
@@ -179,7 +184,7 @@ class BGAWithELOArchiveCreator(GameLogArchiveCreator):
         return {user.bga_id: user.name for user in User.query.all()}
 
     def process_game_log(self, game_log: GameLog) -> None:
-        if self.archive_tarfile is None:
+        if self.archive_tarfile is None or self.archive_tempfile is None:
             raise ValueError(
                 "Cannot call process_game_log before creating the archive tarfile."
             )
@@ -211,3 +216,4 @@ class BGAWithELOArchiveCreator(GameLogArchiveCreator):
             os.fsync(log_tempfile)
 
             self.archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
+            os.fsync(self.archive_tempfile)
