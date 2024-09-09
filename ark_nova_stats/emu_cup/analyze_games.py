@@ -111,9 +111,9 @@ def main(working_dir: str) -> int:
             except StatsNotSetError:
                 print(f"{p} doesn't have stats set!")
                 continue
-            elos: dict[str, PlayerELOs] = {
-                name: PlayerELOs(name=name, **vals)
-                for name, vals in parsed_file["elos"].items()
+            elos: dict[int, PlayerELOs] = {
+                user_id: PlayerELOs(id=user_id, **vals)
+                for user_id, vals in parsed_file["elos"].items()
             }
 
         raw_win_rates.process_game(log)
