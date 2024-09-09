@@ -174,7 +174,6 @@ class RawBGALogArchiveCreator(GameLogArchiveCreator):
 class BGAWithELOArchiveCreator(GameLogArchiveCreator):
     def __init__(self, *args, **kwargs):
         super(BGAWithELOArchiveCreator, self).__init__(*args, **kwargs)
-        self.user_bga_id_to_name = self.initialize_users()
 
     @property
     def archive_type(self) -> GameLogArchiveType:
@@ -197,7 +196,7 @@ class BGAWithELOArchiveCreator(GameLogArchiveCreator):
         payload = {}
         if ratings is not None:
             payload["elos"] = {
-                self.user_bga_id_to_name[rating.user_id]: {
+                rating.user_id: {
                     "prior_elo": rating.prior_elo,
                     "new_elo": rating.new_elo,
                     "prior_arena_elo": rating.prior_arena_elo,
