@@ -53,18 +53,18 @@ class CardWinRateELOAdjusted:
         self.outputs = None
         self.player_cards: defaultdict[int, set[str]] = defaultdict(lambda: set())
 
-    def process_game(self, log: GameLog, elos: dict[str, PlayerELOs]) -> None:
+    def process_game(self, log: GameLog, elos: dict[int, PlayerELOs]) -> None:
         if len(log.data.players) != 2:
             print(f"Skipping log, not a two-player game")
 
         winrates_by_id: dict[int, float] = {
             log.data.players[0].id: probability_of_win(
-                elos[log.data.players[0].name].prior_elo,
-                elos[log.data.players[1].name].prior_elo,
+                elos[log.data.players[0].id].prior_elo,
+                elos[log.data.players[1].id].prior_elo,
             ),
             log.data.players[1].id: probability_of_win(
-                elos[log.data.players[1].name].prior_elo,
-                elos[log.data.players[0].name].prior_elo,
+                elos[log.data.players[1].id].prior_elo,
+                elos[log.data.players[0].id].prior_elo,
             ),
         }
 

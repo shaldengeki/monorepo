@@ -3,7 +3,7 @@ import dataclasses
 
 @dataclasses.dataclass
 class PlayerELOs:
-    name: str
+    id: int
     prior_elo: int
     new_elo: int
     prior_arena_elo: int
