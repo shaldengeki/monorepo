@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package ark_nova_stats.proto;
+
+message Card {
+    int64 card_id = 1;
+}
+
+message AnimalCard {
+    Card card = 1;
+}
+
+message ConservationProjectCard {
+    Card card = 1;
+}
+
+message EndgameScoringCard {
+    Card card = 1;
+}
+
+message SponsorCard {
+    Card card = 1;
+}

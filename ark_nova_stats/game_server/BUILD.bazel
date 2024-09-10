@@ -1,0 +1,8 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "game_server",
+    srcs = ["server.go"],
+    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/game_server",
+    visibility = ["//visibility:public"],
+)

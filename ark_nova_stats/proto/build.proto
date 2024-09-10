@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package ark_nova_stats.proto;
+
+message BuildingCoordinate {
+    int32 x = 1;
+    int32 y = 2;
+}
+
+enum BuildingType {
+    BUILDINGTYPE_UNKNOWN = 0;
+    BUILDINGTYPE_PAVILION = 1;
+    BUILDINGTYPE_KIOSK = 2;
+    BUILDINGTYPE_ENCLOSURE = 3;
+    BUILDINGTYPE_REPTILE_HOUSE = 4;
+    BUILDINGTYPE_AVIARY = 5;
+    // TODO: unique buildings, like from sponsors
+}
+
+message Building {
+    BuildingType building_type = 1;
+    repeated BuildingCoordinate coordinates = 2;
+    int32 num_occupied = 3;
+}
