@@ -7,5 +7,5 @@ import (
 )
 
 type GameStateProvider interface {
-	GetState(_ context.Context, gameId int) (*proto.GameState, error)
+	GetState(_ context.Context, gameId int64) (*proto.GameState, error)
 }

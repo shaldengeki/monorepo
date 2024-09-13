@@ -3,6 +3,7 @@ package game_server
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net"
 
@@ -16,19 +17,24 @@ import (
 type gameServer struct {
 	proto.UnimplementedGameServerServer
 
-	gameStateProvider *game_state_provider.GameStateProvider
+	gameStateProvider game_state_provider.GameStateProvider
 }
 
-func (s *gameServer) GetState(_ context.Context, request *proto.GetStateRequest) (*proto.GetStateResponse, error) {
+func (s *gameServer) GetState(ctx context.Context, request *proto.GetStateRequest) (*proto.GetStateResponse, error) {
 	if request.GameId == 0 {
 		return nil, errors.New("Game ID not provided")
 	}
 
-	r := proto.GetStateResponse{}
+	state, err := s.gameStateProvider.GetState(ctx, request.GameId)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not fetch game state: %v", err))
+	}
+
+	r := proto.GetStateResponse{GameState: state}
 	return &r, nil
 }
 
-func New(gameStateProvider *game_state_provider.GameStateProvider) *gameServer {
+func New(gameStateProvider game_state_provider.GameStateProvider) *gameServer {
 	return &gameServer{gameStateProvider: gameStateProvider}
 }
 
