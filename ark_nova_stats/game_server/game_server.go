@@ -10,6 +10,7 @@ import (
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider"
 
 	proto "github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto"
+	stateProto "github.com/shaldengeki/monorepo/ark_nova_stats/proto"
 
 	"google.golang.org/grpc"
 )
@@ -34,9 +35,23 @@ func (s *gameServer) GetState(ctx context.Context, request *proto.GetStateReques
 	return &r, nil
 }
 
+func (s *gameServer) ValidateMapState(ctx context.Context, gameState *stateProto.GameState) []string {
+	// TODO: implement this.
+	return []string{}
+}
+
 func (s *gameServer) ValidateState(ctx context.Context, request *proto.ValidateStateRequest) (*proto.ValidateStateResponse, error) {
 	if request.GameState == nil {
 		return &proto.ValidateStateResponse{}, nil
+	}
+
+	if request.GameState.Round < 1 {
+		return &proto.ValidateStateResponse{ValidationErrors: []string{"Round count should be >= 1"}}, nil
+	}
+
+	errs := s.ValidateMapState(ctx, request.GameState)
+	if len(errs) > 0 {
+		return &proto.ValidateStateResponse{ValidationErrors: errs}, nil
 	}
 
 	return &proto.ValidateStateResponse{}, nil

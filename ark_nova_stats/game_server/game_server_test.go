@@ -56,7 +56,7 @@ func TestGetState_WhenStaticStateProviderGiven_ReturnsPopulatedState(t *testing.
 	}
 }
 
-func TestValidateState_WhenEmptyStateGiven_ReturnsTrue(t *testing.T) {
+func TestValidateState_WhenEmptyStateGiven_ReturnsValid(t *testing.T) {
 	s := New(nil)
 	r := proto.ValidateStateRequest{}
 	res, err := s.ValidateState(nil, &r)
@@ -67,5 +67,17 @@ func TestValidateState_WhenEmptyStateGiven_ReturnsTrue(t *testing.T) {
 	if len(res.ValidationErrors) > 0 {
 		t.Fatalf("Empty ValidateStateRequest should result in zero validation errors, but got %v", res.ValidationErrors)
 	}
+}
 
+func TestValidateState_WhenRoundIsNegative_ReturnsError(t *testing.T) {
+	s := New(nil)
+	r := proto.ValidateStateRequest{GameState: &stateProto.GameState{Round: -1}}
+	res, err := s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
+	}
 }
