@@ -51,9 +51,6 @@ func main() {
 
 /*
 	TODO:
-		- set up a fixture for a sample game state
-		- implement GetState, returning the fixture
-		- wrangle into a test for GetState
 		- implement skeleton for ValidateState
 		- write tests for invalid states within each board component, like:
 			- invalid buildings (off grid, two of one, enclosure over-occupied, etc)

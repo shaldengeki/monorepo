@@ -6,6 +6,7 @@ import (
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider"
 
 	proto "github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto"
+	stateProto "github.com/shaldengeki/monorepo/ark_nova_stats/proto"
 )
 
 func TestGetState_WhenEmptyRequest_ReturnsError(t *testing.T) {
@@ -27,11 +28,30 @@ func TestGetState_WhenEmptyStateProviderGiven_ReturnsEmptyState(t *testing.T) {
 	r := proto.GetStateRequest{GameId: 1}
 	actual, err := s.GetState(nil, &r)
 	if err != nil {
-		t.Fatalf("Empty GetStateRequest should result in no GetState err, but got %q", err)
+		t.Fatalf("GetStateRequest should result in no GetState err, but got %q", err)
 	}
 
 	if actual.GameState.Round != 0 {
-		t.Fatalf("Empty GetStateRequest should result in empty GetStateResponse, but got %q", actual)
+		t.Fatalf("GetStateRequest should result in empty GetStateResponse, but got %q", actual)
+	}
+}
+
+func TestGetState_WhenStaticStateProviderGiven_ReturnsPopulatedState(t *testing.T) {
+	state := stateProto.GameState{Round: 1, BreakCount: 2, BreakMax: 3}
+	s := New(game_state_provider.NewStaticGameStateProvider(state))
+	r := proto.GetStateRequest{GameId: 1}
+	actual, err := s.GetState(nil, &r)
+	if err != nil {
+		t.Fatalf("GetStateRequest should result in no GetState err, but got %q", err)
 	}
 
+	if actual.GameState.Round != 1 {
+		t.Fatalf("GetStateRequest should return round 1, but got %q", actual.GameState.Round)
+	}
+	if actual.GameState.BreakCount != 2 {
+		t.Fatalf("GetStateRequest should return break count 2, but got %q", actual.GameState.BreakCount)
+	}
+	if actual.GameState.BreakMax != 3 {
+		t.Fatalf("GetStateRequest should return break max 3, but got %q", actual.GameState.BreakMax)
+	}
 }
