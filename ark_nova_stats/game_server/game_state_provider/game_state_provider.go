@@ -7,5 +7,18 @@ import (
 )
 
 type GameStateProvider interface {
-	GetState(_ context.Context, gameId int64) (*proto.GameState, error)
+	GetState(context context.Context, gameId int64) (*proto.GameState, error)
+}
+
+type EmptyGameStateProvider struct {
+	GameStateProvider
+}
+
+func (s EmptyGameStateProvider) GetState(ctx context.Context, gameId int64) (*proto.GameState, error) {
+	gs := proto.GameState{}
+	return &gs, nil
+}
+
+func NewEmptyGameStateProvider() GameStateProvider {
+	return EmptyGameStateProvider{}
 }
