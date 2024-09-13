@@ -34,6 +34,14 @@ func (s *gameServer) GetState(ctx context.Context, request *proto.GetStateReques
 	return &r, nil
 }
 
+func (s *gameServer) ValidateState(ctx context.Context, request *proto.ValidateStateRequest) (*proto.ValidateStateResponse, error) {
+	if request.GameState == nil {
+		return &proto.ValidateStateResponse{}, nil
+	}
+
+	return &proto.ValidateStateResponse{}, nil
+}
+
 func New(gameStateProvider game_state_provider.GameStateProvider) *gameServer {
 	return &gameServer{gameStateProvider: gameStateProvider}
 }
@@ -51,7 +59,6 @@ func main() {
 
 /*
 	TODO:
-		- implement skeleton for ValidateState
 		- write tests for invalid states within each board component, like:
 			- invalid buildings (off grid, two of one, enclosure over-occupied, etc)
 			- invalid partner zoos (two of one)

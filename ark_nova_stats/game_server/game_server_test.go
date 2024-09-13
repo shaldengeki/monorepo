@@ -28,7 +28,7 @@ func TestGetState_WhenEmptyStateProviderGiven_ReturnsEmptyState(t *testing.T) {
 	r := proto.GetStateRequest{GameId: 1}
 	actual, err := s.GetState(nil, &r)
 	if err != nil {
-		t.Fatalf("GetStateRequest should result in no GetState err, but got %q", err)
+		t.Fatalf("GetStateRequest should result in no GetState err, but got %v", err)
 	}
 
 	if actual.GameState.Round != 0 {
@@ -42,7 +42,7 @@ func TestGetState_WhenStaticStateProviderGiven_ReturnsPopulatedState(t *testing.
 	r := proto.GetStateRequest{GameId: 1}
 	actual, err := s.GetState(nil, &r)
 	if err != nil {
-		t.Fatalf("GetStateRequest should result in no GetState err, but got %q", err)
+		t.Fatalf("GetStateRequest should result in no GetState err, but got %v", err)
 	}
 
 	if actual.GameState.Round != 1 {
@@ -54,4 +54,18 @@ func TestGetState_WhenStaticStateProviderGiven_ReturnsPopulatedState(t *testing.
 	if actual.GameState.BreakMax != 3 {
 		t.Fatalf("GetStateRequest should return break max 3, but got %q", actual.GameState.BreakMax)
 	}
+}
+
+func TestValidateState_WhenEmptyStateGiven_ReturnsTrue(t *testing.T) {
+	s := New(nil)
+	r := proto.ValidateStateRequest{}
+	res, err := s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) > 0 {
+		t.Fatalf("Empty ValidateStateRequest should result in zero validation errors, but got %v", res.ValidationErrors)
+	}
+
 }
