@@ -57,6 +57,10 @@ func (s *gameServer) ValidateState(ctx context.Context, request *proto.ValidateS
 		return &proto.ValidateStateResponse{ValidationErrors: []string{"Break max should be >= 1"}}, nil
 	}
 
+	if request.GameState.BreakMax < request.GameState.BreakCount {
+		return &proto.ValidateStateResponse{ValidationErrors: []string{"Break count should be <= break max"}}, nil
+	}
+
 	errs := s.ValidateMapState(ctx, request.GameState)
 	if len(errs) > 0 {
 		return &proto.ValidateStateResponse{ValidationErrors: errs}, nil

@@ -111,7 +111,7 @@ func TestValidateState_WhenBreakMaxIsLessThanOne_ReturnsError(t *testing.T) {
 
 func TestValidateState_WhenBreakCountExceedsMax_ReturnsError(t *testing.T) {
 	s := New(nil)
-	r := proto.ValidateStateRequest{GameState: &stateProto.GameState{Round: 1, BreakCount: -1}}
+	r := proto.ValidateStateRequest{GameState: &stateProto.GameState{Round: 1, BreakMax: 1, BreakCount: 2}}
 	res, err := s.ValidateState(nil, &r)
 	if err != nil {
 		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
