@@ -94,3 +94,30 @@ func TestValidateState_WhenBreakCountIsNegative_ReturnsError(t *testing.T) {
 		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
 	}
 }
+
+func TestValidateState_WhenBreakMaxIsLessThanOne_ReturnsError(t *testing.T) {
+	s := New(nil)
+	r := proto.ValidateStateRequest{GameState: &stateProto.GameState{Round: 1, BreakMax: 0}}
+	res, err := s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
+	}
+}
+
+
+func TestValidateState_WhenBreakCountExceedsMax_ReturnsError(t *testing.T) {
+	s := New(nil)
+	r := proto.ValidateStateRequest{GameState: &stateProto.GameState{Round: 1, BreakCount: -1}}
+	res, err := s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
+	}
+}
