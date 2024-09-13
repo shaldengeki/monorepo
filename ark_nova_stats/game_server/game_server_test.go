@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetState_WhenEmptyRequest_ReturnsError(t *testing.T) {
-	s := newServer()
+	s := New(nil)
 	r := proto.GetStateRequest{}
 	res, err := s.GetState(nil, &r)
 	if res != nil {

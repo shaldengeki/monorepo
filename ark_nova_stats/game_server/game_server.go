@@ -6,6 +6,8 @@ import (
 	"log"
 	"net"
 
+	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider"
+
 	proto "github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto"
 
 	"google.golang.org/grpc"
@@ -13,6 +15,8 @@ import (
 
 type gameServer struct {
 	proto.UnimplementedGameServerServer
+
+	gameStateProvider *game_state_provider.GameStateProvider
 }
 
 func (s *gameServer) GetState(_ context.Context, request *proto.GetStateRequest) (*proto.GetStateResponse, error) {
@@ -24,8 +28,8 @@ func (s *gameServer) GetState(_ context.Context, request *proto.GetStateRequest)
 	return &r, nil
 }
 
-func newServer() *gameServer {
-	return &gameServer{}
+func New(gameStateProvider *game_state_provider.GameStateProvider) *gameServer {
+	return &gameServer{gameStateProvider: gameStateProvider}
 }
 
 func main() {
@@ -35,7 +39,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	proto.RegisterGameServerServer(grpcServer, newServer())
+	proto.RegisterGameServerServer(grpcServer, New(nil))
 	grpcServer.Serve(lis)
 }
 

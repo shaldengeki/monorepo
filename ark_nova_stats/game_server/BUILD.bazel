@@ -6,7 +6,9 @@ go_library(
     importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/game_server",
     visibility = ["//visibility:public"],
     deps = [
+        "//ark_nova_stats/game_server/game_state_provider",
         "//ark_nova_stats/game_server/proto:go_default_library",
+        "//ark_nova_stats/proto:game_state_proto_go_proto",
         "@@gazelle~~go_deps~org_golang_google_grpc//:go_default_library",
     ],
 )

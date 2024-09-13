@@ -1,0 +1,11 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "game_state_provider",
+    srcs = ["game_state_provider.go"],
+    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//ark_nova_stats/proto:game_state_proto_go_proto",
+    ],
+)
