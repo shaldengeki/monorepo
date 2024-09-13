@@ -2,6 +2,7 @@ package game_server
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net"
 
@@ -15,7 +16,12 @@ type gameServer struct {
 }
 
 func (s *gameServer) GetState(_ context.Context, request *proto.GetStateRequest) (*proto.GetStateResponse, error) {
-	return &proto.GetStateResponse{}, nil
+	if request.GameId == 0 {
+		return nil, errors.New("Game ID not provided")
+	}
+
+	r := proto.GetStateResponse{}
+	return &r, nil
 }
 
 func newServer() *gameServer {

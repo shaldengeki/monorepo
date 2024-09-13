@@ -15,4 +15,7 @@ go_test(
     name = "game_server_test",
     srcs = ["game_server_test.go"],
     embed = [":game_server"],
+    deps = [
+        "//ark_nova_stats/game_server/proto:go_default_library",
+    ],
 )
