@@ -2,11 +2,13 @@ package game_server
 
 import (
 	"fmt"
+	proto "github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto"
 )
 
 func main() {
 	fmt.Printf("hello!")
-	return
+	x := proto.GetStateRequest{}
+	fmt.Printf("request: %v", x)
 }
 
 /*

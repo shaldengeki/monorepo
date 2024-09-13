@@ -1,3 +1,4 @@
+load("@rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@rules_python//python:proto.bzl", "py_proto_library")
 
@@ -14,4 +15,14 @@ py_proto_library(
     name = "server_proto_py_pb2",
     visibility = ["//visibility:public"],
     deps = [":server_proto"],
+)
+
+go_proto_library(
+    name = "go_default_library",
+    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto",
+    proto = ":server_proto",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//ark_nova_stats/proto:game_state_proto_go_proto",
+    ],
 )

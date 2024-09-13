@@ -1,3 +1,4 @@
+load("@rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@rules_python//python:proto.bzl", "py_proto_library")
 
@@ -84,3 +85,51 @@ py_proto_library(
 )
 
 # TODO: ensure that there are go clients here
+
+go_proto_library(
+    name = "associate_proto_go_proto",
+    proto = ":associate_proto",
+    visibility = ["//visibility:public"],
+)
+
+go_proto_library(
+    name = "build_proto_go_proto",
+    proto = ":build_proto",
+    visibility = ["//visibility:public"],
+)
+
+go_proto_library(
+    name = "cards_proto_go_proto",
+    proto = ":cards_proto",
+    visibility = ["//visibility:public"],
+)
+
+go_proto_library(
+    name = "display_state_proto_go_proto",
+    proto = ":display_state_proto",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":cards_proto_go_proto",
+    ],
+)
+
+go_proto_library(
+    name = "player_game_state_proto_go_proto",
+    proto = ":player_game_state_proto",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":associate_proto_go_proto",
+        ":build_proto_go_proto",
+        ":cards_proto_go_proto",
+    ],
+)
+
+go_proto_library(
+    name = "game_state_proto_go_proto",
+    proto = ":game_state_proto",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":display_state_proto_go_proto",
+        ":player_game_state_proto_go_proto",
+    ],
+)
