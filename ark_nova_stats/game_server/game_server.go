@@ -1,20 +1,40 @@
 package game_server
 
 import (
-	"fmt"
+	"context"
+	"log"
+	"net"
+
 	proto "github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto"
+
+	"google.golang.org/grpc"
 )
 
+type gameServer struct {
+	proto.UnimplementedGameServerServer
+}
+
+func (s *gameServer) GetState(_ context.Context, request *proto.GetStateRequest) (*proto.GetStateResponse, error) {
+	return &proto.GetStateResponse{}, nil
+}
+
+func newServer() *gameServer {
+	return &gameServer{}
+}
+
 func main() {
-	fmt.Printf("hello!")
-	x := proto.GetStateRequest{}
-	fmt.Printf("request: %v", x)
+	lis, err := net.Listen("tcp", "localhost:5003")
+	if err != nil {
+		log.Fatalf("Failed to listen: %v", err)
+	}
+
+	grpcServer := grpc.NewServer()
+	proto.RegisterGameServerServer(grpcServer, newServer())
+	grpcServer.Serve(lis)
 }
 
 /*
 	TODO:
-		- generate golang client for server.proto and import it here
-		- set up a test harness
 		- set up a fixture for a sample game state
 		- implement GetState, returning the fixture
 		- wrangle into a test for GetState

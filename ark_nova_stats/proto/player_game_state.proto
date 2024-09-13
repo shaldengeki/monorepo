@@ -6,6 +6,8 @@ import "ark_nova_stats/proto/associate.proto";
 import "ark_nova_stats/proto/build.proto";
 import "ark_nova_stats/proto/cards.proto";
 
+option go_package = "github.com/shaldengeki/monorepo/ark_nova_stats/proto";
+
 message PlayerGameState {
     // Reflects a single player's game state.
     int64 player_id = 1;

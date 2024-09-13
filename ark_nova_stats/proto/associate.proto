@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package ark_nova_stats.proto;
 
+option go_package = "github.com/shaldengeki/monorepo/ark_nova_stats/proto";
+
 enum PartnerZoo {
     PARTNERZOO_UNKNOWN = 0;
     PARTNERZOO_AFRICA = 1;
