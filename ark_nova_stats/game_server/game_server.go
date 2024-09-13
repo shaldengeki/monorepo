@@ -9,19 +9,19 @@ import (
 
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider"
 
-	proto "github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto"
-	stateProto "github.com/shaldengeki/monorepo/ark_nova_stats/proto"
+	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state"
+	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto/server"
 
 	"google.golang.org/grpc"
 )
 
 type gameServer struct {
-	proto.UnimplementedGameServerServer
+	server.UnimplementedGameServerServer
 
 	gameStateProvider game_state_provider.GameStateProvider
 }
 
-func (s *gameServer) GetState(ctx context.Context, request *proto.GetStateRequest) (*proto.GetStateResponse, error) {
+func (s *gameServer) GetState(ctx context.Context, request *server.GetStateRequest) (*server.GetStateResponse, error) {
 	if request.GameId == 0 {
 		return nil, errors.New("Game ID not provided")
 	}
@@ -31,42 +31,42 @@ func (s *gameServer) GetState(ctx context.Context, request *proto.GetStateReques
 		return nil, errors.New(fmt.Sprintf("Could not fetch game state: %v", err))
 	}
 
-	r := proto.GetStateResponse{GameState: state}
+	r := server.GetStateResponse{GameState: state}
 	return &r, nil
 }
 
-func (s *gameServer) ValidateMapState(ctx context.Context, gameState *stateProto.GameState) []string {
+func (s *gameServer) ValidateMapState(ctx context.Context, gameState *game_state.GameState) []string {
 	// TODO: implement this.
 	return []string{}
 }
 
-func (s *gameServer) ValidateState(ctx context.Context, request *proto.ValidateStateRequest) (*proto.ValidateStateResponse, error) {
+func (s *gameServer) ValidateState(ctx context.Context, request *server.ValidateStateRequest) (*server.ValidateStateResponse, error) {
 	if request.GameState == nil {
-		return &proto.ValidateStateResponse{}, nil
+		return &server.ValidateStateResponse{}, nil
 	}
 
 	if request.GameState.Round < 1 {
-		return &proto.ValidateStateResponse{ValidationErrors: []string{"Round count should be >= 1"}}, nil
+		return &server.ValidateStateResponse{ValidationErrors: []string{"Round count should be >= 1"}}, nil
 	}
 
 	if request.GameState.BreakCount < 0 {
-		return &proto.ValidateStateResponse{ValidationErrors: []string{"Break count should be >= 0"}}, nil
+		return &server.ValidateStateResponse{ValidationErrors: []string{"Break count should be >= 0"}}, nil
 	}
 
 	if request.GameState.BreakMax < 1 {
-		return &proto.ValidateStateResponse{ValidationErrors: []string{"Break max should be >= 1"}}, nil
+		return &server.ValidateStateResponse{ValidationErrors: []string{"Break max should be >= 1"}}, nil
 	}
 
 	if request.GameState.BreakMax < request.GameState.BreakCount {
-		return &proto.ValidateStateResponse{ValidationErrors: []string{"Break count should be <= break max"}}, nil
+		return &server.ValidateStateResponse{ValidationErrors: []string{"Break count should be <= break max"}}, nil
 	}
 
 	errs := s.ValidateMapState(ctx, request.GameState)
 	if len(errs) > 0 {
-		return &proto.ValidateStateResponse{ValidationErrors: errs}, nil
+		return &server.ValidateStateResponse{ValidationErrors: errs}, nil
 	}
 
-	return &proto.ValidateStateResponse{}, nil
+	return &server.ValidateStateResponse{}, nil
 }
 
 func New(gameStateProvider game_state_provider.GameStateProvider) *gameServer {
@@ -80,7 +80,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	proto.RegisterGameServerServer(grpcServer, New(nil))
+	server.RegisterGameServerServer(grpcServer, New(nil))
 	grpcServer.Serve(lis)
 }
 

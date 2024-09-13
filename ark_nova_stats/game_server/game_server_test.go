@@ -5,13 +5,14 @@ import (
 
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider"
 
-	proto "github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto"
-	stateProto "github.com/shaldengeki/monorepo/ark_nova_stats/proto"
+	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto/server"
+	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state"
+	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state"
 )
 
 func TestGetState_WhenEmptyRequest_ReturnsError(t *testing.T) {
 	s := New(nil)
-	r := proto.GetStateRequest{}
+	r := server.GetStateRequest{}
 	res, err := s.GetState(nil, &r)
 	if res != nil {
 		t.Fatalf("Empty GetStateRequest should result in nil GetStateResponse, but got %q", res)
@@ -25,7 +26,7 @@ func TestGetState_WhenEmptyRequest_ReturnsError(t *testing.T) {
 
 func TestGetState_WhenEmptyStateProviderGiven_ReturnsEmptyState(t *testing.T) {
 	s := New(game_state_provider.NewEmptyGameStateProvider())
-	r := proto.GetStateRequest{GameId: 1}
+	r := server.GetStateRequest{GameId: 1}
 	actual, err := s.GetState(nil, &r)
 	if err != nil {
 		t.Fatalf("GetStateRequest should result in no GetState err, but got %v", err)
@@ -37,9 +38,9 @@ func TestGetState_WhenEmptyStateProviderGiven_ReturnsEmptyState(t *testing.T) {
 }
 
 func TestGetState_WhenStaticStateProviderGiven_ReturnsPopulatedState(t *testing.T) {
-	state := stateProto.GameState{Round: 1, BreakCount: 2, BreakMax: 3}
+	state := game_state.GameState{Round: 1, BreakCount: 2, BreakMax: 3}
 	s := New(game_state_provider.NewStaticGameStateProvider(state))
-	r := proto.GetStateRequest{GameId: 1}
+	r := server.GetStateRequest{GameId: 1}
 	actual, err := s.GetState(nil, &r)
 	if err != nil {
 		t.Fatalf("GetStateRequest should result in no GetState err, but got %v", err)
@@ -58,7 +59,7 @@ func TestGetState_WhenStaticStateProviderGiven_ReturnsPopulatedState(t *testing.
 
 func TestValidateState_WhenEmptyStateGiven_ReturnsValid(t *testing.T) {
 	s := New(nil)
-	r := proto.ValidateStateRequest{}
+	r := server.ValidateStateRequest{}
 	res, err := s.ValidateState(nil, &r)
 	if err != nil {
 		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
@@ -71,7 +72,7 @@ func TestValidateState_WhenEmptyStateGiven_ReturnsValid(t *testing.T) {
 
 func TestValidateState_WhenRoundIsNegative_ReturnsError(t *testing.T) {
 	s := New(nil)
-	r := proto.ValidateStateRequest{GameState: &stateProto.GameState{Round: -1}}
+	r := server.ValidateStateRequest{GameState: &game_state.GameState{Round: -1}}
 	res, err := s.ValidateState(nil, &r)
 	if err != nil {
 		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
@@ -84,7 +85,7 @@ func TestValidateState_WhenRoundIsNegative_ReturnsError(t *testing.T) {
 
 func TestValidateState_WhenBreakCountIsNegative_ReturnsError(t *testing.T) {
 	s := New(nil)
-	r := proto.ValidateStateRequest{GameState: &stateProto.GameState{Round: 1, BreakCount: -1}}
+	r := server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakCount: -1}}
 	res, err := s.ValidateState(nil, &r)
 	if err != nil {
 		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
@@ -97,7 +98,7 @@ func TestValidateState_WhenBreakCountIsNegative_ReturnsError(t *testing.T) {
 
 func TestValidateState_WhenBreakMaxIsLessThanOne_ReturnsError(t *testing.T) {
 	s := New(nil)
-	r := proto.ValidateStateRequest{GameState: &stateProto.GameState{Round: 1, BreakMax: 0}}
+	r := server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 0}}
 	res, err := s.ValidateState(nil, &r)
 	if err != nil {
 		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
@@ -108,10 +109,24 @@ func TestValidateState_WhenBreakMaxIsLessThanOne_ReturnsError(t *testing.T) {
 	}
 }
 
-
 func TestValidateState_WhenBreakCountExceedsMax_ReturnsError(t *testing.T) {
 	s := New(nil)
-	r := proto.ValidateStateRequest{GameState: &stateProto.GameState{Round: 1, BreakMax: 1, BreakCount: 2}}
+	r := server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 1, BreakCount: 2}}
+	res, err := s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
+	}
+}
+
+func TestValidateState_WhenBreakMaxMismatchPlayerCount_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	playerGameStates := []*player_game_state.PlayerGameState{}
+	r := server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 1, PlayerGameStates: playerGameStates}}
 	res, err := s.ValidateState(nil, &r)
 	if err != nil {
 		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)

@@ -115,6 +115,7 @@ go_proto_library(
 
 go_proto_library(
     name = "player_game_state_proto_go_proto",
+    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state",
     proto = ":player_game_state_proto",
     visibility = ["//visibility:public"],
     deps = [
@@ -126,7 +127,7 @@ go_proto_library(
 
 go_proto_library(
     name = "game_state_proto_go_proto",
-    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/proto",
+    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state",
     proto = ":game_state_proto",
     visibility = ["//visibility:public"],
     deps = [

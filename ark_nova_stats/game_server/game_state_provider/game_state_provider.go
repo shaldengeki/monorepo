@@ -3,19 +3,19 @@ package game_state_provider
 import (
 	"context"
 
-	proto "github.com/shaldengeki/monorepo/ark_nova_stats/proto"
+	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state"
 )
 
 type GameStateProvider interface {
-	GetState(context context.Context, gameId int64) (*proto.GameState, error)
+	GetState(context context.Context, gameId int64) (*game_state.GameState, error)
 }
 
 type EmptyGameStateProvider struct {
 	GameStateProvider
 }
 
-func (s EmptyGameStateProvider) GetState(ctx context.Context, gameId int64) (*proto.GameState, error) {
-	gs := proto.GameState{}
+func (s EmptyGameStateProvider) GetState(ctx context.Context, gameId int64) (*game_state.GameState, error) {
+	gs := game_state.GameState{}
 	return &gs, nil
 }
 
@@ -26,13 +26,13 @@ func NewEmptyGameStateProvider() GameStateProvider {
 type StaticGameStateProvider struct {
 	GameStateProvider
 
-	staticState proto.GameState
+	staticState game_state.GameState
 }
 
-func (s StaticGameStateProvider) GetState(ctx context.Context, gameId int64) (*proto.GameState, error) {
+func (s StaticGameStateProvider) GetState(ctx context.Context, gameId int64) (*game_state.GameState, error) {
 	return &(s.staticState), nil
 }
 
-func NewStaticGameStateProvider(state proto.GameState) GameStateProvider {
+func NewStaticGameStateProvider(state game_state.GameState) GameStateProvider {
 	return StaticGameStateProvider{staticState: state}
 }

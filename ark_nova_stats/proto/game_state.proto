@@ -5,7 +5,7 @@ package ark_nova_stats.proto;
 import "ark_nova_stats/proto/display_state.proto";
 import "ark_nova_stats/proto/player_game_state.proto";
 
-option go_package = "github.com/shaldengeki/monorepo/ark_nova_stats/proto";
+option go_package = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state";
 
 message GameState {
     // Reflects the state of an Ark Nova game at a given moment in time.

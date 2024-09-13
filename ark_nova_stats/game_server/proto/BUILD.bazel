@@ -18,7 +18,7 @@ py_proto_library(
 go_proto_library(
     name = "go_default_library",
     compilers = ["@rules_go//proto:go_grpc"],
-    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto",
+    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto/server",
     proto = ":server_proto",
     visibility = ["//visibility:public"],
     deps = [
