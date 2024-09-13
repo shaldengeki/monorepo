@@ -49,6 +49,10 @@ func (s *gameServer) ValidateState(ctx context.Context, request *proto.ValidateS
 		return &proto.ValidateStateResponse{ValidationErrors: []string{"Round count should be >= 1"}}, nil
 	}
 
+	if request.GameState.BreakCount < 0 {
+		return &proto.ValidateStateResponse{ValidationErrors: []string{"Break count should be >= 0"}}, nil
+	}
+
 	errs := s.ValidateMapState(ctx, request.GameState)
 	if len(errs) > 0 {
 		return &proto.ValidateStateResponse{ValidationErrors: errs}, nil
