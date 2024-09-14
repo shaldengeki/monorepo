@@ -44,6 +44,26 @@ func (s *gameServer) CalculateBreakMax(players int) int {
 	return 1 + 4*players
 }
 
+func (s *gameServer) ValidateBreak(ctx context.Context, gameState *game_state.GameState) []string {
+	if gameState.BreakCount < 0 {
+		return []string{"Break count should be >= 0"}
+	}
+
+	if gameState.BreakMax < 1 {
+		return []string{"Break max should be >= 1"}
+	}
+
+	if gameState.BreakMax < gameState.BreakCount {
+		return []string{"Break count should be <= break max"}
+	}
+
+	if int(gameState.BreakMax) != s.CalculateBreakMax(len(gameState.PlayerGameStates)) {
+		return []string{"Break max is incorrect for this number of players"}
+	}
+
+	return []string{}
+}
+
 func (s *gameServer) ValidateState(ctx context.Context, request *server.ValidateStateRequest) (*server.ValidateStateResponse, error) {
 	if request.GameState == nil {
 		return &server.ValidateStateResponse{}, nil
@@ -53,23 +73,12 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		return &server.ValidateStateResponse{ValidationErrors: []string{"Round count should be >= 1"}}, nil
 	}
 
-	if request.GameState.BreakCount < 0 {
-		return &server.ValidateStateResponse{ValidationErrors: []string{"Break count should be >= 0"}}, nil
+	errs := s.ValidateBreak(ctx, request.GameState)
+	if len(errs) > 0 {
+		return &server.ValidateStateResponse{ValidationErrors: errs}, nil
 	}
 
-	if request.GameState.BreakMax < 1 {
-		return &server.ValidateStateResponse{ValidationErrors: []string{"Break max should be >= 1"}}, nil
-	}
-
-	if request.GameState.BreakMax < request.GameState.BreakCount {
-		return &server.ValidateStateResponse{ValidationErrors: []string{"Break count should be <= break max"}}, nil
-	}
-
-	if int(request.GameState.BreakMax) != s.CalculateBreakMax(len(request.GameState.PlayerGameStates)) {
-		return &server.ValidateStateResponse{ValidationErrors: []string{"Break max is incorrect for this number of players"}}, nil
-	}
-
-	errs := s.ValidateMapState(ctx, request.GameState)
+	errs = s.ValidateMapState(ctx, request.GameState)
 	if len(errs) > 0 {
 		return &server.ValidateStateResponse{ValidationErrors: errs}, nil
 	}
