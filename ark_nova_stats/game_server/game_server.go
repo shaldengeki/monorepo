@@ -10,6 +10,7 @@ import (
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider"
 
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state"
+	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto/server"
 
 	"google.golang.org/grpc"
@@ -33,11 +34,6 @@ func (s *gameServer) GetState(ctx context.Context, request *server.GetStateReque
 
 	r := server.GetStateResponse{GameState: state}
 	return &r, nil
-}
-
-func (s *gameServer) ValidateMapState(ctx context.Context, gameState *game_state.GameState) []string {
-	// TODO: implement this.
-	return []string{}
 }
 
 func (s *gameServer) CalculateBreakMax(players int) int {
@@ -64,6 +60,17 @@ func (s *gameServer) ValidateBreak(ctx context.Context, gameState *game_state.Ga
 	return []string{}
 }
 
+func (s *gameServer) ValidateDisplay(ctx context.Context, gameState *game_state.GameState) []string {
+	// TODO: implement this.
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameState *player_game_state.PlayerGameState) []string {
+	// TODO: implement this.
+	return []string{}
+}
+
+
 func (s *gameServer) ValidateState(ctx context.Context, request *server.ValidateStateRequest) (*server.ValidateStateResponse, error) {
 	if request.GameState == nil {
 		return &server.ValidateStateResponse{}, nil
@@ -78,9 +85,16 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		return &server.ValidateStateResponse{ValidationErrors: errs}, nil
 	}
 
-	errs = s.ValidateMapState(ctx, request.GameState)
+	errs = s.ValidateDisplay(ctx, request.GameState)
 	if len(errs) > 0 {
 		return &server.ValidateStateResponse{ValidationErrors: errs}, nil
+	}
+
+	for _, playerGameState := range request.GameState.PlayerGameStates {
+		errs = s.ValidatePlayerGameState(ctx, playerGameState)
+		if len(errs) > 0 {
+			return &server.ValidateStateResponse{ValidationErrors: errs}, nil
+		}
 	}
 
 	return &server.ValidateStateResponse{}, nil
