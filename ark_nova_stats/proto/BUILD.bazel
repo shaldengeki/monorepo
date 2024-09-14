@@ -106,6 +106,7 @@ go_proto_library(
 
 go_proto_library(
     name = "display_state_proto_go_proto",
+    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/display_state",
     proto = ":display_state_proto",
     visibility = ["//visibility:public"],
     deps = [

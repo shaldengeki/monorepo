@@ -61,7 +61,10 @@ func (s *gameServer) ValidateBreak(ctx context.Context, gameState *game_state.Ga
 }
 
 func (s *gameServer) ValidateDisplay(ctx context.Context, gameState *game_state.GameState) []string {
-	// TODO: implement this.
+	if len(gameState.DisplayState.Cards) > 6 {
+		return []string{"Display must contain at most six cards"}
+	}
+
 	return []string{}
 }
 

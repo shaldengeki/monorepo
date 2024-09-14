@@ -6,6 +6,7 @@ import (
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider"
 
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto/server"
+	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/display_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state"
 )
@@ -179,6 +180,36 @@ func TestValidateState_WhenBreakMaxMismatchPlayerCount_ReturnsError(t *testing.T
 	}
 	r = server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 16, PlayerGameStates: playerGameStates}}
 	res, err = s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
+	}
+}
+
+func TestValidateState_WhenDisplayHasTooManyCards_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	displayCard := display_state.DisplayCard{}
+
+	displayCards := []*display_state.DisplayCard{
+		&displayCard,
+		&displayCard,
+		&displayCard,
+		&displayCard,
+		&displayCard,
+		&displayCard,
+		&displayCard,
+	}
+
+	displayState := display_state.DisplayState{
+		Cards: displayCards,
+	}
+
+	r := server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 1, DisplayState: &displayState}}
+	res, err := s.ValidateState(nil, &r)
 	if err != nil {
 		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
 	}
