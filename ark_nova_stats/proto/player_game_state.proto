@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package ark_nova_stats.proto;
+
+import "ark_nova_stats/proto/associate.proto";
+import "ark_nova_stats/proto/build.proto";
+import "ark_nova_stats/proto/cards.proto";
+
+option go_package = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state";
+
+message PlayerGameState {
+    // Reflects a single player's game state.
+    int64 player_id = 1;
+
+    int32 reputation = 2;
+    int32 conservation = 3;
+    int32 appeal = 4;
+    int32 money = 5;
+
+    repeated PlayerActionCard action_cards = 6;
+
+    repeated ConservationProjectReward conservation_project_rewards = 7;
+    repeated PartnerZoo partner_zoos = 8;
+    repeated University universities = 9;
+
+    repeated AnimalCard animals = 10;
+    repeated SponsorCard sponsors = 11;
+
+    PlayerMap map = 12;
+
+    PlayerHand hand = 13;
+}
+
+enum PlayerActionCardType {
+    PLAYERACTIONCARDTYPE_UNKNOWN = 0;
+    PLAYERACTIONCARDTYPE_ANIMALS = 1;
+    PLAYERACTIONCARDTYPE_ASSOCIATE = 2;
+    PLAYERACTIONCARDTYPE_BUILD = 3;
+    PLAYERACTIONCARDTYPE_CARDS = 4;
+    PLAYERACTIONCARDTYPE_SPONSORS = 5;
+}
+
+enum PlayerActionCardTokenType {
+    PLAYERACTIONCARDTOKENTYPE_UNKNOWN = 0;
+    PLAYERACTIONCARDTOKENTYPE_MULTIPLIER = 1;
+    PLAYERACTIONCARDTOKENTYPE_VENOM = 2;
+    PLAYERACTIONCARDTOKENTYPE_CONSTRICTION = 3;
+}
+
+message PlayerActionCardToken {
+    PlayerActionCardTokenType token_type = 1;
+    int32 num_tokens = 2;
+}
+
+message PlayerActionCard {
+    PlayerActionCardType card_type = 1;
+    int32 strength = 2;
+    repeated PlayerActionCardToken tokens = 3;
+}
+
+enum PlayerMapType {
+    PLAYERMAPTYPE_UNKNOWN = 0;
+    // TODO: fill out map types here.
+    // Try to be compatible with BGA IDs.
+}
+
+message PlayerMap {
+    PlayerMapType map_type = 1;
+    repeated Building buildings = 2;
+    // TODO: map-specific state,
+    // like cubes on geographical
+}
+
+message PlayerHandCard {
+    oneof card {
+        AnimalCard animal_card = 1;
+        SponsorCard sponsor_card = 2;
+        EndgameScoringCard endgame_scoring_card = 3;
+    }
+}
+
+message PlayerHand {
+    repeated PlayerHandCard cards = 1;
+}

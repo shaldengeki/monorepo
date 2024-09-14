@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package ark_nova_stats.proto;
+
+import "ark_nova_stats/proto/cards.proto";
+
+option go_package = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/display_state";
+
+message DisplayCard {
+    oneof card {
+        AnimalCard animal_card = 1;
+        SponsorCard sponsor_card = 2;
+    }
+}
+
+message DisplayState {
+    // Reflects the state of the display,
+    // containing the sequence of cards that players can play from reputation range.
+
+    repeated DisplayCard cards = 1;
+}

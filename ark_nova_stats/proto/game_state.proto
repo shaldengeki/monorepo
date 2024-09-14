@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package ark_nova_stats.proto;
+
+import "ark_nova_stats/proto/display_state.proto";
+import "ark_nova_stats/proto/player_game_state.proto";
+
+option go_package = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state";
+
+message GameState {
+    // Reflects the state of an Ark Nova game at a given moment in time.
+    // Players change this state by taking valid actions.
+
+    int32 round = 1;
+    int32 break_count = 2;
+    int32 break_max = 3;
+
+    DisplayState display_state = 4;
+
+    repeated PlayerGameState player_game_states = 5;
+}

@@ -1,0 +1,28 @@
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "game_server",
+    srcs = ["game_server.go"],
+    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/game_server",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//ark_nova_stats/game_server/game_state_provider",
+        "//ark_nova_stats/game_server/proto:go_default_library",
+        "//ark_nova_stats/proto:game_state_proto_go_proto",
+        "//ark_nova_stats/proto:player_game_state_proto_go_proto",
+        "@@gazelle~~go_deps~org_golang_google_grpc//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "game_server_test",
+    srcs = ["game_server_test.go"],
+    embed = [":game_server"],
+    deps = [
+        "//ark_nova_stats/game_server/game_state_provider",
+        "//ark_nova_stats/game_server/proto:go_default_library",
+        "//ark_nova_stats/proto:display_state_proto_go_proto",
+        "//ark_nova_stats/proto:game_state_proto_go_proto",
+        "//ark_nova_stats/proto:player_game_state_proto_go_proto",
+    ],
+)
