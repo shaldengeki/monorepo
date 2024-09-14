@@ -40,6 +40,10 @@ func (s *gameServer) ValidateMapState(ctx context.Context, gameState *game_state
 	return []string{}
 }
 
+func (s *gameServer) CalculateBreakMax(players int) int {
+	return 1 + 4*players
+}
+
 func (s *gameServer) ValidateState(ctx context.Context, request *server.ValidateStateRequest) (*server.ValidateStateResponse, error) {
 	if request.GameState == nil {
 		return &server.ValidateStateResponse{}, nil
@@ -59,6 +63,10 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 
 	if request.GameState.BreakMax < request.GameState.BreakCount {
 		return &server.ValidateStateResponse{ValidationErrors: []string{"Break count should be <= break max"}}, nil
+	}
+
+	if int(request.GameState.BreakMax) != s.CalculateBreakMax(len(request.GameState.PlayerGameStates)) {
+		return &server.ValidateStateResponse{ValidationErrors: []string{"Break max is incorrect for this number of players"}}, nil
 	}
 
 	errs := s.ValidateMapState(ctx, request.GameState)

@@ -125,9 +125,60 @@ func TestValidateState_WhenBreakCountExceedsMax_ReturnsError(t *testing.T) {
 func TestValidateState_WhenBreakMaxMismatchPlayerCount_ReturnsError(t *testing.T) {
 	s := New(nil)
 
-	playerGameStates := []*player_game_state.PlayerGameState{}
-	r := server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 1, PlayerGameStates: playerGameStates}}
+	// One-player should have a break of 5.
+	playerGameStates := []*player_game_state.PlayerGameState{
+		&player_game_state.PlayerGameState{},
+	}
+	r := server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 6, PlayerGameStates: playerGameStates}}
 	res, err := s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
+	}
+
+	// Two-player should have a break of 9.
+	playerGameStates = []*player_game_state.PlayerGameState{
+		&player_game_state.PlayerGameState{},
+		&player_game_state.PlayerGameState{},
+	}
+	r = server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 8, PlayerGameStates: playerGameStates}}
+	res, err = s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
+	}
+
+	// Three-player should have a break of 13.
+	playerGameStates = []*player_game_state.PlayerGameState{
+		&player_game_state.PlayerGameState{},
+		&player_game_state.PlayerGameState{},
+		&player_game_state.PlayerGameState{},
+	}
+	r = server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 14, PlayerGameStates: playerGameStates}}
+	res, err = s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
+	}
+
+	// Four-player should have a break of 17.
+	playerGameStates = []*player_game_state.PlayerGameState{
+		&player_game_state.PlayerGameState{},
+		&player_game_state.PlayerGameState{},
+		&player_game_state.PlayerGameState{},
+		&player_game_state.PlayerGameState{},
+	}
+	r = server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 16, PlayerGameStates: playerGameStates}}
+	res, err = s.ValidateState(nil, &r)
 	if err != nil {
 		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
 	}
