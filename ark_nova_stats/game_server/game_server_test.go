@@ -25,7 +25,6 @@ func TestGetState_WhenEmptyRequest_ReturnsError(t *testing.T) {
 	}
 }
 
-
 func TestGetState_WhenEmptyStateProviderGiven_ReturnsEmptyState(t *testing.T) {
 	s := New(game_state_provider.NewEmptyGameStateProvider())
 	r := server.GetStateRequest{GameId: 1}
@@ -237,8 +236,8 @@ func TestValidateState_WhenPlayerGameStatesEmpty_ReturnsError(t *testing.T) {
 
 	r := server.ValidateStateRequest{
 		GameState: &game_state.GameState{
-			Round: 1,
-			BreakMax: 1,
+			Round:            1,
+			BreakMax:         1,
 			PlayerGameStates: playerGameStates,
 		},
 	}
@@ -300,7 +299,7 @@ func TestValidatePlayerGameState_WhenMoneyNegative_ReturnsError(t *testing.T) {
 func TestValidatePlayerGameState_WhenActionCardsEmpty_ReturnsError(t *testing.T) {
 	s := New(nil)
 	state := player_game_state.PlayerGameState{
-		PlayerId: 1,
+		PlayerId:    1,
 		ActionCards: []*player_game_state.PlayerActionCard{},
 	}
 
@@ -419,7 +418,6 @@ func TestValidatePlayerActionCardToken_WhenActionCardTokensUnknownType_ReturnsEr
 	}
 }
 
-
 func TestValidatePlayerActionCardToken_WhenActionCardTokensLessThanOne_ReturnsError(t *testing.T) {
 	s := New(nil)
 	token := player_game_state.PlayerActionCardToken{
@@ -457,6 +455,24 @@ func TestValidatePlayerConservationProjectReward_WhenOneTimeTypeUnknown_ReturnsE
 		},
 	}
 	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{}
+	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
+
+	res := s.ValidatePlayerConservationProjectReward(nil, &reward, seenConservationRecurringRewards, seenConservationOneTimeRewards)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerConservationProjectReward_WhenDuplicateRecurring_ReturnsError(t *testing.T) {
+	s := New(nil)
+	reward := associate.ConservationProjectReward{
+		Reward: &associate.ConservationProjectReward_RecurringReward{
+			RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_SNAPPING,
+		},
+	}
+	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{
+		associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_SNAPPING: 1,
+	}
 	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
 
 	res := s.ValidatePlayerConservationProjectReward(nil, &reward, seenConservationRecurringRewards, seenConservationOneTimeRewards)
