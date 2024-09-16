@@ -112,6 +112,23 @@ func (s *gameServer) ValidatePlayerActionCard(ctx context.Context, actionCard *p
 	return []string{}
 }
 
+func (s *gameServer) ValidatePlayerActionCards(ctx context.Context, actionCards []*player_game_state.PlayerActionCard) []string {
+	if len(actionCards) != 5 {
+		return []string{"Player must have exactly 5 action cards"}
+	}
+
+	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
+	seenStrengths := map[int32]int{}
+
+	for _, actionCard := range actionCards {
+		if errors := s.ValidatePlayerActionCard(ctx, actionCard, seenCardTypes, seenStrengths); len(errors) > 0 {
+			return errors
+		}
+	}
+
+	return []string{}
+}
+
 func (s *gameServer) ValidatePlayerConservationProjectReward(ctx context.Context, conservationReward *associate.ConservationProjectReward, seenRecurringRewards map[associate.ConservationProjectRecurringReward]int, seenOneTimeRewards map[associate.ConservationProjectOneTimeReward]int) []string {
 	if conservationReward.GetRecurringReward() != associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_UNKNOWN {
 		recurringReward := conservationReward.GetRecurringReward()
@@ -233,17 +250,8 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 		return []string{"Player money must be >= 0"}
 	}
 
-	if len(playerGameState.ActionCards) != 5 {
-		return []string{"Player must have exactly 5 action cards"}
-	}
-
-	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
-	seenStrengths := map[int32]int{}
-
-	for _, actionCard := range playerGameState.ActionCards {
-		if errors := s.ValidatePlayerActionCard(ctx, actionCard, seenCardTypes, seenStrengths); len(errors) > 0 {
-			return errors
-		}
+	if errors := s.ValidatePlayerActionCards(ctx, playerGameState.ActionCards); len(errors) > 0 {
+		return errors
 	}
 
 	// TODO validations for:
