@@ -238,3 +238,50 @@ func TestValidateState_WhenDisplayHasTooManyCards_ReturnsError(t *testing.T) {
 		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
 	}
 }
+
+func TestValidateState_WhenPlayerGameStatesEmpty_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	playerGameStates := []*player_game_state.PlayerGameState{}
+
+	r := server.ValidateStateRequest{
+		GameState: &game_state.GameState{
+			Round: 1,
+			BreakMax: 1,
+			PlayerGameStates: playerGameStates,
+		},
+	}
+	res, err := s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
+	}
+}
+
+
+func TestValidateState_WhenPlayerIdNotSet_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	playerGameStates := []*player_game_state.PlayerGameState{
+		&player_game_state.PlayerGameState{},
+	}
+
+	r := server.ValidateStateRequest{
+		GameState: &game_state.GameState{
+			Round: 1,
+			BreakMax: 1,
+			PlayerGameStates: playerGameStates,
+		},
+	}
+	res, err := s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
+	}
+}
