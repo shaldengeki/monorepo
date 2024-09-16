@@ -189,6 +189,26 @@ func TestValidateState_WhenBreakMaxMismatchPlayerCount_ReturnsError(t *testing.T
 	}
 }
 
+func TestValidateState_WhenDisplayEmpty_IsOK(t *testing.T) {
+	s := New(nil)
+
+	displayCards := []*display_state.DisplayCard{}
+
+	displayState := display_state.DisplayState{
+		Cards: displayCards,
+	}
+
+	r := server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 1, DisplayState: &displayState}}
+	res, err := s.ValidateState(nil, &r)
+	if err != nil {
+		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
+	}
+
+	if len(res.ValidationErrors) > 0 {
+		t.Fatalf("Should have no validation errors, but got %v", res.ValidationErrors)
+	}
+}
+
 func TestValidateState_WhenDisplayHasTooManyCards_ReturnsError(t *testing.T) {
 	s := New(nil)
 
