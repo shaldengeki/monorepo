@@ -251,11 +251,19 @@ func TestValidateState_WhenPlayerGameStatesEmpty_ReturnsError(t *testing.T) {
 	}
 }
 
-
 func TestValidatePlayerGameState_WhenPlayerIdNotSet_ReturnsError(t *testing.T) {
 	s := New(nil)
 
 	res := s.ValidatePlayerGameState(nil, &player_game_state.PlayerGameState{})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenReputationNegative_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	res := s.ValidatePlayerGameState(nil, &player_game_state.PlayerGameState{Reputation: -1})
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}

@@ -75,6 +75,10 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 		return []string{"Player ID not set"}
 	}
 
+	if playerGameState.Reputation < 0 {
+		return []string{"Player reputation must be >= 0"}
+	}
+
 	return []string{}
 }
 
