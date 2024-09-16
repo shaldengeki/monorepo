@@ -96,15 +96,26 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 	}
 
 	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
+	seenStrengths := map[int32]int{}
 
 	for _, actionCard := range playerGameState.ActionCards {
 		if actionCard.CardType == player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_UNKNOWN {
 			return []string{"Player action card type must be set to a known value"}
 		}
 		if _, ok := seenCardTypes[actionCard.CardType]; ok {
-			return []string{"Player has multiple instances of a card type"}
+			return []string{"Player has multiple instances of an action card type"}
 		} else {
 			seenCardTypes[actionCard.CardType] = 1
+		}
+
+		if actionCard.Strength < 1 || actionCard.Strength > 5 {
+			return []string{"Player action card strength must be within [1, 5]"}
+		}
+
+		if _, ok := seenStrengths[actionCard.Strength]; ok {
+			return []string{"Player has multiple instances of an action card strength"}
+		} else {
+			seenStrengths[actionCard.Strength] = 1
 		}
 	}
 
