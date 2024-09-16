@@ -145,6 +145,18 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 		}
 	}
 
+	// TODO validations for:
+    // repeated ConservationProjectReward conservation_project_rewards = 7;
+    // repeated PartnerZoo partner_zoos = 8;
+    // repeated University universities = 9;
+
+    // repeated AnimalCard animals = 10;
+    // repeated SponsorCard sponsors = 11;
+
+    // PlayerMap map = 12;
+
+    // PlayerHand hand = 13;
+
 	return []string{}
 }
 
