@@ -9,6 +9,7 @@ import (
 
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider"
 
+	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/associate"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto/server"
@@ -111,6 +112,14 @@ func (s *gameServer) ValidatePlayerActionCard(ctx context.Context, actionCard *p
 	return []string{}
 }
 
+func (s *gameServer) ValidatePlayerConservationProjectReward(ctx context.Context, conservationReward *associate.ConservationProjectReward, seenRecurringRewards map[associate.ConservationProjectRecurringReward]int, seenOneTimeRewards map[associate.ConservationProjectOneTimeReward]int) []string {
+	if conservationReward.GetRecurringReward() == associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_UNKNOWN && conservationReward.GetOneTimeReward() == associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN {
+		return []string{"Conservation project reward cannot be unknown type"}
+	}
+
+	return []string{}
+}
+
 func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameState *player_game_state.PlayerGameState) []string {
 	if playerGameState.PlayerId <= 0 {
 		return []string{"Player ID not set"}
@@ -147,6 +156,16 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 
 	// TODO validations for:
     // repeated ConservationProjectReward conservation_project_rewards = 7;
+
+	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{}
+	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
+
+	for _, conservationReward := range playerGameState.ConservationProjectRewards {
+		if errors := s.ValidatePlayerConservationProjectReward(ctx, conservationReward, seenConservationRecurringRewards, seenConservationOneTimeRewards); len(errors) > 0 {
+			return errors
+		}
+	}
+
     // repeated PartnerZoo partner_zoos = 8;
     // repeated University universities = 9;
 

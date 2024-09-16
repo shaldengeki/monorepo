@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//ark_nova_stats/game_server/game_state_provider",
         "//ark_nova_stats/game_server/proto:go_default_library",
+        "//ark_nova_stats/proto:associate_proto_go_proto",
         "//ark_nova_stats/proto:game_state_proto_go_proto",
         "//ark_nova_stats/proto:player_game_state_proto_go_proto",
         "@@gazelle~~go_deps~org_golang_google_grpc//:go_default_library",
@@ -21,6 +22,7 @@ go_test(
     deps = [
         "//ark_nova_stats/game_server/game_state_provider",
         "//ark_nova_stats/game_server/proto:go_default_library",
+        "//ark_nova_stats/proto:associate_proto_go_proto",
         "//ark_nova_stats/proto:display_state_proto_go_proto",
         "//ark_nova_stats/proto:game_state_proto_go_proto",
         "//ark_nova_stats/proto:player_game_state_proto_go_proto",

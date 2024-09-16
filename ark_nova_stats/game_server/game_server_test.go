@@ -6,6 +6,7 @@ import (
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider"
 
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto/server"
+	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/associate"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/display_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state"
@@ -425,8 +426,40 @@ func TestValidatePlayerActionCardToken_WhenActionCardTokensLessThanOne_ReturnsEr
 		TokenType: player_game_state.PlayerActionCardTokenType_PLAYERACTIONCARDTOKENTYPE_MULTIPLIER,
 		NumTokens: 0,
 	}
-	res := s.ValidatePlayerActionCardToken(nil, &token)
 
+	res := s.ValidatePlayerActionCardToken(nil, &token)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerConservationProjectReward_WhenRecurringTypeUnknown_ReturnsError(t *testing.T) {
+	s := New(nil)
+	reward := associate.ConservationProjectReward{
+		Reward: &associate.ConservationProjectReward_RecurringReward{
+			RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_UNKNOWN,
+		},
+	}
+	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{}
+	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
+
+	res := s.ValidatePlayerConservationProjectReward(nil, &reward, seenConservationRecurringRewards, seenConservationOneTimeRewards)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerConservationProjectReward_WhenOneTimeTypeUnknown_ReturnsError(t *testing.T) {
+	s := New(nil)
+	reward := associate.ConservationProjectReward{
+		Reward: &associate.ConservationProjectReward_OneTimeReward{
+			OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN,
+		},
+	}
+	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{}
+	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
+
+	res := s.ValidatePlayerConservationProjectReward(nil, &reward, seenConservationRecurringRewards, seenConservationOneTimeRewards)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
