@@ -331,13 +331,14 @@ func TestValidatePlayerGameState_WhenTooManyActionCards_ReturnsError(t *testing.
 
 func TestValidatePlayerActionCard_WhenUnknownActionCard_ReturnsError(t *testing.T) {
 	s := New(nil)
-	actionCard := player_game_state.PlayerActionCard{
-		CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_UNKNOWN,
-		Strength: 1,
+	actionCards := []*player_game_state.PlayerActionCard{
+		&player_game_state.PlayerActionCard{
+			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_UNKNOWN,
+			Strength: 1,
+		},
 	}
-	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
-	seenStrengths := map[int32]int{}
-	res := s.ValidatePlayerActionCard(nil, &actionCard, seenCardTypes, seenStrengths)
+
+	res := s.ValidatePlayerActionCards(nil, actionCards)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
@@ -345,15 +346,18 @@ func TestValidatePlayerActionCard_WhenUnknownActionCard_ReturnsError(t *testing.
 
 func TestValidatePlayerActionCard_WhenDuplicateActionCard_ReturnsError(t *testing.T) {
 	s := New(nil)
-	actionCard := player_game_state.PlayerActionCard{
-		CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
-		Strength: 1,
+	actionCards := []*player_game_state.PlayerActionCard{
+		&player_game_state.PlayerActionCard{
+			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			Strength: 1,
+		},
+		&player_game_state.PlayerActionCard{
+			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			Strength: 2,
+		},
 	}
-	seenCardTypes := map[player_game_state.PlayerActionCardType]int{
-		player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS: 1,
-	}
-	seenStrengths := map[int32]int{}
-	res := s.ValidatePlayerActionCard(nil, &actionCard, seenCardTypes, seenStrengths)
+
+	res := s.ValidatePlayerActionCards(nil, actionCards)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
@@ -361,14 +365,14 @@ func TestValidatePlayerActionCard_WhenDuplicateActionCard_ReturnsError(t *testin
 
 func TestValidatePlayerActionCard_WhenActionCardStrengthZero_ReturnsError(t *testing.T) {
 	s := New(nil)
-	actionCard := player_game_state.PlayerActionCard{
-		CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
-		Strength: 0,
+	actionCards := []*player_game_state.PlayerActionCard{
+		&player_game_state.PlayerActionCard{
+			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			Strength: 0,
+		},
 	}
-	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
-	seenStrengths := map[int32]int{}
-	res := s.ValidatePlayerActionCard(nil, &actionCard, seenCardTypes, seenStrengths)
 
+	res := s.ValidatePlayerActionCards(nil, actionCards)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
@@ -376,14 +380,14 @@ func TestValidatePlayerActionCard_WhenActionCardStrengthZero_ReturnsError(t *tes
 
 func TestValidatePlayerActionCard_WhenActionCardStrengthTooHigh_ReturnsError(t *testing.T) {
 	s := New(nil)
-	actionCard := player_game_state.PlayerActionCard{
-		CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
-		Strength: 6,
+	actionCards := []*player_game_state.PlayerActionCard{
+		&player_game_state.PlayerActionCard{
+			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			Strength: 6,
+		},
 	}
-	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
-	seenStrengths := map[int32]int{}
-	res := s.ValidatePlayerActionCard(nil, &actionCard, seenCardTypes, seenStrengths)
 
+	res := s.ValidatePlayerActionCards(nil, actionCards)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
@@ -391,16 +395,18 @@ func TestValidatePlayerActionCard_WhenActionCardStrengthTooHigh_ReturnsError(t *
 
 func TestValidatePlayerActionCard_WhenActionCardStrengthDuplicated_ReturnsError(t *testing.T) {
 	s := New(nil)
-	actionCard := player_game_state.PlayerActionCard{
-		CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
-		Strength: 1,
+	actionCards := []*player_game_state.PlayerActionCard{
+		&player_game_state.PlayerActionCard{
+			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			Strength: 6,
+		},
+		&player_game_state.PlayerActionCard{
+			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
+			Strength: 6,
+		},
 	}
-	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
-	seenStrengths := map[int32]int{
-		1: 1,
-	}
-	res := s.ValidatePlayerActionCard(nil, &actionCard, seenCardTypes, seenStrengths)
 
+	res := s.ValidatePlayerActionCards(nil, actionCards)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
@@ -433,15 +439,15 @@ func TestValidatePlayerActionCardToken_WhenActionCardTokensLessThanOne_ReturnsEr
 
 func TestValidatePlayerConservationProjectReward_WhenRecurringTypeUnknown_ReturnsError(t *testing.T) {
 	s := New(nil)
-	reward := associate.ConservationProjectReward{
-		Reward: &associate.ConservationProjectReward_RecurringReward{
-			RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_UNKNOWN,
+	rewards := []*associate.ConservationProjectReward{
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_RecurringReward{
+				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_UNKNOWN,
+			},
 		},
 	}
-	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{}
-	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
 
-	res := s.ValidatePlayerConservationProjectReward(nil, &reward, seenConservationRecurringRewards, seenConservationOneTimeRewards)
+	res := s.ValidatePlayerConservationProjectRewards(nil, rewards)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
@@ -449,15 +455,15 @@ func TestValidatePlayerConservationProjectReward_WhenRecurringTypeUnknown_Return
 
 func TestValidatePlayerConservationProjectReward_WhenOneTimeTypeUnknown_ReturnsError(t *testing.T) {
 	s := New(nil)
-	reward := associate.ConservationProjectReward{
-		Reward: &associate.ConservationProjectReward_OneTimeReward{
-			OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN,
+	rewards := []*associate.ConservationProjectReward{
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_OneTimeReward{
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN,
+			},
 		},
 	}
-	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{}
-	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
 
-	res := s.ValidatePlayerConservationProjectReward(nil, &reward, seenConservationRecurringRewards, seenConservationOneTimeRewards)
+	res := s.ValidatePlayerConservationProjectRewards(nil, rewards)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
@@ -465,17 +471,20 @@ func TestValidatePlayerConservationProjectReward_WhenOneTimeTypeUnknown_ReturnsE
 
 func TestValidatePlayerConservationProjectReward_WhenDuplicateRecurring_ReturnsError(t *testing.T) {
 	s := New(nil)
-	reward := associate.ConservationProjectReward{
-		Reward: &associate.ConservationProjectReward_RecurringReward{
-			RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_SNAPPING,
+	rewards := []*associate.ConservationProjectReward{
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_RecurringReward{
+				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_SNAPPING,
+			},
+		},
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_RecurringReward{
+				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_SNAPPING,
+			},
 		},
 	}
-	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{
-		associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_SNAPPING: 1,
-	}
-	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
 
-	res := s.ValidatePlayerConservationProjectReward(nil, &reward, seenConservationRecurringRewards, seenConservationOneTimeRewards)
+	res := s.ValidatePlayerConservationProjectRewards(nil, rewards)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
@@ -483,17 +492,20 @@ func TestValidatePlayerConservationProjectReward_WhenDuplicateRecurring_ReturnsE
 
 func TestValidatePlayerConservationProjectReward_WhenDuplicateOneTime_ReturnsError(t *testing.T) {
 	s := New(nil)
-	reward := associate.ConservationProjectReward{
-		Reward: &associate.ConservationProjectReward_OneTimeReward{
-			OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
+	rewards := []*associate.ConservationProjectReward{
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_OneTimeReward{
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
+			},
+		},
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_OneTimeReward{
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
+			},
 		},
 	}
-	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{}
-	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{
-		associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE: 1,
-	}
 
-	res := s.ValidatePlayerConservationProjectReward(nil, &reward, seenConservationRecurringRewards, seenConservationOneTimeRewards)
+	res := s.ValidatePlayerConservationProjectRewards(nil, rewards)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
