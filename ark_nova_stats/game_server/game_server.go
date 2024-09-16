@@ -119,6 +119,10 @@ func (s *gameServer) ValidatePlayerConservationProjectReward(ctx context.Context
 			return []string{"Player has duplicate recurring conservation rewards"}
 		}
 	} else if conservationReward.GetOneTimeReward() != associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN {
+		oneTimeReward := conservationReward.GetOneTimeReward()
+		if _, found := seenOneTimeRewards[oneTimeReward]; found {
+			return []string{"Player has duplicate one-time conservation rewards"}
+		}
 
 	} else {
 		return []string{"Conservation project reward cannot be unknown type"}
