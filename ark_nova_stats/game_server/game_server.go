@@ -87,6 +87,10 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 		return []string{"Player appeal must be >= 0"}
 	}
 
+	if playerGameState.Money < 0 {
+		return []string{"Player money must be >= 0"}
+	}
+
 	return []string{}
 }
 

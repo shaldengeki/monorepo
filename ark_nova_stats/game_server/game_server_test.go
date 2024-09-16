@@ -286,3 +286,12 @@ func TestValidatePlayerGameState_WhenAppealNegative_ReturnsError(t *testing.T) {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
+
+func TestValidatePlayerGameState_WhenMoneyNegative_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	res := s.ValidatePlayerGameState(nil, &player_game_state.PlayerGameState{PlayerId: 1, Money: -1})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
