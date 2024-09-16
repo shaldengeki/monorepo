@@ -183,6 +183,7 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 	}
 
 	// TODO validations for:
+	// conservation project rewards don't line up with map
 	if errors := s.ValidatePlayerConservationProjectRewards(ctx, playerGameState.ConservationProjectRewards); len(errors) > 0 {
 		return errors
 	}
