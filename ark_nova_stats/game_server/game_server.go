@@ -183,7 +183,6 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 	}
 
 	// TODO validations for:
-	// repeated ConservationProjectReward conservation_project_rewards = 7;
 	if errors := s.ValidatePlayerConservationProjectRewards(ctx, playerGameState.ConservationProjectRewards); len(errors) > 0 {
 		return errors
 	}
