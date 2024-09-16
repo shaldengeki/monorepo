@@ -148,6 +148,30 @@ func (s *gameServer) ValidatePlayerConservationProjectRewards(ctx context.Contex
 	return []string{}
 }
 
+func (s *gameServer) ValidatePlayerPartnerZoo(ctx context.Context, partnerZoo associate.PartnerZoo, seenPartnerZoo map[associate.PartnerZoo]int) []string {
+	if partnerZoo == associate.PartnerZoo_PARTNERZOO_UNKNOWN {
+		return []string{"Partner zoo cannot be unknown type"}
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerPartnerZoos(ctx context.Context, partnerZoos []associate.PartnerZoo) []string {
+	if len(partnerZoos) > 7 {
+		return []string{"Player cannot have more than 7 conservation project rewards"}
+	}
+
+	seenPartnerZoos := map[associate.PartnerZoo]int{}
+
+	for _, partnerZoo := range partnerZoos {
+		if errors := s.ValidatePlayerPartnerZoo(ctx, partnerZoo, seenPartnerZoos); len(errors) > 0 {
+			return errors
+		}
+	}
+
+	return []string{}
+}
+
 func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameState *player_game_state.PlayerGameState) []string {
 	if playerGameState.PlayerId <= 0 {
 		return []string{"Player ID not set"}
@@ -184,11 +208,15 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 
 	// TODO validations for:
 	// conservation project rewards don't line up with map
+	// Probably put this in proto or golang, not the database?
 	if errors := s.ValidatePlayerConservationProjectRewards(ctx, playerGameState.ConservationProjectRewards); len(errors) > 0 {
 		return errors
 	}
 
-	// repeated PartnerZoo partner_zoos = 8;
+	if errors := s.ValidatePlayerPartnerZoos(ctx, playerGameState.PartnerZoos); len(errors) > 0 {
+		return errors
+	}
+
 	// repeated University universities = 9;
 
 	// repeated AnimalCard animals = 10;

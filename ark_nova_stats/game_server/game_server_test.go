@@ -548,3 +548,11 @@ func TestValidatePlayerConservationProjectReward_WhenTooManyRewards_ReturnsError
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
+
+func TestValidatePlayerPartnerZoos_WhenPartnerZooUnknownType_ReturnsError(t *testing.T) {
+	s := New(nil)
+	res := s.ValidatePlayerPartnerZoos(nil, []associate.PartnerZoo{associate.PartnerZoo_PARTNERZOO_UNKNOWN})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
