@@ -167,8 +167,8 @@ func (s *gameServer) ValidatePlayerPartnerZoo(ctx context.Context, partnerZoo as
 }
 
 func (s *gameServer) ValidatePlayerPartnerZoos(ctx context.Context, partnerZoos []associate.PartnerZoo) []string {
-	if len(partnerZoos) > 7 {
-		return []string{"Player cannot have more than 7 conservation project rewards"}
+	if len(partnerZoos) > 4 {
+		return []string{"Player cannot have more than 4 partner zoos"}
 	}
 
 	seenPartnerZoos := map[associate.PartnerZoo]int{}
