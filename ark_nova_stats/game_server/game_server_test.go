@@ -189,7 +189,22 @@ func TestValidateState_WhenBreakMaxMismatchPlayerCount_ReturnsError(t *testing.T
 	}
 }
 
-func TestValidateState_WhenDisplayHasTooManyCards_ReturnsError(t *testing.T) {
+func TestValidateDisplay_WhenDisplayEmpty_IsOK(t *testing.T) {
+	s := New(nil)
+
+	displayCards := []*display_state.DisplayCard{}
+
+	displayState := display_state.DisplayState{
+		Cards: displayCards,
+	}
+
+	res := s.ValidateDisplay(nil, &game_state.GameState{Round: 1, BreakMax: 1, DisplayState: &displayState})
+	if len(res) > 0 {
+		t.Fatalf("Should have no validation errors, but got %v", res)
+	}
+}
+
+func TestValidateDisplay_WhenDisplayHasTooManyCards_ReturnsError(t *testing.T) {
 	s := New(nil)
 
 	displayCard := display_state.DisplayCard{}
@@ -208,7 +223,24 @@ func TestValidateState_WhenDisplayHasTooManyCards_ReturnsError(t *testing.T) {
 		Cards: displayCards,
 	}
 
-	r := server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 1, DisplayState: &displayState}}
+	res := s.ValidateDisplay(nil, &game_state.GameState{Round: 1, BreakMax: 1, DisplayState: &displayState})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidateState_WhenPlayerGameStatesEmpty_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	playerGameStates := []*player_game_state.PlayerGameState{}
+
+	r := server.ValidateStateRequest{
+		GameState: &game_state.GameState{
+			Round: 1,
+			BreakMax: 1,
+			PlayerGameStates: playerGameStates,
+		},
+	}
 	res, err := s.ValidateState(nil, &r)
 	if err != nil {
 		t.Fatalf("Empty ValidateStateRequest shouldn't cause an error, but got %v", err)
@@ -216,5 +248,324 @@ func TestValidateState_WhenDisplayHasTooManyCards_ReturnsError(t *testing.T) {
 
 	if len(res.ValidationErrors) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res.ValidationErrors)
+	}
+}
+
+func TestValidatePlayerGameState_WhenPlayerIdNotSet_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	res := s.ValidatePlayerGameState(nil, &player_game_state.PlayerGameState{})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenReputationNegative_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	res := s.ValidatePlayerGameState(nil, &player_game_state.PlayerGameState{PlayerId: 1, Reputation: -1})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenConservationNegative_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	res := s.ValidatePlayerGameState(nil, &player_game_state.PlayerGameState{PlayerId: 1, Conservation: -1})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenAppealNegative_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	res := s.ValidatePlayerGameState(nil, &player_game_state.PlayerGameState{PlayerId: 1, Appeal: -1})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenMoneyNegative_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	res := s.ValidatePlayerGameState(nil, &player_game_state.PlayerGameState{PlayerId: 1, Money: -1})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenActionCardsEmpty_ReturnsError(t *testing.T) {
+	s := New(nil)
+	state := player_game_state.PlayerGameState{
+		PlayerId: 1,
+		ActionCards: []*player_game_state.PlayerActionCard{},
+	}
+
+	res := s.ValidatePlayerGameState(nil, &state)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenTooManyActionCards_ReturnsError(t *testing.T) {
+	s := New(nil)
+	state := player_game_state.PlayerGameState{
+		PlayerId: 1,
+		ActionCards: []*player_game_state.PlayerActionCard{
+			&player_game_state.PlayerActionCard{},
+			&player_game_state.PlayerActionCard{},
+			&player_game_state.PlayerActionCard{},
+			&player_game_state.PlayerActionCard{},
+			&player_game_state.PlayerActionCard{},
+			&player_game_state.PlayerActionCard{},
+		},
+	}
+
+	res := s.ValidatePlayerGameState(nil, &state)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenUnknownActionCard_ReturnsError(t *testing.T) {
+	s := New(nil)
+	state := player_game_state.PlayerGameState{
+		PlayerId: 1,
+		ActionCards: []*player_game_state.PlayerActionCard{
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_UNKNOWN,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
+			},
+		},
+	}
+
+	res := s.ValidatePlayerGameState(nil, &state)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenDuplicateActionCards_ReturnsError(t *testing.T) {
+	s := New(nil)
+	state := player_game_state.PlayerGameState{
+		PlayerId: 1,
+		ActionCards: []*player_game_state.PlayerActionCard{
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
+			},
+		},
+	}
+
+	res := s.ValidatePlayerGameState(nil, &state)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenActionCardStrengthZero_ReturnsError(t *testing.T) {
+	s := New(nil)
+	state := player_game_state.PlayerGameState{
+		PlayerId: 1,
+		ActionCards: []*player_game_state.PlayerActionCard{
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
+				Strength: 1,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+				Strength: 0,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
+				Strength: 2,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ASSOCIATE,
+				Strength: 3,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
+				Strength: 4,
+			},
+		},
+	}
+
+	res := s.ValidatePlayerGameState(nil, &state)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenActionCardStrengthTooHigh_ReturnsError(t *testing.T) {
+	s := New(nil)
+	state := player_game_state.PlayerGameState{
+		PlayerId: 1,
+		ActionCards: []*player_game_state.PlayerActionCard{
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
+				Strength: 1,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+				Strength: 2,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
+				Strength: 6,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ASSOCIATE,
+				Strength: 3,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
+				Strength: 4,
+			},
+		},
+	}
+
+	res := s.ValidatePlayerGameState(nil, &state)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenActionCardStrengthDuplicated_ReturnsError(t *testing.T) {
+	s := New(nil)
+	state := player_game_state.PlayerGameState{
+		PlayerId: 1,
+		ActionCards: []*player_game_state.PlayerActionCard{
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
+				Strength: 1,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+				Strength: 2,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
+				Strength: 3,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ASSOCIATE,
+				Strength: 3,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
+				Strength: 5,
+			},
+		},
+	}
+
+	res := s.ValidatePlayerGameState(nil, &state)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerGameState_WhenActionCardTokensUnknownType_ReturnsError(t *testing.T) {
+	s := New(nil)
+	state := player_game_state.PlayerGameState{
+		PlayerId: 1,
+		ActionCards: []*player_game_state.PlayerActionCard{
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
+				Strength: 1,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+				Strength: 2,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
+				Strength: 3,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ASSOCIATE,
+				Strength: 4,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
+				Strength: 5,
+				Tokens: []*player_game_state.PlayerActionCardToken{
+					&player_game_state.PlayerActionCardToken{
+						TokenType: player_game_state.PlayerActionCardTokenType_PLAYERACTIONCARDTOKENTYPE_UNKNOWN,
+						NumTokens: 1,
+					},
+				},
+			},
+		},
+	}
+
+	res := s.ValidatePlayerGameState(nil, &state)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+
+func TestValidatePlayerGameState_WhenActionCardTokensLessThanOne_ReturnsError(t *testing.T) {
+	s := New(nil)
+	state := player_game_state.PlayerGameState{
+		PlayerId: 1,
+		ActionCards: []*player_game_state.PlayerActionCard{
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
+				Strength: 1,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+				Strength: 2,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
+				Strength: 3,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ASSOCIATE,
+				Strength: 4,
+			},
+			&player_game_state.PlayerActionCard{
+				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
+				Strength: 5,
+				Tokens: []*player_game_state.PlayerActionCardToken{
+					&player_game_state.PlayerActionCardToken{
+						TokenType: player_game_state.PlayerActionCardTokenType_PLAYERACTIONCARDTOKENTYPE_MULTIPLIER,
+						NumTokens: 0,
+					},
+				},
+			},
+		},
+	}
+
+	res := s.ValidatePlayerGameState(nil, &state)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }

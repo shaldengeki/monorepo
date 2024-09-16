@@ -61,15 +61,102 @@ func (s *gameServer) ValidateBreak(ctx context.Context, gameState *game_state.Ga
 }
 
 func (s *gameServer) ValidateDisplay(ctx context.Context, gameState *game_state.GameState) []string {
-	if len(gameState.DisplayState.Cards) > 6 {
-		return []string{"Display must contain at most six cards"}
+	if gameState.DisplayState != nil && gameState.DisplayState.Cards != nil {
+		if len(gameState.DisplayState.Cards) > 6 {
+			return []string{"Display must contain at most six cards"}
+		}
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerActionCardToken(ctx context.Context, token *player_game_state.PlayerActionCardToken) []string {
+	if token.TokenType == player_game_state.PlayerActionCardTokenType_PLAYERACTIONCARDTOKENTYPE_UNKNOWN {
+		return []string{"Player action card token type must be set to a known value"}
+	}
+
+	if token.NumTokens < 1 {
+		return []string{"Player action card token count must be set to > 0, if passed at all"}
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerActionCard(ctx context.Context, actionCard *player_game_state.PlayerActionCard, seenCardTypes map[player_game_state.PlayerActionCardType]int, seenStrengths map[int32]int) []string {
+	if actionCard.CardType == player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_UNKNOWN {
+		return []string{"Player action card type must be set to a known value"}
+	}
+	if _, ok := seenCardTypes[actionCard.CardType]; ok {
+		return []string{"Player has multiple instances of an action card type"}
+	} else {
+		seenCardTypes[actionCard.CardType] = 1
+	}
+
+	if actionCard.Strength < 1 || actionCard.Strength > 5 {
+		return []string{"Player action card strength must be within [1, 5]"}
+	}
+
+	if _, ok := seenStrengths[actionCard.Strength]; ok {
+		return []string{"Player has multiple instances of an action card strength"}
+	} else {
+		seenStrengths[actionCard.Strength] = 1
+	}
+
+	for _, token := range actionCard.Tokens {
+		if errors := s.ValidatePlayerActionCardToken(ctx, token); len(errors) > 0 {
+			return errors
+		}
 	}
 
 	return []string{}
 }
 
 func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameState *player_game_state.PlayerGameState) []string {
-	// TODO: implement this.
+	if playerGameState.PlayerId <= 0 {
+		return []string{"Player ID not set"}
+	}
+
+	if playerGameState.Reputation < 0 {
+		return []string{"Player reputation must be >= 0"}
+	}
+
+	if playerGameState.Conservation < 0 {
+		return []string{"Player conservation must be >= 0"}
+	}
+
+	if playerGameState.Appeal < 0 {
+		return []string{"Player appeal must be >= 0"}
+	}
+
+	if playerGameState.Money < 0 {
+		return []string{"Player money must be >= 0"}
+	}
+
+	if len(playerGameState.ActionCards) != 5 {
+		return []string{"Player must have exactly 5 action cards"}
+	}
+
+	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
+	seenStrengths := map[int32]int{}
+
+	for _, actionCard := range playerGameState.ActionCards {
+		if errors := s.ValidatePlayerActionCard(ctx, actionCard, seenCardTypes, seenStrengths); len(errors) > 0 {
+			return errors
+		}
+	}
+
+	// TODO validations for:
+    // repeated ConservationProjectReward conservation_project_rewards = 7;
+    // repeated PartnerZoo partner_zoos = 8;
+    // repeated University universities = 9;
+
+    // repeated AnimalCard animals = 10;
+    // repeated SponsorCard sponsors = 11;
+
+    // PlayerMap map = 12;
+
+    // PlayerHand hand = 13;
+
 	return []string{}
 }
 
@@ -91,6 +178,10 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 	errs = s.ValidateDisplay(ctx, request.GameState)
 	if len(errs) > 0 {
 		return &server.ValidateStateResponse{ValidationErrors: errs}, nil
+	}
+
+	if request.GameState.PlayerGameStates == nil || len(request.GameState.PlayerGameStates) < 1 {
+		return &server.ValidateStateResponse{ValidationErrors: []string{"At least one player game state must be passed"}}, nil
 	}
 
 	for _, playerGameState := range request.GameState.PlayerGameStates {
