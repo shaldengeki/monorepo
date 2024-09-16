@@ -91,6 +91,23 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 		return []string{"Player money must be >= 0"}
 	}
 
+	if len(playerGameState.ActionCards) != 5 {
+		return []string{"Player must have exactly 5 action cards"}
+	}
+
+	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
+
+	for _, actionCard := range playerGameState.ActionCards {
+		if actionCard.CardType == player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_UNKNOWN {
+			return []string{"Player action card type must be set to a known value"}
+		}
+		if _, ok := seenCardTypes[actionCard.CardType]; ok {
+			return []string{"Player has multiple instances of a card type"}
+		} else {
+			seenCardTypes[actionCard.CardType] = 1
+		}
+	}
+
 	return []string{}
 }
 
