@@ -556,3 +556,11 @@ func TestValidatePlayerPartnerZoos_WhenPartnerZooUnknownType_ReturnsError(t *tes
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
+
+func TestValidatePlayerPartnerZoos_WhenDuplicatePartnerZoos_ReturnsError(t *testing.T) {
+	s := New(nil)
+	res := s.ValidatePlayerPartnerZoos(nil, []associate.PartnerZoo{associate.PartnerZoo_PARTNERZOO_ASIA, associate.PartnerZoo_PARTNERZOO_EUROPE, associate.PartnerZoo_PARTNERZOO_ASIA})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}

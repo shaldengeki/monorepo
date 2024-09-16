@@ -117,11 +117,15 @@ func (s *gameServer) ValidatePlayerConservationProjectReward(ctx context.Context
 		recurringReward := conservationReward.GetRecurringReward()
 		if _, found := seenRecurringRewards[recurringReward]; found {
 			return []string{"Player has duplicate recurring conservation rewards"}
+		} else {
+			seenRecurringRewards[recurringReward] = 1
 		}
 	} else if conservationReward.GetOneTimeReward() != associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN {
 		oneTimeReward := conservationReward.GetOneTimeReward()
 		if _, found := seenOneTimeRewards[oneTimeReward]; found {
 			return []string{"Player has duplicate one-time conservation rewards"}
+		} else {
+			seenOneTimeRewards[oneTimeReward] = 1
 		}
 
 	} else {
@@ -148,9 +152,15 @@ func (s *gameServer) ValidatePlayerConservationProjectRewards(ctx context.Contex
 	return []string{}
 }
 
-func (s *gameServer) ValidatePlayerPartnerZoo(ctx context.Context, partnerZoo associate.PartnerZoo, seenPartnerZoo map[associate.PartnerZoo]int) []string {
+func (s *gameServer) ValidatePlayerPartnerZoo(ctx context.Context, partnerZoo associate.PartnerZoo, seenPartnerZoos map[associate.PartnerZoo]int) []string {
 	if partnerZoo == associate.PartnerZoo_PARTNERZOO_UNKNOWN {
 		return []string{"Partner zoo cannot be unknown type"}
+	}
+
+	if _, found := seenPartnerZoos[partnerZoo]; found {
+		return []string{"Player has duplicate partner zoos"}
+	} else {
+		seenPartnerZoos[partnerZoo] = 1
 	}
 
 	return []string{}
