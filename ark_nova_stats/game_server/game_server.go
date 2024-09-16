@@ -117,11 +117,15 @@ func (s *gameServer) ValidatePlayerConservationProjectReward(ctx context.Context
 		recurringReward := conservationReward.GetRecurringReward()
 		if _, found := seenRecurringRewards[recurringReward]; found {
 			return []string{"Player has duplicate recurring conservation rewards"}
+		} else {
+			seenRecurringRewards[recurringReward] = 1
 		}
 	} else if conservationReward.GetOneTimeReward() != associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN {
 		oneTimeReward := conservationReward.GetOneTimeReward()
 		if _, found := seenOneTimeRewards[oneTimeReward]; found {
 			return []string{"Player has duplicate one-time conservation rewards"}
+		} else {
+			seenOneTimeRewards[oneTimeReward] = 1
 		}
 
 	} else {
@@ -141,6 +145,66 @@ func (s *gameServer) ValidatePlayerConservationProjectRewards(ctx context.Contex
 
 	for _, conservationReward := range conservationRewards {
 		if errors := s.ValidatePlayerConservationProjectReward(ctx, conservationReward, seenConservationRecurringRewards, seenConservationOneTimeRewards); len(errors) > 0 {
+			return errors
+		}
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerPartnerZoo(ctx context.Context, partnerZoo associate.PartnerZoo, seenPartnerZoos map[associate.PartnerZoo]int) []string {
+	if partnerZoo == associate.PartnerZoo_PARTNERZOO_UNKNOWN {
+		return []string{"Partner zoo cannot be unknown type"}
+	}
+
+	if _, found := seenPartnerZoos[partnerZoo]; found {
+		return []string{"Player has duplicate partner zoos"}
+	} else {
+		seenPartnerZoos[partnerZoo] = 1
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerPartnerZoos(ctx context.Context, partnerZoos []associate.PartnerZoo) []string {
+	if len(partnerZoos) > 4 {
+		return []string{"Player cannot have more than 4 partner zoos"}
+	}
+
+	seenPartnerZoos := map[associate.PartnerZoo]int{}
+
+	for _, partnerZoo := range partnerZoos {
+		if errors := s.ValidatePlayerPartnerZoo(ctx, partnerZoo, seenPartnerZoos); len(errors) > 0 {
+			return errors
+		}
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerUniversity(ctx context.Context, university associate.University, seenUniversities map[associate.University]int) []string {
+	if university == associate.University_UNIVERSITY_UNKNOWN {
+		return []string{"University cannot be unknown type"}
+	}
+
+	if _, found := seenUniversities[university]; found {
+		return []string{"Player has duplicate universities"}
+	} else {
+		seenUniversities[university] = 1
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerUniversities(ctx context.Context, universities []associate.University) []string {
+	if len(universities) > 3 {
+		return []string{"Player cannot have more than 3 universities"}
+	}
+
+	seenUniversities := map[associate.University]int{}
+
+	for _, university := range universities {
+		if errors := s.ValidatePlayerUniversity(ctx, university, seenUniversities); len(errors) > 0 {
 			return errors
 		}
 	}
@@ -184,12 +248,18 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 
 	// TODO validations for:
 	// conservation project rewards don't line up with map
+	// Probably put this in proto or golang, not the database?
 	if errors := s.ValidatePlayerConservationProjectRewards(ctx, playerGameState.ConservationProjectRewards); len(errors) > 0 {
 		return errors
 	}
 
-	// repeated PartnerZoo partner_zoos = 8;
-	// repeated University universities = 9;
+	if errors := s.ValidatePlayerPartnerZoos(ctx, playerGameState.PartnerZoos); len(errors) > 0 {
+		return errors
+	}
+
+	if errors := s.ValidatePlayerUniversities(ctx, playerGameState.Universities); len(errors) > 0 {
+		return errors
+	}
 
 	// repeated AnimalCard animals = 10;
 	// repeated SponsorCard sponsors = 11;
