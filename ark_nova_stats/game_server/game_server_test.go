@@ -329,242 +329,104 @@ func TestValidatePlayerGameState_WhenTooManyActionCards_ReturnsError(t *testing.
 	}
 }
 
-func TestValidatePlayerGameState_WhenUnknownActionCard_ReturnsError(t *testing.T) {
+func TestValidatePlayerActionCard_WhenUnknownActionCard_ReturnsError(t *testing.T) {
 	s := New(nil)
-	state := player_game_state.PlayerGameState{
-		PlayerId: 1,
-		ActionCards: []*player_game_state.PlayerActionCard{
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_UNKNOWN,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
-			},
-		},
+	actionCard := player_game_state.PlayerActionCard{
+		CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_UNKNOWN,
+		Strength: 1,
 	}
-
-	res := s.ValidatePlayerGameState(nil, &state)
+	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
+	seenStrengths := map[int32]int{}
+	res := s.ValidatePlayerActionCard(nil, &actionCard, seenCardTypes, seenStrengths)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
 
-func TestValidatePlayerGameState_WhenDuplicateActionCards_ReturnsError(t *testing.T) {
+func TestValidatePlayerActionCard_WhenDuplicateActionCard_ReturnsError(t *testing.T) {
 	s := New(nil)
-	state := player_game_state.PlayerGameState{
-		PlayerId: 1,
-		ActionCards: []*player_game_state.PlayerActionCard{
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
-			},
-		},
+	actionCard := player_game_state.PlayerActionCard{
+		CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+		Strength: 1,
 	}
-
-	res := s.ValidatePlayerGameState(nil, &state)
+	seenCardTypes := map[player_game_state.PlayerActionCardType]int{
+		player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS: 1,
+	}
+	seenStrengths := map[int32]int{}
+	res := s.ValidatePlayerActionCard(nil, &actionCard, seenCardTypes, seenStrengths)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
 
-func TestValidatePlayerGameState_WhenActionCardStrengthZero_ReturnsError(t *testing.T) {
+func TestValidatePlayerActionCard_WhenActionCardStrengthZero_ReturnsError(t *testing.T) {
 	s := New(nil)
-	state := player_game_state.PlayerGameState{
-		PlayerId: 1,
-		ActionCards: []*player_game_state.PlayerActionCard{
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
-				Strength: 1,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
-				Strength: 0,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
-				Strength: 2,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ASSOCIATE,
-				Strength: 3,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
-				Strength: 4,
-			},
-		},
+	actionCard := player_game_state.PlayerActionCard{
+		CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+		Strength: 0,
 	}
+	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
+	seenStrengths := map[int32]int{}
+	res := s.ValidatePlayerActionCard(nil, &actionCard, seenCardTypes, seenStrengths)
 
-	res := s.ValidatePlayerGameState(nil, &state)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
 
-func TestValidatePlayerGameState_WhenActionCardStrengthTooHigh_ReturnsError(t *testing.T) {
+func TestValidatePlayerActionCard_WhenActionCardStrengthTooHigh_ReturnsError(t *testing.T) {
 	s := New(nil)
-	state := player_game_state.PlayerGameState{
-		PlayerId: 1,
-		ActionCards: []*player_game_state.PlayerActionCard{
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
-				Strength: 1,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
-				Strength: 2,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
-				Strength: 6,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ASSOCIATE,
-				Strength: 3,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
-				Strength: 4,
-			},
-		},
+	actionCard := player_game_state.PlayerActionCard{
+		CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+		Strength: 6,
 	}
+	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
+	seenStrengths := map[int32]int{}
+	res := s.ValidatePlayerActionCard(nil, &actionCard, seenCardTypes, seenStrengths)
 
-	res := s.ValidatePlayerGameState(nil, &state)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
 
-func TestValidatePlayerGameState_WhenActionCardStrengthDuplicated_ReturnsError(t *testing.T) {
+func TestValidatePlayerActionCard_WhenActionCardStrengthDuplicated_ReturnsError(t *testing.T) {
 	s := New(nil)
-	state := player_game_state.PlayerGameState{
-		PlayerId: 1,
-		ActionCards: []*player_game_state.PlayerActionCard{
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
-				Strength: 1,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
-				Strength: 2,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
-				Strength: 3,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ASSOCIATE,
-				Strength: 3,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
-				Strength: 5,
-			},
-		},
+	actionCard := player_game_state.PlayerActionCard{
+		CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+		Strength: 1,
 	}
+	seenCardTypes := map[player_game_state.PlayerActionCardType]int{}
+	seenStrengths := map[int32]int{
+		1: 1,
+	}
+	res := s.ValidatePlayerActionCard(nil, &actionCard, seenCardTypes, seenStrengths)
 
-	res := s.ValidatePlayerGameState(nil, &state)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
 
-func TestValidatePlayerGameState_WhenActionCardTokensUnknownType_ReturnsError(t *testing.T) {
+func TestValidatePlayerActionCardToken_WhenActionCardTokensUnknownType_ReturnsError(t *testing.T) {
 	s := New(nil)
-	state := player_game_state.PlayerGameState{
-		PlayerId: 1,
-		ActionCards: []*player_game_state.PlayerActionCard{
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
-				Strength: 1,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
-				Strength: 2,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
-				Strength: 3,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ASSOCIATE,
-				Strength: 4,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
-				Strength: 5,
-				Tokens: []*player_game_state.PlayerActionCardToken{
-					&player_game_state.PlayerActionCardToken{
-						TokenType: player_game_state.PlayerActionCardTokenType_PLAYERACTIONCARDTOKENTYPE_UNKNOWN,
-						NumTokens: 1,
-					},
-				},
-			},
-		},
+	token := player_game_state.PlayerActionCardToken{
+		TokenType: player_game_state.PlayerActionCardTokenType_PLAYERACTIONCARDTOKENTYPE_UNKNOWN,
+		NumTokens: 1,
 	}
-
-	res := s.ValidatePlayerGameState(nil, &state)
+	res := s.ValidatePlayerActionCardToken(nil, &token)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
 
 
-func TestValidatePlayerGameState_WhenActionCardTokensLessThanOne_ReturnsError(t *testing.T) {
+func TestValidatePlayerActionCardToken_WhenActionCardTokensLessThanOne_ReturnsError(t *testing.T) {
 	s := New(nil)
-	state := player_game_state.PlayerGameState{
-		PlayerId: 1,
-		ActionCards: []*player_game_state.PlayerActionCard{
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_BUILD,
-				Strength: 1,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
-				Strength: 2,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
-				Strength: 3,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ASSOCIATE,
-				Strength: 4,
-			},
-			&player_game_state.PlayerActionCard{
-				CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_CARDS,
-				Strength: 5,
-				Tokens: []*player_game_state.PlayerActionCardToken{
-					&player_game_state.PlayerActionCardToken{
-						TokenType: player_game_state.PlayerActionCardTokenType_PLAYERACTIONCARDTOKENTYPE_MULTIPLIER,
-						NumTokens: 0,
-					},
-				},
-			},
-		},
+	token := player_game_state.PlayerActionCardToken{
+		TokenType: player_game_state.PlayerActionCardTokenType_PLAYERACTIONCARDTOKENTYPE_MULTIPLIER,
+		NumTokens: 0,
 	}
+	res := s.ValidatePlayerActionCardToken(nil, &token)
 
-	res := s.ValidatePlayerGameState(nil, &state)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
