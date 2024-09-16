@@ -9,10 +9,10 @@ import (
 
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider"
 
+	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto/server"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/associate"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state"
-	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto/server"
 
 	"google.golang.org/grpc"
 )
@@ -113,8 +113,36 @@ func (s *gameServer) ValidatePlayerActionCard(ctx context.Context, actionCard *p
 }
 
 func (s *gameServer) ValidatePlayerConservationProjectReward(ctx context.Context, conservationReward *associate.ConservationProjectReward, seenRecurringRewards map[associate.ConservationProjectRecurringReward]int, seenOneTimeRewards map[associate.ConservationProjectOneTimeReward]int) []string {
-	if conservationReward.GetRecurringReward() == associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_UNKNOWN && conservationReward.GetOneTimeReward() == associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN {
+	if conservationReward.GetRecurringReward() != associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_UNKNOWN {
+		recurringReward := conservationReward.GetRecurringReward()
+		if _, found := seenRecurringRewards[recurringReward]; found {
+			return []string{"Player has duplicate recurring conservation rewards"}
+		}
+	} else if conservationReward.GetOneTimeReward() != associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN {
+		oneTimeReward := conservationReward.GetOneTimeReward()
+		if _, found := seenOneTimeRewards[oneTimeReward]; found {
+			return []string{"Player has duplicate one-time conservation rewards"}
+		}
+
+	} else {
 		return []string{"Conservation project reward cannot be unknown type"}
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerConservationProjectRewards(ctx context.Context, conservationRewards []*associate.ConservationProjectReward) []string {
+	if len(conservationRewards) > 7 {
+		return []string{"Player cannot have more than 7 conservation project rewards"}
+	}
+
+	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{}
+	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
+
+	for _, conservationReward := range conservationRewards {
+		if errors := s.ValidatePlayerConservationProjectReward(ctx, conservationReward, seenConservationRecurringRewards, seenConservationOneTimeRewards); len(errors) > 0 {
+			return errors
+		}
 	}
 
 	return []string{}
@@ -155,30 +183,23 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 	}
 
 	// TODO validations for:
-    // repeated ConservationProjectReward conservation_project_rewards = 7;
-
-	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{}
-	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
-
-	for _, conservationReward := range playerGameState.ConservationProjectRewards {
-		if errors := s.ValidatePlayerConservationProjectReward(ctx, conservationReward, seenConservationRecurringRewards, seenConservationOneTimeRewards); len(errors) > 0 {
-			return errors
-		}
+	// conservation project rewards don't line up with map
+	if errors := s.ValidatePlayerConservationProjectRewards(ctx, playerGameState.ConservationProjectRewards); len(errors) > 0 {
+		return errors
 	}
 
-    // repeated PartnerZoo partner_zoos = 8;
-    // repeated University universities = 9;
+	// repeated PartnerZoo partner_zoos = 8;
+	// repeated University universities = 9;
 
-    // repeated AnimalCard animals = 10;
-    // repeated SponsorCard sponsors = 11;
+	// repeated AnimalCard animals = 10;
+	// repeated SponsorCard sponsors = 11;
 
-    // PlayerMap map = 12;
+	// PlayerMap map = 12;
 
-    // PlayerHand hand = 13;
+	// PlayerHand hand = 13;
 
 	return []string{}
 }
-
 
 func (s *gameServer) ValidateState(ctx context.Context, request *server.ValidateStateRequest) (*server.ValidateStateResponse, error) {
 	if request.GameState == nil {
