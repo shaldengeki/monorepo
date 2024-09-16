@@ -502,14 +502,46 @@ func TestValidatePlayerConservationProjectReward_WhenDuplicateOneTime_ReturnsErr
 func TestValidatePlayerConservationProjectReward_WhenTooManyRewards_ReturnsError(t *testing.T) {
 	s := New(nil)
 	rewards := []*associate.ConservationProjectReward{
-		&associate.ConservationProjectReward{},
-		&associate.ConservationProjectReward{},
-		&associate.ConservationProjectReward{},
-		&associate.ConservationProjectReward{},
-		&associate.ConservationProjectReward{},
-		&associate.ConservationProjectReward{},
-		&associate.ConservationProjectReward{},
-		&associate.ConservationProjectReward{},
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_OneTimeReward{
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
+			},
+		},
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_OneTimeReward{
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_ASSOCIATION_WORKER,
+			},
+		},
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_OneTimeReward{
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_TWELVE_MONEY,
+			},
+		},
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_OneTimeReward{
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_THREE_X,
+			},
+		},
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_OneTimeReward{
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNIVERSITY,
+			},
+		},
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_OneTimeReward{
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
+			},
+		},
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_OneTimeReward{
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_DETERMINATION,
+			},
+		},
+		&associate.ConservationProjectReward{
+			Reward: &associate.ConservationProjectReward_OneTimeReward{
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_TWO_REPUTATION,
+			},
+		},
 	}
 	res := s.ValidatePlayerConservationProjectRewards(nil, rewards)
 	if len(res) < 1 {
