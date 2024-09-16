@@ -71,7 +71,10 @@ func (s *gameServer) ValidateDisplay(ctx context.Context, gameState *game_state.
 }
 
 func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameState *player_game_state.PlayerGameState) []string {
-	// TODO: implement this.
+	if playerGameState.PlayerId <= 0 {
+		return []string{"Player ID not set"}
+	}
+
 	return []string{}
 }
 
@@ -93,6 +96,10 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 	errs = s.ValidateDisplay(ctx, request.GameState)
 	if len(errs) > 0 {
 		return &server.ValidateStateResponse{ValidationErrors: errs}, nil
+	}
+
+	if request.GameState.PlayerGameStates == nil || len(request.GameState.PlayerGameStates) < 1 {
+		return &server.ValidateStateResponse{ValidationErrors: []string{"At least one player game state must be passed"}}, nil
 	}
 
 	for _, playerGameState := range request.GameState.PlayerGameStates {
