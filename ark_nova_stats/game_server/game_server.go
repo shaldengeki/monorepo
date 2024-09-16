@@ -79,6 +79,14 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 		return []string{"Player reputation must be >= 0"}
 	}
 
+	if playerGameState.Conservation < 0 {
+		return []string{"Player conservation must be >= 0"}
+	}
+
+	if playerGameState.Appeal < 0 {
+		return []string{"Player appeal must be >= 0"}
+	}
+
 	return []string{}
 }
 
