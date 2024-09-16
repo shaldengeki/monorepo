@@ -498,3 +498,21 @@ func TestValidatePlayerConservationProjectReward_WhenDuplicateOneTime_ReturnsErr
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
+
+func TestValidatePlayerConservationProjectReward_WhenTooManyRewards_ReturnsError(t *testing.T) {
+	s := New(nil)
+	rewards := []*associate.ConservationProjectReward{
+		&associate.ConservationProjectReward{},
+		&associate.ConservationProjectReward{},
+		&associate.ConservationProjectReward{},
+		&associate.ConservationProjectReward{},
+		&associate.ConservationProjectReward{},
+		&associate.ConservationProjectReward{},
+		&associate.ConservationProjectReward{},
+		&associate.ConservationProjectReward{},
+	}
+	res := s.ValidatePlayerConservationProjectRewards(nil, rewards)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}

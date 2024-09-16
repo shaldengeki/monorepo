@@ -131,6 +131,23 @@ func (s *gameServer) ValidatePlayerConservationProjectReward(ctx context.Context
 	return []string{}
 }
 
+func (s *gameServer) ValidatePlayerConservationProjectRewards(ctx context.Context, conservationRewards []*associate.ConservationProjectReward) []string {
+	if len(conservationRewards) > 7 {
+		return []string{"Player cannot have more than 7 conservation project rewards"}
+	}
+
+	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{}
+	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
+
+	for _, conservationReward := range conservationRewards {
+		if errors := s.ValidatePlayerConservationProjectReward(ctx, conservationReward, seenConservationRecurringRewards, seenConservationOneTimeRewards); len(errors) > 0 {
+			return errors
+		}
+	}
+
+	return []string{}
+}
+
 func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameState *player_game_state.PlayerGameState) []string {
 	if playerGameState.PlayerId <= 0 {
 		return []string{"Player ID not set"}
@@ -167,14 +184,8 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 
 	// TODO validations for:
 	// repeated ConservationProjectReward conservation_project_rewards = 7;
-
-	seenConservationRecurringRewards := map[associate.ConservationProjectRecurringReward]int{}
-	seenConservationOneTimeRewards := map[associate.ConservationProjectOneTimeReward]int{}
-
-	for _, conservationReward := range playerGameState.ConservationProjectRewards {
-		if errors := s.ValidatePlayerConservationProjectReward(ctx, conservationReward, seenConservationRecurringRewards, seenConservationOneTimeRewards); len(errors) > 0 {
-			return errors
-		}
+	if errors := s.ValidatePlayerConservationProjectRewards(ctx, playerGameState.ConservationProjectRewards); len(errors) > 0 {
+		return errors
 	}
 
 	// repeated PartnerZoo partner_zoos = 8;
