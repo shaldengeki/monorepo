@@ -182,6 +182,36 @@ func (s *gameServer) ValidatePlayerPartnerZoos(ctx context.Context, partnerZoos 
 	return []string{}
 }
 
+func (s *gameServer) ValidatePlayerUniversity(ctx context.Context, university associate.University, seenUniversities map[associate.University]int) []string {
+	if university == associate.University_UNIVERSITY_UNKNOWN {
+		return []string{"University cannot be unknown type"}
+	}
+
+	if _, found := seenUniversities[university]; found {
+		return []string{"Player has duplicate universities"}
+	} else {
+		seenUniversities[university] = 1
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerUniversities(ctx context.Context, universities []associate.University) []string {
+	if len(universities) > 3 {
+		return []string{"Player cannot have more than 3 universities"}
+	}
+
+	seenUniversities := map[associate.University]int{}
+
+	for _, university := range universities {
+		if errors := s.ValidatePlayerUniversity(ctx, university, seenUniversities); len(errors) > 0 {
+			return errors
+		}
+	}
+
+	return []string{}
+}
+
 func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameState *player_game_state.PlayerGameState) []string {
 	if playerGameState.PlayerId <= 0 {
 		return []string{"Player ID not set"}
@@ -227,7 +257,9 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 		return errors
 	}
 
-	// repeated University universities = 9;
+	if errors := s.ValidatePlayerUniversities(ctx, playerGameState.Universities); len(errors) > 0 {
+		return errors
+	}
 
 	// repeated AnimalCard animals = 10;
 	// repeated SponsorCard sponsors = 11;

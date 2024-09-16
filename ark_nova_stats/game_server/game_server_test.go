@@ -572,3 +572,27 @@ func TestValidatePlayerPartnerZoos_WhenTooManyPartnerZoos_ReturnsError(t *testin
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
+
+func TestValidatePlayerPartnerZoos_WhenUniversityUnknownType_ReturnsError(t *testing.T) {
+	s := New(nil)
+	res := s.ValidatePlayerUniversities(nil, []associate.University{associate.University_UNIVERSITY_UNKNOWN})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerUniversities_WhenDuplicateUniversities_ReturnsError(t *testing.T) {
+	s := New(nil)
+	res := s.ValidatePlayerUniversities(nil, []associate.University{associate.University_UNIVERSITY_TWO_SCIENCE, associate.University_UNIVERSITY_SCIENCE_TWO_REPUTATION, associate.University_UNIVERSITY_TWO_SCIENCE})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerUniversities_WhenTooManyUniversities_ReturnsError(t *testing.T) {
+	s := New(nil)
+	res := s.ValidatePlayerUniversities(nil, []associate.University{associate.University_UNIVERSITY_TWO_SCIENCE, associate.University_UNIVERSITY_SCIENCE_TWO_REPUTATION, associate.University_UNIVERSITY_REPUTATION_HAND_SIZE, associate.University_UNIVERSITY_TWO_SCIENCE})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
