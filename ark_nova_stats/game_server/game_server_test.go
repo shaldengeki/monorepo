@@ -7,6 +7,7 @@ import (
 
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto/server"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/associate"
+	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/cards"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/display_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state"
@@ -604,6 +605,112 @@ func TestValidatePlayerUniversities_WhenDuplicateUniversities_ReturnsError(t *te
 func TestValidatePlayerUniversities_WhenTooManyUniversities_ReturnsError(t *testing.T) {
 	s := New(nil)
 	res := s.ValidatePlayerUniversities(nil, []associate.University{associate.University_UNIVERSITY_TWO_SCIENCE, associate.University_UNIVERSITY_SCIENCE_TWO_REPUTATION, associate.University_UNIVERSITY_REPUTATION_HAND_SIZE, associate.University_UNIVERSITY_TWO_SCIENCE})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerAnimals_WithNoAnimals_IsOK(t *testing.T) {
+	s := New(nil)
+
+	cards := []*cards.AnimalCard{}
+
+	res := s.ValidatePlayerAnimals(nil, cards)
+	if len(res) > 0 {
+		t.Fatalf("Should result in no validation errors, but got %v", res)
+	}
+}
+
+func TestValidatePlayerAnimals_WhenCardIdNotSet_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	cards := []*cards.AnimalCard{
+		&cards.AnimalCard{
+			Card: &cards.Card{},
+		},
+	}
+
+	res := s.ValidatePlayerAnimals(nil, cards)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerAnimals_WithDuplicateAnimals_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	cards := []*cards.AnimalCard{
+		&cards.AnimalCard{
+			Card: &cards.Card{
+				CardId: 1,
+			},
+		},
+		&cards.AnimalCard{
+			Card: &cards.Card{
+				CardId: 2,
+			},
+		},
+		&cards.AnimalCard{
+			Card: &cards.Card{
+				CardId: 1,
+			},
+		},
+	}
+
+	res := s.ValidatePlayerAnimals(nil, cards)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerSponsors_WithNoSponsors_IsOK(t *testing.T) {
+	s := New(nil)
+
+	cards := []*cards.SponsorCard{}
+
+	res := s.ValidatePlayerSponsors(nil, cards)
+	if len(res) > 0 {
+		t.Fatalf("Should result in no validation errors, but got %v", res)
+	}
+}
+
+func TestValidatePlayerSponsors_WhenCardIdNotSet_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	cards := []*cards.SponsorCard{
+		&cards.SponsorCard{
+			Card: &cards.Card{},
+		},
+	}
+
+	res := s.ValidatePlayerSponsors(nil, cards)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerSponsors_WithDuplicateSponsors_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	cards := []*cards.SponsorCard{
+		&cards.SponsorCard{
+			Card: &cards.Card{
+				CardId: 1,
+			},
+		},
+		&cards.SponsorCard{
+			Card: &cards.Card{
+				CardId: 2,
+			},
+		},
+		&cards.SponsorCard{
+			Card: &cards.Card{
+				CardId: 1,
+			},
+		},
+	}
+
+	res := s.ValidatePlayerSponsors(nil, cards)
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
