@@ -260,6 +260,36 @@ func (s *gameServer) ValidatePlayerAnimals(ctx context.Context, animalCards []*c
 	return []string{}
 }
 
+func (s *gameServer) ValidateSponsorCard(ctx context.Context, sponsorCard *cards.SponsorCard, seenSponsors map[int64]int) []string {
+	if sponsorCard.Card == nil {
+		return []string{"Sponsor card must have a Card object set"}
+	}
+
+	if sponsorCard.Card.CardId < 1 {
+		return []string{"Card ID must be >= 1"}
+	}
+
+	if _, found := seenSponsors[sponsorCard.Card.CardId]; found {
+		return []string{"Player has duplicate sponsors"}
+	} else {
+		seenSponsors[sponsorCard.Card.CardId] = 1
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerSponsors(ctx context.Context, sponsorCards []*cards.SponsorCard) []string {
+	seenSponsors := map[int64]int{}
+
+	for _, sponsorCard := range sponsorCards {
+		if errors := s.ValidateSponsorCard(ctx, sponsorCard, seenSponsors); len(errors) > 0 {
+			return errors
+		}
+	}
+
+	return []string{}
+}
+
 func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameState *player_game_state.PlayerGameState) []string {
 	if playerGameState.PlayerId <= 0 {
 		return []string{"Player ID not set"}
@@ -301,6 +331,10 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 	}
 
 	if errors := s.ValidatePlayerAnimals(ctx, playerGameState.Animals); len(errors) > 0 {
+		return errors
+	}
+
+	if errors := s.ValidatePlayerSponsors(ctx, playerGameState.Sponsors); len(errors) > 0 {
 		return errors
 	}
 

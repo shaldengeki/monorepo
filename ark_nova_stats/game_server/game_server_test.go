@@ -662,3 +662,56 @@ func TestValidatePlayerAnimals_WithDuplicateAnimals_ReturnsError(t *testing.T) {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
+
+func TestValidatePlayerSponsors_WithNoSponsors_IsOK(t *testing.T) {
+	s := New(nil)
+
+	cards := []*cards.SponsorCard{}
+
+	res := s.ValidatePlayerSponsors(nil, cards)
+	if len(res) > 0 {
+		t.Fatalf("Should result in no validation errors, but got %v", res)
+	}
+}
+
+func TestValidatePlayerSponsors_WhenCardIdNotSet_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	cards := []*cards.SponsorCard{
+		&cards.SponsorCard{
+			Card: &cards.Card{},
+		},
+	}
+
+	res := s.ValidatePlayerSponsors(nil, cards)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerSponsors_WithDuplicateSponsors_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	cards := []*cards.SponsorCard{
+		&cards.SponsorCard{
+			Card: &cards.Card{
+				CardId: 1,
+			},
+		},
+		&cards.SponsorCard{
+			Card: &cards.Card{
+				CardId: 2,
+			},
+		},
+		&cards.SponsorCard{
+			Card: &cards.Card{
+				CardId: 1,
+			},
+		},
+	}
+
+	res := s.ValidatePlayerSponsors(nil, cards)
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
