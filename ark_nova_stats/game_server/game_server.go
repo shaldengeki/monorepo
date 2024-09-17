@@ -338,8 +338,6 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 		return errors
 	}
 
-	// repeated SponsorCard sponsors = 11;
-
 	// PlayerMap map = 12;
 
 	// PlayerHand hand = 13;
