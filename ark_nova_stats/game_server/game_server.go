@@ -11,6 +11,7 @@ import (
 
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/proto/server"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/associate"
+	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/cards"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state"
 
@@ -229,6 +230,36 @@ func (s *gameServer) ValidatePlayerUniversities(ctx context.Context, universitie
 	return []string{}
 }
 
+func (s *gameServer) ValidateAnimalCard(ctx context.Context, animalCard *cards.AnimalCard, seenAnimals map[int64]int) []string {
+	if animalCard.Card == nil {
+		return []string{"Animal card must have a Card object set"}
+	}
+
+	if animalCard.Card.CardId < 1 {
+		return []string{"Card ID must be >= 1"}
+	}
+
+	if _, found := seenAnimals[animalCard.Card.CardId]; found {
+		return []string{"Player has duplicate animals"}
+	} else {
+		seenAnimals[animalCard.Card.CardId] = 1
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerAnimals(ctx context.Context, animalCards []*cards.AnimalCard) []string {
+	seenAnimals := map[int64]int{}
+
+	for _, animalCard := range animalCards {
+		if errors := s.ValidateAnimalCard(ctx, animalCard, seenAnimals); len(errors) > 0 {
+			return errors
+		}
+	}
+
+	return []string{}
+}
+
 func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameState *player_game_state.PlayerGameState) []string {
 	if playerGameState.PlayerId <= 0 {
 		return []string{"Player ID not set"}
@@ -269,7 +300,10 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 		return errors
 	}
 
-	// repeated AnimalCard animals = 10;
+	if errors := s.ValidatePlayerAnimals(ctx, playerGameState.Animals); len(errors) > 0 {
+		return errors
+	}
+
 	// repeated SponsorCard sponsors = 11;
 
 	// PlayerMap map = 12;
