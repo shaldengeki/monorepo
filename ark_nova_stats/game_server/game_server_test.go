@@ -715,3 +715,72 @@ func TestValidatePlayerSponsors_WithDuplicateSponsors_ReturnsError(t *testing.T)
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
 }
+
+func TestValidatePlayerHand_WithNoCards_IsOK(t *testing.T) {
+	s := New(nil)
+
+	cards := []*player_game_state.PlayerHandCard{}
+
+	res := s.ValidatePlayerHand(nil, &player_game_state.PlayerHand{Cards: cards})
+	if len(res) > 0 {
+		t.Fatalf("Should result in no validation errors, but got %v", res)
+	}
+}
+
+func TestValidatePlayerHand_WhenCardIdNotSet_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	cards := []*player_game_state.PlayerHandCard{
+		&player_game_state.PlayerHandCard{
+			Card: &player_game_state.PlayerHandCard_AnimalCard{
+				AnimalCard: &cards.AnimalCard{
+					Card: &cards.Card{},
+				},
+			},
+		},
+	}
+
+	res := s.ValidatePlayerHand(nil, &player_game_state.PlayerHand{Cards: cards})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
+
+func TestValidatePlayerHand_WithDuplicateCards_ReturnsError(t *testing.T) {
+	s := New(nil)
+
+	cards := []*player_game_state.PlayerHandCard{
+		&player_game_state.PlayerHandCard{
+			Card: &player_game_state.PlayerHandCard_AnimalCard{
+				AnimalCard: &cards.AnimalCard{
+					Card: &cards.Card{
+						CardId: 1,
+					},
+				},
+			},
+		},
+		&player_game_state.PlayerHandCard{
+			Card: &player_game_state.PlayerHandCard_SponsorCard{
+				SponsorCard: &cards.SponsorCard{
+					Card: &cards.Card{
+						CardId: 2,
+					},
+				},
+			},
+		},
+		&player_game_state.PlayerHandCard{
+			Card: &player_game_state.PlayerHandCard_AnimalCard{
+				AnimalCard: &cards.AnimalCard{
+					Card: &cards.Card{
+						CardId: 1,
+					},
+				},
+			},
+		},
+	}
+
+	res := s.ValidatePlayerHand(nil, &player_game_state.PlayerHand{Cards: cards})
+	if len(res) < 1 {
+		t.Fatalf("Should result in a validation error, but got %v", res)
+	}
+}
