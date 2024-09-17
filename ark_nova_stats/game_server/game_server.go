@@ -290,6 +290,62 @@ func (s *gameServer) ValidatePlayerSponsors(ctx context.Context, sponsorCards []
 	return []string{}
 }
 
+func (s *gameServer) ValidatePlayerHandCard(ctx context.Context, playerHandCard *player_game_state.PlayerHandCard, seenCards map[int64]int) []string {
+	if playerHandCard.GetAnimalCard() != nil {
+		card := playerHandCard.GetAnimalCard()
+
+		if card.Card.CardId < 1 {
+			return []string{"Card ID must be >= 1"}
+		}
+
+		if _, found := seenCards[card.Card.CardId]; found {
+			return []string{"Player has duplicate hand cards"}
+		} else {
+			seenCards[card.Card.CardId] = 1
+		}
+	} else if playerHandCard.GetSponsorCard() != nil {
+		card := playerHandCard.GetSponsorCard()
+
+		if card.Card.CardId < 1 {
+			return []string{"Card ID must be >= 1"}
+		}
+
+		if _, found := seenCards[card.Card.CardId]; found {
+			return []string{"Player has duplicate hand cards"}
+		} else {
+			seenCards[card.Card.CardId] = 1
+		}
+	} else if playerHandCard.GetEndgameScoringCard() != nil {
+		card := playerHandCard.GetEndgameScoringCard()
+
+		if card.Card.CardId < 1 {
+			return []string{"Card ID must be >= 1"}
+		}
+
+		if _, found := seenCards[card.Card.CardId]; found {
+			return []string{"Player has duplicate hand cards"}
+		} else {
+			seenCards[card.Card.CardId] = 1
+		}
+	} else {
+		return []string{"Hand card must have a Card object set"}
+	}
+
+	return []string{}
+}
+
+func (s *gameServer) ValidatePlayerHand(ctx context.Context, hand *player_game_state.PlayerHand) []string {
+	seenCards := map[int64]int{}
+
+	for _, card := range hand.Cards {
+		if errors := s.ValidatePlayerHandCard(ctx, card, seenCards); len(errors) > 0 {
+			return errors
+		}
+	}
+
+	return []string{}
+}
+
 func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameState *player_game_state.PlayerGameState) []string {
 	if playerGameState.PlayerId <= 0 {
 		return []string{"Player ID not set"}
@@ -340,7 +396,9 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 
 	// PlayerMap map = 12;
 
-	// PlayerHand hand = 13;
+	if errors := s.ValidatePlayerHand(ctx, playerGameState.Hand); len(errors) > 0 {
+		return errors
+	}
 
 	return []string{}
 }
@@ -367,6 +425,10 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 	if request.GameState.PlayerGameStates == nil || len(request.GameState.PlayerGameStates) < 1 {
 		return &server.ValidateStateResponse{ValidationErrors: []string{"At least one player game state must be passed"}}, nil
 	}
+
+	// TODO validations for:
+	// duplicates across player game states, i.e. animals, sponsors, hand cards, or unique buildings
+	// will probably require sharing global state and passing it in.
 
 	for _, playerGameState := range request.GameState.PlayerGameStates {
 		errs = s.ValidatePlayerGameState(ctx, playerGameState)
