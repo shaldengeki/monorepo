@@ -129,6 +129,22 @@ def populate_card_play_actions() -> None:
     logger.info("Done creating new card plays!")
 
 
+def populate_game_log_start_end() -> None:
+    logger.info(f"Populating game log start & ends.")
+    updated = 0
+    for game_log in GameLog.query.yield_per(10):  # type: ignore
+        parsed_log = BGAGameLog(**json.loads(game_log.log))
+        game_log.game_start = parsed_log.game_start
+        game_log.game_end = parsed_log.game_end
+        updated += 1
+        if updated % 100 == 0:
+            logger.info(f"Populated {updated} game log starts & ends...")
+
+    logger.info("Committing all the populated game log starts & ends.")
+    db.session.commit()
+    logger.info("Done populating game log starts & ends!")
+
+
 API_SECRET_KEY = os.getenv("API_WORKER_SECRET")
 
 
@@ -140,6 +156,7 @@ def main() -> int:
             # Do work here.
             archive_logs_to_tigris(tigris_client)
             # populate_card_play_actions()
+            populate_game_log_start_end()
             delay = (start + max_delay) - time.time()
             if delay > 0:
                 time.sleep(delay)
