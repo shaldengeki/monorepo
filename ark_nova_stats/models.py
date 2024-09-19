@@ -35,8 +35,8 @@ class GameLog(db.Model):
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
     )
     bga_table_id: Mapped[int]
-    game_start: Mapped[datetime.datetime]
-    game_end: Mapped[datetime.datetime]
+    game_start: Mapped[Optional[datetime.datetime]]
+    game_end: Mapped[Optional[datetime.datetime]]
 
     users: Mapped[list["User"]] = relationship(
         secondary="game_participations", back_populates="game_logs", viewonly=True

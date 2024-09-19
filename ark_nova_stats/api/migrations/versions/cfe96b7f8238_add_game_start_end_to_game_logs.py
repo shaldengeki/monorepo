@@ -26,11 +26,11 @@ depends_on = None
 def upgrade():
     op.add_column(
         "game_logs",
-        sa.Column("game_start", sa.DateTime, nullable=False),
+        sa.Column("game_start", sa.DateTime, nullable=True),
     )
     op.add_column(
         "game_logs",
-        sa.Column("game_end", sa.DateTime, nullable=False),
+        sa.Column("game_end", sa.DateTime, nullable=True),
     )
 
     bind = op.get_bind()
