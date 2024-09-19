@@ -369,21 +369,21 @@ class GameLog:
         )
 
     @property
-    def game_start(self) -> Optional[datetime.datetime]:
+    def game_start(self) -> datetime.datetime:
         if self.status != 1:
-            return None
+            raise ValueError(f"Log for table ID {self.table_id} does not have a status")
 
         if not self.data.logs:
-            return None
+            raise ValueError(f"Log for table ID {self.table_id} does not have any logs")
 
         return datetime.datetime.fromtimestamp(self.data.logs[0].time, tz=datetime.UTC)
 
     @property
-    def game_end(self) -> Optional[datetime.datetime]:
+    def game_end(self) -> datetime.datetime:
         if self.status != 1:
-            return None
+            raise ValueError(f"Log for table ID {self.table_id} does not have a status")
 
         if not self.data.logs:
-            return None
+            raise ValueError(f"Log for table ID {self.table_id} does not have any logs")
 
         return datetime.datetime.fromtimestamp(self.data.logs[-1].time, tz=datetime.UTC)
