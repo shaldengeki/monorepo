@@ -32,19 +32,6 @@ def upgrade():
         "game_logs",
         sa.Column("game_end", sa.DateTime, nullable=True),
     )
-
-    bind = op.get_bind()
-    session = orm.Session(bind=bind)
-
-    logging.info("Processing pre-existing logs.")
-    for log_model in session.query(GameLogModel):
-        logging.info(f"Processing log: {log_model.id}")
-        parsed_log = BGAGameLog(**json.loads(log_model.log))
-        log_model.game_start = parsed_log.game_start
-        log_model.game_end = parsed_log.game_end
-
-    session.commit()
-
     op.create_index(
         "game_logs_game_end",
         "game_logs",
