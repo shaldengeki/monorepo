@@ -217,8 +217,8 @@ class TestGameLog:
             datetime.datetime(
                 year=2024,
                 month=7,
-                day=4,
-                hour=23,
+                day=5,
+                hour=3,
                 minute=25,
                 second=0,
                 tzinfo=datetime.UTC,

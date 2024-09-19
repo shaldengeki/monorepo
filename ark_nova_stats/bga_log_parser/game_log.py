@@ -1,3 +1,4 @@
+import datetime
 from dataclasses import dataclass
 from typing import Any, Iterator, Optional
 
@@ -366,3 +367,23 @@ class GameLog:
                 self.parse_player_stats(player_stats) for player_stats in stats
             ]
         )
+
+    @property
+    def game_start(self) -> Optional[datetime.datetime]:
+        if self.status != 1:
+            return None
+
+        if not self.data.logs:
+            return None
+
+        return datetime.datetime.fromtimestamp(self.data.logs[0].time, tz=datetime.UTC)
+
+    @property
+    def game_end(self) -> Optional[datetime.datetime]:
+        if self.status != 1:
+            return None
+
+        if not self.data.logs:
+            return None
+
+        return datetime.datetime.fromtimestamp(self.data.logs[-1].time, tz=datetime.UTC)
