@@ -25,6 +25,14 @@ def game_log_bga_table_id_resolver(game_log: GameLogModel, info, **args) -> int:
     return game_log.bga_table_id
 
 
+def game_log_start_resolver(game_log: GameLogModel, info, **args) -> int:
+    return round(game_log.game_start.timestamp())
+
+
+def game_log_end_resolver(game_log: GameLogModel, info, **args) -> int:
+    return round(game_log.game_end.timestamp())
+
+
 def game_log_fields() -> dict[str, GraphQLField]:
     return {
         "id": GraphQLField(
@@ -42,9 +50,21 @@ def game_log_fields() -> dict[str, GraphQLField]:
         ),
         "users": GraphQLField(
             GraphQLNonNull(GraphQLList(user_type)),
+            description="Users who played in this game.",
         ),
         "cards": GraphQLField(
             GraphQLNonNull(GraphQLList(card_type)),
+            description="Cards played in this game.",
+        ),
+        "start": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="UNIX timestamp when the game started.",
+            resolve=game_log_start_resolver,
+        ),
+        "end": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="UNIX timestamp when the game ended.",
+            resolve=game_log_end_resolver,
         ),
     }
 
