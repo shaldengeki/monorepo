@@ -15,7 +15,7 @@ from ark_nova_stats.worker.archives import (
     RawBGALogArchiveCreator,
 )
 
-max_delay = 10
+max_delay = 12 * 60 * 60
 
 logging.basicConfig(
     format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.INFO
@@ -154,7 +154,7 @@ def main() -> int:
             # Do work here.
             archive_logs_to_tigris(tigris_client)
             # populate_card_play_actions()
-            populate_game_log_start_end()
+            # populate_game_log_start_end()
             delay = (start + max_delay) - time.time()
             if delay > 0:
                 time.sleep(delay)
