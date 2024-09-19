@@ -1,3 +1,4 @@
+import datetime
 from dataclasses import dataclass
 from typing import Any, Iterator, Optional
 
@@ -366,3 +367,23 @@ class GameLog:
                 self.parse_player_stats(player_stats) for player_stats in stats
             ]
         )
+
+    @property
+    def game_start(self) -> datetime.datetime:
+        if self.status != 1:
+            raise ValueError(f"Log for table ID {self.table_id} does not have a status")
+
+        if not self.data.logs:
+            raise ValueError(f"Log for table ID {self.table_id} does not have any logs")
+
+        return datetime.datetime.fromtimestamp(self.data.logs[0].time, tz=datetime.UTC)
+
+    @property
+    def game_end(self) -> datetime.datetime:
+        if self.status != 1:
+            raise ValueError(f"Log for table ID {self.table_id} does not have a status")
+
+        if not self.data.logs:
+            raise ValueError(f"Log for table ID {self.table_id} does not have any logs")
+
+        return datetime.datetime.fromtimestamp(self.data.logs[-1].time, tz=datetime.UTC)

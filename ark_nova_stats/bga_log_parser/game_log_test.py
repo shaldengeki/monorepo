@@ -1,3 +1,4 @@
+import datetime
 import json
 import sys
 from pathlib import Path
@@ -196,6 +197,34 @@ class TestGameLog:
         assert 1 == hardyzhao.icons_water
         assert 2 == hardyzhao.icons_rock
         assert 3 == hardyzhao.icons_science
+
+    def test_game_start_end_with_simple_game(self):
+        game_log = load_data_from_fixture_file("533468391_darcelmaw_hardyzhao.json")
+        x = GameLog(**game_log)
+        assert (
+            datetime.datetime(
+                year=2024,
+                month=7,
+                day=5,
+                hour=2,
+                minute=42,
+                second=51,
+                tzinfo=datetime.UTC,
+            )
+            == x.game_start
+        )
+        assert (
+            datetime.datetime(
+                year=2024,
+                month=7,
+                day=5,
+                hour=3,
+                minute=25,
+                second=0,
+                tzinfo=datetime.UTC,
+            )
+            == x.game_end
+        )
 
 
 class TestGameLogData:
