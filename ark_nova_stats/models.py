@@ -152,7 +152,8 @@ class User(db.Model):
             for p in GameParticipation.query.where(
                 GameParticipation.user_id == self.bga_id
             )
-            .order_by(desc(GameParticipation.game_log_id))
+            .join(GameLog, GameLog.id == GameParticipation.game_log_id)
+            .order_by(desc(GameLog.game_end))
             .limit(10)
             .all()
         ]
@@ -216,8 +217,9 @@ class Card(db.Model):
     def recent_plays(self, num=10) -> Select[tuple["CardPlay"]]:
         return (
             select(CardPlay)
+            .join(GameLog, GameLog.id == CardPlay.game_log_id)
             .where(CardPlay.card_id == self.id)
-            .order_by(desc(CardPlay.game_log_id))
+            .order_by(desc(GameLog.game_end))
             .limit(num)
         )
 
@@ -226,7 +228,7 @@ class Card(db.Model):
             select(GameLog)
             .join(CardPlay, CardPlay.game_log_id == GameLog.id)
             .where(CardPlay.card_id == self.id)
-            .order_by(desc(CardPlay.game_log_id))
+            .order_by(desc(GameLog.game_end))
             .limit(num)
         )
 
@@ -234,8 +236,9 @@ class Card(db.Model):
         return (
             select(User)
             .join(CardPlay, CardPlay.user_id == User.bga_id)
+            .join(GameLog, GameLog.id == CardPlay.game_log_id)
             .where(CardPlay.card_id == self.id)
-            .order_by(desc(CardPlay.game_log_id))
+            .order_by(desc(GameLog.game_end))
             .limit(num)
         )
 

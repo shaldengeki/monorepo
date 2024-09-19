@@ -169,9 +169,7 @@ def game_logs_field(
 
 
 def fetch_recent_game_logs(game_log_model: Type[GameLogModel]) -> list[GameLogModel]:
-    return (
-        game_log_model.query.order_by(desc(game_log_model.bga_table_id)).limit(10).all()
-    )
+    return game_log_model.query.order_by(desc(game_log_model.game_end)).limit(10).all()
 
 
 def recent_game_logs_field(
