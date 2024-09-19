@@ -112,7 +112,10 @@ def submit_game_logs(
         )
 
     log: GameLogModel = game_log_model(
-        bga_table_id=list(table_ids)[0], log=args["logs"]
+        bga_table_id=list(table_ids)[0],
+        log=args["logs"],
+        game_start=parsed_logs.game_start,
+        game_end=parsed_logs.game_end,
     )
     if app.config["TESTING"] == True:
         log.id = 1
