@@ -226,6 +226,14 @@ def user_commonly_played_cards_resolver(user: UserModel, info, **args) -> list[d
     ]
 
 
+def user_current_elo_resolver(user: UserModel, info, **args) -> Optional[int]:
+    return user.current_elo()
+
+
+def user_current_arena_elo_resolver(user: UserModel, info, **args) -> Optional[int]:
+    return user.current_arena_elo()
+
+
 def user_fields() -> dict[str, GraphQLField]:
     return {
         "id": GraphQLField(
@@ -259,6 +267,16 @@ def user_fields() -> dict[str, GraphQLField]:
             GraphQLNonNull(GraphQLList(user_play_count_type)),
             description="Most commonly played cards by the user.",
             resolve=user_commonly_played_cards_resolver,
+        ),
+        "currentElo": GraphQLField(
+            GraphQLInt,
+            description="Current non-arena ELO.",
+            resolve=user_current_elo_resolver,
+        ),
+        "currentArenaElo": GraphQLField(
+            GraphQLInt,
+            description="Current non-arena ELO.",
+            resolve=user_current_arena_elo_resolver,
         ),
     }
 
