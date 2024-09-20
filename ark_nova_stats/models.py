@@ -130,7 +130,6 @@ class User(db.Model):
         secondary="game_participations",
         back_populates="users",
         viewonly=True,
-        order_by="desc(GameLog.game_end)",
     )
     game_participations: Mapped[list["GameParticipation"]] = relationship(
         back_populates="user"
@@ -140,9 +139,7 @@ class User(db.Model):
     cards: Mapped[list["Card"]] = relationship(
         secondary="game_log_cards", back_populates="users", viewonly=True
     )
-    game_ratings: Mapped[list["GameRating"]] = relationship(
-        back_populates="user", order_by="desc(GameRating.game_log.game_end)"
-    )
+    game_ratings: Mapped[list["GameRating"]] = relationship(back_populates="user")
 
     @property
     def num_game_logs(self) -> int:
@@ -173,11 +170,14 @@ class User(db.Model):
             .limit(num)
         )
 
-    def latest_game(self) -> Optional["GameLog"]:
-        if not self.game_logs:
-            return None
-
-        return self.game_logs[0]
+    def latest_game(self) -> Select[tuple["GameLog"]]:
+        return (
+            select(GameLog)
+            .join(GameRating, GameRating.bga_table_id == GameLog.bga_table_id)
+            .where(GameRating.user_id == self.bga_id)
+            .order_by(desc(GameLog.game_end))
+            .limit(1)
+        )
 
     def current_elo(self) -> Optional[int]:
         latest_rating: Optional[GameRating] = (
