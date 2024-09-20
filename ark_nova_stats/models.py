@@ -127,7 +127,9 @@ class User(db.Model):
     )
 
     game_logs: Mapped[list["GameLog"]] = relationship(
-        secondary="game_participations", back_populates="users", viewonly=True
+        secondary="game_participations",
+        back_populates="users",
+        viewonly=True,
     )
     game_participations: Mapped[list["GameParticipation"]] = relationship(
         back_populates="user"
@@ -167,6 +169,49 @@ class User(db.Model):
             .order_by(desc(func.count()))
             .limit(num)
         )
+
+    def latest_game(self) -> Select[tuple["GameLog"]]:
+        return (
+            select(GameLog)
+            .join(GameRating, GameRating.bga_table_id == GameLog.bga_table_id)
+            .where(GameRating.user_id == self.bga_id)
+            .order_by(desc(GameLog.game_end))
+            .limit(1)
+        )
+
+    def current_elo(self) -> Optional[int]:
+        latest_rating: Optional[GameRating] = (
+            GameRating.query.join(
+                GameLog, GameLog.bga_table_id == GameRating.bga_table_id
+            )
+            .where(GameRating.user_id == self.id)
+            .where(GameRating.new_elo != None)
+            .order_by(desc(GameLog.game_end))
+            .limit(1)
+            .first()
+        )
+
+        if latest_rating is None:
+            return None
+
+        return latest_rating.new_elo
+
+    def current_arena_elo(self) -> Optional[int]:
+        latest_rating: Optional[GameRating] = (
+            GameRating.query.join(
+                GameLog, GameLog.bga_table_id == GameRating.bga_table_id
+            )
+            .where(GameRating.user_id == self.id)
+            .where(GameRating.new_arena_elo != None)
+            .order_by(desc(GameLog.game_end))
+            .limit(1)
+            .first()
+        )
+
+        if latest_rating is None:
+            return None
+
+        return latest_rating.new_arena_elo
 
 
 class GameLogArchiveType(enum.IntEnum):

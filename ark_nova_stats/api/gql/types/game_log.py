@@ -21,6 +21,38 @@ from ark_nova_stats.models import GameLogArchiveType
 from ark_nova_stats.models import User as UserModel
 
 
+def player_rating_change_fields() -> dict[str, GraphQLField]:
+    return {
+        "user": GraphQLField(
+            GraphQLNonNull(user_type),
+            description="The user whose ratings may have changed.",
+        ),
+        "priorElo": GraphQLField(
+            GraphQLInt,
+            description="User's non-arena ELO prior to the game.",
+        ),
+        "newElo": GraphQLField(
+            GraphQLInt,
+            description="User's non-arena ELO after the game.",
+        ),
+        "priorArenaElo": GraphQLField(
+            GraphQLInt,
+            description="User's arena ELO prior to the game.",
+        ),
+        "newArenaElo": GraphQLField(
+            GraphQLInt,
+            description="User's arena ELO after the game.",
+        ),
+    }
+
+
+player_rating_change_type = GraphQLObjectType(
+    "PlayerGameRating",
+    description="A struct containing information about how a player's game rating(s) changed after a game.",
+    fields=player_rating_change_fields,
+)
+
+
 def game_log_bga_table_id_resolver(game_log: GameLogModel, info, **args) -> int:
     return game_log.bga_table_id
 
@@ -31,6 +63,21 @@ def game_log_start_resolver(game_log: GameLogModel, info, **args) -> int:
 
 def game_log_end_resolver(game_log: GameLogModel, info, **args) -> int:
     return round(game_log.game_end.timestamp())
+
+
+def game_log_player_rating_changes_resolver(
+    game_log: GameLogModel, info, **args
+) -> list:
+    return [
+        {
+            "user": rating.user,
+            "priorElo": rating.prior_elo,
+            "newElo": rating.new_elo,
+            "priorArenaElo": rating.prior_arena_elo,
+            "newArenaElo": rating.new_arena_elo,
+        }
+        for rating in game_log.game_ratings
+    ]
 
 
 def game_log_fields() -> dict[str, GraphQLField]:
@@ -65,6 +112,11 @@ def game_log_fields() -> dict[str, GraphQLField]:
             GraphQLNonNull(GraphQLInt),
             description="UNIX timestamp when the game ended.",
             resolve=game_log_end_resolver,
+        ),
+        "gameRatingChanges": GraphQLField(
+            GraphQLNonNull(GraphQLList(player_rating_change_type)),
+            description="How players' ratings changed after the game.",
+            resolve=game_log_player_rating_changes_resolver,
         ),
     }
 
@@ -226,6 +278,14 @@ def user_commonly_played_cards_resolver(user: UserModel, info, **args) -> list[d
     ]
 
 
+def user_current_elo_resolver(user: UserModel, info, **args) -> Optional[int]:
+    return user.current_elo()
+
+
+def user_current_arena_elo_resolver(user: UserModel, info, **args) -> Optional[int]:
+    return user.current_arena_elo()
+
+
 def user_fields() -> dict[str, GraphQLField]:
     return {
         "id": GraphQLField(
@@ -259,6 +319,16 @@ def user_fields() -> dict[str, GraphQLField]:
             GraphQLNonNull(GraphQLList(user_play_count_type)),
             description="Most commonly played cards by the user.",
             resolve=user_commonly_played_cards_resolver,
+        ),
+        "currentElo": GraphQLField(
+            GraphQLInt,
+            description="Current non-arena ELO.",
+            resolve=user_current_elo_resolver,
+        ),
+        "currentArenaElo": GraphQLField(
+            GraphQLInt,
+            description="Current non-arena ELO.",
+            resolve=user_current_arena_elo_resolver,
         ),
     }
 
