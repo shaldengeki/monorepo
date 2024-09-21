@@ -214,6 +214,13 @@ class BGAWithELOArchiveCreator(GameLogArchiveCreator):
 
 
 class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
+    def __init__(self, *args, **kwargs) -> None:
+        super(TopLevelStatsCsvArchiveCreator, self).__init__(*args, **kwargs)
+        self.csv_filename = self.filename.replace(".tar.gz", ".csv")
+        self.csv_file = tempfile.NamedTemporaryFile(suffix=self.csv_filename, mode="w")
+        self.csv_writer = csv.DictWriter(self.csv_file, fieldnames=self.csv_field_names)
+        self.csv_writer.writeheader()
+
     @property
     def archive_type(self) -> GameLogArchiveType:
         return GameLogArchiveType.TOP_LEVEL_STATS_CSV
@@ -221,6 +228,7 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
     @property
     def csv_field_names(self) -> list[str]:
         return [
+            "bga_table_id",
             "user_id",
             "prior_elo",
             "new_elo",
@@ -229,17 +237,10 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
         ]
 
     def process_game_log(self, game_log: GameLog) -> None:
-        if self.archive_tarfile is None or self.archive_tempfile is None:
-            raise ValueError(
-                "Cannot call process_game_log before creating the archive tarfile."
-            )
-
         super(TopLevelStatsCsvArchiveCreator, self).process_game_log(game_log)
-
-        user_names = "_".join([u.name.replace(" ", "_") for u in game_log.users])
-        log_tempfile_name = f"{game_log.bga_table_id}_{user_names}.csv"
         rows = [
             {
+                "bga_table_id": game_log.bga_table_id,
                 "user_id": rating.user_id,
                 "prior_elo": rating.prior_elo,
                 "new_elo": rating.new_elo,
@@ -252,14 +253,17 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
         if not rows:
             return
 
-        with tempfile.NamedTemporaryFile(
-            suffix=log_tempfile_name, mode="w"
-        ) as log_tempfile:
-            writer = csv.DictWriter(log_tempfile, fieldnames=self.csv_field_names)
-            writer.writeheader()
-            for row in rows:
-                writer.writerow(row)
-            log_tempfile.flush()
+        for row in rows:
+            self.csv_writer.writerow(row)
 
-            self.archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
-            os.fsync(self.archive_tempfile)
+    def upload_archive(self) -> None:
+        if self.archive_tarfile is None or self.archive_tempfile is None:
+            raise ValueError(
+                "Cannot call upload_archive before creating the archive tarfile."
+            )
+
+        self.csv_file.flush()
+        self.archive_tarfile.add(self.csv_file.name, arcname=self.csv_filename)
+        os.fsync(self.archive_tempfile)
+        super(TopLevelStatsCsvArchiveCreator, self).upload_archive()
+        self.csv_file.close()
