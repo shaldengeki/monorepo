@@ -13,6 +13,7 @@ from ark_nova_stats.models import Card, CardPlay, GameLog, GameLogArchive
 from ark_nova_stats.worker.archives import (
     BGAWithELOArchiveCreator,
     RawBGALogArchiveCreator,
+    TopLevelStatsCsvArchiveCreator,
 )
 
 max_delay = 12 * 60 * 60
@@ -34,7 +35,11 @@ def archive_logs_to_tigris(
             tigris_client=tigris_client,
             min_interval=min_interval,
         )
-        for archive_type in (RawBGALogArchiveCreator, BGAWithELOArchiveCreator)
+        for archive_type in (
+            RawBGALogArchiveCreator,
+            BGAWithELOArchiveCreator,
+            TopLevelStatsCsvArchiveCreator,
+        )
     ]
     archive_types_to_create = [
         archive_type
