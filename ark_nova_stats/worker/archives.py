@@ -259,7 +259,7 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
             writer.writeheader()
             for row in rows:
                 writer.writerow(row)
-            os.fsync(log_tempfile)
+            log_tempfile.flush()
 
             self.archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
             os.fsync(self.archive_tempfile)
