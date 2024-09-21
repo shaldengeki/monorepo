@@ -238,21 +238,27 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
 
         user_names = "_".join([u.name.replace(" ", "_") for u in game_log.users])
         log_tempfile_name = f"{game_log.bga_table_id}_{user_names}.csv"
+        rows = [
+            {
+                "user_id": rating.user_id,
+                "prior_elo": rating.prior_elo,
+                "new_elo": rating.new_elo,
+                "prior_arena_elo": rating.prior_arena_elo,
+                "new_arena_elo": rating.new_arena_elo,
+            }
+            for rating in game_log.game_ratings
+        ]
+
+        if not rows:
+            return
+
         with tempfile.NamedTemporaryFile(
             suffix=log_tempfile_name, mode="w"
         ) as log_tempfile:
             writer = csv.DictWriter(log_tempfile, fieldnames=self.csv_field_names)
             writer.writeheader()
-            for rating in game_log.game_ratings:
-                writer.writerow(
-                    {
-                        "user_id": rating.user_id,
-                        "prior_elo": rating.prior_elo,
-                        "new_elo": rating.new_elo,
-                        "prior_arena_elo": rating.prior_arena_elo,
-                        "new_arena_elo": rating.new_arena_elo,
-                    }
-                )
+            for row in rows:
+                writer.writerow(row)
             os.fsync(log_tempfile)
 
             self.archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
