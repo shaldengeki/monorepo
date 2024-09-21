@@ -36,7 +36,7 @@ class GameLogArchiveCreator:
         self.num_logs += 1
         game_users: list[User] = game_log.users
         self.users.update(set([u.name for u in game_users]))
-        if self.last_log is None or self.last_log.created_at < game_log.created_at:
+        if self.last_log is None or self.last_log.end_at < game_log.end_at:
             self.last_log = game_log
 
     @property
