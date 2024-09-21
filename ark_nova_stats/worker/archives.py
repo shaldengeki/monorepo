@@ -1,3 +1,4 @@
+import csv
 import datetime
 import json
 import logging
@@ -172,15 +173,9 @@ class RawBGALogArchiveCreator(GameLogArchiveCreator):
 
 
 class BGAWithELOArchiveCreator(GameLogArchiveCreator):
-    def __init__(self, *args, **kwargs):
-        super(BGAWithELOArchiveCreator, self).__init__(*args, **kwargs)
-
     @property
     def archive_type(self) -> GameLogArchiveType:
         return GameLogArchiveType.BGA_JSONL_WITH_ELO
-
-    def initialize_users(self) -> dict[int, str]:
-        return {user.bga_id: user.name for user in User.query.all()}
 
     def process_game_log(self, game_log: GameLog) -> None:
         if self.archive_tarfile is None or self.archive_tempfile is None:
@@ -212,6 +207,52 @@ class BGAWithELOArchiveCreator(GameLogArchiveCreator):
             payload["log"] = json.loads(game_log.log)
             log_tempfile.write(json.dumps(payload))
             log_tempfile.flush()
+            os.fsync(log_tempfile)
+
+            self.archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
+            os.fsync(self.archive_tempfile)
+
+
+class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
+    @property
+    def archive_type(self) -> GameLogArchiveType:
+        return GameLogArchiveType.TOP_LEVEL_STATS_CSV
+
+    @property
+    def csv_field_names(self) -> list[str]:
+        return [
+            "user_id",
+            "prior_elo",
+            "new_elo",
+            "prior_arena_elo",
+            "new_arena_elo",
+        ]
+
+    def process_game_log(self, game_log: GameLog) -> None:
+        if self.archive_tarfile is None or self.archive_tempfile is None:
+            raise ValueError(
+                "Cannot call process_game_log before creating the archive tarfile."
+            )
+
+        super(TopLevelStatsCsvArchiveCreator, self).process_game_log(game_log)
+
+        user_names = "_".join([u.name.replace(" ", "_") for u in game_log.users])
+        log_tempfile_name = f"{game_log.bga_table_id}_{user_names}.csv"
+        with tempfile.NamedTemporaryFile(
+            suffix=log_tempfile_name, mode="w"
+        ) as log_tempfile:
+            writer = csv.DictWriter(log_tempfile, fieldnames=self.csv_field_names)
+            writer.writeheader()
+            for rating in game_log.game_ratings:
+                writer.writerow(
+                    {
+                        "user_id": rating.user_id,
+                        "prior_elo": rating.prior_elo,
+                        "new_elo": rating.new_elo,
+                        "prior_arena_elo": rating.prior_arena_elo,
+                        "new_arena_elo": rating.new_arena_elo,
+                    }
+                )
             os.fsync(log_tempfile)
 
             self.archive_tarfile.add(log_tempfile.name, arcname=log_tempfile_name)
