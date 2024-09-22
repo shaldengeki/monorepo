@@ -22,7 +22,7 @@ def upgrade():
         "game_statistics",
         sa.Column("id", sa.Integer, primary_key=True, autoincrement=True),
         sa.Column("bga_table_id", sa.Integer, nullable=False),
-        sa.Column("user_id", sa.Integer, nullable=False),
+        sa.Column("bga_user_id", sa.Integer, nullable=False),
         sa.Column("created_at", sa.DateTime, default=now, nullable=False),
         # statistics. see PlayerStats in protobuf.
         sa.Column("score", sa.Integer, nullable=False),
