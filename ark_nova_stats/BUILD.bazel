@@ -6,6 +6,7 @@ py_library(
     visibility = ["//ark_nova_stats:__subpackages__"],
     deps = [
         ":config_py",
+        "//ark_nova_stats/bga_log_parser:exceptions",
         "//ark_nova_stats/bga_log_parser:game_log",
         "@py_deps//sqlalchemy",
     ],
