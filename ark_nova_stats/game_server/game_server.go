@@ -346,6 +346,11 @@ func (s *gameServer) ValidatePlayerHand(ctx context.Context, hand *player_game_s
 	return []string{}
 }
 
+func (s *gameServer) ValidatePlayerMap(ctx context.Context, map *player_game_state.PlayerMap) []string {
+	// TODO implement this.
+	return []string{}
+}
+
 func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameState *player_game_state.PlayerGameState) []string {
 	if playerGameState.PlayerId <= 0 {
 		return []string{"Player ID not set"}
@@ -394,7 +399,9 @@ func (s *gameServer) ValidatePlayerGameState(ctx context.Context, playerGameStat
 		return errors
 	}
 
-	// PlayerMap map = 12;
+	if errors := s.ValidatePlayerMap(ctx, playerGameState.Map); len(errors) > 0 {
+		return errors
+	}
 
 	if errors := s.ValidatePlayerHand(ctx, playerGameState.Hand); len(errors) > 0 {
 		return errors
