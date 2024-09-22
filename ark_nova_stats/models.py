@@ -1,6 +1,6 @@
 import datetime
 import enum
-from typing import Optional
+from typing import Generator, Optional
 
 from sqlalchemy import ForeignKey, Select, desc, func, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -58,7 +58,13 @@ class GameLog(db.Model):
 
     game_ratings: Mapped[list["GameRating"]] = relationship(back_populates="game_log")
 
-    def create_related_objects(self, parsed_logs: ParsedGameLog) -> db.Model:
+    game_statistics: Mapped[list["GameStatistics"]] = relationship(
+        back_populates="game_log"
+    )
+
+    def create_related_objects(
+        self, parsed_logs: ParsedGameLog
+    ) -> Generator[db.Model, None, None]:
         # Add users if not present.
         present_users = User.query.filter(
             User.bga_id.in_([user.id for user in parsed_logs.data.players])
@@ -91,7 +97,12 @@ class GameLog(db.Model):
         for c in self.create_card_and_plays(parsed_logs):
             yield c
 
-    def create_card_and_plays(self, parsed_logs: ParsedGameLog) -> db.Model:
+        for s in self.create_game_statistics(parsed_logs):
+            yield s
+
+    def create_card_and_plays(
+        self, parsed_logs: ParsedGameLog
+    ) -> Generator[db.Model, None, None]:
         cards = {}
         # Now create a card & card play.
         for play in parsed_logs.data.card_plays:
@@ -111,6 +122,82 @@ class GameLog(db.Model):
                 card=cards[play.card.id],
                 user_id=play.player.id,
                 move=play.move,
+            )
+
+    def create_game_statistics(
+        self, parsed_logs: ParsedGameLog
+    ) -> Generator[db.Model, None, None]:
+        for s in parsed_logs.parse_game_stats().player_stats:
+            yield GameStatistics(
+                bga_table_id=parsed_logs.table_id,
+                bga_user_id=s.player_id,
+                score=s.score,
+                rank=s.rank,
+                thinking_time=s.thinking_time,
+                starting_position=s.starting_position,
+                turns=s.turns,
+                breaks_triggered=s.breaks_triggered,
+                triggered_end=s.triggered_end,
+                map_id=s.map_id,
+                appeal=s.appeal,
+                conservation=s.conservation,
+                reputation=s.reputation,
+                actions_build=s.actions_build,
+                actions_animals=s.actions_animals,
+                actions_cards=s.actions_cards,
+                actions_association=s.actions_association,
+                actions_sponsors=s.actions_sponsors,
+                x_tokens_gained=s.x_tokens_gained,
+                x_actions=s.x_actions,
+                x_tokens_used=s.x_tokens_used,
+                money_gained=s.money_gained,
+                money_gained_through_income=s.money_gained_through_income,
+                money_spent_on_animals=s.money_spent_on_animals,
+                money_spent_on_enclosures=s.money_spent_on_enclosures,
+                money_spent_on_donations=s.money_spent_on_donations,
+                money_spent_on_playing_cards_from_reputation_range=s.money_spent_on_playing_cards_from_reputation_range,
+                money_spent_on_playing_cards_from_reputation_range=s.money_spent_on_playing_cards_from_reputation_range,
+                cards_drawn_from_deck=s.cards_drawn_from_deck,
+                cards_drawn_from_reputation_range=s.cards_drawn_from_reputation_range,
+                cards_snapped=s.cards_snapped,
+                cards_discarded=s.cards_discarded,
+                played_sponsors=s.played_sponsors,
+                played_animals=s.played_animals,
+                release_animals=s.release_animals,
+                association_workers=s.association_workers,
+                association_donations=s.association_donations,
+                association_reputation_actions=s.association_reputation_actions,
+                association_partner_zoo_actions=s.association_partner_zoo_actions,
+                association_university_actions=s.association_university_actions,
+                association_conservation_project_actions=s.association_conservation_project_actions,
+                built_enclosures=s.built_enclosures,
+                built_kiosks=s.built_kiosks,
+                built_pavilions=s.built_pavilions,
+                built_unique_buildings=s.built_unique_buildings,
+                hexes_covered=s.hexes_covered,
+                hexes_empty=s.hexes_empty,
+                upgraded_action_cards=s.upgraded_action_cards,
+                upgraded_animals=s.upgraded_animals,
+                upgraded_build=s.upgraded_build,
+                upgraded_cards=s.upgraded_cards,
+                upgraded_sponsors=s.upgraded_sponsors,
+                upgraded_association=s.upgraded_association,
+                icons_africa=s.icons_africa,
+                icons_europe=s.icons_europe,
+                icons_asia=s.icons_asia,
+                icons_australia=s.icons_australia,
+                icons_americas=s.icons_americas,
+                icons_bird=s.icons_bird,
+                icons_predator=s.icons_predator,
+                icons_herbivore=s.icons_herbivore,
+                icons_bear=s.icons_bear,
+                icons_reptile=s.icons_reptile,
+                icons_primate=s.icons_primate,
+                icons_petting_zoo=s.icons_petting_zoo,
+                icons_sea_animal=s.icons_sea_animal,
+                icons_water=s.icons_water,
+                icons_rock=s.icons_rock,
+                icons_science=s.icons_science,
             )
 
 
@@ -140,6 +227,9 @@ class User(db.Model):
         secondary="game_log_cards", back_populates="users", viewonly=True
     )
     game_ratings: Mapped[list["GameRating"]] = relationship(back_populates="user")
+    game_statistics: Mapped[list["GameStatistics"]] = relationship(
+        back_populates="user"
+    )
 
     @property
     def num_game_logs(self) -> int:
@@ -334,3 +424,85 @@ class GameRating(db.Model):
 
     user: Mapped["User"] = relationship(back_populates="game_ratings")
     game_log: Mapped["GameLog"] = relationship(back_populates="game_ratings")
+
+
+class GameStatistics(db.Model):
+    __tablename__ = "game_statistics"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    bga_table_id: Mapped[int] = mapped_column(ForeignKey("game_logs.bga_table_id"))
+    bga_user_id: Mapped[int] = mapped_column(ForeignKey("users.bga_id"))
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
+    )
+
+    score: Mapped[int]
+    rank: Mapped[int]
+    thinking_time: Mapped[int]
+    starting_position: Mapped[int]
+    turns: Mapped[int]
+    breaks_triggered: Mapped[int]
+    triggered_end: Mapped[int]
+    map_id: Mapped[int]
+    appeal: Mapped[int]
+    conservation: Mapped[int]
+    reputation: Mapped[int]
+    actions_build: Mapped[int]
+    actions_animals: Mapped[int]
+    actions_cards: Mapped[int]
+    actions_association: Mapped[int]
+    actions_sponsors: Mapped[int]
+    x_tokens_gained: Mapped[int]
+    x_actions: Mapped[int]
+    x_tokens_used: Mapped[int]
+    money_gained: Mapped[int]
+    money_gained_through_income: Mapped[int]
+    money_spent_on_animals: Mapped[int]
+    money_spent_on_enclosures: Mapped[int]
+    money_spent_on_donations: Mapped[int]
+    money_spent_on_playing_cards_from_reputation_range: Mapped[int]
+    cards_drawn_from_deck: Mapped[int]
+    cards_drawn_from_reputation_range: Mapped[int]
+    cards_snapped: Mapped[int]
+    cards_discarded: Mapped[int]
+    played_sponsors: Mapped[int]
+    played_animals: Mapped[int]
+    release_animals: Mapped[int]
+    association_workers: Mapped[int]
+    association_donations: Mapped[int]
+    association_reputation_actions: Mapped[int]
+    association_partner_zoo_actions: Mapped[int]
+    association_university_actions: Mapped[int]
+    association_conservation_project_actions: Mapped[int]
+    built_enclosures: Mapped[int]
+    built_kiosks: Mapped[int]
+    built_pavilions: Mapped[int]
+    built_unique_buildings: Mapped[int]
+    hexes_covered: Mapped[int]
+    hexes_empty: Mapped[int]
+    upgraded_action_cards: Mapped[bool]
+    upgraded_animals: Mapped[bool]
+    upgraded_build: Mapped[bool]
+    upgraded_cards: Mapped[bool]
+    upgraded_sponsors: Mapped[bool]
+    upgraded_association: Mapped[bool]
+    icons_africa: Mapped[int]
+    icons_europe: Mapped[int]
+    icons_asia: Mapped[int]
+    icons_australia: Mapped[int]
+    icons_americas: Mapped[int]
+    icons_bird: Mapped[int]
+    icons_predator: Mapped[int]
+    icons_herbivore: Mapped[int]
+    icons_bear: Mapped[int]
+    icons_reptile: Mapped[int]
+    icons_primate: Mapped[int]
+    icons_petting_zoo: Mapped[int]
+    icons_sea_animal: Mapped[int]
+    icons_water: Mapped[int]
+    icons_rock: Mapped[int]
+    icons_science: Mapped[int]
+
+    user: Mapped["User"] = relationship(back_populates="game_statistics")
+    game_log: Mapped["GameLog"] = relationship(back_populates="game_statistics")
