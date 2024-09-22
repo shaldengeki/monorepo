@@ -9,14 +9,20 @@ import boto3
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as BGAGameLog
 from ark_nova_stats.config import app, db
-from ark_nova_stats.models import Card, CardPlay, GameLog, GameLogArchive
+from ark_nova_stats.models import (
+    Card,
+    CardPlay,
+    GameLog,
+    GameLogArchive,
+    GameStatistics,
+)
 from ark_nova_stats.worker.archives import (
     BGAWithELOArchiveCreator,
     RawBGALogArchiveCreator,
     TopLevelStatsCsvArchiveCreator,
 )
 
-max_delay = 12 * 60 * 60
+max_delay = 10
 
 logging.basicConfig(
     format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.INFO
@@ -148,6 +154,20 @@ def populate_game_log_start_end() -> None:
     logger.info(f"Done populating {updated} game log starts & ends!")
 
 
+def populate_game_statistics() -> None:
+    logger.info(f"Populating game statistics.")
+    updated = 0
+    for game_log in GameLog.query.outerjoin(GameStatistics).where(GameStatistics.bga_table_id == None).limit(25).yield_per(10):  # type: ignore
+        parsed_log = BGAGameLog(**json.loads(game_log.log))
+        for s in game_log.create_game_statistics(parsed_log):
+            db.session.add(s)
+        updated += 1
+
+    logger.info(f"Committing {updated} populated game statistics.")
+    db.session.commit()
+    logger.info(f"Done populating {updated} game statistics!")
+
+
 API_SECRET_KEY = os.getenv("API_WORKER_SECRET")
 
 
@@ -160,6 +180,7 @@ def main() -> int:
             archive_logs_to_tigris(tigris_client)
             # populate_card_play_actions()
             # populate_game_log_start_end()
+            populate_game_statistics()
             delay = (start + max_delay) - time.time()
             if delay > 0:
                 time.sleep(delay)
