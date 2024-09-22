@@ -54,11 +54,6 @@ def upgrade():
             sa.Integer,
             nullable=False,
         ),
-        sa.Column(
-            "money_spent_on_playing_cards_from_reputation_range",
-            sa.Integer,
-            nullable=False,
-        ),
         sa.Column("cards_drawn_from_deck", sa.Integer, nullable=False),
         sa.Column("cards_drawn_from_reputation_range", sa.Integer, nullable=False),
         sa.Column("cards_snapped", sa.Integer, nullable=False),
