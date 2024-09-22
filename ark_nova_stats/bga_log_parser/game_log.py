@@ -300,7 +300,7 @@ class GameLog:
             cards_discarded=int(stats["stats"]["43"]),
             played_sponsors=int(stats["stats"]["44"]),
             played_animals=int(stats["stats"]["45"]),
-            release_animals=int(stats["stats"]["46"]),
+            released_animals=int(stats["stats"]["46"]),
             association_workers=int(stats["stats"]["50"]),
             association_donations=int(stats["stats"]["51"]),
             association_reputation_actions=int(stats["stats"]["52"]),

@@ -35,7 +35,7 @@ message PlayerStats {
     int32 cards_discarded = 30;
     int32 played_sponsors = 31;
     int32 played_animals = 32;
-    int32 release_animals = 33;
+    int32 released_animals = 33;
     int32 association_workers = 34;
     int32 association_donations = 35;
     int32 association_reputation_actions = 36;
