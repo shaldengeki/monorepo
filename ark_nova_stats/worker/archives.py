@@ -11,7 +11,14 @@ import sqlalchemy
 from sqlalchemy import desc
 
 from ark_nova_stats.config import db
-from ark_nova_stats.models import GameLog, GameLogArchive, GameLogArchiveType, User
+from ark_nova_stats.models import (
+    GameLog,
+    GameLogArchive,
+    GameLogArchiveType,
+    GameRating,
+    GameStatistics,
+    User,
+)
 
 
 class GameLogArchiveCreator:
@@ -83,7 +90,9 @@ class GameLogArchiveCreator:
         return True
 
     def game_logs(self) -> "sqlalchemy.orm.query.Query[GameLog]":
-        return GameLog.query.yield_per(10)
+        return (
+            GameLog.query.join(GameRating).join(GameStatistics).join(User).yield_per(10)
+        )
 
     def create_archive_tempfile(self, directory: str) -> tarfile.TarFile:
         self.logger.info(f"Creating archive at: {self.filename}")
@@ -199,6 +208,78 @@ class BGAWithELOArchiveCreator(GameLogArchiveCreator):
                 }
                 for rating in ratings
             }
+        if game_log.game_statistics is not None:
+            payload["statistics"] = {
+                stat.bga_user_id: {
+                    "score": stat.score,
+                    "rank": stat.rank,
+                    "thinking_time": stat.thinking_time,
+                    "starting_position": stat.starting_position,
+                    "turns": stat.turns,
+                    "breaks_triggered": stat.breaks_triggered,
+                    "triggered_end": stat.triggered_end,
+                    "map_id": stat.map_id,
+                    "appeal": stat.appeal,
+                    "conservation": stat.conservation,
+                    "reputation": stat.reputation,
+                    "actions_build": stat.actions_build,
+                    "actions_animals": stat.actions_animals,
+                    "actions_cards": stat.actions_cards,
+                    "actions_association": stat.actions_association,
+                    "actions_sponsors": stat.actions_sponsors,
+                    "x_tokens_gained": stat.x_tokens_gained,
+                    "x_actions": stat.x_actions,
+                    "x_tokens_used": stat.x_tokens_used,
+                    "money_gained": stat.money_gained,
+                    "money_gained_through_income": stat.money_gained_through_income,
+                    "money_spent_on_animals": stat.money_spent_on_animals,
+                    "money_spent_on_enclosures": stat.money_spent_on_enclosures,
+                    "money_spent_on_donations": stat.money_spent_on_donations,
+                    "money_spent_on_playing_cards_from_reputation_range": stat.money_spent_on_playing_cards_from_reputation_range,
+                    "cards_drawn_from_deck": stat.cards_drawn_from_deck,
+                    "cards_drawn_from_reputation_range": stat.cards_drawn_from_reputation_range,
+                    "cards_snapped": stat.cards_snapped,
+                    "cards_discarded": stat.cards_discarded,
+                    "played_sponsors": stat.played_sponsors,
+                    "played_animals": stat.played_animals,
+                    "released_animals": stat.released_animals,
+                    "association_workers": stat.association_workers,
+                    "association_donations": stat.association_donations,
+                    "association_reputation_actions": stat.association_reputation_actions,
+                    "association_partner_zoo_actions": stat.association_partner_zoo_actions,
+                    "association_university_actions": stat.association_university_actions,
+                    "association_conservation_project_actions": stat.association_conservation_project_actions,
+                    "built_enclosures": stat.built_enclosures,
+                    "built_kiosks": stat.built_kiosks,
+                    "built_pavilions": stat.built_pavilions,
+                    "built_unique_buildings": stat.built_unique_buildings,
+                    "hexes_covered": stat.hexes_covered,
+                    "hexes_empty": stat.hexes_empty,
+                    "upgraded_action_cards": stat.upgraded_action_cards,
+                    "upgraded_animals": stat.upgraded_animals,
+                    "upgraded_build": stat.upgraded_build,
+                    "upgraded_cards": stat.upgraded_cards,
+                    "upgraded_sponsors": stat.upgraded_sponsors,
+                    "upgraded_association": stat.upgraded_association,
+                    "icons_africa": stat.icons_africa,
+                    "icons_europe": stat.icons_europe,
+                    "icons_asia": stat.icons_asia,
+                    "icons_australia": stat.icons_australia,
+                    "icons_americas": stat.icons_americas,
+                    "icons_bird": stat.icons_bird,
+                    "icons_predator": stat.icons_predator,
+                    "icons_herbivore": stat.icons_herbivore,
+                    "icons_bear": stat.icons_bear,
+                    "icons_reptile": stat.icons_reptile,
+                    "icons_primate": stat.icons_primate,
+                    "icons_petting_zoo": stat.icons_petting_zoo,
+                    "icons_sea_animal": stat.icons_sea_animal,
+                    "icons_water": stat.icons_water,
+                    "icons_rock": stat.icons_rock,
+                    "icons_science": stat.icons_science,
+                }
+                for stat in game_log.game_statistics
+            }
 
         log_tempfile_name = f"{game_log.bga_table_id}_{user_names}.json"
         with tempfile.NamedTemporaryFile(
@@ -234,21 +315,169 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
             "new_elo",
             "prior_arena_elo",
             "new_arena_elo",
+            "score",
+            "rank",
+            "thinking_time",
+            "starting_position",
+            "turns",
+            "breaks_triggered",
+            "triggered_end",
+            "map_id",
+            "appeal",
+            "conservation",
+            "reputation",
+            "actions_build",
+            "actions_animals",
+            "actions_cards",
+            "actions_association",
+            "actions_sponsors",
+            "x_tokens_gained",
+            "x_actions",
+            "x_tokens_used",
+            "money_gained",
+            "money_gained_through_income",
+            "money_spent_on_animals",
+            "money_spent_on_enclosures",
+            "money_spent_on_donations",
+            "money_spent_on_playing_cards_from_reputation_range",
+            "cards_drawn_from_deck",
+            "cards_drawn_from_reputation_range",
+            "cards_snapped",
+            "cards_discarded",
+            "played_sponsors",
+            "played_animals",
+            "released_animals",
+            "association_workers",
+            "association_donations",
+            "association_reputation_actions",
+            "association_partner_zoo_actions",
+            "association_university_actions",
+            "association_conservation_project_actions",
+            "built_enclosures",
+            "built_kiosks",
+            "built_pavilions",
+            "built_unique_buildings",
+            "hexes_covered",
+            "hexes_empty",
+            "upgraded_action_cards",
+            "upgraded_animals",
+            "upgraded_build",
+            "upgraded_cards",
+            "upgraded_sponsors",
+            "upgraded_association",
+            "icons_africa",
+            "icons_europe",
+            "icons_asia",
+            "icons_australia",
+            "icons_americas",
+            "icons_bird",
+            "icons_predator",
+            "icons_herbivore",
+            "icons_bear",
+            "icons_reptile",
+            "icons_primate",
+            "icons_petting_zoo",
+            "icons_sea_animal",
+            "icons_water",
+            "icons_rock",
+            "icons_science",
         ]
 
     def process_game_log(self, game_log: GameLog) -> None:
         super(TopLevelStatsCsvArchiveCreator, self).process_game_log(game_log)
-        rows = [
-            {
-                "bga_table_id": game_log.bga_table_id,
-                "user_id": rating.user_id,
-                "prior_elo": rating.prior_elo,
-                "new_elo": rating.new_elo,
-                "prior_arena_elo": rating.prior_arena_elo,
-                "new_arena_elo": rating.new_arena_elo,
-            }
-            for rating in game_log.game_ratings
-        ]
+        rows: list[dict] = []
+        for user in game_log.users:
+            row = {k: None for k in self.csv_field_names}
+            row["bga_table_id"] = game_log.bga_table_id
+            row["user_id"] = user.bga_id
+
+            for rating in game_log.game_ratings:
+                if rating.user_id == user.bga_id:
+                    row.update(
+                        {
+                            "prior_elo": rating.prior_elo,
+                            "new_elo": rating.new_elo,
+                            "prior_arena_elo": rating.prior_arena_elo,
+                            "new_arena_elo": rating.new_arena_elo,
+                        }
+                    )
+                    break
+
+            for stat in game_log.game_statistics:
+                if stat.bga_user_id == user.bga_id:
+                    row.update(
+                        {
+                            "score": stat.score,
+                            "rank": stat.rank,
+                            "thinking_time": stat.thinking_time,
+                            "starting_position": stat.starting_position,
+                            "turns": stat.turns,
+                            "breaks_triggered": stat.breaks_triggered,
+                            "triggered_end": stat.triggered_end,
+                            "map_id": stat.map_id,
+                            "appeal": stat.appeal,
+                            "conservation": stat.conservation,
+                            "reputation": stat.reputation,
+                            "actions_build": stat.actions_build,
+                            "actions_animals": stat.actions_animals,
+                            "actions_cards": stat.actions_cards,
+                            "actions_association": stat.actions_association,
+                            "actions_sponsors": stat.actions_sponsors,
+                            "x_tokens_gained": stat.x_tokens_gained,
+                            "x_actions": stat.x_actions,
+                            "x_tokens_used": stat.x_tokens_used,
+                            "money_gained": stat.money_gained,
+                            "money_gained_through_income": stat.money_gained_through_income,
+                            "money_spent_on_animals": stat.money_spent_on_animals,
+                            "money_spent_on_enclosures": stat.money_spent_on_enclosures,
+                            "money_spent_on_donations": stat.money_spent_on_donations,
+                            "money_spent_on_playing_cards_from_reputation_range": stat.money_spent_on_playing_cards_from_reputation_range,
+                            "cards_drawn_from_deck": stat.cards_drawn_from_deck,
+                            "cards_drawn_from_reputation_range": stat.cards_drawn_from_reputation_range,
+                            "cards_snapped": stat.cards_snapped,
+                            "cards_discarded": stat.cards_discarded,
+                            "played_sponsors": stat.played_sponsors,
+                            "played_animals": stat.played_animals,
+                            "released_animals": stat.released_animals,
+                            "association_workers": stat.association_workers,
+                            "association_donations": stat.association_donations,
+                            "association_reputation_actions": stat.association_reputation_actions,
+                            "association_partner_zoo_actions": stat.association_partner_zoo_actions,
+                            "association_university_actions": stat.association_university_actions,
+                            "association_conservation_project_actions": stat.association_conservation_project_actions,
+                            "built_enclosures": stat.built_enclosures,
+                            "built_kiosks": stat.built_kiosks,
+                            "built_pavilions": stat.built_pavilions,
+                            "built_unique_buildings": stat.built_unique_buildings,
+                            "hexes_covered": stat.hexes_covered,
+                            "hexes_empty": stat.hexes_empty,
+                            "upgraded_action_cards": stat.upgraded_action_cards,
+                            "upgraded_animals": stat.upgraded_animals,
+                            "upgraded_build": stat.upgraded_build,
+                            "upgraded_cards": stat.upgraded_cards,
+                            "upgraded_sponsors": stat.upgraded_sponsors,
+                            "upgraded_association": stat.upgraded_association,
+                            "icons_africa": stat.icons_africa,
+                            "icons_europe": stat.icons_europe,
+                            "icons_asia": stat.icons_asia,
+                            "icons_australia": stat.icons_australia,
+                            "icons_americas": stat.icons_americas,
+                            "icons_bird": stat.icons_bird,
+                            "icons_predator": stat.icons_predator,
+                            "icons_herbivore": stat.icons_herbivore,
+                            "icons_bear": stat.icons_bear,
+                            "icons_reptile": stat.icons_reptile,
+                            "icons_primate": stat.icons_primate,
+                            "icons_petting_zoo": stat.icons_petting_zoo,
+                            "icons_sea_animal": stat.icons_sea_animal,
+                            "icons_water": stat.icons_water,
+                            "icons_rock": stat.icons_rock,
+                            "icons_science": stat.icons_science,
+                        }
+                    )
+                    break
+
+            rows.append(row)
 
         if not rows:
             return
