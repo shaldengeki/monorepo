@@ -112,7 +112,7 @@ def main(working_dir: str) -> int:
                 print(f"{p} doesn't have stats set!")
                 continue
             elos: dict[int, PlayerELOs] = {
-                user_id: PlayerELOs(id=user_id, **vals)
+                int(user_id): PlayerELOs(id=user_id, **vals)
                 for user_id, vals in parsed_file["elos"].items()
             }
 
