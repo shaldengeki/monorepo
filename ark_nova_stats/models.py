@@ -156,7 +156,6 @@ class GameLog(db.Model):
                 money_spent_on_enclosures=s.money_spent_on_enclosures,
                 money_spent_on_donations=s.money_spent_on_donations,
                 money_spent_on_playing_cards_from_reputation_range=s.money_spent_on_playing_cards_from_reputation_range,
-                money_spent_on_playing_cards_from_reputation_range=s.money_spent_on_playing_cards_from_reputation_range,
                 cards_drawn_from_deck=s.cards_drawn_from_deck,
                 cards_drawn_from_reputation_range=s.cards_drawn_from_reputation_range,
                 cards_snapped=s.cards_snapped,
