@@ -447,7 +447,7 @@ class GameStatistics(db.Model):
     starting_position: Mapped[int]
     turns: Mapped[int]
     breaks_triggered: Mapped[int]
-    triggered_end: Mapped[int]
+    triggered_end: Mapped[bool]
     map_id: Mapped[int]
     appeal: Mapped[int]
     conservation: Mapped[int]

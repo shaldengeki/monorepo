@@ -31,7 +31,7 @@ def upgrade():
         sa.Column("starting_position", sa.Integer, nullable=False),
         sa.Column("turns", sa.Integer, nullable=False),
         sa.Column("breaks_triggered", sa.Integer, nullable=False),
-        sa.Column("triggered_end", sa.Integer, nullable=False),
+        sa.Column("triggered_end", sa.Boolean, nullable=False),
         sa.Column("map_id", sa.Integer, nullable=False),
         sa.Column("appeal", sa.Integer, nullable=False),
         sa.Column("conservation", sa.Integer, nullable=False),
