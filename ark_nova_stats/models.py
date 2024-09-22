@@ -485,7 +485,7 @@ class GameStatistics(db.Model):
     built_unique_buildings: Mapped[int]
     hexes_covered: Mapped[int]
     hexes_empty: Mapped[int]
-    upgraded_action_cards: Mapped[bool]
+    upgraded_action_cards: Mapped[int]
     upgraded_animals: Mapped[bool]
     upgraded_build: Mapped[bool]
     upgraded_cards: Mapped[bool]
