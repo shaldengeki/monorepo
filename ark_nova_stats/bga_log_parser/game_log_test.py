@@ -93,7 +93,7 @@ class TestGameLog:
         assert 1 == darcelmaw.cards_discarded
         assert 7 == darcelmaw.played_sponsors
         assert 9 == darcelmaw.played_animals
-        assert 2 == darcelmaw.release_animals
+        assert 2 == darcelmaw.released_animals
         assert 4 == darcelmaw.association_workers
         assert 0 == darcelmaw.association_donations
         assert 1 == darcelmaw.association_reputation_actions
@@ -162,7 +162,7 @@ class TestGameLog:
         assert 2 == hardyzhao.cards_discarded
         assert 4 == hardyzhao.played_sponsors
         assert 12 == hardyzhao.played_animals
-        assert 1 == hardyzhao.release_animals
+        assert 1 == hardyzhao.released_animals
         assert 3 == hardyzhao.association_workers
         assert 0 == hardyzhao.association_donations
         assert 0 == hardyzhao.association_reputation_actions
