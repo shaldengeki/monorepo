@@ -164,7 +164,7 @@ class GameLog(db.Model):
                     cards_discarded=s.cards_discarded,
                     played_sponsors=s.played_sponsors,
                     played_animals=s.played_animals,
-                    release_animals=s.release_animals,
+                    released_animals=s.released_animals,
                     association_workers=s.association_workers,
                     association_donations=s.association_donations,
                     association_reputation_actions=s.association_reputation_actions,
@@ -472,7 +472,7 @@ class GameStatistics(db.Model):
     cards_discarded: Mapped[int]
     played_sponsors: Mapped[int]
     played_animals: Mapped[int]
-    release_animals: Mapped[int]
+    released_animals: Mapped[int]
     association_workers: Mapped[int]
     association_donations: Mapped[int]
     association_reputation_actions: Mapped[int]
