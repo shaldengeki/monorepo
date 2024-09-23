@@ -538,9 +538,9 @@ protobuf==5.27.3 \
     --hash=sha256:c84eee2c71ed83704f1afbf1a85c3171eab0fd1ade3b399b3fad0884cbcca8bf \
     --hash=sha256:dcb307cd4ef8fec0cf52cb9105a03d06fbb5275ce6d84a6ae33bc6cf84e0a07b
     # via -r requirements.txt
-pylint==3.2.7 \
-    --hash=sha256:02f4aedeac91be69fb3b4bea997ce580a4ac68ce58b89eaefeaf06749df73f4b \
-    --hash=sha256:1b7a721b575eaeaa7d39db076b6e7743c993ea44f57979127c517c6c572c803e
+pylint==3.3.0 \
+    --hash=sha256:02dce1845f68974b9b03045894eb3bf05a8b3c7da9fd10af4de3c91e69eb92f1 \
+    --hash=sha256:c685fe3c061ee5fb0ce7c29436174ab84a2f525fce2a268b1986e921e083fe22
     # via -r requirements.txt
 pysocks==1.7.1 \
     --hash=sha256:08e69f092cc6dbe92a0fdd16eeb9b9ffbc13cadfe5ca4c7bd92ffb078b293299 \
