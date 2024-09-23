@@ -9,6 +9,7 @@ from typing import Optional
 
 import sqlalchemy
 from sqlalchemy import desc
+from sqlalchemy.orm import joinedload
 
 from ark_nova_stats.config import db
 from ark_nova_stats.models import (
@@ -90,9 +91,11 @@ class GameLogArchiveCreator:
         return True
 
     def game_logs(self) -> "sqlalchemy.orm.query.Query[GameLog]":
-        return (
-            GameLog.query.join(GameRating).join(GameStatistics).join(User).yield_per(10)
-        )
+        return GameLog.query.options(
+            joinedload(GameLog.game_ratings),
+            joinedload(GameLog.game_statistics),
+            joinedload(GameLog.users),
+        ).yield_per(10)
 
     def create_archive_tempfile(self, directory: str) -> tarfile.TarFile:
         self.logger.info(f"Creating archive at: {self.filename}")
