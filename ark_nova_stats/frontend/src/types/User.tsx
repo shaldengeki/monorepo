@@ -1,11 +1,11 @@
-import GameLog from './GameLog';
-
 type User = {
     id: number;
     bgaId: number;
     name: string;
     avatar: string;
     numGameLogs: number;
+    currentElo?: number;
+    currentArenaElo?: number;
 }
 
 export const emptyUser: User = {
