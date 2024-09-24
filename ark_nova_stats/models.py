@@ -278,7 +278,7 @@ class User(db.Model):
             GameRating.query.join(
                 GameLog, GameLog.bga_table_id == GameRating.bga_table_id
             )
-            .where(GameRating.user_id == self.id)
+            .where(GameRating.user_id == self.bga_id)
             .where(GameRating.new_elo != None)
             .order_by(desc(GameLog.game_end))
             .limit(1)
@@ -295,7 +295,7 @@ class User(db.Model):
             GameRating.query.join(
                 GameLog, GameLog.bga_table_id == GameRating.bga_table_id
             )
-            .where(GameRating.user_id == self.id)
+            .where(GameRating.user_id == self.bga_id)
             .where(GameRating.new_arena_elo != None)
             .order_by(desc(GameLog.game_end))
             .limit(1)
