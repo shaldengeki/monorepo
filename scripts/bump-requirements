@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+bazel run //:requirements.update && git add requirements.lock.txt && git commit -m "bazel run //:requirements.update" && git push
