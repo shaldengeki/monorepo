@@ -51,8 +51,8 @@ dependencies:
     specifier: ^2.0.1
     version: 2.0.1
   plotly.js:
-    specifier: ^2.35.0
-    version: 2.35.0(mapbox-gl@1.13.3)
+    specifier: ^2.35.2
+    version: 2.35.2(mapbox-gl@1.13.3)(webpack@5.94.0)
   plotly.js-basic-dist:
     specifier: ^2.35.2
     version: 2.35.2
@@ -67,7 +67,7 @@ dependencies:
     version: 18.3.1(react@18.3.1)
   react-plotly.js:
     specifier: ^2.6.0
-    version: 2.6.0(plotly.js@2.35.0)(react@18.3.1)
+    version: 2.6.0(plotly.js@2.35.2)(react@18.3.1)
   react-router-dom:
     specifier: ^6.26.2
     version: 6.26.2(react-dom@18.3.1)(react@18.3.1)
@@ -92,8 +92,8 @@ devDependencies:
     specifier: ^4.17.7
     version: 4.17.7
   '@types/plotly.js':
-    specifier: ^2.33.3
-    version: 2.33.3
+    specifier: ^2.33.4
+    version: 2.33.4
   '@types/react-plotly.js':
     specifier: ^2.6.3
     version: 2.6.3
@@ -3356,8 +3356,8 @@ packages:
     resolution: {integrity: sha512-j3pOPiEcWZ34R6a6mN07mUkM4o4Lwf6hPNt8eilOeZhTFbxFXmKhvXl9Y28jotFPaI1bpPDJsbCprUoNke6OrA==}
     dev: false
 
-  /@types/plotly.js@2.33.3:
-    resolution: {integrity: sha512-Uu9aC8Z5oMj+oq1QHKtZAug9uAdPV66KPZrIa+r26bhktfuAbSCIq2HDN1kFPrcci0QKNCh8Gqj1GtMYvfoEUQ==}
+  /@types/plotly.js@2.33.4:
+    resolution: {integrity: sha512-BzAbsJTiUQyALkkYx1D31YZ9YvcU2ag3LlE/iePMo19eDPvM30cbM2EFNIcu31n39EhXj/9G7800XLA8/rfApA==}
     dev: true
 
   /@types/prettier@2.7.3:
@@ -3388,7 +3388,7 @@ packages:
   /@types/react-plotly.js@2.6.3:
     resolution: {integrity: sha512-HBQwyGuu/dGXDsWhnQrhH+xcJSsHvjkwfSRjP+YpOsCCWryIuXF78ZCBjpfgO3sCc0Jo8sYp4NOGtqT7Cn3epQ==}
     dependencies:
-      '@types/plotly.js': 2.33.3
+      '@types/plotly.js': 2.33.4
       '@types/react': 18.3.5
     dev: true
 
@@ -5154,7 +5154,6 @@ packages:
       postcss-value-parser: 4.2.0
       semver: 7.6.3
       webpack: 5.94.0(webpack-cli@5.1.4)
-    dev: true
 
   /css-minimizer-webpack-plugin@3.4.1(webpack@5.94.0):
     resolution: {integrity: sha512-1u6D71zeIfgngN2XNRJefc/hY7Ybsxd74Jm4qngIXyUEk7fss3VUzuHxLAq/R8NAba4QU9OUSaMZlbpRc7bM4Q==}
@@ -10447,8 +10446,8 @@ packages:
     resolution: {integrity: sha512-cowePSVui1C6jx9hVi0wcYrIDS29Dp95HRjw31M8przgGls9t5jsdeScPzGGQuJ4/OTnQkTRZec25ZXDjfr/yA==}
     dev: false
 
-  /plotly.js@2.35.0(mapbox-gl@1.13.3):
-    resolution: {integrity: sha512-6PuCd0Lngii/58hOZ1+h9shdf2fTWDelweS3HOWRV9YG2ga/oOmMb0GOsBKLQstiyEeIrVwkIM3RqOCLRtiTcQ==}
+  /plotly.js@2.35.2(mapbox-gl@1.13.3)(webpack@5.94.0):
+    resolution: {integrity: sha512-s0knlWzRvLQXxzf3JQ6qbm8FpwKuMjkr+6r04f8/yCEByAQ+I0jkUzY/hSGRGb+u7iljTh9hgpEiiJP90vjyeQ==}
     dependencies:
       '@plotly/d3': 3.8.2
       '@plotly/d3-sankey': 0.7.2
@@ -10464,6 +10463,7 @@ packages:
       color-parse: 2.0.0
       color-rgba: 2.1.1
       country-regex: 1.1.0
+      css-loader: 7.1.2(webpack@5.94.0)
       d3-force: 1.2.1
       d3-format: 1.4.5
       d3-geo: 1.12.1
@@ -10493,6 +10493,7 @@ packages:
       regl-scatter2d: 3.3.1
       regl-splom: 1.0.14
       strongly-connected-components: 1.0.1
+      style-loader: 4.0.0(webpack@5.94.0)
       superscript-text: 1.0.0
       svg-path-sdf: 1.1.3
       tinycolor2: 1.6.0
@@ -10501,8 +10502,10 @@ packages:
       webgl-context: 2.2.0
       world-calendars: 1.0.3
     transitivePeerDependencies:
+      - '@rspack/core'
       - mapbox-gl
       - supports-color
+      - webpack
     dev: false
 
   /point-in-polygon@1.1.0:
@@ -11585,13 +11588,13 @@ packages:
   /react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
-  /react-plotly.js@2.6.0(plotly.js@2.35.0)(react@18.3.1):
+  /react-plotly.js@2.6.0(plotly.js@2.35.2)(react@18.3.1):
     resolution: {integrity: sha512-g93xcyhAVCSt9kV1svqG1clAEdL6k3U+jjuSzfTV7owaSU9Go6Ph8bl25J+jKfKvIGAEYpe4qj++WHJuc9IaeA==}
     peerDependencies:
       plotly.js: '>1.34.0'
       react: '>0.13.0'
     dependencies:
-      plotly.js: 2.35.0(mapbox-gl@1.13.3)
+      plotly.js: 2.35.2(mapbox-gl@1.13.3)(webpack@5.94.0)
       prop-types: 15.8.1
       react: 18.3.1
     dev: false
@@ -12823,7 +12826,6 @@ packages:
       webpack: ^5.27.0
     dependencies:
       webpack: 5.94.0(webpack-cli@5.1.4)
-    dev: true
 
   /stylehacks@5.1.1(postcss@8.4.47):
     resolution: {integrity: sha512-sBpcd5Hx7G6seo7b1LkpttvTz7ikD0LlH5RmdcBNb6fFR0Fl7LQwHDFr300q4cwUqi+IYrFGmsIHieMBfnN/Bw==}
