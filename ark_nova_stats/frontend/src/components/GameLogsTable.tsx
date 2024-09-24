@@ -23,7 +23,10 @@ const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
         var rows = gameLogs.map((gameLog: GameLog) => {
             const rowAttrs: any = {
                 "BGA table": <Link to={"https://boardgamearena.com/table?table=" + gameLog.bgaTableId}>{gameLog.bgaTableId}</Link>,
-                "Players": <ul>{gameLog.users.map((user: User) => {return <li><Link to={`/user/${user.name}`}>{user.name} ({user.currentElo} / {user.currentArenaElo})</Link></li>})}</ul>,
+                "Players": <ul>{gameLog.users.map((user: User) => {
+                    const ratingChange = gameLog.gameRatingChanges.find((change) => { return change.user.bgaId === user.bgaId })
+                    return <li><Link to={`/user/${user.name}`}>{user.name} ({ratingChange?.priorElo} / {ratingChange?.priorArenaElo})</Link></li>;
+                })}</ul>,
             }
             if (currentPlayer !== undefined) {
                 const ratingChange = gameLog.gameRatingChanges.find((change) => { return change.user.bgaId === currentPlayer.bgaId })
