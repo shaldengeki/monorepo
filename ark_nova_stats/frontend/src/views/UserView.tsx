@@ -26,11 +26,11 @@ export const USER_VIEW_QUERY = gql`
                 gameRatingChanges {
                     user {
                         bgaId
-                        priorElo
-                        newElo
-                        priorArenaElo
-                        newArenaElo
                     }
+                    priorElo
+                    newElo
+                    priorArenaElo
+                    newArenaElo
                 }
             }
             numGameLogs
