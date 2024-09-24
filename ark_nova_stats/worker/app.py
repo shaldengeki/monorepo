@@ -42,7 +42,6 @@ def archive_logs_to_tigris(
             min_interval=min_interval,
         )
         for archive_type in (
-            RawBGALogArchiveCreator,
             BGAWithELOArchiveCreator,
             TopLevelStatsCsvArchiveCreator,
         )
