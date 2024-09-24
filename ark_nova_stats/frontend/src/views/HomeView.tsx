@@ -22,7 +22,19 @@ export const HOME_VIEW_QUERY = gql`
         recentGameLogs {
             bgaTableId
             users {
+                bgaId
                 name
+                currentElo
+                currentArenaElo
+            }
+            gameRatingChanges {
+                user {
+                    bgaId
+                    priorElo
+                    newElo
+                    priorArenaElo
+                    newArenaElo
+                }
             }
         }
         recentGameLogArchives {

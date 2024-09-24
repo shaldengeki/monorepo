@@ -20,7 +20,17 @@ export const USER_VIEW_QUERY = gql`
             recentGameLogs {
                 bgaTableId
                 users {
+                    bgaId
                     name
+                }
+                gameRatingChanges {
+                    user {
+                        bgaId
+                        priorElo
+                        newElo
+                        priorArenaElo
+                        newArenaElo
+                    }
                 }
             }
             numGameLogs
@@ -32,6 +42,8 @@ export const USER_VIEW_QUERY = gql`
                 }
                 count
             }
+            currentElo
+            currentArenaElo
         }
     }
 `;
@@ -65,7 +77,7 @@ const UserView = () => {
                 </div>
                 <div className={"py-2"}>
                     <h2 className={"text-xl"}>Recent game logs:</h2>
-                    <GameLogsTable gameLogs={recentGameLogs} />
+                    <GameLogsTable gameLogs={recentGameLogs} currentPlayer={user} />
                 </div>
             </div>
         );

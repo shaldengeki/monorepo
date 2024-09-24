@@ -28,6 +28,8 @@ const UserInfoBox = ({user, commonlyPlayedCards}: UserInfoBoxParams) => {
             <ul>
                 <li>BGA ID: {user.bgaId}</li>
                 <li>Number of games archived: {user.numGameLogs}</li>
+                <li>Current ELO: {user.currentElo}</li>
+                <li>Current Arena ELO: {user.currentArenaElo}</li>
             </ul>
             <h2 className={"text-xl"}>Most played:</h2>
             <Table
