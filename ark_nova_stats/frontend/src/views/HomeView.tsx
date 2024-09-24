@@ -24,6 +24,8 @@ export const HOME_VIEW_QUERY = gql`
             users {
                 bgaId
                 name
+                currentElo
+                currentArenaElo
             }
             gameRatingChanges {
                 user {
