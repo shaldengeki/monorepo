@@ -14,7 +14,7 @@ export const CARDS_VIEW_QUERY = gql`
         cards {
             bgaId
             name
-            mostPlayedBy {
+            mostPlayedBy(limit:1) {
                 user {
                     name
                 }
@@ -39,10 +39,11 @@ const CardsView = () => {
         const cards: Card[] = data.cards;
         const tableColumns = ["Name", "Most played by"];
         const cardRows = cards.map((card: Card) => {
-            const mostPlayedUser: User = data.cards.find((c: any) => {return c.bgaId === card.bgaId}).mostPlayedBy[0];
+            const mostPlayed = data.cards.find((c: any) => {return c.bgaId === card.bgaId}).mostPlayedBy[0];
+            const mostPlayedUser: User = mostPlayed.user;
             return {
                 "Name": <Link to={`/card/${card.bgaId}`}>{card.name}</Link>,
-                "Most played by": <Link to={`user/${mostPlayedUser.name}`}>{mostPlayedUser.name}</Link>
+                "Most played by": <Link to={`user/${mostPlayedUser.name}`}>{mostPlayedUser.name} ({mostPlayed.count})</Link>
             }
         });
         innerContent = (
@@ -53,7 +54,7 @@ const CardsView = () => {
                         cols={tableColumns}
                         rows={cardRows}
                         key="cards"
-                        showFilters={false}
+                        showFilters={true}
                     />
                 </div>
             </div>
