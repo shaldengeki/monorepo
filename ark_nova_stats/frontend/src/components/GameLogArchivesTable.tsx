@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 import {getDate} from '../DateUtils';
 import GameLogArchive from '../types/GameLogArchive';
-import User from '../types/User';
 import Table from './Table';
 
 type GameLogArchivesTableParams = {
