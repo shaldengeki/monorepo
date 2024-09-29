@@ -544,14 +544,25 @@ def card_recent_users_resolver(card: CardModel, info, **args) -> Sequence[UserMo
 
 
 def card_most_played_by_resolver(card: CardModel, info, **args) -> list[dict]:
+    limit = min(10, int(args['limit']))
+
     return [
         {"user": user, "card": card, "count": count}
-        for user, count in db.session.execute(card.most_played_by()).all()
+        for user, count in db.session.execute(card.most_played_by(num=limit)).all()
     ]
 
 
 def card_created_at_resolver(card: CardModel, info, **args) -> int:
     return int(round(card.created_at.timestamp()))
+
+
+most_played_by_filters: dict[str, GraphQLArgument] = {
+    "limit": GraphQLArgument(
+        GraphQLInt,
+        default_value=10,
+        description="How many users to return. Maximum of 10 (also the default).",
+    ),
+}
 
 
 def card_fields() -> dict[str, GraphQLField]:
@@ -582,6 +593,7 @@ def card_fields() -> dict[str, GraphQLField]:
         "mostPlayedBy": GraphQLField(
             GraphQLNonNull(GraphQLList(user_play_count_type)),
             description="Players who play this card most often.",
+            args=most_played_by_filters,
             resolve=card_most_played_by_resolver,
         ),
         "createdAt": GraphQLField(
