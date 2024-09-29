@@ -5,7 +5,7 @@ import {BrowserRouter} from 'react-router-dom'
 import React from 'react';
 
 it('should render the name of the view', async () => {
-  const testFetchStatsMock = {
+  const testFetchCardsMock = {
     request: {
       query: CARDS_VIEW_QUERY
     },
@@ -17,7 +17,7 @@ it('should render the name of the view', async () => {
   }
 
   render(
-      <MockedProvider mocks={[testFetchStatsMock]}>
+      <MockedProvider mocks={[testFetchCardsMock]}>
         <CardsView />
       </MockedProvider>,
       {wrapper: BrowserRouter},
@@ -27,7 +27,7 @@ it('should render the name of the view', async () => {
 
 
 it('should render cards when provided', async () => {
-    const testFetchStatsMock = {
+    const testFetchCardsMock = {
       request: {
         query: CARDS_VIEW_QUERY
       },
@@ -41,7 +41,7 @@ it('should render cards when provided', async () => {
     }
 
     render(
-        <MockedProvider mocks={[testFetchStatsMock]}>
+        <MockedProvider mocks={[testFetchCardsMock]}>
           <CardsView />
         </MockedProvider>,
         {wrapper: BrowserRouter},
@@ -52,7 +52,7 @@ it('should render cards when provided', async () => {
 
 
 it('should render most-commonly played user when provided', async () => {
-    const testFetchStatsMock = {
+    const testFetchCardsMock = {
       request: {
         query: CARDS_VIEW_QUERY
       },
@@ -66,7 +66,7 @@ it('should render most-commonly played user when provided', async () => {
     }
 
     render(
-        <MockedProvider mocks={[testFetchStatsMock]}>
+        <MockedProvider mocks={[testFetchCardsMock]}>
           <CardsView />
         </MockedProvider>,
         {wrapper: BrowserRouter},
