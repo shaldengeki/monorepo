@@ -39,7 +39,7 @@ const CardsView = () => {
         const cards: Card[] = data.cards;
         const tableColumns = ["Name", "Most played by"];
         const cardRows = cards.map((card: Card) => {
-            const mostPlayedUser: User = data.cards.find((c: any) => {c.bgaId === card.bgaId}).mostPlayedBy[0];
+            const mostPlayedUser: User = data.cards.find((c: any) => {return c.bgaId === card.bgaId}).mostPlayedBy[0];
             return {
                 "Name": <Link to={`/card/${card.bgaId}`}>{card.name}</Link>,
                 "Most played by": <Link to={`user/${mostPlayedUser.name}`}>{mostPlayedUser.name}</Link>

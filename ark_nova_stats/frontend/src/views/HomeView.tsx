@@ -57,9 +57,6 @@ export const HOME_VIEW_QUERY = gql`
 
 
 
-type HomeViewParams = {
-}
-
 const HomeView = () => {
     const { loading, error, data } = useQuery(
         HOME_VIEW_QUERY,
