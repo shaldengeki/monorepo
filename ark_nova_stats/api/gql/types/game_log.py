@@ -544,7 +544,7 @@ def card_recent_users_resolver(card: CardModel, info, **args) -> Sequence[UserMo
 
 
 def card_most_played_by_resolver(card: CardModel, info, **args) -> list[dict]:
-    limit = min(10, int(args['limit']))
+    limit = min(10, int(args["limit"]))
 
     return [
         {"user": user, "card": card, "count": count}
