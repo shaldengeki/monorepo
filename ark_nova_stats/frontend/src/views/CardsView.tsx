@@ -10,7 +10,7 @@ import User from '../types/User';
 import Table from '../components/Table';
 
 export const CARDS_VIEW_QUERY = gql`
-    query FetchCards() {
+    query FetchCards {
         cards {
             bgaId
             name
