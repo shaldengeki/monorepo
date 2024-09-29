@@ -17,6 +17,11 @@ const NavBar = (props: NavBarProps) => {
                             <p className="font-bold">Ark Nova Games Database</p>
                         </Link>
                     </div>
+                    <div className="dark:hover:text-slate-300 hover:text-slate-500">
+                        <Link to={'/cards'}>
+                            <p>Cards</p>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>
