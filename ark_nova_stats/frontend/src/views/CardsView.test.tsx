@@ -39,7 +39,7 @@ it('should render cards when provided', async () => {
         }
       }
     }
-  
+
     render(
         <MockedProvider mocks={[testFetchStatsMock]}>
           <CardsView />
@@ -48,4 +48,3 @@ it('should render cards when provided', async () => {
     );
     expect(await screen.findByText("test card")).toBeInTheDocument();
   });
-  
