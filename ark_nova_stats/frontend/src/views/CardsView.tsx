@@ -54,7 +54,7 @@ const CardsView = () => {
                         cols={tableColumns}
                         rows={cardRows}
                         key="cards"
-                        showFilters={false}
+                        showFilters={true}
                     />
                 </div>
             </div>
