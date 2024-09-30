@@ -10,6 +10,11 @@ type CardInfoBoxParams = {
     mostPlayedBy: UserPlayCount[];
 }
 
+type CardPlayedTableRow = {
+    "User": React.JSX.Element,
+    "Count": React.JSX.Element,
+}
+
 const CardInfoBox = ({card, mostPlayedBy}: CardInfoBoxParams) => {
     let innerContent = <p></p>;
     if (!card) {
@@ -17,7 +22,7 @@ const CardInfoBox = ({card, mostPlayedBy}: CardInfoBoxParams) => {
     } else if (!mostPlayedBy) {
         innerContent = <p>Error: card play info could not be retrieved!</p>;
     } else {
-        const rows = mostPlayedBy.map((userPlayCount: UserPlayCount) => {
+        const rows: CardPlayedTableRow[] = mostPlayedBy.map((userPlayCount: UserPlayCount) => {
             return {
                 "User": <Link to={"/user/" + userPlayCount.user.name}>{userPlayCount.user.name}</Link>,
                 "Count": <ul>{userPlayCount.count}</ul>,
@@ -29,8 +34,7 @@ const CardInfoBox = ({card, mostPlayedBy}: CardInfoBoxParams) => {
                 <li>BGA ID: {card.bgaId}</li>
             </ul>
             <h2 className={"text-xl"}>Most played by:</h2>
-            <Table
-                cols={["User", "Count"]}
+            <Table<CardPlayedTableRow>
                 rows={rows}
                 key="card-played-cards"
                 showFilters={false}
