@@ -31,12 +31,12 @@ const GameLogArchivesTable = ({gameLogArchives}: GameLogArchivesTableParams) => 
             </Link>;
             return {
                 "Link": <Link to={gameLogArchive.url}>Download</Link>,
-                "Date": <p>getDate(gameLogArchive.createdAt)</p>,
-                "Type": <p>gameLogArchive.archiveType</p>,
-                "Games": <p>gameLogArchive.numGameLogs</p>,
-                "Users": <p>gameLogArchive.numUsers</p>,
-                "Latest table": <p>latestTableDescription</p>,
-                "Size in MB": <p>Math.round((gameLogArchive.sizeBytes) / (1024 * 1024))</p>,
+                "Date": <p>{getDate(gameLogArchive.createdAt)}</p>,
+                "Type": <p>{gameLogArchive.archiveType}</p>,
+                "Games": <p>{gameLogArchive.numGameLogs}</p>,
+                "Users": <p>{gameLogArchive.numUsers}</p>,
+                "Latest table": <p>{latestTableDescription}</p>,
+                "Size in MB": <p>{Math.round((gameLogArchive.sizeBytes) / (1024 * 1024))}</p>,
             }
         });
         innerContent = (
