@@ -24,7 +24,10 @@ export const CARDS_VIEW_QUERY = gql`
     }
 `;
 
-
+type CardsTableRow = {
+    "Name": React.JSX.Element,
+    "Most played by": React.JSX.Element,
+}
 
 const CardsView = () => {
     const { loading, error, data } = useQuery(
@@ -37,8 +40,7 @@ const CardsView = () => {
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
         const cards: Card[] = data.cards;
-        const tableColumns = ["Name", "Most played by"];
-        const cardRows = cards.map((card: Card) => {
+        const cardRows: CardsTableRow[] = cards.map((card: Card) => {
             const mostPlayed = data.cards.find((c: any) => {return c.bgaId === card.bgaId}).mostPlayedBy[0];
             const mostPlayedUser: User = mostPlayed.user;
             return {
@@ -50,8 +52,7 @@ const CardsView = () => {
             <div>
                 <PageTitle>Cards</PageTitle>
                 <div className={"py-2"}>
-                    <Table
-                        cols={tableColumns}
+                    <Table<CardsTableRow>
                         rows={cardRows}
                         key="cards"
                         showFilters={true}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import _ from 'lodash'
 
-const renderColumn = (col: string, showFilters: Boolean, filters: _.Dictionary<any>, setFilter: Function, tablePrefix: string) => {
+const renderColumn = (col: string, showFilters: Boolean | undefined, filters: _.Dictionary<any>, setFilter: Function, tablePrefix: string) => {
   const filterInput = (
     <input
       className="border w-full"
@@ -42,14 +42,19 @@ const renderRow = (row: any, idx: number, cols: Array<string>, tablePrefix: stri
   )
 }
 
-type TableProps = {
-  cols: Array<string>,
-  rows: Array<any>,
-  key: string,
-  showFilters?: Boolean
-};
+interface TableRow {
+  [index: string]:React.JSX.Element;
+}
 
-const Table = ({ cols, rows, key, showFilters = true }: TableProps) => {
+interface TableProps<T extends TableRow> {
+  key: string;
+  rows: Array<T>;
+  showFilters?: Boolean;
+}
+
+function Table<T extends TableRow>({ key, rows, showFilters }: TableProps<T>) {
+  const cols = Object.keys(rows[0]);
+
   const [filters, setFilter] = useColumnFilters(cols)
   const tablePrefix = `Table-${key}`
 
@@ -57,7 +62,9 @@ const Table = ({ cols, rows, key, showFilters = true }: TableProps) => {
   if (showFilters) {
     _.forEach(cols, (col) => {
       if (filters[col]) {
-        shownRows = _.filter(shownRows, (txn) => { return _.upperCase(txn[col]).includes(_.upperCase(filters[col])) })
+        shownRows = _.filter(shownRows, (row: T) => {
+          return _.upperCase(row[col].props.children).includes(_.upperCase(filters[col]))
+        })
       }
     })
   }
