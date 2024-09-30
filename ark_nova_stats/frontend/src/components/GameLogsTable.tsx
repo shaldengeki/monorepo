@@ -10,6 +10,12 @@ type GameLogsTableParams = {
     currentPlayer?: User;
 }
 
+type GameLogsTableRow = {
+    "BGA table": React.JSX.Element,
+    "Players": React.JSX.Element,
+    "Rating changes"?: React.JSX.Element,
+}
+
 const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
     let innerContent = <p></p>;
     if (!gameLogs) {
@@ -21,7 +27,7 @@ const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
         }
 
         var rows = gameLogs.map((gameLog: GameLog) => {
-            const rowAttrs: any = {
+            const rowAttrs: GameLogsTableRow = {
                 "BGA table": <Link to={"https://boardgamearena.com/table?table=" + gameLog.bgaTableId}>{gameLog.bgaTableId}</Link>,
                 "Players": <ul>{gameLog.users.map((user: User) => {
                     const ratingChange = gameLog.gameRatingChanges.find((change) => { return change.user.bgaId === user.bgaId })
@@ -41,8 +47,7 @@ const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
             return rowAttrs;
         });
         innerContent = (
-        <Table
-            cols={tableColumns}
+        <Table<GameLogsTableRow>
             rows={rows}
             key="game-logs"
             showFilters={false}
