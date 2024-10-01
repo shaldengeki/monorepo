@@ -9,17 +9,10 @@ from typing import Optional
 
 import sqlalchemy
 from sqlalchemy import desc
-from sqlalchemy.orm import joinedload
 
 from ark_nova_stats.config import db
-from ark_nova_stats.models import (
-    GameLog,
-    GameLogArchive,
-    GameLogArchiveType,
-    GameRating,
-    GameStatistics,
-    User,
-)
+from ark_nova_stats.emu_cup.tables import EMU_CUP_GAME_TABLE_IDS
+from ark_nova_stats.models import GameLog, GameLogArchive, GameLogArchiveType, User
 
 
 class GameLogArchiveCreator:
@@ -495,3 +488,14 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
         os.fsync(self.archive_tempfile)
         super(TopLevelStatsCsvArchiveCreator, self).upload_archive()
         self.csv_file.close()
+
+
+class EmuCupTopLevelStatsCsvArchiveCreator(TopLevelStatsCsvArchiveCreator):
+    @property
+    def archive_type(self) -> GameLogArchiveType:
+        return GameLogArchiveType.EMU_CUP_TOP_LEVEL_STATS_CSV
+
+    def game_logs(self) -> "sqlalchemy.orm.query.Query[GameLog]":
+        return GameLog.query.where(
+            GameLog.bga_table_id.in_(EMU_CUP_GAME_TABLE_IDS)
+        ).yield_per(10)

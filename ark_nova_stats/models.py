@@ -313,6 +313,7 @@ class GameLogArchiveType(enum.IntEnum):
     RAW_BGA_JSONL = 1
     BGA_JSONL_WITH_ELO = 2
     TOP_LEVEL_STATS_CSV = 3
+    EMU_CUP_TOP_LEVEL_STATS_CSV = 4
 
 
 class GameLogArchive(db.Model):
