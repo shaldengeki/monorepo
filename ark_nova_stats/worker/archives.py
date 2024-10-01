@@ -309,6 +309,7 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
         return [
             "bga_table_id",
             "user_id",
+            "user_name",
             "prior_elo",
             "new_elo",
             "prior_arena_elo",
@@ -391,6 +392,7 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
             row = {k: None for k in self.csv_field_names}
             row["bga_table_id"] = game_log.bga_table_id
             row["user_id"] = user.bga_id
+            row["user_name"] = user.name
 
             for rating in game_log.game_ratings:
                 if rating.user_id == user.bga_id:
