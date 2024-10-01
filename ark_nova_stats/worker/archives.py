@@ -514,3 +514,19 @@ class EmuCupTopLevelStatsCsvArchiveCreator(TopLevelStatsCsvArchiveCreator):
             return False
 
         return bool(game_log.bga_table_id in EMU_CUP_GAME_TABLE_IDS)
+
+    def should_create_archive(self) -> bool:
+        if not super().should_create_archive():
+            return False
+
+        last_archive: Optional[GameLogArchive] = (
+            GameLogArchive.query.filter(
+                GameLogArchive.archive_type == self.archive_type
+            )
+            .order_by(desc(GameLogArchive.last_game_log_id))
+            .first()
+        )
+        if last_archive is None:
+            return True
+
+        return bool(max(EMU_CUP_GAME_TABLE_IDS) > last_archive.last_game_log.id)
