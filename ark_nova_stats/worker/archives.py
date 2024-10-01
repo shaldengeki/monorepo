@@ -33,7 +33,13 @@ class GameLogArchiveCreator:
     def archive_type(self) -> GameLogArchiveType:
         raise NotImplementedError
 
+    def should_include_game_log(self, game_log: GameLog) -> bool:
+        return True
+
     def process_game_log(self, game_log: GameLog) -> None:
+        if not self.should_include_game_log(game_log):
+            return
+
         self.num_logs += 1
         game_users: list[User] = game_log.users
         self.users.update(set([u.name for u in game_users]))
@@ -377,6 +383,9 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
 
     def process_game_log(self, game_log: GameLog) -> None:
         super(TopLevelStatsCsvArchiveCreator, self).process_game_log(game_log)
+        if not self.should_include_game_log(game_log):
+            return
+
         rows: list[dict] = []
         for user in game_log.users:
             row = {k: None for k in self.csv_field_names}
@@ -499,3 +508,9 @@ class EmuCupTopLevelStatsCsvArchiveCreator(TopLevelStatsCsvArchiveCreator):
         return GameLog.query.where(
             GameLog.bga_table_id.in_(EMU_CUP_GAME_TABLE_IDS)
         ).yield_per(10)
+
+    def should_include_game_log(self, game_log: GameLog) -> bool:
+        if not super().should_include_game_log(game_log):
+            return False
+
+        return bool(game_log.bga_table_id in EMU_CUP_GAME_TABLE_IDS)
