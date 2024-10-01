@@ -1397,7 +1397,7 @@ def game_statistics_fields() -> dict[str, GraphQLField]:
 
 
 game_statistics_type = GraphQLObjectType(
-    "GameRating",
-    description="A game rating entry.",
+    "GameStatistics",
+    description="End-game statistics for a game.",
     fields=game_statistics_fields,
 )
