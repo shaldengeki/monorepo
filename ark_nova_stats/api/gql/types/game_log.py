@@ -933,37 +933,37 @@ def game_statistics_hexes_empty_resolver(
 
 def game_statistics_upgraded_action_cards_resolver(
     game_statistics: GameStatisticsModel, info, **args
-) -> int:
+) -> bool:
     return game_statistics.upgraded_action_cards
 
 
 def game_statistics_upgraded_animals_resolver(
     game_statistics: GameStatisticsModel, info, **args
-) -> int:
+) -> bool:
     return game_statistics.upgraded_animals
 
 
 def game_statistics_upgraded_build_resolver(
     game_statistics: GameStatisticsModel, info, **args
-) -> int:
+) -> bool:
     return game_statistics.upgraded_build
 
 
 def game_statistics_upgraded_cards_resolver(
     game_statistics: GameStatisticsModel, info, **args
-) -> int:
+) -> bool:
     return game_statistics.upgraded_cards
 
 
 def game_statistics_upgraded_sponsors_resolver(
     game_statistics: GameStatisticsModel, info, **args
-) -> int:
+) -> bool:
     return game_statistics.upgraded_sponsors
 
 
 def game_statistics_upgraded_association_resolver(
     game_statistics: GameStatisticsModel, info, **args
-) -> int:
+) -> bool:
     return game_statistics.upgraded_association
 
 
