@@ -29,6 +29,10 @@ def player_rating_change_fields() -> dict[str, GraphQLField]:
             GraphQLNonNull(user_type),
             description="The user whose ratings may have changed.",
         ),
+        "gameLog": GraphQLField(
+            GraphQLNonNull(game_log_type),
+            description="The game this rating change is for.",
+        ),
         "priorElo": GraphQLField(
             GraphQLInt,
             description="User's non-arena ELO prior to the game.",
@@ -73,6 +77,7 @@ def game_log_player_rating_changes_resolver(
     return [
         {
             "user": rating.user,
+            "gameLog": game_log,
             "priorElo": rating.prior_elo,
             "newElo": rating.new_elo,
             "priorArenaElo": rating.prior_arena_elo,
