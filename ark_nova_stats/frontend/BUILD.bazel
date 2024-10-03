@@ -129,6 +129,7 @@ jest_test(
         "src/types/Card.js",
         "src/types/GameLog.js",
         "src/types/GameLogArchive.js",
+        "src/types/GameStatistics.js",
         "src/types/Stats.js",
         "src/types/User.js",
         "src/types/UserPlayCount.js",

@@ -8,6 +8,7 @@ import PageTitle from "../components/PageTitle";
 // import Table from '../components/Table';
 import EmuCupTableIds from '../EmuCupTableIds';
 import GameLog from '../types/GameLog';
+import GameStatistics from '../types/GameStatistics';
 
 export const EMU_CUP_VIEW_QUERY = gql`
     query EmuCupView($tableIds: [String]) {
@@ -24,6 +25,9 @@ export const EMU_CUP_VIEW_QUERY = gql`
             start
             end
             gameRatingChanges {
+                gameLog {
+                    bgaTableId
+                }
                 user {
                     bgaId
                     name
@@ -117,10 +121,13 @@ const EmuCupView = () => {
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
         const gameLogs: GameLog[] = data.gameLogs;
+        const statistics: GameStatistics[] = data.gameLogs.map((gameLog: any) => {return gameLog.statistics}).flatMap();
+
         if (!gameLogs || gameLogs.length === 0) {
             innerContent = <p>No games found!</p>
         } else {
             // TODO
+            // <TournamentResultsTable statistics={statistics} />
         }
     }
 
