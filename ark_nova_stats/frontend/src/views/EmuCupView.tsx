@@ -9,6 +9,7 @@ import PageTitle from "../components/PageTitle";
 import EmuCupTableIds from '../EmuCupTableIds';
 import GameLog from '../types/GameLog';
 import GameStatistics from '../types/GameStatistics';
+import GameLogsTable from '../components/GameLogsTable';
 
 export const EMU_CUP_VIEW_QUERY = gql`
     query EmuCupView($tableIds: [String]) {
@@ -126,7 +127,21 @@ const EmuCupView = () => {
         } else {
             // TODO
             const statistics: GameStatistics[] = data.gameLogs.map((gameLog: any) => {return gameLog.statistics}).flatMap();
-            // <TournamentResultsTable statistics={statistics} />
+            const sortedGameLogs = gameLogs.sort((a, b) => { return ((a.end || 0) > (b.end || 0)) ? -1 : (a.end == b.end) ? 0 : 1 });
+            innerContent = (<div>
+                <div className={"py-2"}>
+                    <h2 className={"text-xl"}>Results:</h2>
+                    {/* <TournamentResultsTable statistics={statistics} /> */}
+                </div>
+                <div className={"py-2"}>
+                    <h2 className={"text-xl"}>Stats:</h2>
+                    {/* <TournamentStatisticsTable statistics={statistics} /> */}
+                </div>
+                <div className={"py-2"}>
+                    <h2 className={"text-xl"}>All games:</h2>
+                    <GameLogsTable gameLogs={sortedGameLogs} />
+                </div>
+            </div>);
         }
     }
 
