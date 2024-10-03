@@ -1376,12 +1376,12 @@ def game_statistics_fields() -> dict[str, GraphQLField]:
             description="The number of primate icons for this game log and user.",
             resolve=game_statistics_icons_primate_resolver,
         ),
-        "iconsPetting_zoo": GraphQLField(
+        "iconsPettingZoo": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The number of petting_zoo icons for this game log and user.",
             resolve=game_statistics_icons_petting_zoo_resolver,
         ),
-        "iconsSea_animal": GraphQLField(
+        "iconsSeaAnimal": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The number of sea_animal icons for this game log and user.",
             resolve=game_statistics_icons_sea_animal_resolver,
