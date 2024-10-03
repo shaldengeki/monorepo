@@ -121,12 +121,11 @@ const EmuCupView = () => {
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
         const gameLogs: GameLog[] = data.gameLogs;
-        const statistics: GameStatistics[] = data.gameLogs.map((gameLog: any) => {return gameLog.statistics}).flatMap();
-
         if (!gameLogs || gameLogs.length === 0) {
             innerContent = <p>No games found!</p>
         } else {
             // TODO
+            const statistics: GameStatistics[] = data.gameLogs.map((gameLog: any) => {return gameLog.statistics}).flatMap();
             // <TournamentResultsTable statistics={statistics} />
         }
     }
