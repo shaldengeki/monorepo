@@ -1093,6 +1093,14 @@ def game_statistics_fields() -> dict[str, GraphQLField]:
             description="When the statistics for this game log and user were recorded.",
             resolve=game_statistics_created_at_resolver,
         ),
+        "score": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="Player's score.",
+        ),
+        "rank": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="Player's final rank. The winner has rank 1.",
+        ),
         "thinkingTime": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The thinking time, in seconds, for this game log and user.",
