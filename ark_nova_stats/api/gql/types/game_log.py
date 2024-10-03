@@ -1276,7 +1276,7 @@ def game_statistics_fields() -> dict[str, GraphQLField]:
             description="The number of built pavilions for this game log and user.",
             resolve=game_statistics_built_pavilions_resolver,
         ),
-        "builtUnique_buildings": GraphQLField(
+        "builtUniqueBuildings": GraphQLField(
             GraphQLNonNull(GraphQLInt),
             description="The number of built unique buildings for this game log and user.",
             resolve=game_statistics_built_unique_buildings_resolver,
