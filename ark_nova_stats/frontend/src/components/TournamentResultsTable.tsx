@@ -37,9 +37,14 @@ const computeGameResults = (statistics: GameStatistics[]): TournamentPlayerRecor
             })
         }
         // Not a tie; we can use the ranks directly.
-        // TODO: specify the total here directly, and just add it up later.
         return stats.map((stat) => {
-            return {user: stat.user.name, wins: + Boolean(stat.rank === 1), losses: + Boolean(stat.rank > 1), ties: 0, total: 0};
+            return {
+                user: stat.user.name,
+                wins: + Boolean(stat.rank === 1),
+                losses: + Boolean(stat.rank > 1),
+                ties: 0,
+                total: (stat.rank === 1) ? 1 : -1,
+            };
         })
     });
     return gameResults;
@@ -48,28 +53,15 @@ const computeGameResults = (statistics: GameStatistics[]): TournamentPlayerRecor
 const computePlayerScores = (statistics: GameStatistics[]) => {
     const gameResults = computeGameResults(statistics);
     const groupedResults = _.toPairs(_.groupBy(gameResults, (obj) => obj.user));
-    const totalResults = groupedResults.map(([user, records]) => {
-        const initialRecord: TournamentPlayerRecord = {
-            user: user,
-            wins: 0,
-            losses: 0,
-            ties: 0,
-            total: 0
-        }
-        return (records || []).reduce(
+    const totalResults = groupedResults.map(([_user, records]) => {
+        return records.reduce(
             (prev, curr) => {
                 prev.wins += curr.wins;
                 prev.losses += curr.losses;
                 prev.ties += curr.ties;
-
-                if (curr.wins) {
-                    prev.total++;
-                } else if (curr.losses) {
-                    prev.total--;
-                }
+                prev.total += curr.total;
                 return prev;
-            },
-            initialRecord
+            }
         )
     })
     const sortedResults = totalResults.sort((a, b) => {
