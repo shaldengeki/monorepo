@@ -1,6 +1,6 @@
 import React from 'react';
 import logo192 from './logo192.png';
-import { Link } from 'react-router-dom';
+import PageLink from './PageLink';
 
 type NavBarProps = {
     className?: string;
@@ -13,14 +13,14 @@ const NavBar = (props: NavBarProps) => {
                 <div className="py-4 mx-4 lg:mx-0 lg:px-8 relative flex items-center gap-2 dark:text-slate-400">
                     <img className="flex-none h-6 inline" src={logo192} alt="Fitbit app icon" />
                     <div className="dark:hover:text-slate-300 hover:text-slate-500">
-                        <Link to={'/'}>
+                        <PageLink to={'/'}>
                             <p className="font-bold">Ark Nova Games Database</p>
-                        </Link>
+                        </PageLink>
                     </div>
                     <div className="dark:hover:text-slate-300 hover:text-slate-500">
-                        <Link to={'/cards'}>
+                        <PageLink to={'/cards'}>
                             <p>Cards</p>
-                        </Link>
+                        </PageLink>
                     </div>
                 </div>
             </div>

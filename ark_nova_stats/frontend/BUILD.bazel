@@ -121,6 +121,7 @@ jest_test(
         "src/components/GameLogsTable.js",
         "src/components/NavBar.js",
         "src/components/PageContainer.js",
+        "src/components/PageLink.js",
         "src/components/PageTitle.js",
         "src/components/Table.js",
         "src/components/UserInfoBox.js",

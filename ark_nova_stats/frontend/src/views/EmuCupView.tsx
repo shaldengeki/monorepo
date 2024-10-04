@@ -1,7 +1,6 @@
 import React from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery } from '@apollo/client/react/hooks';
-import { Link } from 'react-router-dom';
 
 import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
@@ -9,6 +8,7 @@ import EmuCupTableIds from '../EmuCupTableIds';
 import GameLog from '../types/GameLog';
 import GameStatistics from '../types/GameStatistics';
 import GameLogsTable from '../components/GameLogsTable';
+import PageLink from '../components/PageLink';
 
 export const EMU_CUP_VIEW_QUERY = gql`
     query EmuCupView($tableIds: [String]) {
@@ -148,7 +148,7 @@ const EmuCupView = () => {
         <PageContainer>
             <div>
                 <PageTitle>Emu Cup</PageTitle>
-                <p>Not sure what this is? <Link to={'https://www.youtube.com/watch?v=Rf_iUSZZqgM'}>See the first 4.5min of this video.</Link></p>
+                <p>Not sure what this is? <PageLink to={'https://www.youtube.com/watch?v=Rf_iUSZZqgM'}>See the first 4.5min of this video.</PageLink></p>
                 {innerContent}
             </div>
         </PageContainer>
