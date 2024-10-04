@@ -7,7 +7,7 @@ type PageLinkProps = {
 }
 
 const PageLink = (props: PropsWithChildren<PageLinkProps>) => {
-    const defaultClasses = "";
+    const defaultClasses = "text-sky-500";
     const actualClasses = props.className ? defaultClasses + " " + props.className : defaultClasses;
 
     return (
