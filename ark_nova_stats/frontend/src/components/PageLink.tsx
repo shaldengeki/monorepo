@@ -7,7 +7,7 @@ type PageLinkProps = {
 }
 
 const PageLink = (props: PropsWithChildren<PageLinkProps>) => {
-    const defaultClasses = "text-sky-500";
+    const defaultClasses = "text-blue-600 hover:text-blue-400 dark:text-sky-500 dark:hover:text-sky-400";
     const actualClasses = props.className ? defaultClasses + " " + props.className : defaultClasses;
 
     return (
