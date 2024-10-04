@@ -54,13 +54,13 @@ interface TableProps<T extends TableRow> {
 
 function Table<T extends TableRow>({ key, rows, showFilters }: TableProps<T>) {
   const tablePrefix = `Table-${key}`
-  const cols: string[] = Object.keys(rows[0]) || [];
+  const cols: string[] = rows.length < 1 ? [] : Object.keys(rows[0]);
   const [filters, setFilter] = useColumnFilters(cols)
 
   let tableHead = <p>No data to show!</p>;
   let tableBody = <></>;
 
-  if (rows.length !== 0) {
+  if (rows.length > 0) {
     let shownRows = rows || []
     if (showFilters) {
       _.forEach(cols, (col) => {

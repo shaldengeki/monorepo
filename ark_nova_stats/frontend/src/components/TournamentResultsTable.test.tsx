@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { emptyUser } from '../types/User';
 import GameStatistics, { emptyGameStatistics } from '../types/GameStatistics';
+import {BrowserRouter} from 'react-router-dom'
 import TournamentResultsTable from './TournamentResultsTable';
 
 it('should handle when no data was retrieved', async () => {
@@ -24,7 +25,8 @@ it('should handle a single win', async () => {
     }
 
     render(
-        <TournamentResultsTable statistics={[stat]}/>
+        <TournamentResultsTable statistics={[stat]}/>,
+        {wrapper: BrowserRouter},
     );
     expect(await screen.findByText("test-user-1")).toBeInTheDocument();
 });
@@ -42,7 +44,8 @@ it('should handle a single loss', async () => {
     }
 
     render(
-        <TournamentResultsTable statistics={[stat]}/>
+        <TournamentResultsTable statistics={[stat]}/>,
+        {wrapper: BrowserRouter},
     );
     expect(await screen.findByText("test-user-1")).toBeInTheDocument();
     expect(await screen.findByText("-1")).toBeInTheDocument();
@@ -73,7 +76,8 @@ it('should handle a pair of results', async () => {
     ];
 
     render(
-        <TournamentResultsTable statistics={stats}/>
+        <TournamentResultsTable statistics={stats}/>,
+        {wrapper: BrowserRouter},
     );
     expect(await screen.findByText("test-user-1")).toBeInTheDocument();
     expect(await screen.findByText("test-user-2")).toBeInTheDocument();
