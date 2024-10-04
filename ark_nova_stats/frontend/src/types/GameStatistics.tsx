@@ -1,7 +1,9 @@
+import GameLog, { emptyGameLog } from './GameLog';
 import User, { emptyUser } from './User';
 
 type GameStatistics = {
     user: User;
+    gameLog?: GameLog;
     rank: number;
     score: number;
     thinkingTime: number;
@@ -68,6 +70,7 @@ type GameStatistics = {
 
 export const emptyGameStatistics: GameStatistics = {
     user: emptyUser,
+    gameLog: emptyGameLog,
     rank: 0,
     score: 0,
     thinkingTime: 0,
