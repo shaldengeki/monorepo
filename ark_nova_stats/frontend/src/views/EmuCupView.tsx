@@ -6,9 +6,9 @@ import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import EmuCupTableIds from '../EmuCupTableIds';
 import GameLog from '../types/GameLog';
-import GameStatistics from '../types/GameStatistics';
 import GameLogsTable from '../components/GameLogsTable';
 import PageLink from '../components/PageLink';
+import TournamentResultsTable from '../components/TournamentResultsTable';
 
 export const EMU_CUP_VIEW_QUERY = gql`
     query EmuCupView($tableIds: [Int]) {
@@ -18,16 +18,9 @@ export const EMU_CUP_VIEW_QUERY = gql`
                 bgaId
                 name
             }
-            cards {
-                name
-                bgaId
-            }
             start
             end
             gameRatingChanges {
-                gameLog {
-                    bgaTableId
-                }
                 user {
                     bgaId
                     name
@@ -41,67 +34,6 @@ export const EMU_CUP_VIEW_QUERY = gql`
                     name
                 }
                 rank
-                score
-                thinkingTime
-                startingPosition
-                breaksTriggered
-                triggeredEnd
-                mapId
-                actionsBuild
-                actionsAnimals
-                actionsCards
-                actionsAssociation
-                actionsSponsors
-                xTokensGained
-                xActions
-                xTokensUsed
-                moneyGained
-                moneyGainedThroughIncome
-                moneySpentOnAnimals
-                moneySpentOnEnclosures
-                moneySpentOnDonations
-                moneySpentOnPlayingCardsFromReputationRange
-                cardsDrawnFromDeck
-                cardsDrawnFromReputationRange
-                cardsSnapped
-                cardsDiscarded
-                playedSponsors
-                playedAnimals
-                releasedAnimals
-                associationWorkers
-                associationDonations
-                associationReputationActions
-                associationPartnerZooActions
-                associationUniversityActions
-                associationConservationProjectActions
-                builtEnclosures
-                builtKiosks
-                builtPavilions
-                builtUniqueBuildings
-                hexesCovered
-                hexesEmpty
-                upgradedActionCards
-                upgradedAnimals
-                upgradedBuild
-                upgradedCards
-                upgradedSponsors
-                upgradedAssociation
-                iconsAfrica
-                iconsEurope
-                iconsAsia
-                iconsAustralia
-                iconsAmericas
-                iconsBird
-                iconsPredator
-                iconsHerbivore
-                iconsBear
-                iconsReptile
-                iconsPrimate
-                iconsPettingZoo
-                iconsSeaAnimal
-                iconsWater
-                iconsRock
-                iconsScience
             }
         }
     }
@@ -125,12 +57,11 @@ const EmuCupView = () => {
             innerContent = <p>No games found!</p>
         } else {
             // TODO
-            const statistics: GameStatistics[] = data.gameLogs.flatMap((gameLog: any) => {return gameLog.statistics});
-            const sortedGameLogs = gameLogs.toSorted((a, b) => { return ((a.end || 0) > (b.end || 0)) ? -1 : (a.end == b.end) ? 0 : 1 });
+            const sortedGameLogs = gameLogs.toSorted((a, b) => { return ((a.end || 0) > (b.end || 0)) ? -1 : (a.end === b.end) ? 0 : 1 });
             innerContent = (<div>
                 <div className={"py-2"}>
                     <h2 className={"text-xl"}>Results:</h2>
-                    {/* <TournamentResultsTable statistics={statistics} /> */}
+                    <TournamentResultsTable gameLogs={gameLogs} />
                 </div>
                 <div className={"py-2"}>
                     <h2 className={"text-xl"}>Stats:</h2>

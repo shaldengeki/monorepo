@@ -25,7 +25,7 @@ const GameLogArchivesTable = ({gameLogArchives}: GameLogArchivesTableParams) => 
     if (!gameLogArchives) {
         innerContent = <p>Error: game log archives could not be retrieved!</p>;
     } else {
-        var rows: GameLogArchivesTableRow[] = gameLogArchives.map((gameLogArchive: GameLogArchive) => {
+        const rows: GameLogArchivesTableRow[] = gameLogArchives.map((gameLogArchive: GameLogArchive) => {
             let latestTableDescription = <PageLink to={"https://boardgamearena.com/table?table=" + gameLogArchive.maxGameLog.bgaTableId}>
                 {gameLogArchive.maxGameLog.bgaTableId}
             </PageLink>;

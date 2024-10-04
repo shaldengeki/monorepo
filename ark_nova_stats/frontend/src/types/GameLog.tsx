@@ -1,7 +1,9 @@
+import GameStatistics from './GameStatistics';
 import User from './User';
 import UserRatingChange from './UserRatingChange';
 
 type GameLog = {
+    statistics?: GameStatistics[];
     id: number;
     log: string;
     bgaTableId: number;

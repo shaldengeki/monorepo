@@ -53,32 +53,45 @@ interface TableProps<T extends TableRow> {
 }
 
 function Table<T extends TableRow>({ key, rows, showFilters }: TableProps<T>) {
-  const cols = Object.keys(rows[0]);
-
-  const [filters, setFilter] = useColumnFilters(cols)
   const tablePrefix = `Table-${key}`
+  const cols: string[] = rows.length < 1 ? [] : Object.keys(rows[0]);
+  const [filters, setFilter] = useColumnFilters(cols)
 
-  let shownRows = rows || []
-  if (showFilters) {
-    _.forEach(cols, (col) => {
-      if (filters[col]) {
-        shownRows = _.filter(shownRows, (row: T) => {
-          return _.upperCase(row[col].props.children).includes(_.upperCase(filters[col]))
-        })
-      }
-    })
+  let tableHead = <p>No data to show!</p>;
+  let tableBody = <></>;
+
+  if (rows.length > 0) {
+    let shownRows = rows || []
+    if (showFilters) {
+      _.forEach(cols, (col) => {
+        if (filters[col]) {
+          shownRows = _.filter(shownRows, (row: T) => {
+            return _.upperCase(row[col].props.children).includes(_.upperCase(filters[col]))
+          })
+        }
+      })
+    }
+
+    tableHead = (
+      <thead>
+        <tr>
+            {cols.map(col => renderColumn(col, showFilters, filters, setFilter, tablePrefix))}
+        </tr>
+      </thead>
+    );
+
+    tableBody = (
+      <tbody>
+        {shownRows.map((row, idx) => renderRow(row, idx, cols, tablePrefix))}
+      </tbody>
+    );
+
   }
 
   return (
         <table key={tablePrefix} className="w-full table-fixed text-center">
-            <thead>
-                <tr>
-                    {cols.map(col => renderColumn(col, showFilters, filters, setFilter, tablePrefix))}
-                </tr>
-            </thead>
-            <tbody>
-                {shownRows.map((row, idx) => renderRow(row, idx, cols, tablePrefix))}
-            </tbody>
+          { tableHead }
+          { tableBody }
         </table>
   )
 }
