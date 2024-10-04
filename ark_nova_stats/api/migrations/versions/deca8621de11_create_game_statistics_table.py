@@ -106,13 +106,13 @@ def upgrade():
     )
 
     op.create_index(
-        "game_statistics_user_id",
+        "game_statistics_bga_user_id",
         "game_statistics",
-        ["user_id"],
+        ["bga_user_id"],
     )
 
 
 def downgrade():
     op.drop_index("game_statistics_bga_table_id", "game_statistics")
-    op.drop_index("game_statistics_user_id", "game_statistics")
+    op.drop_index("game_statistics_bga_user_id", "game_statistics")
     op.drop_table("game_statistics")
