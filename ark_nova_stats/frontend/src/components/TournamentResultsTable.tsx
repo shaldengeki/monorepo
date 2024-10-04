@@ -4,9 +4,10 @@ import GameStatistics from '../types/GameStatistics';
 import Table from './Table';
 import PageLink from './PageLink';
 import _ from 'lodash';
+import GameLog from '../types/GameLog';
 
 type TournamentResultsTableParams = {
-    statistics: GameStatistics[];
+    gameLogs: GameLog[];
 }
 
 type TournamentResultsTableRow = {
@@ -26,10 +27,10 @@ type TournamentPlayerRecord = {
     total: number,
 }
 
-const computeGameResults = (statistics: GameStatistics[]): TournamentPlayerRecord[] => {
-    // First, group by table ID, so we can detect ties.
-    const statsByGame = _.toPairs(_.groupBy(statistics, (stat) => stat.gameLog?.bgaTableId));
-    const gameResults = statsByGame.flatMap(([_unused, stats]) => {
+const computeGameResults = (gameLogs: GameLog[]): TournamentPlayerRecord[] => {
+    return gameLogs.flatMap((gameLog) => {
+        const stats: GameStatistics[] = gameLog.statistics || [];
+
         if (stats.filter((s) => s.rank === 1).length == stats.length) {
             // This is a tie.
             return stats.map((stat) => {
@@ -47,11 +48,10 @@ const computeGameResults = (statistics: GameStatistics[]): TournamentPlayerRecor
             };
         })
     });
-    return gameResults;
 }
 
-const computePlayerScores = (statistics: GameStatistics[]) => {
-    const gameResults = computeGameResults(statistics);
+const computePlayerScores = (gameLogs: GameLog[]) => {
+    const gameResults = computeGameResults(gameLogs);
     const groupedResults = _.toPairs(_.groupBy(gameResults, (obj) => obj.user));
     const totalResults = groupedResults.map(([_user, records]) => {
         return records.reduce(
@@ -87,12 +87,12 @@ const computePlayerScores = (statistics: GameStatistics[]) => {
     return sortedResults;
 }
 
-const TournamentResultsTable = ({statistics}: TournamentResultsTableParams) => {
+const TournamentResultsTable = ({gameLogs}: TournamentResultsTableParams) => {
     let innerContent = <p></p>;
-    if (!statistics || statistics.length < 1) {
+    if (!gameLogs || gameLogs.length < 1) {
         innerContent = <p>Error: tournament results could not be retrieved!</p>;
     } else {
-        const sortedResults = computePlayerScores(statistics);
+        const sortedResults = computePlayerScores(gameLogs);
         var rows: TournamentResultsTableRow[] = sortedResults.map((record: TournamentPlayerRecord) => {
             return {
                 "Player": <PageLink to={`/user/${record.user}`}>{record.user}</PageLink>,

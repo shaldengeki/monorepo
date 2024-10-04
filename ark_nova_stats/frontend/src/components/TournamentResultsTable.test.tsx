@@ -4,10 +4,11 @@ import { emptyUser } from '../types/User';
 import GameStatistics, { emptyGameStatistics } from '../types/GameStatistics';
 import {BrowserRouter} from 'react-router-dom'
 import TournamentResultsTable from './TournamentResultsTable';
+import GameLog, { emptyGameLog } from '../types/GameLog';
 
 it('should handle when no data was retrieved', async () => {
     render(
-        <TournamentResultsTable statistics={[]}/>
+        <TournamentResultsTable gameLogs={[]}/>
     );
     expect(await screen.findByText("Error: tournament results could not be retrieved!")).toBeInTheDocument();
 });
@@ -23,9 +24,13 @@ it('should handle a single win', async () => {
         },
         rank: 1,
     }
+    const log: GameLog = {
+        ...emptyGameLog,
+        statistics: [stat],
+    }
 
     render(
-        <TournamentResultsTable statistics={[stat]}/>,
+        <TournamentResultsTable gameLogs={[log]}/>,
         {wrapper: BrowserRouter},
     );
     expect(await screen.findByText("test-user-1")).toBeInTheDocument();
@@ -42,9 +47,13 @@ it('should handle a single loss', async () => {
         },
         rank: 2,
     }
+    const log: GameLog = {
+        ...emptyGameLog,
+        statistics: [stat],
+    }
 
     render(
-        <TournamentResultsTable statistics={[stat]}/>,
+        <TournamentResultsTable gameLogs={[log]}/>,
         {wrapper: BrowserRouter},
     );
     expect(await screen.findByText("test-user-1")).toBeInTheDocument();
@@ -74,9 +83,13 @@ it('should handle a pair of results', async () => {
             rank: 2,
         },
     ];
+    const log: GameLog = {
+        ...emptyGameLog,
+        statistics: stats,
+    };
 
     render(
-        <TournamentResultsTable statistics={stats}/>,
+        <TournamentResultsTable gameLogs={[log]}/>,
         {wrapper: BrowserRouter},
     );
     expect(await screen.findByText("test-user-1")).toBeInTheDocument();

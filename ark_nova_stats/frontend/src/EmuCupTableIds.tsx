@@ -114,6 +114,8 @@ const EmuCupTableIds = [
     568678667,
     569484530,
     569544385,
+    548196413,
+    552046795,
 ];
 
 export default EmuCupTableIds;
