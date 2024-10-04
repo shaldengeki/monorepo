@@ -10,6 +10,7 @@ import CardView from './views/CardView';
 import CardsView from './views/CardsView';
 import HomeView from './views/HomeView';
 import UserView from './views/UserView';
+import EmuCupView from './views/EmuCupView';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="user/:name" element={<UserView />} />
           <Route path="cards" element={<CardsView />} />
           <Route path="card/:id" element={<CardView />} />
+          <Route path="emu_cup" element={<EmuCupView />} />
         </Routes>
     </Router>
   );

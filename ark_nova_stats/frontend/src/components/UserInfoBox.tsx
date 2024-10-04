@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import User from '../types/User';
 import UserPlayCount from '../types/UserPlayCount';
 import Table from './Table';
+import PageLink from './PageLink';
 
 type UserInfoBoxParams = {
     user: User;
@@ -24,7 +24,7 @@ const UserInfoBox = ({user, commonlyPlayedCards}: UserInfoBoxParams) => {
     } else {
         const rows: UserPlayedTableRow[] = commonlyPlayedCards.map((userPlayCount: UserPlayCount) => {
             return {
-                "Card": <Link to={"/card/" + userPlayCount.card.bgaId}>{userPlayCount.card.name}</Link>,
+                "Card": <PageLink to={"/card/" + userPlayCount.card.bgaId}>{userPlayCount.card.name}</PageLink>,
                 "Count": <ul>{userPlayCount.count}</ul>,
             }
         });

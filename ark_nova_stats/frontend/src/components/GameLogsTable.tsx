@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import GameLog from '../types/GameLog';
 import User from '../types/User';
 import Table from './Table';
+import PageLink from './PageLink';
 
 type GameLogsTableParams = {
     gameLogs: GameLog[];
@@ -28,10 +28,10 @@ const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
 
         var rows = gameLogs.map((gameLog: GameLog) => {
             const rowAttrs: GameLogsTableRow = {
-                "BGA table": <Link to={"https://boardgamearena.com/table?table=" + gameLog.bgaTableId}>{gameLog.bgaTableId}</Link>,
+                "BGA table": <PageLink to={"https://boardgamearena.com/table?table=" + gameLog.bgaTableId}>{gameLog.bgaTableId}</PageLink>,
                 "Players": <ul>{gameLog.users.map((user: User) => {
                     const ratingChange = gameLog.gameRatingChanges.find((change) => { return change.user.bgaId === user.bgaId })
-                    return <li><Link to={`/user/${user.name}`}>{user.name} ({ratingChange?.priorElo} / {ratingChange?.priorArenaElo})</Link></li>;
+                    return <li><PageLink to={`/user/${user.name}`}>{user.name} ({ratingChange?.priorElo} / {ratingChange?.priorArenaElo})</PageLink></li>;
                 })}</ul>,
             }
             if (currentPlayer !== undefined) {

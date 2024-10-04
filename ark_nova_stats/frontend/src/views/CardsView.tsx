@@ -1,13 +1,13 @@
 import React from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery } from '@apollo/client/react/hooks';
-import { Link } from 'react-router-dom';
 
 import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import Card from '../types/Card';
 import User from '../types/User';
 import Table from '../components/Table';
+import PageLink from '../components/PageLink';
 
 export const CARDS_VIEW_QUERY = gql`
     query FetchCards {
@@ -44,8 +44,8 @@ const CardsView = () => {
             const mostPlayed = data.cards.find((c: any) => {return c.bgaId === card.bgaId}).mostPlayedBy[0];
             const mostPlayedUser: User = mostPlayed.user;
             return {
-                "Name": <Link to={`/card/${card.bgaId}`}>{card.name}</Link>,
-                "Most played by": <Link to={`user/${mostPlayedUser.name}`}>{mostPlayedUser.name} ({mostPlayed.count})</Link>
+                "Name": <PageLink to={`/card/${card.bgaId}`}>{card.name}</PageLink>,
+                "Most played by": <PageLink to={`user/${mostPlayedUser.name}`}>{mostPlayedUser.name} ({mostPlayed.count})</PageLink>
             }
         });
         innerContent = (

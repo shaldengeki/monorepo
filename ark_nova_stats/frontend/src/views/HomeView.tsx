@@ -91,7 +91,7 @@ const HomeView = () => {
 
     return (
         <PageContainer>
-            <PageTitle><Link to={'/home'}>Home</Link></PageTitle>
+            <PageTitle linkTo={'/home'}>Home</PageTitle>
             {innerContent}
         </PageContainer>
     )

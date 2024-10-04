@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import {getDate} from '../DateUtils';
 import GameLogArchive from '../types/GameLogArchive';
 import Table from './Table';
+import PageLink from './PageLink';
 
 type GameLogArchivesTableParams = {
     gameLogArchives: GameLogArchive[];
@@ -26,11 +26,11 @@ const GameLogArchivesTable = ({gameLogArchives}: GameLogArchivesTableParams) => 
         innerContent = <p>Error: game log archives could not be retrieved!</p>;
     } else {
         var rows: GameLogArchivesTableRow[] = gameLogArchives.map((gameLogArchive: GameLogArchive) => {
-            let latestTableDescription = <Link to={"https://boardgamearena.com/table?table=" + gameLogArchive.maxGameLog.bgaTableId}>
+            let latestTableDescription = <PageLink to={"https://boardgamearena.com/table?table=" + gameLogArchive.maxGameLog.bgaTableId}>
                 {gameLogArchive.maxGameLog.bgaTableId}
-            </Link>;
+            </PageLink>;
             return {
-                "Link": <Link to={gameLogArchive.url}>Download</Link>,
+                "Link": <PageLink to={gameLogArchive.url}>Download</PageLink>,
                 "Date": <p>{getDate(gameLogArchive.createdAt)}</p>,
                 "Type": <p>{gameLogArchive.archiveType}</p>,
                 "Games": <p>{gameLogArchive.numGameLogs}</p>,

@@ -5,6 +5,8 @@ type GameLog = {
     id: number;
     log: string;
     bgaTableId: number;
+    start?: number;
+    end?: number;
     users: User[];
     gameRatingChanges: UserRatingChange[];
 }
@@ -13,6 +15,8 @@ export const emptyGameLog: GameLog = {
     id: 0,
     log: "",
     bgaTableId: 0,
+    start: 0,
+    end: 0,
     users: [],
     gameRatingChanges: [],
 }

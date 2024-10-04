@@ -71,7 +71,7 @@ const UserView = () => {
         const recentGameLogs: GameLog[] = data.user.recentGameLogs;
         innerContent = (
             <div>
-                <PageTitle><Link to={`/user/${user.name}`} >User: {user.name}</Link></PageTitle>
+                <PageTitle linkTo={`/user/${user.name}`}>User: {user.name}</PageTitle>
                 <div className={"py-2"}>
                     <UserInfoBox user={user} commonlyPlayedCards={commonlyPlayedCards} />
                 </div>

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import Card from '../types/Card';
 import UserPlayCount from '../types/UserPlayCount';
 import Table from './Table';
+import PageLink from './PageLink';
 
 type CardInfoBoxParams = {
     card: Card;
@@ -24,7 +24,7 @@ const CardInfoBox = ({card, mostPlayedBy}: CardInfoBoxParams) => {
     } else {
         const rows: CardPlayedTableRow[] = mostPlayedBy.map((userPlayCount: UserPlayCount) => {
             return {
-                "User": <Link to={"/user/" + userPlayCount.user.name}>{userPlayCount.user.name}</Link>,
+                "User": <PageLink to={"/user/" + userPlayCount.user.name}>{userPlayCount.user.name}</PageLink>,
                 "Count": <ul>{userPlayCount.count}</ul>,
             }
         });

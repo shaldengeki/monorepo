@@ -71,7 +71,7 @@ const CardView = () => {
         const recentGameLogs: GameLog[] = data.card.recentGameLogs;
         innerContent = (
             <div>
-                <PageTitle><Link to={`/card/${card.bgaId}`} >Card: {card.name}</Link></PageTitle>
+                <PageTitle linkTo={`/card/${card.bgaId}`}>Card: {card.name}</PageTitle>
                 <div className={"py-2"}>
                     <CardInfoBox card={card} mostPlayedBy={mostPlayedBy} />
                 </div>
