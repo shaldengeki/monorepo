@@ -26,16 +26,29 @@ type TournamentPlayerRecord = {
     total: number,
 }
 
-const computeGameResults = (statistics: GameStatistics[]) => {
-    const sortedInputStats = [...statistics].sort((a, b) => {
-        return (a.user.bgaId < b.user.bgaId) ? -1 : (a.user.bgaId === b.user.bgaId) ? 0 : 1;
-    })
-    const transformedData = sortedInputStats.map((stat: GameStatistics) => {
-        return {user: stat.user.name, win: Boolean(stat.rank === 1), loss: Boolean(stat.rank !== 1)};
-    })
-    const groupedData = _.groupBy(transformedData, (obj) => obj.user);
-    const groupedEntries = _.toPairs(groupedData);
-    const summedData = groupedEntries.map(([user, records]) => {
+const computeGameResults = (statistics: GameStatistics[]): TournamentPlayerRecord[] => {
+    // First, group by table ID, so we can detect ties.
+    const statsByGame = _.toPairs(_.groupBy(statistics, (stat) => stat.gameLog?.bgaTableId));
+    const gameResults = statsByGame.flatMap(([_unused, stats]) => {
+        if (stats.filter((s) => s.rank === 1).length == stats.length) {
+            // This is a tie.
+            return stats.map((stat) => {
+                return {user: stat.user.name, wins: 0, losses: 0, ties: 1, total: 0};
+            })
+        }
+        // Not a tie; we can use the ranks directly.
+        // TODO: specify the total here directly, and just add it up later.
+        return stats.map((stat) => {
+            return {user: stat.user.name, wins: + Boolean(stat.rank === 1), losses: + Boolean(stat.rank > 1), ties: 0, total: 0};
+        })
+    });
+    return gameResults;
+}
+
+const computePlayerScores = (statistics: GameStatistics[]) => {
+    const gameResults = computeGameResults(statistics);
+    const groupedResults = _.toPairs(_.groupBy(gameResults, (obj) => obj.user));
+    const totalResults = groupedResults.map(([user, records]) => {
         const initialRecord: TournamentPlayerRecord = {
             user: user,
             wins: 0,
@@ -45,11 +58,13 @@ const computeGameResults = (statistics: GameStatistics[]) => {
         }
         return (records || []).reduce(
             (prev, curr) => {
-                if (curr.win) {
-                    prev.wins++;
+                prev.wins += curr.wins;
+                prev.losses += curr.losses;
+                prev.ties += curr.ties;
+
+                if (curr.wins) {
                     prev.total++;
-                } else if (curr.loss) {
-                    prev.losses++;
+                } else if (curr.losses) {
                     prev.total--;
                 }
                 return prev;
@@ -57,8 +72,24 @@ const computeGameResults = (statistics: GameStatistics[]) => {
             initialRecord
         )
     })
-    const sortedResults = summedData.sort((a, b) => {
-        return (a.total > b.total) ? -1 : (a.total === b.total) ? 0 : 1
+    const sortedResults = totalResults.sort((a, b) => {
+        // Order by total score first.
+        if (a.total > b.total) {
+            return -1
+        }
+        if (a.total < b.total ) {
+            return 1
+        }
+        // Tiebreak by total wins.
+        if (a.wins > b.wins) {
+            return -1
+        }
+        if (a.wins < b.wins) {
+            return 1
+        }
+        // Tiebreak by time violations.
+        // We can't do this (yet); we don't expose time data.
+        return 0;
     });
 
     return sortedResults;
@@ -69,7 +100,7 @@ const TournamentResultsTable = ({statistics}: TournamentResultsTableParams) => {
     if (!statistics || statistics.length < 1) {
         innerContent = <p>Error: tournament results could not be retrieved!</p>;
     } else {
-        const sortedResults = computeGameResults(statistics);
+        const sortedResults = computePlayerScores(statistics);
         var rows: TournamentResultsTableRow[] = sortedResults.map((record: TournamentPlayerRecord) => {
             return {
                 "Player": <PageLink to={`/user/${record.user}`}>{record.user}</PageLink>,

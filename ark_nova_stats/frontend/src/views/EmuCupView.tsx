@@ -41,6 +41,9 @@ export const EMU_CUP_VIEW_QUERY = gql`
                     bgaId
                     name
                 }
+              	gameLog {
+                  bgaTableId
+                }
                 rank
                 score
                 thinkingTime
