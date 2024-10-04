@@ -11,7 +11,7 @@ import GameLogsTable from '../components/GameLogsTable';
 import PageLink from '../components/PageLink';
 
 export const EMU_CUP_VIEW_QUERY = gql`
-    query EmuCupView($tableIds: [String]) {
+    query EmuCupView($tableIds: [Int]) {
         gameLogs(bgaTableIds: $tableIds) {
             bgaTableId
             users {
@@ -125,8 +125,8 @@ const EmuCupView = () => {
             innerContent = <p>No games found!</p>
         } else {
             // TODO
-            const statistics: GameStatistics[] = data.gameLogs.map((gameLog: any) => {return gameLog.statistics}).flatMap();
-            const sortedGameLogs = gameLogs.sort((a, b) => { return ((a.end || 0) > (b.end || 0)) ? -1 : (a.end == b.end) ? 0 : 1 });
+            const statistics: GameStatistics[] = data.gameLogs.flatMap((gameLog: any) => {return gameLog.statistics});
+            const sortedGameLogs = gameLogs.toSorted((a, b) => { return ((a.end || 0) > (b.end || 0)) ? -1 : (a.end == b.end) ? 0 : 1 });
             innerContent = (<div>
                 <div className={"py-2"}>
                     <h2 className={"text-xl"}>Results:</h2>
@@ -147,7 +147,7 @@ const EmuCupView = () => {
     return (
         <PageContainer>
             <div>
-                <PageTitle>Emu Cup</PageTitle>
+                <PageTitle linkTo={'/emu_cup'}>Emu Cup</PageTitle>
                 <p>Not sure what this is? <PageLink to={'https://www.youtube.com/watch?v=Rf_iUSZZqgM'}>See the first 4.5min of this video.</PageLink></p>
                 {innerContent}
             </div>
