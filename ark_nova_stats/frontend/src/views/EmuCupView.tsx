@@ -1,11 +1,10 @@
 import React from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery } from '@apollo/client/react/hooks';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
-// import Table from '../components/Table';
 import EmuCupTableIds from '../EmuCupTableIds';
 import GameLog from '../types/GameLog';
 import GameStatistics from '../types/GameStatistics';
@@ -149,6 +148,7 @@ const EmuCupView = () => {
         <PageContainer>
             <div>
                 <PageTitle>Emu Cup</PageTitle>
+                <p>Not sure what this is? <Link to={'https://www.youtube.com/watch?v=Rf_iUSZZqgM'}>See the first 4.5min of this video.</Link></p>
                 {innerContent}
             </div>
         </PageContainer>

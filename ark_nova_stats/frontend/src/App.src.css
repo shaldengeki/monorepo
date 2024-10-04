@@ -40,3 +40,7 @@
     transform: rotate(360deg);
   }
 }
+
+.page-contents a {
+  color: #61dafb;
+}
