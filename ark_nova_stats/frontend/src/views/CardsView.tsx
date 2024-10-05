@@ -45,7 +45,7 @@ const CardsView = () => {
             const mostPlayedUser: User = mostPlayed.user;
             return {
                 "Name": <PageLink to={`/card/${card.bgaId}`}>{card.name}</PageLink>,
-                "Most played by": <PageLink to={`user/${mostPlayedUser.name}`}>{mostPlayedUser.name} ({mostPlayed.count})</PageLink>
+                "Most played by": <PageLink to={`/user/${mostPlayedUser.name}`}>{mostPlayedUser.name} ({mostPlayed.count})</PageLink>
             }
         });
         innerContent = (
