@@ -14,7 +14,8 @@ it('should render the name of the view', async () => {
     },
     result: {
       data: {
-        gameLogs: null,
+        gameStatistics: null,
+        gameRatings: null,
       }
     }
   }
@@ -29,7 +30,7 @@ it('should render the name of the view', async () => {
 });
 
 
-it('should render with no game logs present', async () => {
+it('should render with no game statistics present', async () => {
     const testEmuCupQueryMock = {
       request: {
         query: EMU_CUP_VIEW_QUERY,
@@ -37,7 +38,7 @@ it('should render with no game logs present', async () => {
     },
       result: {
         data: {
-            gameLogs: [],
+            gameStatistics: [],
         }
       }
     }

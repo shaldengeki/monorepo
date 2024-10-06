@@ -6,19 +6,6 @@ import PageLink from './PageLink';
 import _ from 'lodash';
 import GameLog from '../types/GameLog';
 
-type TournamentResultsTableParams = {
-    gameLogs: GameLog[];
-}
-
-type TournamentResultsTableRow = {
-    "Player": React.JSX.Element,
-    "Wins": React.JSX.Element,
-    "Losses": React.JSX.Element,
-    "Ties": React.JSX.Element,
-    "Overall": React.JSX.Element,
-
-}
-
 type TournamentPlayerRecord = {
     user: string,
     wins: number,
@@ -27,10 +14,12 @@ type TournamentPlayerRecord = {
     total: number,
 }
 
-const computeGameResults = (gameLogs: GameLog[]): TournamentPlayerRecord[] => {
-    return gameLogs.flatMap((gameLog) => {
-        const stats: GameStatistics[] = gameLog.statistics || [];
+const computeGameResults = (statistics: GameStatistics[]): TournamentPlayerRecord[] => {
+    const groupedStatistics = _.toPairs(_.groupBy(statistics, (stat) => {
+        return stat.bgaTableId;
+    }))
 
+    return groupedStatistics.flatMap(([_tableId, stats]) => {
         if (stats.filter((s) => s.rank === 1).length == stats.length) {
             // This is a tie.
             return stats.map((stat) => {
@@ -50,8 +39,8 @@ const computeGameResults = (gameLogs: GameLog[]): TournamentPlayerRecord[] => {
     });
 }
 
-const computePlayerScores = (gameLogs: GameLog[]) => {
-    const gameResults = computeGameResults(gameLogs);
+const computePlayerScores = (statistics: GameStatistics[]) => {
+    const gameResults = computeGameResults(statistics);
     const groupedResults = _.toPairs(_.groupBy(gameResults, (obj) => obj.user));
     const totalResults = groupedResults.map(([_user, records]) => {
         return records.reduce(
@@ -87,12 +76,25 @@ const computePlayerScores = (gameLogs: GameLog[]) => {
     return sortedResults;
 }
 
-const TournamentResultsTable = ({gameLogs}: TournamentResultsTableParams) => {
+type TournamentResultsTableParams = {
+    statistics: GameStatistics[];
+}
+
+type TournamentResultsTableRow = {
+    "Player": React.JSX.Element,
+    "Wins": React.JSX.Element,
+    "Losses": React.JSX.Element,
+    "Ties": React.JSX.Element,
+    "Overall": React.JSX.Element,
+
+}
+
+const TournamentResultsTable = ({statistics}: TournamentResultsTableParams) => {
     let innerContent = <p></p>;
-    if (!gameLogs || gameLogs.length < 1) {
+    if (!statistics || statistics.length < 1) {
         innerContent = <p>Error: tournament results could not be retrieved!</p>;
     } else {
-        const sortedResults = computePlayerScores(gameLogs);
+        const sortedResults = computePlayerScores(statistics);
         var rows: TournamentResultsTableRow[] = sortedResults.map((record: TournamentPlayerRecord) => {
             return {
                 "Player": <PageLink to={`/user/${record.user}`}>{record.user}</PageLink>,
