@@ -13,7 +13,10 @@ from ark_nova_stats.api.gql.types.game_log import (
     stats_field,
     submit_game_logs_field,
 )
-from ark_nova_stats.api.gql.types.game_rating import submit_game_ratings_field
+from ark_nova_stats.api.gql.types.game_rating import (
+    fetch_game_ratings_field,
+    submit_game_ratings_field,
+)
 from ark_nova_stats.models import (
     Card,
     GameLog,
@@ -32,6 +35,7 @@ def Schema(app: flask.Flask):
                 "gameLog": game_log_field(GameLog),
                 "gameLogs": game_logs_field(GameLog),
                 "gameStatistics": fetch_game_statistics_field(GameStatistics),
+                "gameRatings": fetch_game_ratings_field(GameRating),
                 "recentGameLogs": recent_game_logs_field(GameLog),
                 "recentGameLogArchives": recent_game_log_archives_field(GameLogArchive),
                 "stats": stats_field(GameLog, User),
