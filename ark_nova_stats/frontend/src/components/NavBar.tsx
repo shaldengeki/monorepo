@@ -2,6 +2,26 @@ import React from 'react';
 import logo192 from './logo192.png';
 import { Link } from 'react-router-dom';
 
+type NavBarElementProps = {
+    link?: string;
+    text: string;
+}
+
+const NavBarElement = (props: NavBarElementProps) => {
+    let innerContent = <p>{props.text}</p>
+    if (props.link !== undefined) {
+        innerContent = (<Link to={props.link}>
+            <p>{props.text}</p>
+        </Link>);
+    }
+
+    return (
+        <div className="dark:hover:text-slate-300 hover:text-slate-500">
+            {innerContent}
+        </div>
+    );
+}
+
 type NavBarProps = {
     className?: string;
 }
@@ -12,16 +32,9 @@ const NavBar = (props: NavBarProps) => {
             <div className="max-w-screen-2xl mx-auto">
                 <div className="py-4 mx-4 lg:mx-0 lg:px-8 relative flex items-center gap-2 dark:text-slate-400">
                     <img className="flex-none h-6 inline" src={logo192} alt="Fitbit app icon" />
-                    <div className="dark:hover:text-slate-300 hover:text-slate-500">
-                        <Link to={'/'}>
-                            <p className="font-bold">Ark Nova Games Database</p>
-                        </Link>
-                    </div>
-                    <div className="dark:hover:text-slate-300 hover:text-slate-500">
-                        <Link to={'/cards'}>
-                            <p>Cards</p>
-                        </Link>
-                    </div>
+                    <NavBarElement link={'/'} text={"Ark Nova Games Database"} />
+                    <NavBarElement link={'/emu_cup'} text={"Emu Cup"} />
+                    <NavBarElement link={'/cards'} text={"Cards"} />
                 </div>
             </div>
         </div>
