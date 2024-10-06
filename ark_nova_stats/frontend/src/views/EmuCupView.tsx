@@ -11,6 +11,14 @@ import GameStatistics from '../types/GameStatistics';
 
 export const EMU_CUP_VIEW_QUERY = gql`
     query EmuCupView($tableIds: [Int]!) {
+        gameRatings(bgaTableIds: $tableIds) {
+            user {
+                bgaId
+                name
+            }
+            priorElo
+            newElo
+        }
         gameStatistics(bgaTableIds: $tableIds) {
             user {
                 bgaId
