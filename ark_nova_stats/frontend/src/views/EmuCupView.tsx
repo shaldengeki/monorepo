@@ -62,13 +62,11 @@ const EmuCupView = () => {
     }
 
     return (
-        <PageContainer>
             <div>
                 <PageTitle linkTo={'/emu_cup'}>Emu Cup</PageTitle>
                 <p>Not sure what this is? <PageLink to={'https://www.youtube.com/watch?v=Rf_iUSZZqgM'}>See the first 4.5min of this video.</PageLink></p>
                 {innerContent}
             </div>
-        </PageContainer>
     )
 }
 
