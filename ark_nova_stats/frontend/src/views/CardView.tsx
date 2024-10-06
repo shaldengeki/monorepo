@@ -84,9 +84,9 @@ const CardView = () => {
     }
 
     return (
-        <PageContainer>
+        <div>
             {innerContent}
-        </PageContainer>
+        </div>
     )
 }
 

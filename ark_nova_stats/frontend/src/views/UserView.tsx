@@ -84,9 +84,9 @@ const UserView = () => {
     }
 
     return (
-        <PageContainer>
+        <div>
             {innerContent}
-        </PageContainer>
+        </div>
     )
 }
 

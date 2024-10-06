@@ -49,23 +49,21 @@ const CardsView = () => {
             }
         });
         innerContent = (
-            <div>
-                <PageTitle>Cards</PageTitle>
-                <div className={"py-2"}>
-                    <Table<CardsTableRow>
-                        rows={cardRows}
-                        key="cards"
-                        showFilters={true}
-                    />
-                </div>
+            <div className={"py-2"}>
+                <Table<CardsTableRow>
+                    rows={cardRows}
+                    key="cards"
+                    showFilters={true}
+                />
             </div>
         );
     }
 
     return (
-        <PageContainer>
+        <div>
+            <PageTitle>Cards</PageTitle>
             {innerContent}
-        </PageContainer>
+        </div>
     )
 }
 
