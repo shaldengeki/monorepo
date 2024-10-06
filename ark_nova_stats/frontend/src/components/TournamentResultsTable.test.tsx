@@ -8,7 +8,7 @@ import GameLog, { emptyGameLog } from '../types/GameLog';
 
 it('should handle when no data was retrieved', async () => {
     render(
-        <TournamentResultsTable gameLogs={[]}/>
+        <TournamentResultsTable statistics={[]}/>
     );
     expect(await screen.findByText("Error: tournament results could not be retrieved!")).toBeInTheDocument();
 });
@@ -24,13 +24,8 @@ it('should handle a single win', async () => {
         },
         rank: 1,
     }
-    const log: GameLog = {
-        ...emptyGameLog,
-        statistics: [stat],
-    }
-
     render(
-        <TournamentResultsTable gameLogs={[log]}/>,
+        <TournamentResultsTable statistics={[stat]}/>,
         {wrapper: BrowserRouter},
     );
     expect(await screen.findByText("test-user-1")).toBeInTheDocument();
@@ -47,13 +42,9 @@ it('should handle a single loss', async () => {
         },
         rank: 2,
     }
-    const log: GameLog = {
-        ...emptyGameLog,
-        statistics: [stat],
-    }
 
     render(
-        <TournamentResultsTable gameLogs={[log]}/>,
+        <TournamentResultsTable statistics={[stat]}/>,
         {wrapper: BrowserRouter},
     );
     expect(await screen.findByText("test-user-1")).toBeInTheDocument();
@@ -83,13 +74,9 @@ it('should handle a pair of results', async () => {
             rank: 2,
         },
     ];
-    const log: GameLog = {
-        ...emptyGameLog,
-        statistics: stats,
-    };
 
     render(
-        <TournamentResultsTable gameLogs={[log]}/>,
+        <TournamentResultsTable statistics={stats}/>,
         {wrapper: BrowserRouter},
     );
     expect(await screen.findByText("test-user-1")).toBeInTheDocument();
