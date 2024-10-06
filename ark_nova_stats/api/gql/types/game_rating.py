@@ -170,7 +170,7 @@ def fetch_game_ratings(
 ) -> list[GameRatingModel]:
     query = game_rating_model.query
     table_ids = [int(i) for i in args["bgaTableIds"]]
-    query.where(game_rating_model.bga_table_id.in_(table_ids))
+    query = query.where(game_rating_model.bga_table_id.in_(table_ids))
 
     return query.order_by(asc(game_rating_model.bga_table_id)).all()
 
