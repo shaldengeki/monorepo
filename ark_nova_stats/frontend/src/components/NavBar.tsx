@@ -37,7 +37,7 @@ const NavBar = (props: NavBarProps) => {
     return (
         <div className="sticky top-0 z-40 w-full backdrop-blur flex-none lg:border-b lg:border-slate-900/10 lg:dark:border-slate-50/[0.06] bg-white/95 supports-backdrop-blur:bg-white/60 dark:bg-transparent">
             <div className="max-w-screen-2xl mx-auto">
-                <div className="py-4 mx-4 lg:mx-0 lg:px-8 relative flex items-center gap-2 dark:text-slate-400">
+                <div className="py-4 mx-4 lg:mx-0 lg:pr-8 relative flex items-center gap-4 dark:text-slate-400">
                     <NavBarElement link={'/'} className={"font-bold"}>
                         <img className="flex-none h-6 inline" src={logo192} alt="Fitbit app icon" />
                         <span>Ark Nova Games Database</span>
