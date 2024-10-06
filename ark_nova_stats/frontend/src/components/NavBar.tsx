@@ -3,11 +3,15 @@ import logo192 from './logo192.png';
 import { Link } from 'react-router-dom';
 
 type NavBarElementProps = {
-    link?: string;
     text: string;
+    link?: string;
+    className?: string;
 }
 
 const NavBarElement = (props: NavBarElementProps) => {
+    const defaultClassName = "dark:hover:text-slate-300 hover:text-slate-500";
+    const actualClassName = props.className ? defaultClassName + " " + props.className : defaultClassName;
+
     let innerContent = <p>{props.text}</p>
     if (props.link !== undefined) {
         innerContent = (<Link to={props.link}>
@@ -16,7 +20,7 @@ const NavBarElement = (props: NavBarElementProps) => {
     }
 
     return (
-        <div className="dark:hover:text-slate-300 hover:text-slate-500">
+        <div className={actualClassName}>
             {innerContent}
         </div>
     );
@@ -32,7 +36,7 @@ const NavBar = (props: NavBarProps) => {
             <div className="max-w-screen-2xl mx-auto">
                 <div className="py-4 mx-4 lg:mx-0 lg:px-8 relative flex items-center gap-2 dark:text-slate-400">
                     <img className="flex-none h-6 inline" src={logo192} alt="Fitbit app icon" />
-                    <NavBarElement link={'/'} text={"Ark Nova Games Database"} />
+                    <NavBarElement link={'/'} text={"Ark Nova Games Database"} className={"font-bold"} />
                     <NavBarElement link={'/emu_cup'} text={"Emu Cup"} />
                     <NavBarElement link={'/cards'} text={"Cards"} />
                 </div>
