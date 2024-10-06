@@ -9,6 +9,7 @@ from graphql import (
     GraphQLObjectType,
     GraphQLString,
 )
+from sqlalchemy import asc
 
 from ark_nova_stats.api.gql.types.game_log import game_log_type, user_type
 from ark_nova_stats.bga_log_parser.game_ratings import parse_ratings
@@ -161,4 +162,33 @@ def submit_game_ratings_field(
             ),
         },
         resolve=lambda root, info, **args: submit_game_ratings(game_rating_model, args),
+    )
+
+
+def fetch_game_ratings(
+    game_rating_model: Type[GameRatingModel], args: dict
+) -> list[GameRatingModel]:
+    query = game_rating_model.query
+    table_ids = [int(i) for i in args["bgaTableIds"]]
+    query.where(game_rating_model.bga_table_id.in_(table_ids))
+
+    return query.order_by(asc(game_rating_model.bga_table_id)).all()
+
+
+fetch_game_ratings_filters: dict[str, GraphQLArgument] = {
+    "bgaTableIds": GraphQLArgument(
+        GraphQLNonNull(GraphQLList(GraphQLInt)),
+        description="List of BGA table IDs to fetch.",
+    ),
+}
+
+
+def fetch_game_ratings_field(
+    game_rating_model: Type[GameRatingModel],
+) -> GraphQLField:
+    return GraphQLField(
+        GraphQLNonNull(GraphQLList(game_rating_type)),
+        description="Retrieves game ratings for one or more games.",
+        args=fetch_game_ratings_filters,
+        resolve=lambda root, info, **args: fetch_game_ratings(game_rating_model, args),
     )

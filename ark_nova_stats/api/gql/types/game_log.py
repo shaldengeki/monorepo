@@ -1414,3 +1414,34 @@ game_statistics_type = GraphQLObjectType(
     description="End-game statistics for a game.",
     fields=game_statistics_fields,
 )
+
+
+def fetch_game_statistics(
+    game_statistics_model: Type[GameStatisticsModel], args: dict
+) -> list[GameStatisticsModel]:
+    query = game_statistics_model.query
+    table_ids = [int(i) for i in args["bgaTableIds"]]
+    query.where(game_statistics_model.bga_table_id.in_(table_ids))
+
+    return query.order_by(asc(game_statistics_model.bga_table_id)).all()
+
+
+fetch_game_statistics_filters: dict[str, GraphQLArgument] = {
+    "bgaTableIds": GraphQLArgument(
+        GraphQLNonNull(GraphQLList(GraphQLInt)),
+        description="List of BGA table IDs to fetch.",
+    ),
+}
+
+
+def fetch_game_statistics_field(
+    game_statistics_model: Type[GameStatisticsModel],
+) -> GraphQLField:
+    return GraphQLField(
+        GraphQLNonNull(GraphQLList(game_statistics_type)),
+        description="Retrieves game statistics for one or more games.",
+        args=fetch_game_statistics_filters,
+        resolve=lambda root, info, **args: fetch_game_statistics(
+            game_statistics_model, args
+        ),
+    )
