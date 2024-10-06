@@ -36,7 +36,7 @@ const renderRow = (row: any, idx: number, cols: Array<string>, tablePrefix: stri
   return (
         <tr key={rowPrefix}>
             {cols.map((col) => {
-              return <td key={`${rowPrefix}-col-${col}`} className="border px-4 py-2">{row[col]}</td>
+              return <td key={`${rowPrefix}-col-${col}`} className="border px-4 py-2 truncate">{row[col]}</td>
             })}
         </tr>
   )
