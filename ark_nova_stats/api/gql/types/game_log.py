@@ -1421,7 +1421,7 @@ def fetch_game_statistics(
 ) -> list[GameStatisticsModel]:
     query = game_statistics_model.query
     table_ids = [int(i) for i in args["bgaTableIds"]]
-    query.where(game_statistics_model.bga_table_id.in_(table_ids))
+    query = query.where(game_statistics_model.bga_table_id.in_(table_ids))
 
     return query.order_by(asc(game_statistics_model.bga_table_id)).all()
 
