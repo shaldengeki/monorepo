@@ -31,7 +31,22 @@ const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
                 "BGA table": <PageLink to={"https://boardgamearena.com/table?table=" + gameLog.bgaTableId}>{gameLog.bgaTableId}</PageLink>,
                 "Players": <ul>{gameLog.users.map((user: User) => {
                     const ratingChange = gameLog.gameRatingChanges.find((change) => { return change.user.bgaId === user.bgaId })
-                    return <li><PageLink to={`/user/${user.name}`}>{user.name} ({ratingChange?.priorElo} / {ratingChange?.priorArenaElo})</PageLink></li>;
+                    const priorElos = [];
+                    let linkTextParts = [user.name];
+                    if (ratingChange?.priorElo !== undefined) {
+                        priorElos.push(ratingChange.priorElo)
+                        if (ratingChange.priorArenaElo !== undefined) {
+                            priorElos.push(ratingChange.priorArenaElo);
+                        }
+
+                        linkTextParts.push("(" + priorElos.join(" / ") + ")");
+                    }
+
+                    return <li>
+                        <PageLink to={`/user/${user.name}`}>
+                            {linkTextParts.join(" ")}
+                        </PageLink>
+                    </li>;
                 })}</ul>,
             }
             if (currentPlayer !== undefined) {
