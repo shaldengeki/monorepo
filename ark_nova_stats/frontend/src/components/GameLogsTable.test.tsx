@@ -49,6 +49,24 @@ it('should handle a single game log with rating changes', async () => {
     expect(await screen.findByText("3846")).toBeInTheDocument();
 });
 
+it('should not render arena ELO when it is null', async () => {
+    const gameLogWithRatingChanges: GameLog = {
+        ...gameLog,
+        gameRatingChanges: [
+            {
+                ...emptyUserRatingChange,
+                priorElo: 1823,
+                priorArenaElo: null,
+            },
+        ]
+    }
+
+    render(
+        <GameLogsTable gameLogs={[gameLogWithRatingChanges]}/>
+    );
+    expect(await screen.findByText("1823")).toBeInTheDocument();
+});
+
 it('should render ELO changes when current player is set', async () => {
     const currentPlayer: User = {
         ...emptyUser,
