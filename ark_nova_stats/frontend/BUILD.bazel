@@ -119,6 +119,7 @@ jest_test(
         "src/components/DatabaseStatistics.test.js",
         "src/components/GameLogArchivesTable.js",
         "src/components/GameLogsTable.js",
+        "src/components/LoadingSpinner.js",
         "src/components/NavBar.js",
         "src/components/PageContainer.js",
         "src/components/PageLink.js",
