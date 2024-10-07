@@ -2,12 +2,12 @@ import React from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery } from '@apollo/client/react/hooks';
 
-import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import EmuCupTableIds from '../EmuCupTableIds';
 import PageLink from '../components/PageLink';
 import TournamentResultsTable from '../components/TournamentResultsTable';
 import GameStatistics from '../types/GameStatistics';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export const EMU_CUP_VIEW_QUERY = gql`
     query EmuCupView($tableIds: [Int]!) {
@@ -40,7 +40,7 @@ const EmuCupView = () => {
 
 
     let innerContent = <p></p>;
-    if (loading) innerContent = <p>Loading...</p>;
+    if (loading) innerContent = <LoadingSpinner />;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
         const statistics: GameStatistics[] = data.gameStatistics;

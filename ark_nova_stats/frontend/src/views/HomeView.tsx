@@ -1,9 +1,7 @@
 import React from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery } from '@apollo/client/react/hooks';
-import { Link } from 'react-router-dom';
 
-import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import DatabaseStatistics from '../components/DatabaseStatistics';
 import GameLogsTable from '../components/GameLogsTable';
@@ -11,6 +9,7 @@ import GameLogArchivesTable from '../components/GameLogArchivesTable';
 import Stats from '../types/Stats';
 import GameLog from '../types/GameLog';
 import GameLogArchive from '../types/GameLogArchive';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export const HOME_VIEW_QUERY = gql`
     query FetchHome {
@@ -64,7 +63,7 @@ const HomeView = () => {
 
 
     let innerContent = <p></p>;
-    if (loading) innerContent = <p>Loading...</p>;
+    if (loading) innerContent = <LoadingSpinner />;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
         var stats: Stats = data.stats;

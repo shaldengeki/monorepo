@@ -1,15 +1,15 @@
 import React from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery } from '@apollo/client/react/hooks';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import UserInfoBox from '../components/UserInfoBox';
 import GameLogsTable from '../components/GameLogsTable';
 import GameLog from '../types/GameLog';
 import User from '../types/User';
 import UserPlayCount from '../types/UserPlayCount';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export const USER_VIEW_QUERY = gql`
     query FetchUser($name: String!) {
@@ -63,7 +63,7 @@ const UserView = () => {
 
 
     let innerContent = <p></p>;
-    if (loading) innerContent = <p>Loading...</p>;
+    if (loading) innerContent = <LoadingSpinner />;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
         const user: User = data.user;

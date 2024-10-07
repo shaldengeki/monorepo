@@ -2,12 +2,12 @@ import React from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery } from '@apollo/client/react/hooks';
 
-import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import Card from '../types/Card';
 import User from '../types/User';
 import Table from '../components/Table';
 import PageLink from '../components/PageLink';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export const CARDS_VIEW_QUERY = gql`
     query FetchCards {
@@ -36,7 +36,7 @@ const CardsView = () => {
 
 
     let innerContent = <p></p>;
-    if (loading) innerContent = <p>Loading...</p>;
+    if (loading) innerContent = <LoadingSpinner />;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
         const cards: Card[] = data.cards;
