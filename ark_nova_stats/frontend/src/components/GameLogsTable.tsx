@@ -45,7 +45,6 @@ const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
                     return <li>
                         <PageLink to={`/user/${user.name}`}>
                             {linkTextParts.join(" ")}
-                            {user.name} ({ratingChange?.priorElo} / {ratingChange?.priorArenaElo})
                         </PageLink>
                     </li>;
                 })}</ul>,
