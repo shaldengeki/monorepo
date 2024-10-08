@@ -30,15 +30,15 @@ class CardRecord:
 
 
 @dataclasses.dataclass
-class CardRawWinRateOutput:
+class TopLevelStatsOutput:
     rank: int
     card: str
-    rate: float
+    rate: int
     plays: int
-    rate_bayes: float
+    rate_bayes: int
 
 
-class CardRawWinRate:
+class TopLevelStats:
     def __init__(self):
         self.all_cards: Counter[str] = Counter()
         self.winner_cards: Counter[str] = Counter()
@@ -93,35 +93,30 @@ class CardRawWinRate:
 
         return game_cards
 
-    def output(self, card) -> CardRawWinRateOutput:
+    def output(self, card) -> TopLevelStatsOutput:
         if self.global_stats is None:
             global_stats = [
                 (record.wins, record.wins + record.losses)
                 for _, record in self.game_card_records.items()
             ]
-
             self.global_stats = {}
             self.global_stats["total_wins"] = sum(wins for wins, _ in global_stats)
             self.global_stats["average_wins"] = (
-                self.global_stats["total_wins"] * 1.0 / (len(global_stats) or 1)
+                self.global_stats["total_wins"] * 1.0 / len(global_stats)
             )
             self.global_stats["total_plays"] = sum(plays for _, plays in global_stats)
             self.global_stats["average_plays"] = (
-                self.global_stats["total_plays"] * 1.0 / (len(global_stats) or 1)
+                self.global_stats["total_plays"] * 1.0 / len(global_stats)
             )
 
         if self.outputs is None:
             self.outputs = {
-                card: CardRawWinRateOutput(
+                card: TopLevelStatsOutput(
                     rank=rank + 1,
                     card=card,
-                    rate=(
-                        0
-                        if record.win_rate is None
-                        else round(record.win_rate * 100, 2)
-                    ),
+                    rate=0 if record.win_rate is None else round(record.win_rate * 100),
                     plays=record.wins + record.losses,
-                    rate_bayes=round(record.bayesian_win_rate(self.global_stats["average_wins"], self.global_stats["average_plays"]) * 100, 2),  # type: ignore
+                    rate_bayes=round(record.bayesian_win_rate(self.global_stats["average_wins"], self.global_stats["average_plays"]) * 100),  # type: ignore
                 )
                 for rank, (card, record) in enumerate(self.game_card_records.items())
             }
@@ -129,7 +124,7 @@ class CardRawWinRate:
         return self.outputs[card]
 
 
-class OpeningHandRawWinRate(CardRawWinRate):
+class OpeningHandRawWinRate(TopLevelStats):
     def game_log_cards(self, log: GameLog) -> dict[int, set[str]]:
         game_cards: defaultdict[int, set[str]] = defaultdict(lambda: set())
         for player_id, hand_cards in log.data.opening_hands.items():
