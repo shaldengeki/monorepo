@@ -21,7 +21,16 @@ py_test(
     name = "elo_adjusted_test",
     srcs = ["elo_adjusted_test.py"],
     deps = [
-        "//ark_nova_stats/emu_cup:analyze_games",
+        ":elo_adjusted",
+        "@py_deps//pytest",
+    ],
+)
+
+py_test(
+    name = "win_rates_test",
+    srcs = ["win_rates_test.py"],
+    deps = [
+        ":win_rates",
         "@py_deps//pytest",
     ],
 )

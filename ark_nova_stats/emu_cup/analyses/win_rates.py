@@ -33,9 +33,9 @@ class CardRecord:
 class CardRawWinRateOutput:
     rank: int
     card: str
-    rate: int
+    rate: float
     plays: int
-    rate_bayes: int
+    rate_bayes: float
 
 
 class CardRawWinRate:
@@ -99,14 +99,15 @@ class CardRawWinRate:
                 (record.wins, record.wins + record.losses)
                 for _, record in self.game_card_records.items()
             ]
+
             self.global_stats = {}
             self.global_stats["total_wins"] = sum(wins for wins, _ in global_stats)
             self.global_stats["average_wins"] = (
-                self.global_stats["total_wins"] * 1.0 / len(global_stats)
+                self.global_stats["total_wins"] * 1.0 / (len(global_stats) or 1)
             )
             self.global_stats["total_plays"] = sum(plays for _, plays in global_stats)
             self.global_stats["average_plays"] = (
-                self.global_stats["total_plays"] * 1.0 / len(global_stats)
+                self.global_stats["total_plays"] * 1.0 / (len(global_stats) or 1)
             )
 
         if self.outputs is None:
@@ -114,9 +115,13 @@ class CardRawWinRate:
                 card: CardRawWinRateOutput(
                     rank=rank + 1,
                     card=card,
-                    rate=0 if record.win_rate is None else round(record.win_rate * 100),
+                    rate=(
+                        0
+                        if record.win_rate is None
+                        else round(record.win_rate * 100, 2)
+                    ),
                     plays=record.wins + record.losses,
-                    rate_bayes=round(record.bayesian_win_rate(self.global_stats["average_wins"], self.global_stats["average_plays"]) * 100),  # type: ignore
+                    rate_bayes=round(record.bayesian_win_rate(self.global_stats["average_wins"], self.global_stats["average_plays"]) * 100, 2),  # type: ignore
                 )
                 for rank, (card, record) in enumerate(self.game_card_records.items())
             }
