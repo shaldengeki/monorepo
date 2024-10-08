@@ -26,13 +26,6 @@ py_test(
     ],
 )
 
-py_library(
-    name = "top_level_stats",
-    srcs = ["top_level_stats.py"],
-    visibility = ["//:__subpackages__"],
-    deps = ["//ark_nova_stats/bga_log_parser:game_log"],
-)
-
 py_test(
     name = "win_rates_test",
     srcs = ["win_rates_test.py"],
