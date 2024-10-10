@@ -126,9 +126,8 @@ def submit_game_ratings(
             arena_rating_update = parsed_ratings.data.players_arena_rating_update[
                 player_id
             ]
-            leading_arena_elo_digits = int(arena_rating_update.new_arena_rating)
-            new_arena_elo = 10_000 * (
-                arena_rating_update.new_arena_rating - leading_arena_elo_digits
+            new_arena_elo = compute_arena_elo_from_rating(
+                arena_rating_update.new_arena_rating
             )
             arena_elo_delta = arena_rating_update.real_arena_elo_delta
             rating.prior_arena_elo = round(new_arena_elo - arena_elo_delta)
