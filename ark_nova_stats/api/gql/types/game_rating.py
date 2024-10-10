@@ -93,6 +93,14 @@ game_rating_type = GraphQLObjectType(
 )
 
 
+def compute_arena_elo_from_rating(rating: float) -> float:
+    # Arena ratings look like: 201.1234
+    # where 201 determines your league, and 1234 is the actual ELO.
+    # So we transform that to 1234.
+    leading_arena_elo_digits = int(rating)
+    return 10_000 * (rating - leading_arena_elo_digits)
+
+
 def submit_game_ratings(
     game_rating_model: Type[GameRatingModel],
     args: dict[str, Any],
@@ -118,7 +126,10 @@ def submit_game_ratings(
             arena_rating_update = parsed_ratings.data.players_arena_rating_update[
                 player_id
             ]
-            new_arena_elo = 10_000 * (arena_rating_update.new_arena_rating - 501)
+            leading_arena_elo_digits = int(arena_rating_update.new_arena_rating)
+            new_arena_elo = 10_000 * (
+                arena_rating_update.new_arena_rating - leading_arena_elo_digits
+            )
             arena_elo_delta = arena_rating_update.real_arena_elo_delta
             rating.prior_arena_elo = round(new_arena_elo - arena_elo_delta)
             rating.new_arena_elo = round(new_arena_elo)
