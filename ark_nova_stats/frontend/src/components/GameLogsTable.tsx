@@ -32,7 +32,7 @@ const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
                 "Players": <ul>{gameLog.users.map((user: User) => {
                     const ratingChange = gameLog.gameRatingChanges.find((change) => { return change.user.bgaId === user.bgaId })
                     const priorElos = [];
-                    let linkTextParts = [user.name];
+                    const linkTextParts = [user.name];
                     if (ratingChange?.priorElo) {
                         priorElos.push(ratingChange.priorElo)
                         if (ratingChange.priorArenaElo) {
@@ -52,9 +52,12 @@ const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
             if (currentPlayer !== undefined) {
                 const ratingChange = gameLog.gameRatingChanges.find((change) => { return change.user.bgaId === currentPlayer.bgaId })
                 if (ratingChange) {
+                    const ratingChanges = [`Normal: ${ratingChange.priorElo} -> ${ratingChange.newElo}`];
+                    if (ratingChange.priorArenaElo) {
+                        ratingChanges.push(`Arena: ${ratingChange.priorArenaElo} -> ${ratingChange.newArenaElo}`)
+                    }
                     rowAttrs["Rating changes"] = <ul>
-                    <li>Normal: {ratingChange.priorElo} -&gt; {ratingChange.newElo}</li>
-                    <li>Arena: {ratingChange.priorArenaElo} -&gt; {ratingChange.newArenaElo}</li>
+                        {ratingChanges.map((change) => { return <li>{change}</li>})}
                     </ul>;
                 }
             }
