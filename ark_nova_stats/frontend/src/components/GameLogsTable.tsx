@@ -52,9 +52,9 @@ const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
             if (currentPlayer !== undefined) {
                 const ratingChange = gameLog.gameRatingChanges.find((change) => { return change.user.bgaId === currentPlayer.bgaId })
                 if (ratingChange) {
-                    const ratingChanges = [`Normal: ${ratingChange.priorElo} -&gt; ${ratingChange.newElo}`];
+                    const ratingChanges = [`Normal: ${ratingChange.priorElo} -> ${ratingChange.newElo}`];
                     if (ratingChange.priorArenaElo) {
-                        ratingChanges.push(`Arena: ${ratingChange.priorArenaElo} -&gt; ${ratingChange.newArenaElo}`)
+                        ratingChanges.push(`Arena: ${ratingChange.priorArenaElo} -> ${ratingChange.newArenaElo}`)
                     }
                     rowAttrs["Rating changes"] = <ul>
                         {ratingChanges.map((change) => { return <li>{change}</li>})}
