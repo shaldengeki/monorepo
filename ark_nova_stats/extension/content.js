@@ -217,3 +217,19 @@ fixPlayerOrdering = (intervalId) => {
 const fixPlayerOrderingInterval = setInterval(() => {
   fixPlayerOrdering(fixPlayerOrderingInterval);
 }, 500);
+
+// REPLAY SIDEBAR AT BOTTOM FIX
+fixReplaySidebar = (intervalId) => {
+  // This happens when the page wrapper gets display:block attached do it,
+  // causing the columnar child elements to reserve the entire width of the page instead of living side-by-side.
+  const pageWrapper = document.getElementById("#leftright_page_wrapper");
+  if (pageWrapper === null) {
+    return;
+  }
+
+  pageWrapper.style.display = "flex";
+  clearInterval(intervalId);
+}
+const fixReplaySidebarInterval = setInterval(() => {
+  fixReplaySidebar(fixReplaySidebarInterval);
+}, 500);
