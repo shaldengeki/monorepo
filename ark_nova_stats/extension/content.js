@@ -222,14 +222,16 @@ const fixPlayerOrderingInterval = setInterval(() => {
 fixReplaySidebar = (intervalId) => {
   // This happens when the page wrapper gets display:block attached do it,
   // causing the columnar child elements to reserve the entire width of the page instead of living side-by-side.
-  const pageWrapper = document.getElementById("#leftright_page_wrapper");
+  const pageWrapper = document.getElementById("leftright_page_wrapper");
   if (pageWrapper === null) {
     return;
   }
 
-  pageWrapper.style.display = "flex";
-  clearInterval(intervalId);
+  if (pageWrapper.style.display !== "flex") {
+    console.log("Setting to flex");
+    pageWrapper.style.display = "flex";
+  }
 }
 const fixReplaySidebarInterval = setInterval(() => {
   fixReplaySidebar(fixReplaySidebarInterval);
-}, 500);
+}, 1000);
