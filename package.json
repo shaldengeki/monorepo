@@ -10,7 +10,7 @@
     "dependencies": {
         "@apollo/client": "^3.11.8",
         "@apollo/react-testing": "^4.0.0",
-        "@headlessui/react": "^2.1.9",
+        "@headlessui/react": "^2.1.10",
         "@heroicons/react": "^2.1.5",
         "@testing-library/jest-dom": "^6.5.0",
         "@testing-library/react": "^16.0.1",
