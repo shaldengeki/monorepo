@@ -228,9 +228,10 @@ fixReplaySidebar = (intervalId) => {
   }
 
   if (pageWrapper.style.display !== "flex") {
-    console.log("Setting to flex");
     pageWrapper.style.display = "flex";
   }
+
+  clearInterval(intervalId);
 }
 const fixReplaySidebarInterval = setInterval(() => {
   fixReplaySidebar(fixReplaySidebarInterval);
