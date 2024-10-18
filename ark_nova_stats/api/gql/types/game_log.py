@@ -149,13 +149,23 @@ game_log_type = GraphQLObjectType(
 def fetch_game_log(
     game_log: Type[GameLogModel], params: dict[str, Any]
 ) -> Optional[GameLogModel]:
-    return (game_log.query.filter(game_log.id == params["id"])).first()
+    query = game_log.query
+    if "id" in params:
+        query = query.where(game_log.id == params["id"])
+    if "bgaTableId" in params:
+        query = query.where(game_log.bga_table_id == params["bgaTableId"])
+
+    return query.first()
 
 
 game_log_filters: dict[str, GraphQLArgument] = {
     "id": GraphQLArgument(
-        GraphQLNonNull(GraphQLInt),
+        GraphQLInt,
         description="ID of the game log.",
+    ),
+    "bgaTableId": GraphQLArgument(
+        GraphQLInt,
+        description="BGA table ID for the game.",
     ),
 }
 
