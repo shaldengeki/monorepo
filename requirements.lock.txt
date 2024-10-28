@@ -646,9 +646,9 @@ requests==2.32.3 \
     #   -r requirements.txt
     #   docker
     #   qbittorrent-api
-s3transfer==0.10.2 \
-    --hash=sha256:0711534e9356d3cc692fdde846b4a1e4b0cb6519971860796e6bc4c7aea00ef6 \
-    --hash=sha256:eca1c20de70a39daee580aef4986996620f365c4e0fda6a86100231d62f1bf69
+s3transfer==0.10.3 \
+    --hash=sha256:263ed587a5803c6c708d3ce44dc4dfedaab4c1a32e8329bab818933d79ddcf5d \
+    --hash=sha256:4f50ed74ab84d474ce614475e0b8d5047ff080810aac5d01ea25231cfc944b0c
     # via boto3
 scramp==1.4.5 \
     --hash=sha256:50e37c464fc67f37994e35bee4151e3d8f9320e9c204fca83a5d313c121bbbe7 \
