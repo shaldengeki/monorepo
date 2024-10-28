@@ -726,9 +726,9 @@ tomlkit==0.13.2 \
     # via
     #   -r requirements.txt
     #   pylint
-types-awscrt==0.22.0 \
-    --hash=sha256:67a660c90bad360c339f6a79310cc17094d12472042c7ca5a41450aaf5fc9a54 \
-    --hash=sha256:b2c196bbd3226bab42d80fae13c34548de9ddc195f5a366d79c15d18e5897aa9
+types-awscrt==0.23.0 \
+    --hash=sha256:3fd1edeac923d1956c0e907c973fb83bda465beae7f054716b371b293f9b5fdc \
+    --hash=sha256:517d9d06f19cf58d778ca90ad01e52e0489466bf70dcf78c7f47f74fdf151a60
     # via botocore-stubs
 types-flask-cors==5.0.0.20240902 \
     --hash=sha256:595e5f36056cd128ab905832e055f2e5d116fbdc685356eea4490bc77df82137 \
