@@ -41,7 +41,7 @@ jobs:
       - name: Install flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Validate fly configs
-        run: find . -name fly.toml | xargs -n 1 fly config validate --config
+        run: find . -name fly.toml | xargs -n 1 flyctl config validate --config
   push_ark_nova_stats:
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
