@@ -5,7 +5,7 @@ A macro used to define a cross-platform container image.
 """
 
 load("@aspect_bazel_lib//lib:transitions.bzl", "platform_transition_filegroup")
-load("@rules_oci//oci:defs.bzl", "oci_push", "oci_tarball")
+load("@rules_oci//oci:defs.bzl", "oci_load", "oci_push")
 
 def cross_platform_image(
         name,
@@ -39,7 +39,7 @@ def cross_platform_image(
         visibility = visibility,
     )
 
-    oci_tarball(
+    oci_load(
         name = name + "_tarball",
         image = name,
         repo_tags = repo_tags,

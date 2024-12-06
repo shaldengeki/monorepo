@@ -1,11 +1,10 @@
-bazel_dep(name = "aspect_bazel_lib", version = "2.8.1")
-bazel_dep(name = "rules_proto", version = "6.0.2")
-bazel_dep(name = "toolchains_protoc", version = "0.3.3")
-bazel_dep(name = "rules_python", version = "0.35.0")
+bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
+bazel_dep(name = "rules_python", version = "0.40.0")
+bazel_dep(name = "protobuf", version = "29.1", repo_name = "com_google_protobuf")
 
 register_toolchains("//tools/protoc:all")
 
-bazel_dep(name = "rules_oci", version = "1.8.0")
+bazel_dep(name = "rules_oci", version = "2.0.1")
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
@@ -61,9 +60,9 @@ oci.pull(
         "linux/s390x",
     ],
 )
-use_repo(oci, "nginx_debian_slim")
+use_repo(oci, "nginx_debian_slim", "nginx_debian_slim_linux_386", "nginx_debian_slim_linux_amd64", "nginx_debian_slim_linux_arm64_v8", "nginx_debian_slim_linux_arm_v5", "nginx_debian_slim_linux_arm_v7", "nginx_debian_slim_linux_ppc64le", "nginx_debian_slim_linux_s390x", "python3_image_linux_386", "python3_image_linux_amd64", "python3_image_linux_arm64_v8", "python3_image_linux_arm_v5", "python3_image_linux_arm_v7", "python3_image_linux_ppc64le", "python3_image_linux_s390x", "ubuntu_image_linux_amd64", "ubuntu_image_linux_arm64_v8")
 
-bazel_dep(name = "aspect_rules_js", version = "2.0.1")
+bazel_dep(name = "aspect_rules_js", version = "2.1.1")
 
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
 npm.npm_translate_lock(
@@ -92,4 +91,4 @@ bazel_dep(name = "aspect_rules_webpack", version = "0.16.0")
 bazel_dep(name = "rules_pkg", version = "1.0.1")
 bazel_dep(name = "rules_go", version = "0.50.1")
 bazel_dep(name = "gazelle", version = "0.38.0")
-bazel_dep(name = "rules_python_gazelle_plugin", version = "0.35.0")
+bazel_dep(name = "rules_python_gazelle_plugin", version = "0.40.0")
