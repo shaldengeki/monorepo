@@ -1,7 +1,6 @@
 bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
-bazel_dep(name = "rules_proto", version = "7.0.2")
-bazel_dep(name = "toolchains_protoc", version = "0.3.4")
 bazel_dep(name = "rules_python", version = "0.40.0")
+bazel_dep(name = "protobuf", version = "29.1", repo_name = "com_google_protobuf")
 
 register_toolchains("//tools/protoc:all")
 
@@ -61,7 +60,7 @@ oci.pull(
         "linux/s390x",
     ],
 )
-use_repo(oci, "nginx_debian_slim")
+use_repo(oci, "nginx_debian_slim", "nginx_debian_slim_linux_386", "nginx_debian_slim_linux_amd64", "nginx_debian_slim_linux_arm64_v8", "nginx_debian_slim_linux_arm_v5", "nginx_debian_slim_linux_arm_v7", "nginx_debian_slim_linux_ppc64le", "nginx_debian_slim_linux_s390x", "python3_image_linux_386", "python3_image_linux_amd64", "python3_image_linux_arm64_v8", "python3_image_linux_arm_v5", "python3_image_linux_arm_v7", "python3_image_linux_ppc64le", "python3_image_linux_s390x", "ubuntu_image_linux_amd64", "ubuntu_image_linux_arm64_v8")
 
 bazel_dep(name = "aspect_rules_js", version = "2.1.1")
 
