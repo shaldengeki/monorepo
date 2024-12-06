@@ -1,3 +1,8 @@
+module(
+    name = "monorepo",
+    repo_name = "com_github_shaldengeki_monorepo",
+)
+
 bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
 bazel_dep(name = "rules_python", version = "0.40.0")
 bazel_dep(name = "protobuf", version = "29.1", repo_name = "com_google_protobuf")
@@ -91,4 +96,28 @@ bazel_dep(name = "aspect_rules_webpack", version = "0.16.0")
 bazel_dep(name = "rules_pkg", version = "1.0.1")
 bazel_dep(name = "rules_go", version = "0.50.1")
 bazel_dep(name = "gazelle", version = "0.38.0")
+
+go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
+go_deps.module(
+    path = "google.golang.org/grpc",
+    sum = "h1:fPVVDxY9w++VjTZsYvXWqEf9Rqar/e+9zYfxKK+W+YU=",
+    version = "v1.50.0",
+)
+go_deps.module(
+    # build_file_proto_mode = "disable",
+    path = "google.golang.org/grpc",
+    sum = "h1:J0UbZOIrCAl+fpTOf8YLs4dJo8L/owV4LYVtAXQoPkw=",
+    version = "v1.22.0",
+)
+go_deps.module(
+    path = "golang.org/x/net",
+    sum = "h1:oWX7TPOiFAMXLq8o0ikBYfCJVlRHBcsciT5bXOrH628=",
+    version = "v0.0.0-20190311183353-d8887717615a",
+)
+go_deps.module(
+    path = "golang.org/x/text",
+    sum = "h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=",
+    version = "v0.3.0",
+)
+
 bazel_dep(name = "rules_python_gazelle_plugin", version = "0.40.0")
