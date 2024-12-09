@@ -15,8 +15,8 @@ dependencies:
     specifier: ^2.2.0
     version: 2.2.0(react-dom@18.3.1)(react@18.3.1)
   '@heroicons/react':
-    specifier: ^2.1.5
-    version: 2.1.5(react@18.3.1)
+    specifier: ^2.2.0
+    version: 2.2.0(react@18.3.1)
   '@testing-library/jest-dom':
     specifier: ^6.6.3
     version: 6.6.3
@@ -1954,10 +1954,10 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
     dev: false
 
-  /@heroicons/react@2.1.5(react@18.3.1):
-    resolution: {integrity: sha512-FuzFN+BsHa+7OxbvAERtgBTNeZpUjgM/MIizfVkSCL2/edriN0Hx/DWRCR//aPYwO5QX/YlgLGXk+E3PcfZwjA==}
+  /@heroicons/react@2.2.0(react@18.3.1):
+    resolution: {integrity: sha512-LMcepvRaS9LYHJGsF0zzmgKCUim/X3N/DQKc4jepAXJ7l8QxJ1PmxJzqplF2Z3FE4PqBAIGyJAQ/w4B5dsqbtQ==}
     peerDependencies:
-      react: '>= 16'
+      react: '>= 16 || ^19.0.0-rc'
     dependencies:
       react: 18.3.1
     dev: false
