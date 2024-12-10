@@ -6,9 +6,6 @@ module(
 bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
 bazel_dep(name = "rules_python", version = "0.40.0")
 bazel_dep(name = "protobuf", version = "29.1", repo_name = "com_google_protobuf")
-
-register_toolchains("//tools/protoc:all")
-
 bazel_dep(name = "rules_oci", version = "2.0.1")
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
