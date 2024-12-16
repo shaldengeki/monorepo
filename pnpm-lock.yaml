@@ -51,8 +51,8 @@ dependencies:
     specifier: ^2.0.1
     version: 2.0.1
   plotly.js:
-    specifier: ^2.35.2
-    version: 2.35.2(mapbox-gl@1.13.3)(webpack@5.95.0)
+    specifier: ^2.35.3
+    version: 2.35.3(mapbox-gl@1.13.3)(webpack@5.95.0)
   plotly.js-basic-dist:
     specifier: ^2.35.2
     version: 2.35.2
@@ -67,7 +67,7 @@ dependencies:
     version: 18.3.1(react@18.3.1)
   react-plotly.js:
     specifier: ^2.6.0
-    version: 2.6.0(plotly.js@2.35.2)(react@18.3.1)
+    version: 2.6.0(plotly.js@2.35.3)(react@18.3.1)
   react-router-dom:
     specifier: ^6.27.0
     version: 6.27.0(react-dom@18.3.1)(react@18.3.1)
@@ -10355,8 +10355,8 @@ packages:
     resolution: {integrity: sha512-cowePSVui1C6jx9hVi0wcYrIDS29Dp95HRjw31M8przgGls9t5jsdeScPzGGQuJ4/OTnQkTRZec25ZXDjfr/yA==}
     dev: false
 
-  /plotly.js@2.35.2(mapbox-gl@1.13.3)(webpack@5.95.0):
-    resolution: {integrity: sha512-s0knlWzRvLQXxzf3JQ6qbm8FpwKuMjkr+6r04f8/yCEByAQ+I0jkUzY/hSGRGb+u7iljTh9hgpEiiJP90vjyeQ==}
+  /plotly.js@2.35.3(mapbox-gl@1.13.3)(webpack@5.95.0):
+    resolution: {integrity: sha512-7RaC6FxmCUhpD6H4MpD+QLUu3hCn76I11rotRefrh3m1iDvWqGnVqVk9dSaKmRAhFD3vsNsYea0OxnR1rc2IzQ==}
     dependencies:
       '@plotly/d3': 3.8.2
       '@plotly/d3-sankey': 0.7.2
@@ -11506,13 +11506,13 @@ packages:
   /react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
-  /react-plotly.js@2.6.0(plotly.js@2.35.2)(react@18.3.1):
+  /react-plotly.js@2.6.0(plotly.js@2.35.3)(react@18.3.1):
     resolution: {integrity: sha512-g93xcyhAVCSt9kV1svqG1clAEdL6k3U+jjuSzfTV7owaSU9Go6Ph8bl25J+jKfKvIGAEYpe4qj++WHJuc9IaeA==}
     peerDependencies:
       plotly.js: '>1.34.0'
       react: '>0.13.0'
     dependencies:
-      plotly.js: 2.35.2(mapbox-gl@1.13.3)(webpack@5.95.0)
+      plotly.js: 2.35.3(mapbox-gl@1.13.3)(webpack@5.95.0)
       prop-types: 15.8.1
       react: 18.3.1
     dev: false
