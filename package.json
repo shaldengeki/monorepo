@@ -29,7 +29,7 @@
         "react-canvas-confetti": "^2.0.7",
         "react-dom": "^19.0.0",
         "react-plotly.js": "^2.6.0",
-        "react-router-dom": "^7.1.0",
+        "react-router-dom": "^7.1.1",
         "react-scripts": "^5.0.1",
         "typescript": "^5",
         "web-vitals": "^4.2.4"
