@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, ReactElement} from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery, useMutation } from '@apollo/client/react/hooks';
 import PageContainer from '../components/PageContainer';
@@ -208,7 +208,7 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
         <option key={1} value={1}>Weekend Warrior</option>,
         <option key={2} value={2}>Bingo</option>
     ]
-    let userElements: JSX.Element[] = [];
+    let userElements: ReactElement[] = [];
     if (fetchUsersData) {
         userElements = fetchUsersData.users.map((user: User) => {
             return <option key={user.fitbitUserId} value={user.fitbitUserId}>{user.displayName}</option>
