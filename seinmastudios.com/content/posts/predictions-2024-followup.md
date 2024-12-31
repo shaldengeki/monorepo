@@ -23,7 +23,7 @@ Here's how I did with my 2024 predictions.
 
 The first one was a near miss; instead, [collection is scheduled to start on January 5th](https://gothamist.com/news/nycs-congestion-pricing-tolls-to-launch-jan-5-what-you-need-to-know), 2025, after the governor (in my opinion) illegally paused the program until after the federal elections, allegedly to help Democrats in vulnerable New York districts.
 
-Obviously the revenues and traffic impacts didn't happen, either. The top-line tolls were also cut from $15 to $9; I expect annual revenues to be correspondingly lower, and the impact on congestion to also be pretty minimal.
+Obviously the revenues and traffic impacts didn't happen, either. The top-line tolls were also cut from \$15 to \$9; I expect annual revenues to be correspondingly lower, and the impact on congestion to also be pretty minimal.
 
 ### Second Avenue Subway
 
