@@ -13,7 +13,7 @@ image = "ghcr.io/tailscale/golink:main"
 strategy = "immediate"
 
 [[vm]]
-  memory = '512mb'
+  memory = '256mb'
   cpu_kind = 'shared'
   cpus = 1
 
