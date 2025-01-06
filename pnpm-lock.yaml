@@ -89,8 +89,8 @@ devDependencies:
     specifier: ^29.5.14
     version: 29.5.14
   '@types/lodash':
-    specifier: ^4.17.13
-    version: 4.17.13
+    specifier: ^4.17.14
+    version: 4.17.14
   '@types/plotly.js':
     specifier: ^2.35.1
     version: 2.35.1
@@ -3267,8 +3267,8 @@ packages:
       '@types/node': 22.10.5
     dev: false
 
-  /@types/lodash@4.17.13:
-    resolution: {integrity: sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==}
+  /@types/lodash@4.17.14:
+    resolution: {integrity: sha512-jsxagdikDiDBeIRaPYtArcT8my4tN1og7MtMRquFT3XNA6axxyHDRUemqDz/taRDdOUn0GnGHRCuff4q48sW9A==}
     dev: true
 
   /@types/mapbox__point-geometry@0.1.4:
