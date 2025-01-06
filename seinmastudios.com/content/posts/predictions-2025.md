@@ -91,3 +91,26 @@ I'll assess these only if the CAHSR releases a new project update report, with n
 - Twitter files for bankruptcy: 20%
 - Amazon, Google, Apple, or Steam accept Bitcoin: 5%
 - AGDQ 2025 raises at least $2.5M: 60%
+- Apple releases a foldable iPhone: 10%
+
+# Pop culture
+
+- Marvel films will have total revenue over 1.5 billion dollars (international box office): 60%
+- Marvel films will average greater than 650 million in international box office: 40%
+- There are >5 movies with domestic box office >250 million: 25%
+- There are >10 movies with domestic box office >250 million: 10%
+- An A24 movie will win the Best Picture Oscar: 40%
+- Kieran Culkin will win the Best Supporting Actor Oscar: 75%
+- Challengers will win an Oscar: 60%
+- The live action Snow White will make more than 200 million dollars in domestic box office: 60%
+- A streaming service will close down / be merged into another: 30%
+  - Max, Peacock, Paramount, Hulu, Disney+, Amazon Prime Video, Netflix, Apple TV+, Mubi
+- The book that spends the longest at the top of the NYT bestseller list is a romance: 60%
+- The highest grossing movie of the year domestically is a sequel or part of an ongoing franchise (like Marvel, with previous entries): 80%
+
+# Sports
+
+- The NFC champion will win the Super Bowl: 40%
+- The Mets will make the playoffs: 50%
+- The Knicks will have a winning season: 70%
+- The Eastern Conference champion will win the NBA finals: 50%
