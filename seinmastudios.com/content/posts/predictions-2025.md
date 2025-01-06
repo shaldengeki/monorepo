@@ -7,7 +7,7 @@ categories = []
 draft = false
 +++
 
-Following up on [my predictions for 2024]({{< ref "predictions-2024-followup" >}}), here's a bunch of predictions for this year. As before, all dollar values inflation-adjusted for start of 2024.
+Following up on [my predictions for 2024]({{< ref "predictions-2024-followup" >}}), here's a bunch of predictions for this year. As before, all dollar values inflation-adjusted for start of 2025.
 
 <!--more-->
 
