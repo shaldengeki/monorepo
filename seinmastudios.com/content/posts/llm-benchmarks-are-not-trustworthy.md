@@ -42,3 +42,5 @@ With FrontierMath, [OpenAI's o1 scored less than 2%](https://arxiv.org/abs/2411.
 To be clear, I'm not claiming that OpenAI is knowingly cheating on benchmarks. I don't think they have to be, in order for this to happen. They're a private company with a closed model, and internally, they're hoovering up as much data as they can possibly get. This leakage is just what I'd expect to happen by default.
 
 But I do think that you absolutely have to view LLM benchmarks from a position of default-distrust, _especially_ given the amounts of money sloshing around in the AI industry. That's what's required for honest science. The real question, in my mind, is whether or when we'll see autonomous software engineering, or math research, being done anywhere.
+
+Thanks to Guanqing Ou for feedback on this post.
