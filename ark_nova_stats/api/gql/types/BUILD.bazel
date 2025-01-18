@@ -29,6 +29,7 @@ py_library(
 
 py_test(
     name = "game_rating_test",
+    size = "small",
     srcs = ["game_rating_test.py"],
     deps = [
         ":game_rating",

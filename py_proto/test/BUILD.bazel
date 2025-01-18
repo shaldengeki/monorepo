@@ -2,18 +2,21 @@ load("@rules_python//python:defs.bzl", "py_test")
 
 py_test(
     name = "proto_bool_test",
+    size = "small",
     srcs = ["proto_bool_test.py"],
     deps = ["//py_proto:proto_bool"],
 )
 
 py_test(
     name = "proto_comment_test",
+    size = "small",
     srcs = ["proto_comment_test.py"],
     deps = ["//py_proto:proto_comment"],
 )
 
 py_test(
     name = "proto_constant_test",
+    size = "small",
     srcs = ["proto_constant_test.py"],
     deps = [
         "//py_proto:proto_bool",
@@ -27,6 +30,7 @@ py_test(
 
 py_test(
     name = "proto_enum_test",
+    size = "small",
     srcs = ["proto_enum_test.py"],
     deps = [
         "//py_proto:proto_bool",
@@ -44,6 +48,7 @@ py_test(
 
 py_test(
     name = "proto_extend_test",
+    size = "small",
     srcs = ["proto_extend_test.py"],
     deps = [
         "//py_proto:proto_extend",
@@ -55,30 +60,35 @@ py_test(
 
 py_test(
     name = "proto_extensions_test",
+    size = "small",
     srcs = ["proto_extensions_test.py"],
     deps = ["//py_proto:proto_extensions"],
 )
 
 py_test(
     name = "proto_file_test",
+    size = "small",
     srcs = ["proto_file_test.py"],
     deps = ["//py_proto:proto_file"],
 )
 
 py_test(
     name = "proto_float_test",
+    size = "small",
     srcs = ["proto_float_test.py"],
     deps = ["//py_proto:proto_float"],
 )
 
 py_test(
     name = "proto_identifier_test",
+    size = "small",
     srcs = ["proto_identifier_test.py"],
     deps = ["//py_proto:proto_identifier"],
 )
 
 py_test(
     name = "proto_import_test",
+    size = "small",
     srcs = ["proto_import_test.py"],
     deps = [
         "//py_proto:proto_import",
@@ -88,12 +98,14 @@ py_test(
 
 py_test(
     name = "proto_int_test",
+    size = "small",
     srcs = ["proto_int_test.py"],
     deps = ["//py_proto:proto_int"],
 )
 
 py_test(
     name = "proto_map_test",
+    size = "small",
     srcs = ["proto_map_test.py"],
     deps = [
         "//py_proto:proto_constant",
@@ -107,6 +119,7 @@ py_test(
 
 py_test(
     name = "proto_message_field_test",
+    size = "small",
     srcs = ["proto_message_field_test.py"],
     deps = [
         "//py_proto:proto_identifier",
@@ -117,6 +130,7 @@ py_test(
 
 py_test(
     name = "proto_message_test",
+    size = "small",
     srcs = ["proto_message_test.py"],
     deps = [
         "//py_proto:proto_bool",
@@ -140,6 +154,7 @@ py_test(
 
 py_test(
     name = "proto_oneof_test",
+    size = "small",
     srcs = ["proto_oneof_test.py"],
     deps = [
         "//py_proto:proto_comment",
@@ -155,6 +170,7 @@ py_test(
 
 py_test(
     name = "proto_option_test",
+    size = "small",
     srcs = ["proto_option_test.py"],
     deps = [
         "//py_proto:proto_constant",
@@ -168,24 +184,28 @@ py_test(
 
 py_test(
     name = "proto_package_test",
+    size = "small",
     srcs = ["proto_package_test.py"],
     deps = ["//py_proto:proto_package"],
 )
 
 py_test(
     name = "proto_range_test",
+    size = "small",
     srcs = ["proto_range_test.py"],
     deps = ["//py_proto:proto_range"],
 )
 
 py_test(
     name = "proto_reserved_test",
+    size = "small",
     srcs = ["proto_reserved_test.py"],
     deps = ["//py_proto:proto_reserved"],
 )
 
 py_test(
     name = "proto_service_test",
+    size = "small",
     srcs = ["proto_service_test.py"],
     deps = [
         "//py_proto:proto_bool",
@@ -200,12 +220,14 @@ py_test(
 
 py_test(
     name = "proto_string_literal_test",
+    size = "small",
     srcs = ["proto_string_literal_test.py"],
     deps = ["//py_proto:proto_string_literal"],
 )
 
 py_test(
     name = "proto_syntax_test",
+    size = "small",
     srcs = ["proto_syntax_test.py"],
     deps = [
         "//py_proto:proto_string_literal",

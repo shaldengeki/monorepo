@@ -19,6 +19,7 @@ py_library(
 
 py_test(
     name = "elo_adjusted_test",
+    size = "small",
     srcs = ["elo_adjusted_test.py"],
     deps = [
         ":elo_adjusted",
@@ -28,6 +29,7 @@ py_test(
 
 py_test(
     name = "win_rates_test",
+    size = "small",
     srcs = ["win_rates_test.py"],
     deps = [
         ":win_rates",
