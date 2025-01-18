@@ -2,6 +2,7 @@ load("@rules_python//python:defs.bzl", "py_test")
 
 py_test(
     name = "worker_test",
+    size = "small",
     srcs = ["worker_test.py"],
     deps = [
         "//mc_manager/worker:binary",

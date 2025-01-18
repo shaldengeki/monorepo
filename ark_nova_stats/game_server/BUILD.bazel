@@ -12,12 +12,13 @@ go_library(
         "//ark_nova_stats/proto:cards_proto_go_proto",
         "//ark_nova_stats/proto:game_state_proto_go_proto",
         "//ark_nova_stats/proto:player_game_state_proto_go_proto",
-        "@@gazelle~~go_deps~org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_grpc//:go_default_library",
     ],
 )
 
 go_test(
     name = "game_server_test",
+    size = "small",
     srcs = ["game_server_test.go"],
     embed = [":game_server"],
     deps = [

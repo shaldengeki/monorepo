@@ -13,6 +13,7 @@ py_library(
 
 py_test(
     name = "game_log_test",
+    size = "small",
     srcs = ["game_log_test.py"],
     data = [
         "//ark_nova_stats/bga_log_parser:fixtures",
@@ -27,6 +28,7 @@ py_test(
 
 py_test(
     name = "game_ratings_test",
+    size = "small",
     srcs = ["game_ratings_test.py"],
     data = [
         "//ark_nova_stats/bga_log_parser:fixtures",

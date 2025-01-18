@@ -2,6 +2,7 @@ load("@rules_python//python:defs.bzl", "py_test")
 
 py_test(
     name = "parser_test",
+    size = "small",
     srcs = ["parser_test.py"],
     deps = [
         "//py_proto:proto_bool",
