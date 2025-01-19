@@ -39,6 +39,8 @@ edge cutoff dates, posing potential data leakage issues.
 
 With FrontierMath, [OpenAI's o1 scored less than 2%](https://arxiv.org/abs/2411.04872) when the benchmark was released in November 2024. At the end of December, [OpenAI announced that o3 solved 25% of the problems.](https://techcrunch.com/2024/12/20/openai-announces-new-o3-model/) (Interestingly, the public hasn't been given access to the model.)
 
+_Update, 2025-01-18_: [An Epoch AI employee confirmed](https://web.archive.org/web/20250119042500/https://www.lesswrong.com/posts/cu2E8wgmbdZbqeWqb/meemi-s-shortform) that OpenAI did have access to the questions and solutions for the FrontierMath benchmark. Worse, they were contractually-forbidden from disclosing this, so the confusion about whether FrontierMath was a trustworthy benchmark was almost certainly intentional on OpenAI's part.
+
 To be clear, I'm not claiming that OpenAI is knowingly cheating on benchmarks. I don't think they have to be, in order for this to happen. They're a private company with a closed model, and internally, they're hoovering up as much data as they can possibly get. This leakage is just what I'd expect to happen by default.
 
 But I do think that you absolutely have to view LLM benchmarks from a position of default-distrust, _especially_ given the amounts of money sloshing around in the AI industry. That's what's required for honest science. The real question, in my mind, is whether or when we'll see autonomous software engineering, or math research, being done anywhere.
