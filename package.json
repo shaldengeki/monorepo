@@ -54,6 +54,7 @@
         "react-canvas-confetti": "^2.0.7",
         "style-loader": "^4.0.0",
         "tailwindcss": "^4.0.3",
+        "@tailwindcss/cli": "^4.0.3",
         "webpack": "^5.97.1",
         "webpack-cli": "^6.0.1"
     },
