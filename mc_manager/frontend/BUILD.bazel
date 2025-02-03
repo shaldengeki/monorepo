@@ -1,5 +1,5 @@
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
-load("@npm//:tailwindcss/package_json.bzl", tailwindcss_bin = "bin")
+load("@npm//:@tailwindcss/cli/package_json.bzl", tailwindcss_bin = "bin")
 load("//tools/build_rules:frontend_image.bzl", "BUILD_DEPS", "frontend_image")
 
 # Dependencies required to do typechecks.
