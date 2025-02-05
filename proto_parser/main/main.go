@@ -9,6 +9,6 @@ import (
 func main() {
 	ctx := context.Background()
 	fmt.Printf("hello!")
-	proto_parser.Parse(ctx, "")
+	proto_parser.ParseTokens(ctx, "")
 	return
 }

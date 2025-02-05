@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package proto_parser.proto;
+
+import "proto_parser/proto/file_position.proto";
+
+option go_package = "github.com/shaldengeki/monorepo/proto_parser/proto/token";
+
+message Token {
+    FilePosition start = 1;
+    FilePosition end = 2;
+}

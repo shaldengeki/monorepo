@@ -2,13 +2,9 @@ package proto_parser
 
 import (
 	"context"
+	pbtoken "github.com/shaldengeki/monorepo/proto_parser/proto/token"
 )
 
-type Token struct {
-	start FilePosition
-	end FilePosition
-}
-
-func Parse(ctx context.Context, body string) ([]Token, error) {
-	return []Token{}, nil
+func ParseTokens(ctx context.Context, body string) ([]pbtoken.Token, error) {
+	return []pbtoken.Token{}, nil
 }
