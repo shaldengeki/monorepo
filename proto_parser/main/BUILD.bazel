@@ -5,7 +5,7 @@ go_library(
     srcs = ["main.go"],
     importpath = "github.com/shaldengeki/monorepo/proto_parser/main",
     visibility = ["//visibility:private"],
-    deps = ["//proto_parser"],
+    deps = ["//proto_parser/token"],
 )
 
 go_binary(
