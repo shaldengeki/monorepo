@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/shaldengeki/monorepo/proto_parser"
+	"github.com/shaldengeki/monorepo/proto_parser/token"
 )
 
 func main() {
 	ctx := context.Background()
-	fmt.Printf("hello!")
-	proto_parser.ParseTokens(ctx, "")
+	fmt.Println("hello!")
+	token.ParseTokens(ctx, "")
 	return
 }
