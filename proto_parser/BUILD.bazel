@@ -2,7 +2,10 @@ load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "proto_parser",
-    srcs = ["main.go"],
+    srcs = [
+        "file_position.go",
+        "token.go",
+    ],
     importpath = "github.com/shaldengeki/monorepo/proto_parser",
     visibility = ["//visibility:public"],
 )
