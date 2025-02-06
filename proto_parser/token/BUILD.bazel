@@ -2,7 +2,10 @@ load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "token",
-    srcs = ["token.go"],
+    srcs = [
+        "token.go",
+        "whitespace_token.go",
+    ],
     importpath = "github.com/shaldengeki/monorepo/proto_parser/token",
     visibility = ["//visibility:public"],
     deps = ["//proto_parser/proto:token_go_proto"],
@@ -10,7 +13,10 @@ go_library(
 
 go_test(
     name = "token_test",
-    srcs = ["token_test.go"],
+    srcs = [
+        "token_test.go",
+        "whitespace_token_test.go",
+    ],
     embed = [":token"],
     deps = [
         "//proto_parser/proto:token_go_proto",
