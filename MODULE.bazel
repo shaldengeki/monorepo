@@ -116,6 +116,17 @@ go_deps.module(
     sum = "h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=",
     version = "v0.3.0",
 )
-use_repo(go_deps, "org_golang_google_grpc", "org_golang_x_net", "org_golang_x_text")
+go_deps.module(
+    path = "github.com/stretchr/testify",
+    sum = "h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=",
+    version = "v1.10.0",
+)
+use_repo(
+    go_deps,
+    "com_github_stretchr_testify",
+    "org_golang_google_grpc",
+    "org_golang_x_net",
+    "org_golang_x_text",
+)
 
 bazel_dep(name = "rules_python_gazelle_plugin", version = "0.40.0")
