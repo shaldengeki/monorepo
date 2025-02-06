@@ -12,13 +12,14 @@ func ParseWhitespaceToken(ctx context.Context, start int, body string) (pbtoken.
 	if start >= len(body) {
 		return pbtoken.WhitespaceToken{}, 0, fmt.Errorf("Cannot parse position %i in body of length %i", start, len(body))
 	}
-	if !strings.ContainsAny(string(body[start]), " \n\t") {
-		return pbtoken.WhitespaceToken{}, 0, token.TokenNotParseableError(fmt.Sprintf("character %s is not whitespace", string(body[start])))
-	}
 
 	stringToScan := string(body[start:])
 	removedBody := strings.TrimLeft(stringToScan, " \n\t")
 	whitespaceLength := len(stringToScan) - len(removedBody)
+
+	if whitespaceLength == 0 {
+		return pbtoken.WhitespaceToken{}, 0, token.TokenNotParseableError(fmt.Sprintf("character %s is not whitespace", string(body[start])))
+	}
 
 	return pbtoken.WhitespaceToken{
 		Spaces: string(body[start:start+whitespaceLength]),
