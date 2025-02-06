@@ -5,7 +5,11 @@ go_library(
     srcs = ["token.go"],
     importpath = "github.com/shaldengeki/monorepo/proto_parser/token",
     visibility = ["//visibility:public"],
-    deps = ["//proto_parser/proto:token_go_proto"],
+    deps = [
+        "//proto_parser/proto:token_go_proto",
+        "//proto_parser/token/errors",
+        "//proto_parser/token/whitespace_token",
+    ],
 )
 
 go_test(

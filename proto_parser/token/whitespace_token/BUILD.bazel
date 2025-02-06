@@ -7,7 +7,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//proto_parser/proto:token_go_proto",
-        "//proto_parser/token",
+        "//proto_parser/token/errors",
     ],
 )
 
@@ -16,7 +16,7 @@ go_test(
     srcs = ["whitespace_token_test.go"],
     embed = [":whitespace_token"],
     deps = [
-        "//proto_parser/token",
+        "//proto_parser/token/errors",
         "@com_github_stretchr_testify//assert:go_default_library",
         "@com_github_stretchr_testify//require:go_default_library",
     ],
