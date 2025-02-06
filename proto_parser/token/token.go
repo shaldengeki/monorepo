@@ -32,7 +32,7 @@ func ParseTokens(ctx context.Context, body string) ([]pbtoken.Token, error) {
 				break
 			}
 			if !errors.As(err, &unparseableError) {
-				return []pbtoken.Token{}, fmt.Errorf("Unexpected error when parsing tokens: %w", err)
+				return []pbtoken.Token{}, fmt.Errorf("Unexpected error when parsing tokens at position %d: %w\nfor body: %s", pos, err, body)
 			}
 		}
 		if pos >= len(body) {
