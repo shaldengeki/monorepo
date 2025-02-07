@@ -18,7 +18,7 @@ func ParseWhitespaceToken(ctx context.Context, start int, body string) (pbtoken.
 	whitespaceLength := len(stringToScan) - len(removedBody)
 
 	if whitespaceLength == 0 {
-		return pbtoken.Token{}, 0, tokenErrors.TokenNotParseableError(fmt.Sprintf("character %s is not whitespace", string(body[start])))
+		return pbtoken.Token{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("character %s is not whitespace", string(body[start]))}
 	}
 
 	return pbtoken.Token{

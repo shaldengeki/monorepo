@@ -4,7 +4,10 @@ import (
 	"fmt"
 )
 
-type TokenNotParseableError string
+type TokenNotParseableError struct {
+	Message string
+}
+
 func (e TokenNotParseableError) Error() string {
-	return fmt.Sprintf("Cannot parse body as token: %v", string(e))
+	return fmt.Sprintf("Cannot parse body as token: %s", e.Message)
 }
