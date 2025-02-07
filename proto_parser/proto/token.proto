@@ -12,9 +12,14 @@ message Token {
 
     oneof token {
         WhitespaceToken whitespace_token = 3;
+        CharactersToken characters_token = 4;
     }
 }
 
 message WhitespaceToken {
     string spaces = 1;
+}
+
+message CharactersToken {
+    string characters = 1;
 }

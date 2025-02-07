@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	pbtoken "github.com/shaldengeki/monorepo/proto_parser/proto/token"
+	"github.com/shaldengeki/monorepo/proto_parser/token/characters_token"
 	"github.com/shaldengeki/monorepo/proto_parser/token/whitespace_token"
 	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/token/errors"
 )
@@ -18,8 +19,12 @@ func ParseTokens(ctx context.Context, body string) ([]pbtoken.Token, error) {
 		return tokens, nil
 	}
 
+	// To add support for a new parseable token, add a function into this list.
+	// The function should return TokenNotParseableError when the current string doesn't match the token type (but could be a valid token),
+	// and any other error when the string is definitely invalid.
 	parseFuncs := []func(context.Context, int, string)(pbtoken.Token, int, error){
 		whitespace_token.ParseWhitespaceToken,
+		characters_token.ParseCharactersToken,
 	}
 
 	var unparseableError *tokenErrors.TokenNotParseableError
@@ -28,7 +33,7 @@ func ParseTokens(ctx context.Context, body string) ([]pbtoken.Token, error) {
 			tkn, idx, err := f(ctx, pos, body)
 			if err == nil {
 				tokens = append(tokens, tkn)
-				pos = pos + idx
+				pos = idx
 				break
 			}
 			if !errors.As(err, &unparseableError) {

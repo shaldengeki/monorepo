@@ -18,7 +18,7 @@ func TestParseWhitespaceToken_WithNonWhitespace_ReturnsError(t *testing.T) {
 	ctx := context.Background()
 	_, _, err := ParseWhitespaceToken(ctx, 0, "syntax  f")
 	require.NotNil(t, err)
-	errType := tokenErrors.TokenNotParseableError("test")
+	var errType *tokenErrors.TokenNotParseableError
 	assert.ErrorAs(t, err, &errType)
 }
 
