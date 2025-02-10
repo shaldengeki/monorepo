@@ -1,22 +1,22 @@
 load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
-    name = "token",
-    srcs = ["token.go"],
-    importpath = "github.com/shaldengeki/monorepo/proto_parser/token",
+    name = "tokenizer",
+    srcs = ["tokenizer.go"],
+    importpath = "github.com/shaldengeki/monorepo/proto_parser/tokenizer",
     visibility = ["//visibility:public"],
     deps = [
         "//proto_parser/proto:token_go_proto",
-        "//proto_parser/token/characters_token",
-        "//proto_parser/token/errors",
-        "//proto_parser/token/whitespace_token",
+        "//proto_parser/tokenizer/characters_token",
+        "//proto_parser/tokenizer/errors",
+        "//proto_parser/tokenizer/whitespace_token",
     ],
 )
 
 go_test(
-    name = "token_test",
-    srcs = ["token_test.go"],
-    embed = [":token"],
+    name = "tokenizer_test",
+    srcs = ["tokenizer_test.go"],
+    embed = [":tokenizer"],
     deps = [
         "//proto_parser/proto:token_go_proto",
         "@com_github_stretchr_testify//assert:go_default_library",

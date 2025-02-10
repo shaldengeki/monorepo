@@ -5,7 +5,7 @@ import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/token/errors"
+	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/tokenizer/errors"
 )
 
 func TestParseCharactersToken_WithEmptyString_ReturnsError(t *testing.T) {

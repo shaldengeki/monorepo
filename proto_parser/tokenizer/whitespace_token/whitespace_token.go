@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/token/errors"
+	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/tokenizer/errors"
 	pbtoken "github.com/shaldengeki/monorepo/proto_parser/proto/token"
 )
 

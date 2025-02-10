@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	pbtoken "github.com/shaldengeki/monorepo/proto_parser/proto/token"
-	"github.com/shaldengeki/monorepo/proto_parser/token/characters_token"
-	"github.com/shaldengeki/monorepo/proto_parser/token/whitespace_token"
-	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/token/errors"
+	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/characters_token"
+	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/whitespace_token"
+	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/tokenizer/errors"
 )
 
 
