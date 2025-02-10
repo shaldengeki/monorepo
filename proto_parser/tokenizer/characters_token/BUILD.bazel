@@ -3,11 +3,11 @@ load("@rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "characters_token",
     srcs = ["characters_token.go"],
-    importpath = "github.com/shaldengeki/monorepo/proto_parser/token/characters_token",
+    importpath = "github.com/shaldengeki/monorepo/proto_parser/tokenizer/characters_token",
     visibility = ["//visibility:public"],
     deps = [
         "//proto_parser/proto:token_go_proto",
-        "//proto_parser/token/errors",
+        "//proto_parser/tokenizer/errors",
     ],
 )
 
@@ -16,7 +16,7 @@ go_test(
     srcs = ["characters_token_test.go"],
     embed = [":characters_token"],
     deps = [
-        "//proto_parser/token/errors",
+        "//proto_parser/tokenizer/errors",
         "@com_github_stretchr_testify//assert:go_default_library",
         "@com_github_stretchr_testify//require:go_default_library",
     ],

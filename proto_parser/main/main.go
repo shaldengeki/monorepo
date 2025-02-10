@@ -5,7 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
-	"github.com/shaldengeki/monorepo/proto_parser/token"
+	tokenizer "github.com/shaldengeki/monorepo/proto_parser/tokenizer"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 		logger.Fatalf("Could not read stdin: %v", err)
 	}
 
-	tokens, err := token.ParseTokens(ctx, string(protoText))
+	tokens, err := tokenizer.ParseTokens(ctx, string(protoText))
 	if err != nil {
 		logger.Fatalf("Could not parse tokens: %v", err)
 	}
