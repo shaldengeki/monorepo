@@ -1,0 +1,13 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "syntax_node",
+    srcs = ["syntax_node.go"],
+    importpath = "github.com/shaldengeki/monorepo/proto_parser/parser/syntax_node",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//proto_parser/parser/errors",
+        "//proto_parser/proto:node_go_proto",
+        "//proto_parser/proto:token_go_proto",
+    ],
+)

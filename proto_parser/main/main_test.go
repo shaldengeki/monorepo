@@ -20,6 +20,7 @@ func TestSyntax_WithProto3_WithSingleQuotes_ReturnsNode(t *testing.T) {
 	require.Nil(t, err)
 	assert.Equal(t, 1, len(res.Nodes))
 	assert.Equal(t, "proto3", res.Nodes[0].GetSyntaxNode().Syntax)
+	assert.Equal(t, "QUOTATION_MARK_TYPE_SINGLE", res.Nodes[0].GetSyntaxNode().QuotationMarkType.String())
 }
 
 func TestSyntax_WithProto3_WithDoubleQuotes_ReturnsNode(t *testing.T) {
