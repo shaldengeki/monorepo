@@ -1,4 +1,4 @@
-load("@rules_go//go:def.bzl", "go_binary", "go_library")
+load("@rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
 
 go_library(
     name = "main_lib",
@@ -7,6 +7,7 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//proto_parser/parser",
+        "//proto_parser/proto:node_go_proto",
         "//proto_parser/tokenizer",
     ],
 )
@@ -15,4 +16,14 @@ go_binary(
     name = "main",
     embed = [":main_lib"],
     visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "main_test",
+    srcs = ["main_test.go"],
+    embed = [":main_lib"],
+    deps = [
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
 )
