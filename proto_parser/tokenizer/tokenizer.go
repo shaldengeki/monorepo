@@ -1,4 +1,4 @@
-package token
+package tokenizer
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 )
 
 
-func ParseTokens(ctx context.Context, body string) ([]pbtoken.Token, error) {
+func Tokenize(ctx context.Context, body string) ([]pbtoken.Token, error) {
 	pos := 0
 	tokens := []pbtoken.Token{}
 

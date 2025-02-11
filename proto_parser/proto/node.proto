@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package proto_parser.proto;
+
+option go_package = "github.com/shaldengeki/monorepo/proto_parser/proto/node";
+
+message Node {
+    oneof node {
+        SyntaxNode syntax_node = 1;
+    }
+}
+
+message SyntaxNode {
+    string syntax = 1;
+}
+
+message NodeTree {
+    repeated Node nodes = 1;
+}

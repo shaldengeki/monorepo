@@ -10,30 +10,30 @@ import (
 
 func TestEmpty(t *testing.T) {
 	ctx := context.Background()
-	res, err := ParseTokens(ctx, "")
+	res, err := Tokenize(ctx, "")
 	require.Nil(t, err)
 	assert.Equal(t, []pbtoken.Token{}, res)
 }
 
-func TestParseTokens_WithAllWhitespace_ReturnsWhitespaceToken(t *testing.T) {
+func TestTokenize_WithAllWhitespace_ReturnsWhitespaceToken(t *testing.T) {
 	ctx := context.Background()
-	res, err := ParseTokens(ctx, "\t  \n   \t")
+	res, err := Tokenize(ctx, "\t  \n   \t")
 	require.Nil(t, err)
 	assert.Equal(t, 1, len(res))
 	assert.Equal(t, "\t  \n   \t", res[0].GetWhitespaceToken().Spaces)
 }
 
-func TestParseTokens_WithAllCharacters_ReturnsCharactersToken(t *testing.T) {
+func TestTokenize_WithAllCharacters_ReturnsCharactersToken(t *testing.T) {
 	ctx := context.Background()
-	res, err := ParseTokens(ctx, "s9d8f7S(D*F&bS(dfs9b7df8s76df))")
+	res, err := Tokenize(ctx, "s9d8f7S(D*F&bS(dfs9b7df8s76df))")
 	require.Nil(t, err)
 	assert.Equal(t, 1, len(res))
 	assert.Equal(t, "s9d8f7S(D*F&bS(dfs9b7df8s76df))", res[0].GetCharactersToken().Characters)
 }
 
-func TestParseTokens_WithMixedCharactersWhitespace_ReturnsMultipleTokens(t *testing.T) {
+func TestTokenize_WithMixedCharactersWhitespace_ReturnsMultipleTokens(t *testing.T) {
 	ctx := context.Background()
-	res, err := ParseTokens(ctx, "aff *Ugjnk\n\t  boo")
+	res, err := Tokenize(ctx, "aff *Ugjnk\n\t  boo")
 	require.Nil(t, err)
 	assert.Equal(t, 5, len(res))
 	assert.Equal(t, "aff", res[0].GetCharactersToken().Characters)
