@@ -10,8 +10,15 @@ message Node {
     }
 }
 
+enum QuotationMarkType {
+    QUOTATION_MARK_TYPE_UNKNOWN = 0;
+    QUOTATION_MARK_TYPE_SINGLE = 1;
+    QUOTATION_MARK_TYPE_DOUBLE = 2;
+}
+
 message SyntaxNode {
     string syntax = 1;
+    QuotationMarkType quotation_mark_type = 2;
 }
 
 message NodeTree {

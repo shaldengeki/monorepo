@@ -8,6 +8,8 @@ import (
 	pbnode "github.com/shaldengeki/monorepo/proto_parser/proto/node"
 	pbtoken "github.com/shaldengeki/monorepo/proto_parser/proto/token"
 	parserErrors "github.com/shaldengeki/monorepo/proto_parser/parser/errors"
+
+	"github.com/shaldengeki/monorepo/proto_parser/parser/syntax_node"
 )
 
 
@@ -19,7 +21,9 @@ func Parse(ctx context.Context, tokens []pbtoken.Token) (pbnode.NodeTree, error)
 		return nodeTree, nil
 	}
 
-	parseFuncs := []func(context.Context, int, []pbtoken.Token)(pbnode.Node, int, error){}
+	parseFuncs := []func(context.Context, int, []pbtoken.Token)(pbnode.Node, int, error){
+		syntax_node.ParseSyntaxNode,
+	}
 
 	var unparseableError *parserErrors.NodeNotParseableError
 	for {
