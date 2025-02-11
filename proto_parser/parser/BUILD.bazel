@@ -6,6 +6,7 @@ go_library(
     importpath = "github.com/shaldengeki/monorepo/proto_parser/parser",
     visibility = ["//visibility:public"],
     deps = [
+        "//proto_parser/parser/errors",
         "//proto_parser/proto:node_go_proto",
         "//proto_parser/proto:token_go_proto",
     ],

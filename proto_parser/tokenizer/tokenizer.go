@@ -29,6 +29,7 @@ func Tokenize(ctx context.Context, body string) ([]pbtoken.Token, error) {
 
 	var unparseableError *tokenErrors.TokenNotParseableError
 	for {
+		priorPos := pos
 		for _, f := range parseFuncs {
 			tkn, idx, err := f(ctx, pos, body)
 			if err == nil {
@@ -42,6 +43,10 @@ func Tokenize(ctx context.Context, body string) ([]pbtoken.Token, error) {
 		}
 		if pos >= len(body) {
 			break
+		}
+
+		if pos == priorPos {
+			return []pbtoken.Token{}, fmt.Errorf("Body position %d was unparseable as token: %v", pos, body)
 		}
 	}
 	return tokens, nil
