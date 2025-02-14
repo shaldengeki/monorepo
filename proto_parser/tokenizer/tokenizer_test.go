@@ -33,12 +33,15 @@ func TestTokenize_WithAllCharacters_ReturnsCharactersToken(t *testing.T) {
 
 func TestTokenize_WithMixedCharactersWhitespace_ReturnsMultipleTokens(t *testing.T) {
 	ctx := context.Background()
-	res, err := Tokenize(ctx, "aff Ugjnk\n\t  boo")
+	res, err := Tokenize(ctx, "aff Ugjnk\n-23768\t  boo")
 	require.Nil(t, err)
-	assert.Equal(t, 5, len(res))
+	assert.Equal(t, 7, len(res))
 	assert.Equal(t, "aff", res[0].GetCharactersToken().Characters)
 	assert.Equal(t, " ", res[1].GetWhitespaceToken().Spaces)
 	assert.Equal(t, "Ugjnk", res[2].GetCharactersToken().Characters)
-	assert.Equal(t, "\n\t  ", res[3].GetWhitespaceToken().Spaces)
-	assert.Equal(t, "boo", res[4].GetCharactersToken().Characters)
+	assert.Equal(t, "\n", res[3].GetWhitespaceToken().Spaces)
+	assert.Equal(t, "23768", res[4].GetIntegerToken().GetDecimalToken().Literal)
+	assert.True(t, res[4].GetIntegerToken().GetDecimalToken().Negative)
+	assert.Equal(t, "\t  ", res[5].GetWhitespaceToken().Spaces)
+	assert.Equal(t, "boo", res[6].GetCharactersToken().Characters)
 }

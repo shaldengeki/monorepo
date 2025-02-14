@@ -26,10 +26,6 @@ message WhitespaceToken {
     string spaces = 1;
 }
 
-message CharactersToken {
-    string characters = 1;
-}
-
 message IdentifierToken {
     string identifier = 1;
 }
