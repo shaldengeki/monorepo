@@ -18,7 +18,7 @@ func IsDecimalRune(r rune) bool {
 
 func ParseDecimalToken(ctx context.Context, start int, body string) (pbtoken.DecimalToken, int, error) {
 	if start >= len(body) {
-		return pbtoken.DecimalToken{}, 0, fmt.Errorf("Cannot parse identifier in position %d in body of length %d", start, len(body))
+		return pbtoken.DecimalToken{}, 0, fmt.Errorf("Cannot parse decimal in position %d in body of length %d", start, len(body))
 	}
 
 	negative := false
@@ -28,7 +28,7 @@ func ParseDecimalToken(ctx context.Context, start int, body string) (pbtoken.Dec
 	}
 
 	if !IsDecimalLeadingRune(rune(body[start])) {
-		return pbtoken.DecimalToken{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("prefix of %s is not a parseable as an identifier", body)}
+		return pbtoken.DecimalToken{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("prefix of %s is not a parseable as a decimal", body)}
 	}
 
 	stringToScan := string(body[start:])
