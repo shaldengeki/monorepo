@@ -26,6 +26,9 @@ func ParseDecimalToken(ctx context.Context, start int, body string) (pbtoken.Dec
 		negative = true
 		start += 1
 	}
+	if start >= len(body) {
+		return pbtoken.DecimalToken{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("prefix of %s is not a parseable as a decimal", body)}
+	}
 
 	if !IsDecimalLeadingRune(rune(body[start])) {
 		return pbtoken.DecimalToken{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("prefix of %s is not a parseable as a decimal", body)}

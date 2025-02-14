@@ -17,7 +17,7 @@ func TestParseIdentifierToken_WithEmptyString_ReturnsError(t *testing.T) {
 func TestParseIdentifierToken_WithNonCharacters_ReturnsError(t *testing.T) {
 	ctx := context.Background()
 	_, _, err := ParseIdentifierToken(ctx, 0, " foo bar")
-	require.NotNil(t, err)
+	require.Error(t, err)
 	var errType *tokenErrors.TokenNotParseableError
 	assert.ErrorAs(t, err, &errType)
 }
@@ -26,7 +26,7 @@ func TestParseIdentifierToken_WithCharactersOnly_ReturnsWholeBody(t *testing.T) 
 	ctx := context.Background()
 	body := "asaspd8728_sdfoijbpsdofi"
 	res, idx, err := ParseIdentifierToken(ctx, 0, body)
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.NotNil(t, res.GetIdentifierToken())
 	assert.Equal(t, body, res.GetIdentifierToken().Identifier)
 	assert.Equal(t, len(body), idx)
@@ -36,7 +36,7 @@ func TestParseIdentifierToken_WithPartialCharacters_ReturnsLeadingCharacters(t *
 	ctx := context.Background()
 	body := "asodfdgdZ*DVS)09sd8f fapsdfoij\npsodifjpa"
 	res, idx, err := ParseIdentifierToken(ctx, 0, body)
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.NotNil(t, res.GetIdentifierToken())
 	assert.Equal(t, "asodfdgdZ", res.GetIdentifierToken().Identifier)
 	assert.Equal(t, 9, idx)
