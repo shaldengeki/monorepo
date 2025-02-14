@@ -17,7 +17,15 @@ func TestParseDecimalToken_WithEmptyString_ReturnsError(t *testing.T) {
 func TestParseDecimalToken_WithNonDigits_ReturnsError(t *testing.T) {
 	ctx := context.Background()
 	_, _, err := ParseDecimalToken(ctx, 0, "foo")
-	require.NotNil(t, err)
+	require.Error(t, err)
+	var errType *tokenErrors.TokenNotParseableError
+	assert.ErrorAs(t, err, &errType)
+}
+
+func TestParseDecimalToken_WithDash_ReturnsError(t *testing.T) {
+	ctx := context.Background()
+	_, _, err := ParseDecimalToken(ctx, 0, "-")
+	require.Error(t, err)
 	var errType *tokenErrors.TokenNotParseableError
 	assert.ErrorAs(t, err, &errType)
 }

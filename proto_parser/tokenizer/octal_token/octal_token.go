@@ -26,6 +26,9 @@ func ParseOctalToken(ctx context.Context, start int, body string) (pbtoken.Octal
 		negative = true
 		start += 1
 	}
+	if start >= len(body) {
+		return pbtoken.OctalToken{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("prefix of %s is not a parseable as an octal", body)}
+	}
 
 	if !IsOctalLeadingRune(rune(body[start])) {
 		return pbtoken.OctalToken{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("prefix of %s is not a parseable as an octal", body)}
