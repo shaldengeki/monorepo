@@ -8,6 +8,26 @@ import (
 	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/tokenizer/errors"
 )
 
+func TestLeadingWhitespaceLength_WithEmptyString_ReturnsZero(t *testing.T) {
+	ctx := context.Background()
+	assert.Equal(t, 0, LeadingWhitespaceLength(ctx, ""))
+}
+
+func TestLeadingWhitespaceLength_WithAllSpaces_ReturnsLength(t *testing.T) {
+	ctx := context.Background()
+	assert.Equal(t, 3, LeadingWhitespaceLength(ctx, "\n\t "))
+}
+
+func TestLeadingWhitespaceLength_WithLeadingSpaces_ReturnsRightLength(t *testing.T) {
+	ctx := context.Background()
+	assert.Equal(t, 3, LeadingWhitespaceLength(ctx, "\n\t foo   "))
+}
+
+func TestLeadingWhitespaceLength_WithLeadingNonSpaces_ReturnsZero(t *testing.T) {
+	ctx := context.Background()
+	assert.Equal(t, 0, LeadingWhitespaceLength(ctx, "yay\n\t foo"))
+}
+
 func TestParseWhitespaceToken_WithEmptyString_ReturnsError(t *testing.T) {
 	ctx := context.Background()
 	_, _, err := ParseWhitespaceToken(ctx, 0, "")
