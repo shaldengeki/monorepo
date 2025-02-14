@@ -6,6 +6,7 @@ import (
 	"fmt"
 	pbtoken "github.com/shaldengeki/monorepo/proto_parser/proto/token"
 	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/identifier_token"
+	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/integer_token"
 	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/whitespace_token"
 	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/tokenizer/errors"
 )
@@ -25,6 +26,7 @@ func Tokenize(ctx context.Context, body string) ([]pbtoken.Token, error) {
 	parseFuncs := []func(context.Context, int, string)(pbtoken.Token, int, error){
 		whitespace_token.ParseWhitespaceToken,
 		identifier_token.ParseIdentifierToken,
+		integer_token.ParseIntegerToken,
 	}
 
 	var unparseableError *tokenErrors.TokenNotParseableError
