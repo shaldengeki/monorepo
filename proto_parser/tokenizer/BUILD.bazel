@@ -7,8 +7,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//proto_parser/proto:token_go_proto",
-        "//proto_parser/tokenizer/characters_token",
         "//proto_parser/tokenizer/errors",
+        "//proto_parser/tokenizer/identifier_token",
         "//proto_parser/tokenizer/whitespace_token",
     ],
 )
