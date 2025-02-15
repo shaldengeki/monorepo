@@ -143,5 +143,5 @@ node_modules/
 postgres-data/
 
 # AWS
-settings.json
+./settings.json
 .aws-credentials
