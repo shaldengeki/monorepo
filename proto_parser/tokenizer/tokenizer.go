@@ -8,6 +8,7 @@ import (
 	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/identifier_token"
 	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/integer_token"
 	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/whitespace_token"
+	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/floating_point_token"
 	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/tokenizer/errors"
 )
 
@@ -27,6 +28,7 @@ func Tokenize(ctx context.Context, body string) ([]pbtoken.Token, error) {
 		whitespace_token.ParseWhitespaceToken,
 		identifier_token.ParseIdentifierToken,
 		integer_token.ParseIntegerToken,
+		floating_point_token.ParseFloatingPointToken,
 	}
 
 	var unparseableError *tokenErrors.TokenNotParseableError

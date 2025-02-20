@@ -1,0 +1,24 @@
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "floating_point_token",
+    srcs = ["floating_point_token.go"],
+    importpath = "github.com/shaldengeki/monorepo/proto_parser/tokenizer/floating_point_token",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//proto_parser/proto:token_go_proto",
+        "//proto_parser/tokenizer/decimal_token",
+        "//proto_parser/tokenizer/errors",
+    ],
+)
+
+go_test(
+    name = "floating_point_token_test",
+    srcs = ["floating_point_token_test.go"],
+    embed = [":floating_point_token"],
+    deps = [
+        "//proto_parser/tokenizer/errors",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)
