@@ -89,39 +89,39 @@ func TestParseStringToken_WithDoubleQuotedString_ReturnsSingleString(t *testing.
 	assert.Equal(t, 29, idx)
 }
 
-func TestParseStringToken_WithCharEscapes_ReturnsCharEscapes(t *testing.T) {
+func TestParseStringToken_WithSimpleEscapes_ReturnsSimpleEscapes(t *testing.T) {
 	ctx := context.Background()
-	body := "\"\r\n\" foo bar"
+	body := "\"\\r\\n\" foo bar"
 	res, idx, err := ParseStringToken(ctx, 0, body)
 	require.NoError(t, err)
 	require.NotNil(t, res.GetStringToken())
 	assert.Equal(t, 1, len(res.GetStringToken().StringLiterals))
 	assert.Equal(t, pbtoken.QuotationMarkType_QUOTATION_MARK_TYPE_DOUBLE, res.GetStringToken().StringLiterals[0].QuotationMarkType)
-	assert.Equal(t, "\r\n", res.GetStringToken().StringLiterals[0].Value)
-	assert.Equal(t, 4, idx)
+	assert.Equal(t, "\\r\\n", res.GetStringToken().StringLiterals[0].Value)
+	assert.Equal(t, 6, idx)
 }
 
 func TestParseStringToken_WithMixedEscapesAndCharacters_ReturnsMixture(t *testing.T) {
 	ctx := context.Background()
-	body := "\"test asd\nf)S(Dn8fy\r0Afs0f(*NSD))\" foo bar"
+	body := "\"test asd\\nf)S(Dn8fy\\x0Afs0f(*NSD))\" foo bar"
 	res, idx, err := ParseStringToken(ctx, 0, body)
 	require.NoError(t, err)
 	require.NotNil(t, res.GetStringToken())
 	assert.Equal(t, 1, len(res.GetStringToken().StringLiterals))
 	assert.Equal(t, pbtoken.QuotationMarkType_QUOTATION_MARK_TYPE_DOUBLE, res.GetStringToken().StringLiterals[0].QuotationMarkType)
-	assert.Equal(t, "test asd\nf)S(Dn8fy\x0Afs0f(*NSD))", res.GetStringToken().StringLiterals[0].Value)
+	assert.Equal(t, "test asd\\nf)S(Dn8fy\\x0Afs0f(*NSD))", res.GetStringToken().StringLiterals[0].Value)
 	assert.Equal(t, 34, idx)
 }
 
 func TestParseStringToken_WithMultipleLiterals_ReturnsAllLiterals(t *testing.T) {
 	ctx := context.Background()
-	body := "\"foo bar\r\n\" 'baz bat'"
+	body := "\"foo bar\\r\\n\" 'baz bat'"
 	res, idx, err := ParseStringToken(ctx, 0, body)
 	require.NoError(t, err)
 	require.NotNil(t, res.GetStringToken())
-	assert.Equal(t, 2, len(res.GetStringToken().StringLiterals))
+	require.Equal(t, 2, len(res.GetStringToken().StringLiterals))
 	assert.Equal(t, pbtoken.QuotationMarkType_QUOTATION_MARK_TYPE_DOUBLE, res.GetStringToken().StringLiterals[0].QuotationMarkType)
-	assert.Equal(t, "foo bar \r\n", res.GetStringToken().StringLiterals[0].Value)
+	assert.Equal(t, "foo bar\\r\\n", res.GetStringToken().StringLiterals[0].Value)
 	assert.Equal(t, pbtoken.QuotationMarkType_QUOTATION_MARK_TYPE_SINGLE, res.GetStringToken().StringLiterals[1].QuotationMarkType)
 	assert.Equal(t, "baz bat", res.GetStringToken().StringLiterals[1].Value)
 	assert.Equal(t, 21, idx)

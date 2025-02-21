@@ -34,8 +34,21 @@ func ParseRegularString(ctx context.Context, start int, body string, openingQuot
 	return string(body[start:currIdx]), currIdx, nil
 }
 
+func IsSimpleEscapeRune(s string) bool {
+	return strings.Contains("abfnrtv\\'\"?", s)
+}
+
 func ParseSimpleEscapeSequence(ctx context.Context, start int, body string, openingQuote string) (string, int, error) {
-	return "", 0, &tokenErrors.TokenNotParseableError{Message: "TODO"}
+	if start >= len(body) {
+		return "", 0, fmt.Errorf("Cannot parse simple escape in position %d in body of length %d", start, len(body))
+	}
+
+	stringToScan := string(body[start:])
+	if len(stringToScan) < 2 || string(stringToScan[0]) != "\\" || !IsSimpleEscapeRune(string(stringToScan[1])) {
+		return "", 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("body %s, position %d is not parseable as a simple escape", body, start)}
+	}
+
+	return string(stringToScan[0:2]), start + 2, nil
 }
 
 func ParseHexEscapeSequence(ctx context.Context, start int, body string, openingQuote string) (string, int, error) {
@@ -62,11 +75,11 @@ func ParseStringSingleToken(ctx context.Context, start int, body string) (pbtoke
 	}
 
 	parseFuncs := []func(context.Context, int, string, string) (string, int, error){
-		ParseRegularString,
 		ParseSimpleEscapeSequence,
 		ParseHexEscapeSequence,
 		ParseOctalEscapeSequence,
 		ParseUnicodeEscapeSequence,
+		ParseRegularString,
 	}
 
 	idx := start
@@ -116,10 +129,11 @@ func ParseStringToken(ctx context.Context, start int, body string) (pbtoken.Toke
 
 	idx := start
 	tokens := []*pbtoken.StringSingleToken{}
+	var lastErr error
 
 	for {
-		tkn, newIdx, err := ParseStringSingleToken(ctx, idx, body)
-		if err == nil {
+		tkn, newIdx, parseErr := ParseStringSingleToken(ctx, idx, body)
+		if parseErr == nil {
 			tokens = append(tokens, &tkn)
 			idx = newIdx
 
@@ -129,15 +143,16 @@ func ParseStringToken(ctx context.Context, start int, body string) (pbtoken.Toke
 			continue
 		}
 
-		if errors.As(err, &unparseableError) {
+		if errors.As(parseErr, &unparseableError) {
+			lastErr = parseErr
 			break
 		} else {
-			return pbtoken.Token{}, start, fmt.Errorf("Unexpected error when parsing string literal tokens at position %d: %w\nfor body: %s", idx, err, body)
+			return pbtoken.Token{}, start, fmt.Errorf("Unexpected error when parsing string literal tokens at position %d: %w\nfor body: %s", idx, parseErr, body)
 		}
 	}
 
 	if len(tokens) == 0 {
-		return pbtoken.Token{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("body %s, start %d is not a parseable as a string literal", body, start)}
+		return pbtoken.Token{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("body %s, start %d is not parseable as a string literal: %w", body, start, lastErr)}
 	}
 
 	return pbtoken.Token{
