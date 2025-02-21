@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	pbtoken "github.com/shaldengeki/monorepo/proto_parser/proto/token"
 	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/tokenizer/errors"
@@ -13,8 +14,24 @@ func IsStringQuote(s string) bool {
 	return s == "\"" || s == "'"
 }
 
+func IsRegularStringRune(r rune, openingQuote string) bool {
+	return !strings.ContainsRune("\n\x00\\"+openingQuote, r)
+}
+
 func ParseRegularString(ctx context.Context, start int, body string, openingQuote string) (string, int, error) {
-	return "", 0, &tokenErrors.TokenNotParseableError{Message: "TODO"}
+	currIdx := start
+	for idx, r := range string(body[start:]) {
+		currIdx = idx + start
+		if !IsRegularStringRune(r, openingQuote) {
+			break
+		}
+	}
+
+	if currIdx == start {
+		return "", 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("body %s, position %d is not parseable as a regular string", body, currIdx)}
+	}
+
+	return string(body[start:currIdx]), currIdx, nil
 }
 
 func ParseSimpleEscapeSequence(ctx context.Context, start int, body string, openingQuote string) (string, int, error) {
@@ -73,7 +90,7 @@ func ParseStringSingleToken(ctx context.Context, start int, body string) (pbtoke
 	}
 
 	// We should now be pointing at an end quote, matching the leading quote.
-	if string(body[idx]) != openingQuote {
+	if idx >= len(body) || string(body[idx]) != openingQuote {
 		return pbtoken.StringSingleToken{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("body %s, position %d does not end with a string quote matching leading quote %s", body, idx, openingQuote)}
 	}
 
@@ -113,10 +130,14 @@ func ParseStringToken(ctx context.Context, start int, body string) (pbtoken.Toke
 		}
 
 		if errors.As(err, &unparseableError) {
-			return pbtoken.Token{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("body %s, start %d is not a parseable as a string literal: %w", body, start, err)}
+			break
 		} else {
 			return pbtoken.Token{}, start, fmt.Errorf("Unexpected error when parsing string literal tokens at position %d: %w\nfor body: %s", idx, err, body)
 		}
+	}
+
+	if len(tokens) == 0 {
+		return pbtoken.Token{}, 0, &tokenErrors.TokenNotParseableError{Message: fmt.Sprintf("body %s, start %d is not a parseable as a string literal", body, start)}
 	}
 
 	return pbtoken.Token{
