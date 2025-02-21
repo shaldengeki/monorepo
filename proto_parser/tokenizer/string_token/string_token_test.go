@@ -103,14 +103,14 @@ func TestParseStringToken_WithSimpleEscapes_ReturnsSimpleEscapes(t *testing.T) {
 
 func TestParseStringToken_WithMixedEscapesAndCharacters_ReturnsMixture(t *testing.T) {
 	ctx := context.Background()
-	body := "\"test asd\\nf)S(Dn8fy\\x0Afs0f(*NSD))\" foo bar"
+	body := "\"test asd\\nf)S\\012345(Dn8fy\\x0Afs0\\u0FA3f(*NSD))\" foo bar"
 	res, idx, err := ParseStringToken(ctx, 0, body)
 	require.NoError(t, err)
 	require.NotNil(t, res.GetStringToken())
 	assert.Equal(t, 1, len(res.GetStringToken().StringLiterals))
 	assert.Equal(t, pbtoken.QuotationMarkType_QUOTATION_MARK_TYPE_DOUBLE, res.GetStringToken().StringLiterals[0].QuotationMarkType)
-	assert.Equal(t, "test asd\\nf)S(Dn8fy\\x0Afs0f(*NSD))", res.GetStringToken().StringLiterals[0].Value)
-	assert.Equal(t, 34, idx)
+	assert.Equal(t, "test asd\\nf)S\\012345(Dn8fy\\x0Afs0\\u0FA3f(*NSD))", res.GetStringToken().StringLiterals[0].Value)
+	assert.Equal(t, 49, idx)
 }
 
 func TestParseStringToken_WithMultipleLiterals_ReturnsAllLiterals(t *testing.T) {
@@ -119,10 +119,10 @@ func TestParseStringToken_WithMultipleLiterals_ReturnsAllLiterals(t *testing.T) 
 	res, idx, err := ParseStringToken(ctx, 0, body)
 	require.NoError(t, err)
 	require.NotNil(t, res.GetStringToken())
-	require.Equal(t, 2, len(res.GetStringToken().StringLiterals))
+	assert.Equal(t, 2, len(res.GetStringToken().StringLiterals))
 	assert.Equal(t, pbtoken.QuotationMarkType_QUOTATION_MARK_TYPE_DOUBLE, res.GetStringToken().StringLiterals[0].QuotationMarkType)
 	assert.Equal(t, "foo bar\\r\\n", res.GetStringToken().StringLiterals[0].Value)
 	assert.Equal(t, pbtoken.QuotationMarkType_QUOTATION_MARK_TYPE_SINGLE, res.GetStringToken().StringLiterals[1].QuotationMarkType)
 	assert.Equal(t, "baz bat", res.GetStringToken().StringLiterals[1].Value)
-	assert.Equal(t, 21, idx)
+	assert.Equal(t, 23, idx)
 }
