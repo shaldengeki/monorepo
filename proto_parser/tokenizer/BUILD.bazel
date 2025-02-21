@@ -12,6 +12,7 @@ go_library(
         "//proto_parser/tokenizer/floating_point_token",
         "//proto_parser/tokenizer/identifier_token",
         "//proto_parser/tokenizer/integer_token",
+        "//proto_parser/tokenizer/string_token",
         "//proto_parser/tokenizer/whitespace_token",
     ],
 )

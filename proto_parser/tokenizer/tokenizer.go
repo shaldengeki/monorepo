@@ -4,15 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	pbtoken "github.com/shaldengeki/monorepo/proto_parser/proto/token"
 	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/boolean_token"
+	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/tokenizer/errors"
+	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/floating_point_token"
 	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/identifier_token"
 	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/integer_token"
+	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/string_token"
 	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/whitespace_token"
-	"github.com/shaldengeki/monorepo/proto_parser/tokenizer/floating_point_token"
-	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/tokenizer/errors"
 )
-
 
 func Tokenize(ctx context.Context, body string) ([]pbtoken.Token, error) {
 	pos := 0
@@ -25,12 +26,13 @@ func Tokenize(ctx context.Context, body string) ([]pbtoken.Token, error) {
 	// To add support for a new parseable token, add a function into this list.
 	// The function should return TokenNotParseableError when the current string doesn't match the token type (but could be a valid token),
 	// and any other error when the string is definitely invalid.
-	parseFuncs := []func(context.Context, int, string)(pbtoken.Token, int, error){
+	parseFuncs := []func(context.Context, int, string) (pbtoken.Token, int, error){
 		whitespace_token.ParseWhitespaceToken,
 		boolean_token.ParseBooleanToken,
 		identifier_token.ParseIdentifierToken,
 		floating_point_token.ParseFloatingPointToken,
 		integer_token.ParseIntegerToken,
+		string_token.ParseStringToken,
 	}
 
 	var unparseableError *tokenErrors.TokenNotParseableError
