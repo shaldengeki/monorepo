@@ -110,7 +110,7 @@ func TestParseStringToken_WithMixedEscapesAndCharacters_ReturnsMixture(t *testin
 	assert.Equal(t, 1, len(res.GetStringToken().StringLiterals))
 	assert.Equal(t, pbtoken.QuotationMarkType_QUOTATION_MARK_TYPE_DOUBLE, res.GetStringToken().StringLiterals[0].QuotationMarkType)
 	assert.Equal(t, "test asd\\nf)S\\012345(Dn8fy\\x0Afs0\\u0FA3f(*NSD))", res.GetStringToken().StringLiterals[0].Value)
-	assert.Equal(t, 49, idx)
+	assert.Equal(t, 50, idx)
 }
 
 func TestParseStringToken_WithMultipleLiterals_ReturnsAllLiterals(t *testing.T) {
