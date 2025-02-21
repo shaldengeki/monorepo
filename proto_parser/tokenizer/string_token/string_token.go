@@ -210,26 +210,16 @@ func ParseStringToken(ctx context.Context, start int, body string) (pbtoken.Toke
 
 	idx := start
 	lastIdx := idx
+	lastStringTokenIdx := start
 	tokens := []*pbtoken.StringSingleToken{}
 	var lastErr error
 
 	for {
-		// See if this is whitespace.
-		_, newIdx, whitespaceErr := whitespace_token.ParseWhitespaceToken(ctx, idx, body)
-		if whitespaceErr == nil {
-			idx = newIdx
-
-			if idx >= len(body) {
-				break
-			}
-		} else if !errors.As(whitespaceErr, &unparseableError) {
-			return pbtoken.Token{}, 0, fmt.Errorf("Unexpected error when parsing string literal tokens (whitespace) at position %d: %w\nfor body: %s", idx, whitespaceErr, body)
-		}
-
 		tkn, newIdx, parseErr := ParseStringSingleToken(ctx, idx, body)
 		if parseErr == nil {
 			tokens = append(tokens, &tkn)
 			idx = newIdx
+			lastStringTokenIdx = idx
 
 			if idx >= len(body) {
 				break
@@ -241,6 +231,18 @@ func ParseStringToken(ctx context.Context, start int, body string) (pbtoken.Toke
 			return pbtoken.Token{}, 0, fmt.Errorf("Unexpected error when parsing string literal tokens at position %d: %w\nfor body: %s", idx, parseErr, body)
 		}
 		lastErr = parseErr
+
+		// See if this is whitespace.
+		_, newIdx, whitespaceErr := whitespace_token.ParseWhitespaceToken(ctx, idx, body)
+		if whitespaceErr == nil {
+			idx = newIdx
+
+			if idx >= len(body) {
+				break
+			}
+		} else if !errors.As(whitespaceErr, &unparseableError) {
+			return pbtoken.Token{}, 0, fmt.Errorf("Unexpected error when parsing string literal tokens (whitespace) at position %d: %w\nfor body: %s", idx, whitespaceErr, body)
+		}
 
 		// Not a string.
 		if lastIdx == idx {
@@ -259,5 +261,5 @@ func ParseStringToken(ctx context.Context, start int, body string) (pbtoken.Toke
 				StringLiterals: tokens,
 			},
 		},
-	}, idx, nil
+	}, lastStringTokenIdx, nil
 }
