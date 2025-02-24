@@ -78,9 +78,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - name: Deploy API
-        run: flyctl deploy
-        working-directory: ark_nova_stats/api
+      # - name: Deploy API
+      #   run: flyctl deploy
+      #   working-directory: ark_nova_stats/api
       - name: Deploy frontend
         run: flyctl deploy
         working-directory: ark_nova_stats/frontend
