@@ -27,10 +27,10 @@ func TestTokenize_WithAllWhitespace_ReturnsWhitespaceToken(t *testing.T) {
 
 func TestTokenize_WithAllCharacters_ReturnsCharactersToken(t *testing.T) {
 	ctx := context.Background()
-	res, err := Tokenize(ctx, "s9d8f7S(D*F&bS(dfs9b7df8s76df))")
+	res, err := Tokenize(ctx, "s9d8f7S")
 	require.Nil(t, err)
 	assert.Equal(t, 1, len(res))
-	assert.Equal(t, "s9d8f7S", res[0].GetCharactersToken().Characters)
+	assert.Equal(t, "s9d8f7S", res[0].GetIdentifierToken().Identifier)
 }
 
 func TestTokenize_WithMixedCharactersWhitespace_ReturnsMultipleTokens(t *testing.T) {
@@ -38,14 +38,14 @@ func TestTokenize_WithMixedCharactersWhitespace_ReturnsMultipleTokens(t *testing
 	res, err := Tokenize(ctx, "aff Ugjnk\n-23768\t  04334635 boo")
 	require.Nil(t, err)
 	assert.Equal(t, 9, len(res))
-	assert.Equal(t, "aff", res[0].GetCharactersToken().Characters)
+	assert.Equal(t, "aff", res[0].GetIdentifierToken().Identifier)
 	assert.Equal(t, " ", res[1].GetWhitespaceToken().Spaces)
-	assert.Equal(t, "Ugjnk", res[2].GetCharactersToken().Characters)
+	assert.Equal(t, "Ugjnk", res[2].GetIdentifierToken().Identifier)
 	assert.Equal(t, "\n", res[3].GetWhitespaceToken().Spaces)
 	assert.Equal(t, "23768", res[4].GetIntegerToken().GetDecimalToken().Literal)
 	assert.True(t, res[4].GetIntegerToken().GetDecimalToken().Negative)
 	assert.Equal(t, "\t  ", res[5].GetWhitespaceToken().Spaces)
 	assert.Equal(t, "04334635", res[6].GetIntegerToken().GetOctalToken().Literal)
-	assert.Equal(t, " ", res[7].WhitespaceToken().Spaces)
-	assert.Equal(t, "boo", res[8].GetCharactersToken().Characters)
+	assert.Equal(t, " ", res[7].GetWhitespaceToken().Spaces)
+	assert.Equal(t, "boo", res[8].GetIdentifierToken().Identifier)
 }

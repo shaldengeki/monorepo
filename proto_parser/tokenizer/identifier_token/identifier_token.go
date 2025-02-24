@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/tokenizer/errors"
+
 	pbtoken "github.com/shaldengeki/monorepo/proto_parser/proto/token"
+	tokenErrors "github.com/shaldengeki/monorepo/proto_parser/tokenizer/errors"
 )
 
 func IsIdentifierLeadingRune(r rune) bool {
@@ -37,7 +38,7 @@ func ParseIdentifierToken(ctx context.Context, start int, body string) (pbtoken.
 	return pbtoken.Token{
 		Token: &pbtoken.Token_IdentifierToken{
 			IdentifierToken: &pbtoken.IdentifierToken{
-				Identifier: string(body[:endIdx + 1]),
+				Identifier: string(stringToScan[:endIdx+1]),
 			},
 		},
 	}, start + endIdx + 1, nil
