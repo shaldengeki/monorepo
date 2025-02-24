@@ -1,4 +1,4 @@
-load("@rules_go//go:def.bzl", "go_library")
+load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "tokenizer",
@@ -14,5 +14,16 @@ go_library(
         "//proto_parser/tokenizer/integer_token",
         "//proto_parser/tokenizer/string_token",
         "//proto_parser/tokenizer/whitespace_token",
+    ],
+)
+
+go_test(
+    name = "tokenizer_test",
+    srcs = ["tokenizer_test.go"],
+    embed = [":tokenizer"],
+    deps = [
+        "//proto_parser/proto:token_go_proto",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
     ],
 )
