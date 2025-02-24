@@ -17,7 +17,7 @@
         "@testing-library/user-event": "^14.6.1",
         "@types/node": "^22.13.5",
         "@types/react": "^19.0.9",
-        "@types/react-dom": "^19.0.3",
+        "@types/react-dom": "^19.0.4",
         "d3-array": "^3.0.0",
         "d3-collection": "^1.0.0",
         "d3-dispatch": "^3.0.0",
