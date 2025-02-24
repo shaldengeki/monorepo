@@ -1,11 +1,13 @@
-package token
+package tokenizer
 
 import (
 	"context"
 	"testing"
-	pbtoken "github.com/shaldengeki/monorepo/proto_parser/proto/token"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	pbtoken "github.com/shaldengeki/monorepo/proto_parser/proto/token"
 )
 
 func TestEmpty(t *testing.T) {
