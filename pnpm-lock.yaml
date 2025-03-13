@@ -75,8 +75,8 @@ dependencies:
     specifier: ^2.0.1
     version: 2.0.1
   plotly.js:
-    specifier: ^3.0.0
-    version: 3.0.0(mapbox-gl@1.13.3)(webpack@5.98.0)
+    specifier: ^3.0.1
+    version: 3.0.1(mapbox-gl@1.13.3)(webpack@5.98.0)
   plotly.js-basic-dist:
     specifier: ^3.0.1
     version: 3.0.1
@@ -91,7 +91,7 @@ dependencies:
     version: 19.0.0(react@19.0.0)
   react-plotly.js:
     specifier: ^2.6.0
-    version: 2.6.0(plotly.js@3.0.0)(react@19.0.0)
+    version: 2.6.0(plotly.js@3.0.1)(react@19.0.0)
   react-router-dom:
     specifier: ^7.3.0
     version: 7.3.0(react-dom@19.0.0)(react@19.0.0)
@@ -4287,10 +4287,6 @@ packages:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
-  /almost-equal@1.1.0:
-    resolution: {integrity: sha512-0V/PkoculFl5+0Lp47JoxUcO0xSxhIBvm+BxHdD/OgXNmdRpRHCFnKVuUoWyS9EzQP+otSGv0m9Lb4yVkQBn2A==}
-    dev: false
-
   /ansi-escapes@4.3.2:
     resolution: {integrity: sha512-gKXj5ALrKWQLsYG9jlTRmR/xKluxHV+Z9QEwNIgCfM1/uwPMCuzVVnh5mwTd+OuBZcwSIMbqssNWRm1lE51QaQ==}
     engines: {node: '>=8'}
@@ -5150,7 +5146,7 @@ packages:
     resolution: {integrity: sha512-rUT/HDXMr6RFffrR53oX3HGWkDOP9goSAQGBkUaAYKjOE2JxozccdGyufageWDlInRAjm/jYPrf/Y38oa+7obw==}
     dependencies:
       clamp: 1.0.1
-      color-rgba: 2.1.1
+      color-rgba: 2.4.0
       dtype: 2.0.0
     dev: false
 
@@ -5166,19 +5162,22 @@ packages:
       color-name: 1.1.4
     dev: false
 
-  /color-rgba@2.1.1:
-    resolution: {integrity: sha512-VaX97wsqrMwLSOR6H7rU1Doa2zyVdmShabKrPEIFywLlHoibgD3QW9Dw6fSqM4+H/LfjprDNAUUW31qEQcGzNw==}
+  /color-rgba@2.4.0:
+    resolution: {integrity: sha512-Nti4qbzr/z2LbUWySr7H9dk3Rl7gZt7ihHAxlgT4Ho90EXWkjtkL1avTleu9yeGuqrt/chxTB6GKK8nZZ6V0+Q==}
     dependencies:
-      clamp: 1.0.1
       color-parse: 1.4.3
-      color-space: 1.16.0
+      color-space: 2.3.1
     dev: false
 
-  /color-space@1.16.0:
-    resolution: {integrity: sha512-A6WMiFzunQ8KEPFmj02OnnoUnqhmSaHaZ/0LVFcPTdlvm8+3aMJ5x1HRHy3bDHPkovkf4sS0f4wsVvwk71fKkg==}
+  /color-rgba@3.0.0:
+    resolution: {integrity: sha512-PPwZYkEY3M2THEHHV6Y95sGUie77S7X8v+h1r6LSAPF3/LL2xJ8duUXSrkic31Nzc4odPwHgUbiX/XuTYzQHQg==}
     dependencies:
-      hsluv: 0.0.3
-      mumath: 3.3.4
+      color-parse: 2.0.0
+      color-space: 2.3.1
+    dev: false
+
+  /color-space@2.3.1:
+    resolution: {integrity: sha512-5DJdKYwoDji3ik/i0xSn+SiwXsfwr+1FEcCMUz2GS5speGCfGSbBMOLd84SDUBOuX8y4CvdFJmOBBJuC4wp7sQ==}
     dev: false
 
   /colord@2.9.3:
@@ -7931,10 +7930,6 @@ packages:
       wbuf: 1.7.3
     dev: false
 
-  /hsluv@0.0.3:
-    resolution: {integrity: sha512-08iL2VyCRbkQKBySkSh6m8zMUa3sADAxGVWs3Z1aPcUkTJeK0ETG4Fc27tEmQBGUAXZjIsXOZqBvacuVNSC/fQ==}
-    dev: false
-
   /html-encoding-sniffer@2.0.1:
     resolution: {integrity: sha512-D5JbOMBIR/TVZkubHT+OyT2705QvogUW4IBn6nHd756OwieSF9aDYFj4dv6HHEVGYbHaLETa3WggZYWWMyy3ZQ==}
     engines: {node: '>=10'}
@@ -10415,13 +10410,6 @@ packages:
       thunky: 1.1.0
     dev: false
 
-  /mumath@3.3.4:
-    resolution: {integrity: sha512-VAFIOG6rsxoc7q/IaY3jdjmrsuX9f15KlRLYTHmixASBZkZEKC1IFqE2BC5CdhXmK6WLM1Re33z//AGmeRI6FA==}
-    deprecated: Redundant dependency in your project.
-    dependencies:
-      almost-equal: 1.1.0
-    dev: false
-
   /murmurhash-js@1.0.0:
     resolution: {integrity: sha512-TvmkNhkv8yct0SVBSy+o8wYzXjE4Zz3PCesbfs8HiCXXdcTuocApFv11UWlNFWKYsP2okqrhb7JNlSm9InBhIw==}
     dev: false
@@ -11015,8 +11003,8 @@ packages:
     resolution: {integrity: sha512-TFhJjbCdOSp8IhxThlcaE9doaiBQ8gdFkBoyJ1UrsnLjJzsSGkNfVd2jl51WtOMiAxMSW0F1dtELEju4/cicnQ==}
     dev: false
 
-  /plotly.js@3.0.0(mapbox-gl@1.13.3)(webpack@5.98.0):
-    resolution: {integrity: sha512-vo4sClOWEsKBST5gKwzKi3wjMno7lPQpy/LBXNFJowlXeqL/RQN7oi+eU9rOj5+qjXGtqKUv560gnUD+1WL3fQ==}
+  /plotly.js@3.0.1(mapbox-gl@1.13.3)(webpack@5.98.0):
+    resolution: {integrity: sha512-eWEUkqdv4sblmUQJ7xGlEA+LghzEVPJOlPBZMJuagG0CsQxlmBb+7rd0UFVig5jhRnN8PQqRQaLv6qXIjnvzgg==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@plotly/d3': 3.8.2
@@ -11031,7 +11019,7 @@ packages:
       color-alpha: 1.0.4
       color-normalize: 1.5.0
       color-parse: 2.0.0
-      color-rgba: 2.1.1
+      color-rgba: 3.0.0
       country-regex: 1.1.0
       css-loader: 7.1.2(webpack@5.98.0)
       d3-force: 1.2.1
@@ -12188,13 +12176,13 @@ packages:
   /react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
-  /react-plotly.js@2.6.0(plotly.js@3.0.0)(react@19.0.0):
+  /react-plotly.js@2.6.0(plotly.js@3.0.1)(react@19.0.0):
     resolution: {integrity: sha512-g93xcyhAVCSt9kV1svqG1clAEdL6k3U+jjuSzfTV7owaSU9Go6Ph8bl25J+jKfKvIGAEYpe4qj++WHJuc9IaeA==}
     peerDependencies:
       plotly.js: '>1.34.0'
       react: '>0.13.0'
     dependencies:
-      plotly.js: 3.0.0(mapbox-gl@1.13.3)(webpack@5.98.0)
+      plotly.js: 3.0.1(mapbox-gl@1.13.3)(webpack@5.98.0)
       prop-types: 15.8.1
       react: 19.0.0
     dev: false
@@ -12543,7 +12531,7 @@ packages:
       clamp: 1.0.1
       color-id: 1.1.0
       color-normalize: 1.5.0
-      color-rgba: 2.1.1
+      color-rgba: 2.4.0
       flatten-vertex-data: 1.0.2
       glslify: 7.1.1
       is-iexplorer: 1.0.0
