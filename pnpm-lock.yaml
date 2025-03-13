@@ -93,8 +93,8 @@ dependencies:
     specifier: ^2.6.0
     version: 2.6.0(plotly.js@3.0.0)(react@19.0.0)
   react-router-dom:
-    specifier: ^7.2.0
-    version: 7.2.0(react-dom@19.0.0)(react@19.0.0)
+    specifier: ^7.3.0
+    version: 7.3.0(react-dom@19.0.0)(react@19.0.0)
   react-scripts:
     specifier: ^5.0.1
     version: 5.0.1(@babel/plugin-syntax-flow@7.26.0)(@babel/plugin-transform-react-jsx@7.25.9)(eslint@8.57.1)(react@19.0.0)(typescript@5.0.2)(webpack-cli@6.0.1)
@@ -12204,8 +12204,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /react-router-dom@7.2.0(react-dom@19.0.0)(react@19.0.0):
-    resolution: {integrity: sha512-cU7lTxETGtQRQbafJubvZKHEn5izNABxZhBY0Jlzdv0gqQhCPQt2J8aN5ZPjS6mQOXn5NnirWNh+FpE8TTYN0Q==}
+  /react-router-dom@7.3.0(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-z7Q5FTiHGgQfEurX/FBinkOXhWREJIAB2RiU24lvcBa82PxUpwqvs/PAXb9lJyPjTs2jrl6UkLvCZVGJPeNuuQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -12213,11 +12213,11 @@ packages:
     dependencies:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
-      react-router: 7.2.0(react-dom@19.0.0)(react@19.0.0)
+      react-router: 7.3.0(react-dom@19.0.0)(react@19.0.0)
     dev: false
 
-  /react-router@7.2.0(react-dom@19.0.0)(react@19.0.0):
-    resolution: {integrity: sha512-fXyqzPgCPZbqhrk7k3hPcCpYIlQ2ugIXDboHUzhJISFVy2DEPsmHgN588MyGmkIOv3jDgNfUE3kJi83L28s/LQ==}
+  /react-router@7.3.0(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-466f2W7HIWaNXTKM5nHTqNxLrHTyXybm7R0eBlVSt0k/u55tTCDO194OIx/NrYD4TS5SXKTNekXfT37kMKUjgw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
