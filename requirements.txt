@@ -27,7 +27,7 @@ pathspec
 pg8000
 platformdirs
 pre-commit
-protobuf>=5.29.1
+protobuf>=5.29.3
 pylint
 pysocks
 pytest

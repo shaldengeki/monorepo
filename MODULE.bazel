@@ -119,15 +119,10 @@ bazel_dep(name = "gazelle", version = "0.42.0")
 
 go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.module(
-    path = "google.golang.org/grpc",
-    sum = "h1:fPVVDxY9w++VjTZsYvXWqEf9Rqar/e+9zYfxKK+W+YU=",
-    version = "v1.50.0",
-)
-go_deps.module(
     # build_file_proto_mode = "disable",
     path = "google.golang.org/grpc",
-    sum = "h1:pWFv03aZoHzlRKHWicjsZytKAiYCtNS0dHbXnIdq7jQ=",
-    version = "v1.70.0",
+    sum = "h1:kF77BGdPTQ4/JZWMlb9VpJ5pa25aqvVqogsxNHHdeBg=",
+    version = "v1.71.0",
 )
 go_deps.module(
     path = "golang.org/x/net",
