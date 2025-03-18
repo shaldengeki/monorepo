@@ -17,3 +17,6 @@ common --@aspect_rules_ts//ts:skipLibCheck=always
 
 # Use protoc toolchain, to avoid recompiling protoc.
 common --incompatible_enable_proto_toolchain_resolution
+
+# Some of our globs are empty.
+common --incompatible_disallow_empty_glob=false
