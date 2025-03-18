@@ -4,9 +4,26 @@ module(
 )
 
 bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
+
+# protoc toolchain setup.
+bazel_dep(name = "toolchains_protoc", version = "0.3.7")
+
+protoc = use_extension("@toolchains_protoc//protoc:extensions.bzl", "protoc")
+protoc.toolchain(
+    # Creates a repository to satisfy well-known-types dependencies such as
+    # deps=["@com_google_protobuf//:any_proto"]
+    google_protobuf = "com_google_protobuf",
+    # Pin to any version of protoc
+    version = "v29.1",
+)
+use_repo(protoc, "com_google_protobuf", "toolchains_protoc_hub")
+
+register_toolchains("@toolchains_protoc_hub//:all")
+
+register_toolchains("//tools/protoc:all")
+
+# python setup.
 bazel_dep(name = "rules_python", version = "0.40.0")
-bazel_dep(name = "protobuf", version = "29.1", repo_name = "com_google_protobuf")
-bazel_dep(name = "rules_oci", version = "2.0.1")
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
@@ -21,6 +38,9 @@ pip.parse(
     requirements_lock = "//:requirements.lock.txt",
 )
 use_repo(pip, "py_deps")
+
+# rules_oci setup.
+bazel_dep(name = "rules_oci", version = "2.0.1")
 
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 oci.pull(
@@ -64,6 +84,7 @@ oci.pull(
 )
 use_repo(oci, "nginx_debian_slim", "nginx_debian_slim_linux_386", "nginx_debian_slim_linux_amd64", "nginx_debian_slim_linux_arm64_v8", "nginx_debian_slim_linux_arm_v5", "nginx_debian_slim_linux_arm_v7", "nginx_debian_slim_linux_ppc64le", "nginx_debian_slim_linux_s390x", "python3_image_linux_386", "python3_image_linux_amd64", "python3_image_linux_arm64_v8", "python3_image_linux_arm_v5", "python3_image_linux_arm_v7", "python3_image_linux_ppc64le", "python3_image_linux_s390x", "ubuntu_image_linux_amd64", "ubuntu_image_linux_arm64_v8")
 
+# js setup.
 bazel_dep(name = "aspect_rules_js", version = "2.1.1")
 
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
@@ -91,6 +112,8 @@ use_repo(rules_ts_ext, "npm_typescript")
 bazel_dep(name = "aspect_rules_jest", version = "0.22.0")
 bazel_dep(name = "aspect_rules_webpack", version = "0.16.0")
 bazel_dep(name = "rules_pkg", version = "1.0.1")
+
+# golang setup.
 bazel_dep(name = "rules_go", version = "0.53.0")
 bazel_dep(name = "gazelle", version = "0.42.0")
 

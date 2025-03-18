@@ -14,3 +14,6 @@ build --incompatible_default_to_explicit_init_py
 # passes an argument `--skipLibCheck` to *every* spawn of tsc
 # Bazel 6.4 or greater: 'common' means 'any command that supports this flag'
 common --@aspect_rules_ts//ts:skipLibCheck=always
+
+# Use protoc toolchain, to avoid recompiling protoc.
+common --incompatible_enable_proto_toolchain_resolution
