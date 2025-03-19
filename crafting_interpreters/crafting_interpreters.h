@@ -14,6 +14,7 @@ class DoublyLinkedListNode {
 class DoublyLinkedList {
     public:
         DoublyLinkedListNode* head;
+        DoublyLinkedListNode* tail;
         DoublyLinkedListNode* insert(std::string* v);
         DoublyLinkedListNode* find(std::string* v);
         DoublyLinkedListNode* remove(std::string* v);
