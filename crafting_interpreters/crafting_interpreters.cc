@@ -20,6 +20,7 @@ class DoublyLinkedList {
 
 };
 
+// Create a new node containing the given string, and append it to the end.
 DoublyLinkedListNode* DoublyLinkedList::insert(std::string* v) {
     DoublyLinkedListNode* n = new DoublyLinkedListNode();
     n->value = v;
@@ -34,6 +35,8 @@ DoublyLinkedListNode* DoublyLinkedList::insert(std::string* v) {
 
     return n;
 }
+
+// Return the node in the list with the same value as the given string, or nullptr if it wasn't found.
 DoublyLinkedListNode* DoublyLinkedList::find(std::string* v) {
     if (this->head == nullptr) {
         return nullptr;
@@ -48,6 +51,21 @@ DoublyLinkedListNode* DoublyLinkedList::find(std::string* v) {
     }
     return nullptr;
 }
+
+// Remove the node in the list with the same value as the given string.
+// Return the removed node, or nullptr if it wasn't found.
 DoublyLinkedListNode* DoublyLinkedList::remove(std::string* v) {
-    return nullptr;
+    DoublyLinkedListNode* n = this->find(v);
+    if (n == nullptr) {
+        return nullptr;
+    }
+
+    if (n->previous != nullptr) {
+        n->previous->next = n->next;
+    }
+    if (n->next != nullptr) {
+        n->next->previous = n->previous;
+    }
+
+    return n;
 }
