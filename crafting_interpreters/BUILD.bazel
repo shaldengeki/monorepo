@@ -11,6 +11,7 @@ cc_library(
     name = "main_cc_library",
     srcs = ["crafting_interpreters.cc"],
     hdrs = ["crafting_interpreters.h"],
+    features = ["treat_warnings_as_errors"],
 )
 
 cc_binary(
@@ -21,6 +22,7 @@ cc_binary(
 cc_test(
     name = "crafting_interpreters_test",
     srcs = ["crafting_interpreters_test.cc"],
+    features = ["treat_warnings_as_errors"],
     deps = [
         ":main_cc_library",
         "@googletest//:gtest",
