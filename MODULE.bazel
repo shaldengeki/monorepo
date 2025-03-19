@@ -151,3 +151,11 @@ use_repo(
 )
 
 bazel_dep(name = "rules_python_gazelle_plugin", version = "1.2.0")
+
+# java setup.
+bazel_dep(name = "rules_java", version = "8.11.0")
+bazel_dep(name = "contrib_rules_jvm", version = "0.28.0")
+
+# c++ setup.
+bazel_dep(name = "rules_cc", version = "0.1.1")
+bazel_dep(name = "googletest", version = "1.15.2")
