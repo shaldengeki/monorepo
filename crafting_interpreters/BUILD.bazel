@@ -1,4 +1,4 @@
-load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
 load("@rules_java//java:java_binary.bzl", "java_binary")
 
 java_binary(
@@ -7,7 +7,23 @@ java_binary(
     main_class = "CraftingInterpeters",
 )
 
+cc_library(
+    name = "main_cc_library",
+    srcs = ["crafting_interpreters.cc"],
+    hdrs = ["crafting_interpreters.h"],
+)
+
 cc_binary(
     name = "main_cc_binary",
-    srcs = ["crafting_interpreters.cc"],
+    deps = [":main_cc_library"],
+)
+
+cc_test(
+    name = "crafting_interpreters_test",
+    srcs = ["crafting_interpreters_test.cc"],
+    deps = [
+        ":main_cc_library",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
 )
