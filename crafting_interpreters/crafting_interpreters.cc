@@ -62,9 +62,13 @@ DoublyLinkedListNode* DoublyLinkedList::remove(std::string* v) {
 
     if (n->previous != nullptr) {
         n->previous->next = n->next;
+    } else {
+        this->head = n->next;
     }
     if (n->next != nullptr) {
         n->next->previous = n->previous;
+    } else {
+        this->tail = n->previous;
     }
 
     return n;

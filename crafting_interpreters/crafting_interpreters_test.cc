@@ -6,6 +6,7 @@
 TEST(CraftingInterpretersTest, EmptyList) {
     DoublyLinkedList* x = new DoublyLinkedList();
     EXPECT_EQ(x->head, nullptr);
+    EXPECT_EQ(x->tail, nullptr);
 
     std::string* v = new std::string("not found");
     EXPECT_EQ(x->find(v), nullptr);
@@ -52,4 +53,6 @@ TEST(CraftingInterpretersTest, RemovesExistingValues) {
     ASSERT_EQ(x->remove(v), n);
     ASSERT_EQ(x->remove(v2), n2);
     ASSERT_EQ(x->remove(v3), nullptr);
+    ASSERT_EQ(x->head, nullptr);
+    ASSERT_EQ(x->tail, nullptr);
 }
