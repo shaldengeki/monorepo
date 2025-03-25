@@ -4,7 +4,7 @@ load("@rules_java//java:java_binary.bzl", "java_binary")
 java_binary(
     name = "main_java_binary",
     srcs = glob(["*.java"]),
-    main_class = "CraftingInterpeters",
+    main_class = "com.craftinginterpreters.lox.Lox",
 )
 
 cc_library(
