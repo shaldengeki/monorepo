@@ -4,4 +4,5 @@ java_binary(
     name = "generate_ast_java_binary",
     srcs = ["GenerateAst.java"],
     main_class = "com.craftinginterpreters.tool.GenerateAst",
+    visibility = ["//visibility:public"],
 )

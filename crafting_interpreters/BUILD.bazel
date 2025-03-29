@@ -1,15 +1,27 @@
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 load("@rules_java//java:java_binary.bzl", "java_binary")
 
+GENERATED_FILES = [
+    "Expr.java",
+]
+
+genrule(
+    name = "generate_ast",
+    srcs = [],
+    outs = GENERATED_FILES,
+    cmd = "./$(location //crafting_interpreters/tool:generate_ast_java_binary) \"$@\"",
+    tools = ["//crafting_interpreters/tool:generate_ast_java_binary"],
+)
+
 java_binary(
     name = "main_java_binary",
-    srcs = glob(["*.java"]),
+    srcs = glob(["*.java"]) + GENERATED_FILES,
     main_class = "com.craftinginterpreters.lox.Lox",
 )
 
 java_binary(
     name = "ast_printer_java_binary",
-    srcs = glob(["*.java"]),
+    srcs = glob(["*.java"]) + GENERATED_FILES,
     main_class = "com.craftinginterpreters.lox.AstPrinter",
 )
 
