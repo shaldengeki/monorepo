@@ -7,6 +7,12 @@ java_binary(
     main_class = "com.craftinginterpreters.lox.Lox",
 )
 
+java_binary(
+    name = "ast_printer_java_binary",
+    srcs = glob(["*.java"]),
+    main_class = "com.craftinginterpreters.lox.AstPrinter",
+)
+
 cc_library(
     name = "main_cc_library",
     srcs = ["crafting_interpreters.cc"],

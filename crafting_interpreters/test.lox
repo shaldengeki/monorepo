@@ -1,0 +1,9 @@
+var foo = 5;
+
+class Foo {
+    bar() {
+        print "bar";
+    }
+}
+
+print 5 / 2;
