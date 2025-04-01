@@ -7,13 +7,13 @@ settings:
 dependencies:
   '@apollo/client':
     specifier: ^3.13.5
-    version: 3.13.5(@types/react@19.0.12)(graphql@16.10.0)(react-dom@19.0.0)(react@19.1.0)
+    version: 3.13.5(@types/react@19.0.12)(graphql@16.10.0)(react-dom@19.1.0)(react@19.1.0)
   '@apollo/react-testing':
     specifier: ^4.0.0
-    version: 4.0.0(@types/react@19.0.12)(graphql@16.10.0)(react-dom@19.0.0)(react@19.1.0)
+    version: 4.0.0(@types/react@19.0.12)(graphql@16.10.0)(react-dom@19.1.0)(react@19.1.0)
   '@headlessui/react':
     specifier: ^2.2.0
-    version: 2.2.0(react-dom@19.0.0)(react@19.1.0)
+    version: 2.2.0(react-dom@19.1.0)(react@19.1.0)
   '@heroicons/react':
     specifier: ^2.2.0
     version: 2.2.0(react@19.1.0)
@@ -22,7 +22,7 @@ dependencies:
     version: 6.6.3
   '@testing-library/react':
     specifier: ^16.1.0
-    version: 16.1.0(@testing-library/dom@10.4.0)(@types/react-dom@19.0.4)(@types/react@19.0.12)(react-dom@19.0.0)(react@19.1.0)
+    version: 16.1.0(@testing-library/dom@10.4.0)(@types/react-dom@19.0.4)(@types/react@19.0.12)(react-dom@19.1.0)(react@19.1.0)
   '@testing-library/user-event':
     specifier: ^14.6.1
     version: 14.6.1(@testing-library/dom@10.4.0)
@@ -87,14 +87,14 @@ dependencies:
     specifier: ^2.0.7
     version: 2.0.7(react@19.1.0)
   react-dom:
-    specifier: ^19.0.0
-    version: 19.0.0(react@19.1.0)
+    specifier: ^19.1.0
+    version: 19.1.0(react@19.1.0)
   react-plotly.js:
     specifier: ^2.6.0
     version: 2.6.0(plotly.js@3.0.1)(react@19.1.0)
   react-router-dom:
     specifier: ^7.4.0
-    version: 7.4.0(react-dom@19.0.0)(react@19.1.0)
+    version: 7.4.0(react-dom@19.1.0)(react@19.1.0)
   react-scripts:
     specifier: ^5.0.1
     version: 5.0.1(@babel/plugin-syntax-flow@7.26.0)(@babel/plugin-transform-react-jsx@7.25.9)(eslint@8.57.1)(react@19.1.0)(typescript@5.0.2)(webpack-cli@6.0.1)
@@ -200,7 +200,7 @@ packages:
       leven: 3.1.0
     dev: false
 
-  /@apollo/client@3.13.5(@types/react@19.0.12)(graphql@16.10.0)(react-dom@19.0.0)(react@19.1.0):
+  /@apollo/client@3.13.5(@types/react@19.0.12)(graphql@16.10.0)(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-ceHa1lApLAiGmUur4V+G/CrjwVwHYujfB7U5HM++poCgHpfGn6eet8YGM93fgeWjYX85SaqwdZbQk18IVwhRHg==}
     peerDependencies:
       graphql: ^15.0.0 || ^16.0.0
@@ -228,7 +228,7 @@ packages:
       optimism: 0.18.1
       prop-types: 15.8.1
       react: 19.1.0
-      react-dom: 19.0.0(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
       rehackt: 0.1.0(@types/react@19.0.12)(react@19.1.0)
       symbol-observable: 4.0.0
       ts-invariant: 0.10.3
@@ -238,10 +238,10 @@ packages:
       - '@types/react'
     dev: false
 
-  /@apollo/react-testing@4.0.0(@types/react@19.0.12)(graphql@16.10.0)(react-dom@19.0.0)(react@19.1.0):
+  /@apollo/react-testing@4.0.0(@types/react@19.0.12)(graphql@16.10.0)(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-P7Z/flUHpRRZYc3FkIqxZH9XD3FuP2Sgks1IXqGq2Zb7qI0aaTfVeRsLYmZNUcFOh2pTHxs0NXgPnH1VfYOpig==}
     dependencies:
-      '@apollo/client': 3.13.5(@types/react@19.0.12)(graphql@16.10.0)(react-dom@19.0.0)(react@19.1.0)
+      '@apollo/client': 3.13.5(@types/react@19.0.12)(graphql@16.10.0)(react-dom@19.1.0)(react@19.1.0)
     transitivePeerDependencies:
       - '@types/react'
       - graphql
@@ -1944,7 +1944,7 @@ packages:
       '@floating-ui/utils': 0.2.9
     dev: false
 
-  /@floating-ui/react-dom@2.1.2(react-dom@19.0.0)(react@19.1.0):
+  /@floating-ui/react-dom@2.1.2(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-06okr5cgPzMNBy+Ycse2A6udMi4bqwW/zgBF/rwjcNqWkyr82Mcg8b0vjX8OJpZFy/FKjJmw6wV7t44kK6kW7A==}
     peerDependencies:
       react: '>=16.8.0'
@@ -1952,19 +1952,19 @@ packages:
     dependencies:
       '@floating-ui/dom': 1.6.13
       react: 19.1.0
-      react-dom: 19.0.0(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
     dev: false
 
-  /@floating-ui/react@0.26.28(react-dom@19.0.0)(react@19.1.0):
+  /@floating-ui/react@0.26.28(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-yORQuuAtVpiRjpMhdc0wJj06b9JFjrYF4qp96j++v2NBpbi6SEGF7donUJ3TMieerQ6qVkAv1tgr7L4r5roTqw==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@floating-ui/react-dom': 2.1.2(react-dom@19.0.0)(react@19.1.0)
+      '@floating-ui/react-dom': 2.1.2(react-dom@19.1.0)(react@19.1.0)
       '@floating-ui/utils': 0.2.9
       react: 19.1.0
-      react-dom: 19.0.0(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
       tabbable: 6.2.0
     dev: false
 
@@ -1980,19 +1980,19 @@ packages:
       graphql: 16.10.0
     dev: false
 
-  /@headlessui/react@2.2.0(react-dom@19.0.0)(react@19.1.0):
+  /@headlessui/react@2.2.0(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-RzCEg+LXsuI7mHiSomsu/gBJSjpupm6A1qIZ5sWjd7JhARNlMiSA4kKfJpCKwU9tE+zMRterhhrP74PvfJrpXQ==}
     engines: {node: '>=10'}
     peerDependencies:
       react: ^18 || ^19 || ^19.0.0-rc
       react-dom: ^18 || ^19 || ^19.0.0-rc
     dependencies:
-      '@floating-ui/react': 0.26.28(react-dom@19.0.0)(react@19.1.0)
-      '@react-aria/focus': 3.20.1(react-dom@19.0.0)(react@19.1.0)
-      '@react-aria/interactions': 3.24.1(react-dom@19.0.0)(react@19.1.0)
-      '@tanstack/react-virtual': 3.13.6(react-dom@19.0.0)(react@19.1.0)
+      '@floating-ui/react': 0.26.28(react-dom@19.1.0)(react@19.1.0)
+      '@react-aria/focus': 3.20.1(react-dom@19.1.0)(react@19.1.0)
+      '@react-aria/interactions': 3.24.1(react-dom@19.1.0)(react@19.1.0)
+      '@tanstack/react-virtual': 3.13.6(react-dom@19.1.0)(react@19.1.0)
       react: 19.1.0
-      react-dom: 19.0.0(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
     dev: false
 
   /@heroicons/react@2.2.0(react@19.1.0):
@@ -2871,34 +2871,34 @@ packages:
       webpack-dev-server: 4.15.2(webpack-cli@6.0.1)(webpack@5.98.0)
     dev: false
 
-  /@react-aria/focus@3.20.1(react-dom@19.0.0)(react@19.1.0):
+  /@react-aria/focus@3.20.1(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-lgYs+sQ1TtBrAXnAdRBQrBo0/7o5H6IrfDxec1j+VRpcXL0xyk0xPq+m3lZp8typzIghqDgpnKkJ5Jf4OrzPIw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
     dependencies:
-      '@react-aria/interactions': 3.24.1(react-dom@19.0.0)(react@19.1.0)
-      '@react-aria/utils': 3.28.1(react-dom@19.0.0)(react@19.1.0)
+      '@react-aria/interactions': 3.24.1(react-dom@19.1.0)(react@19.1.0)
+      '@react-aria/utils': 3.28.1(react-dom@19.1.0)(react@19.1.0)
       '@react-types/shared': 3.28.0(react@19.1.0)
       '@swc/helpers': 0.5.15
       clsx: 2.1.1
       react: 19.1.0
-      react-dom: 19.0.0(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
     dev: false
 
-  /@react-aria/interactions@3.24.1(react-dom@19.0.0)(react@19.1.0):
+  /@react-aria/interactions@3.24.1(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-OWEcIC6UQfWq4Td5Ptuh4PZQ4LHLJr/JL2jGYvuNL6EgL3bWvzPrRYIF/R64YbfVxIC7FeZpPSkS07sZ93/NoA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
     dependencies:
       '@react-aria/ssr': 3.9.7(react@19.1.0)
-      '@react-aria/utils': 3.28.1(react-dom@19.0.0)(react@19.1.0)
+      '@react-aria/utils': 3.28.1(react-dom@19.1.0)(react@19.1.0)
       '@react-stately/flags': 3.1.0
       '@react-types/shared': 3.28.0(react@19.1.0)
       '@swc/helpers': 0.5.15
       react: 19.1.0
-      react-dom: 19.0.0(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
     dev: false
 
   /@react-aria/ssr@3.9.7(react@19.1.0):
@@ -2911,7 +2911,7 @@ packages:
       react: 19.1.0
     dev: false
 
-  /@react-aria/utils@3.28.1(react-dom@19.0.0)(react@19.1.0):
+  /@react-aria/utils@3.28.1(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-mnHFF4YOVu9BRFQ1SZSKfPhg3z+lBRYoW5mLcYTQihbKhz48+I1sqRkP7ahMITr8ANH3nb34YaMME4XWmK2Mgg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -2924,7 +2924,7 @@ packages:
       '@swc/helpers': 0.5.15
       clsx: 2.1.1
       react: 19.1.0
-      react-dom: 19.0.0(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
     dev: false
 
   /@react-stately/flags@3.1.0:
@@ -3308,7 +3308,7 @@ packages:
       '@tailwindcss/oxide-win32-x64-msvc': 4.0.15
     dev: true
 
-  /@tanstack/react-virtual@3.13.6(react-dom@19.0.0)(react@19.1.0):
+  /@tanstack/react-virtual@3.13.6(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-WT7nWs8ximoQ0CDx/ngoFP7HbQF9Q2wQe4nh2NB+u2486eX3nZRE40P9g6ccCVq7ZfTSH5gFOuCoVH5DLNS/aA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -3316,7 +3316,7 @@ packages:
     dependencies:
       '@tanstack/virtual-core': 3.13.6
       react: 19.1.0
-      react-dom: 19.0.0(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
     dev: false
 
   /@tanstack/virtual-core@3.13.6:
@@ -3350,7 +3350,7 @@ packages:
       redent: 3.0.0
     dev: false
 
-  /@testing-library/react@16.1.0(@testing-library/dom@10.4.0)(@types/react-dom@19.0.4)(@types/react@19.0.12)(react-dom@19.0.0)(react@19.1.0):
+  /@testing-library/react@16.1.0(@testing-library/dom@10.4.0)(@types/react-dom@19.0.4)(@types/react@19.0.12)(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-Q2ToPvg0KsVL0ohND9A3zLJWcOXXcO8IDu3fj11KhNt0UlCWyFyvnCIBkd12tidB2lkiVRG8VFqdhcqhqnAQtg==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -3370,7 +3370,7 @@ packages:
       '@types/react': 19.0.12
       '@types/react-dom': 19.0.4(@types/react@19.0.12)
       react: 19.1.0
-      react-dom: 19.0.0(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
     dev: false
 
   /@testing-library/user-event@14.6.1(@testing-library/dom@10.4.0):
@@ -12113,13 +12113,13 @@ packages:
       - vue-template-compiler
     dev: false
 
-  /react-dom@19.0.0(react@19.1.0):
-    resolution: {integrity: sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ==}
+  /react-dom@19.1.0(react@19.1.0):
+    resolution: {integrity: sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==}
     peerDependencies:
-      react: ^19.0.0
+      react: ^19.1.0
     dependencies:
       react: 19.1.0
-      scheduler: 0.25.0
+      scheduler: 0.26.0
     dev: false
 
   /react-error-overlay@6.1.0:
@@ -12153,7 +12153,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /react-router-dom@7.4.0(react-dom@19.0.0)(react@19.1.0):
+  /react-router-dom@7.4.0(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-VlksBPf3n2bijPvnA7nkTsXxMAKOj+bWp4R9c3i+bnwlSOFAGOkJkKhzy/OsRkWaBMICqcAl1JDzh9ZSOze9CA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
@@ -12161,11 +12161,11 @@ packages:
       react-dom: '>=18'
     dependencies:
       react: 19.1.0
-      react-dom: 19.0.0(react@19.1.0)
-      react-router: 7.4.0(react-dom@19.0.0)(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
+      react-router: 7.4.0(react-dom@19.1.0)(react@19.1.0)
     dev: false
 
-  /react-router@7.4.0(react-dom@19.0.0)(react@19.1.0):
+  /react-router@7.4.0(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-Y2g5ObjkvX3VFeVt+0CIPuYd9PpgqCslG7ASSIdN73LwA1nNWzcMLaoMRJfP3prZFI92svxFwbn7XkLJ+UPQ6A==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
@@ -12178,7 +12178,7 @@ packages:
       '@types/cookie': 0.6.0
       cookie: 1.0.2
       react: 19.1.0
-      react-dom: 19.0.0(react@19.1.0)
+      react-dom: 19.1.0(react@19.1.0)
       set-cookie-parser: 2.7.1
       turbo-stream: 2.4.0
     dev: false
@@ -12788,8 +12788,8 @@ packages:
       xmlchars: 2.2.0
     dev: true
 
-  /scheduler@0.25.0:
-    resolution: {integrity: sha512-xFVuu11jh+xcO7JOAGJNOXld8/TcEHK/4CituBUeUb5hqxJLj9YuemAEuvm9gQ/+pgXYfbQuqAkiYu+u7YEsNA==}
+  /scheduler@0.26.0:
+    resolution: {integrity: sha512-NlHwttCI/l5gCPR3D1nNXtWABUmBwvZpEQiD4IXSbIDq8BzLIK/7Ir5gTFSGZDUu37K5cMNp0hFtzO38sC7gWA==}
     dev: false
 
   /schema-utils@2.7.0:
