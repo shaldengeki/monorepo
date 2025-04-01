@@ -119,8 +119,8 @@ devDependencies:
     specifier: ^4.17.16
     version: 4.17.16
   '@types/plotly.js':
-    specifier: ^2.35.1
-    version: 2.35.1
+    specifier: ^2.35.4
+    version: 2.35.4
   '@types/react-plotly.js':
     specifier: ^2.6.3
     version: 2.6.3
@@ -3670,8 +3670,8 @@ packages:
     resolution: {integrity: sha512-j3pOPiEcWZ34R6a6mN07mUkM4o4Lwf6hPNt8eilOeZhTFbxFXmKhvXl9Y28jotFPaI1bpPDJsbCprUoNke6OrA==}
     dev: false
 
-  /@types/plotly.js@2.35.1:
-    resolution: {integrity: sha512-9fTHC8qeJNEDpGJK1qIJAEcRxrI9uPrap32I8cbCLPKsqwFmafOYHecaBzvIJXEPhLIUiQocN9Bc/tIV9CjsxQ==}
+  /@types/plotly.js@2.35.4:
+    resolution: {integrity: sha512-A8d3r8I2vIsaMRJ+0ZLvzW98l4vDu5AuLAWwtWSF61ekqUj3q6Hu0w6RQk+S1fumu7A3Fji+aodta4F9+8BMuA==}
     dev: true
 
   /@types/prettier@2.7.3:
@@ -3701,7 +3701,7 @@ packages:
   /@types/react-plotly.js@2.6.3:
     resolution: {integrity: sha512-HBQwyGuu/dGXDsWhnQrhH+xcJSsHvjkwfSRjP+YpOsCCWryIuXF78ZCBjpfgO3sCc0Jo8sYp4NOGtqT7Cn3epQ==}
     dependencies:
-      '@types/plotly.js': 2.35.1
+      '@types/plotly.js': 2.35.4
       '@types/react': 19.0.12
     dev: true
 

@@ -46,7 +46,7 @@
         "@tsconfig/create-react-app": "^2.0.5",
         "@types/jest": "^29.5.14",
         "@types/lodash": "^4.17.16",
-        "@types/plotly.js": "^2.35.1",
+        "@types/plotly.js": "^2.35.4",
         "@types/react-plotly.js": "^2.6.3",
         "copy-webpack-plugin": "^13.0.0",
         "css-loader": "^7.1.2",
