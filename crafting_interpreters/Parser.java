@@ -23,7 +23,35 @@ class Parser {
   }
 
   private Expr expression() {
-    return equality();
+    return ternary();
+  }
+
+  private Expr ternary() {
+    Expr expr = comma();
+
+    if (match(QUESTION)) {
+      Token leftOperator = previous();
+      Expr middle = comma();
+      consume(COLON, "Expect ':' in ternary.");
+      Token rightOperator = previous();
+      Expr right = comma();
+
+      expr = new Expr.Ternary(expr, leftOperator, middle, rightOperator, right);
+    }
+
+    return expr;
+  }
+
+  private Expr comma() {
+    Expr expr = equality();
+
+    while (match(COMMA)) {
+      Token operator = previous();
+      Expr right = equality();
+      expr = new Expr.Binary(expr, operator, right);
+    }
+
+    return expr;
   }
 
   private Expr equality() {
