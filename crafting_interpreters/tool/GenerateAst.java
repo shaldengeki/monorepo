@@ -19,6 +19,7 @@ public class GenerateAst {
       String astName = filename.replaceAll(".java", "");
 
       defineAst(outputDir, astName, Arrays.asList(
+          "Ternary   : Expr left, Token leftOperator, Expr middle, Token rightOperator, Expr right",
           "Binary    : Expr left, Token operator, Expr right",
           "Grouping  : Expr expression",
           "Literal   : Object value",

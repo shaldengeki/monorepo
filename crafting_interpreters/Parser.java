@@ -23,7 +23,23 @@ class Parser {
   }
 
   private Expr expression() {
-    return comma();
+    return ternary();
+  }
+
+  private Expr ternary() {
+    Expr expr = comma();
+
+    if (match(QUESTION)) {
+      Token leftOperator = previous();
+      Expr middle = comma();
+      consume(COLON, "Expect ':' in ternary.");
+      Token rightOperator = previous();
+      Expr right = comma();
+
+      expr = new Expr.Ternary(expr, leftOperator, middle, rightOperator, right);
+    }
+
+    return expr;
   }
 
   private Expr comma() {
