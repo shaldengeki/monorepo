@@ -44,7 +44,7 @@ manifest:
     jinja2: jinja2
     jmespath: jmespath
     lazy_object_proxy: lazy_object_proxy
-    mako: Mako
+    mako: mako
     markupsafe: MarkupSafe
     mccabe: mccabe
     mypy: mypy
