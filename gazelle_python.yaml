@@ -27,7 +27,7 @@ manifest:
     exceptiongroup: exceptiongroup
     filelock: filelock
     flask: flask
-    flask_cors: Flask_Cors
+    flask_cors: flask_cors
     flask_migrate: Flask_Migrate
     flask_sqlalchemy: flask_sqlalchemy
     google.protobuf: protobuf

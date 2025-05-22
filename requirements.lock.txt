@@ -225,9 +225,9 @@ flask==3.0.3 \
     #   graphql-server
     #   types-flask-cors
     #   types-flask-migrate
-flask-cors==5.0.0 \
-    --hash=sha256:5aadb4b950c4e93745034594d9f3ea6591f734bb3662e16e255ffbf5e89c88ef \
-    --hash=sha256:b9e307d082a9261c100d8fb0ba909eec6a228ed1b60a8315fd85f783d61910bc
+flask-cors==6.0.0 \
+    --hash=sha256:4592c1570246bf7beee96b74bc0adbbfcb1b0318f6ba05c412e8909eceec3393 \
+    --hash=sha256:6332073356452343a8ccddbfec7befdc3fdd040141fe776ec9b94c262f058657
     # via -r requirements.txt
 flask-migrate==4.1.0 \
     --hash=sha256:1a336b06eb2c3ace005f5f2ded8641d534c18798d64061f6ff11f79e1434126d \
@@ -790,7 +790,9 @@ virtualenv==20.28.0 \
 werkzeug==3.0.6 \
     --hash=sha256:1bc0c2310d2fbb07b1dd1105eba2f7af72f322e1e455f2f93c993bee8c8a5f17 \
     --hash=sha256:a8dd59d4de28ca70471a34cba79bed5f7ef2e036a76b3ab0835474246eb41f8d
-    # via flask
+    # via
+    #   flask
+    #   flask-cors
 wrapt==1.17.0 \
     --hash=sha256:0229b247b0fc7dee0d36176cbb79dbaf2a9eb7ecc50ec3121f40ef443155fb1d \
     --hash=sha256:0698d3a86f68abc894d537887b9bbf84d29bcfbc759e23f4644be27acf6da301 \
