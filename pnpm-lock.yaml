@@ -93,8 +93,8 @@ dependencies:
     specifier: ^2.6.0
     version: 2.6.0(plotly.js@3.0.1)(react@19.1.0)
   react-router-dom:
-    specifier: ^7.5.2
-    version: 7.5.2(react-dom@19.1.0)(react@19.1.0)
+    specifier: ^7.6.0
+    version: 7.6.0(react-dom@19.1.0)(react@19.1.0)
   react-scripts:
     specifier: ^5.0.1
     version: 5.0.1(@babel/plugin-syntax-flow@7.27.1)(@babel/plugin-transform-react-jsx@7.27.1)(eslint@8.57.1)(react@19.1.0)(typescript@5.0.2)(webpack-cli@6.0.1)
@@ -12200,8 +12200,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /react-router-dom@7.5.2(react-dom@19.1.0)(react@19.1.0):
-    resolution: {integrity: sha512-yk1XW8Fj7gK7flpYBXF3yzd2NbX6P7Kxjvs2b5nu1M04rb5pg/Zc4fGdBNTeT4eDYL2bvzWNyKaIMJX/RKHTTg==}
+  /react-router-dom@7.6.0(react-dom@19.1.0)(react@19.1.0):
+    resolution: {integrity: sha512-DYgm6RDEuKdopSyGOWZGtDfSm7Aofb8CCzgkliTjtu/eDuB0gcsv6qdFhhi8HdtmA+KHkt5MfZ5K2PdzjugYsA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -12209,11 +12209,11 @@ packages:
     dependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
-      react-router: 7.5.2(react-dom@19.1.0)(react@19.1.0)
+      react-router: 7.6.0(react-dom@19.1.0)(react@19.1.0)
     dev: false
 
-  /react-router@7.5.2(react-dom@19.1.0)(react@19.1.0):
-    resolution: {integrity: sha512-9Rw8r199klMnlGZ8VAsV/I8WrIF6IyJ90JQUdboupx1cdkgYqwnrYjH+I/nY/7cA1X5zia4mDJqH36npP7sxGQ==}
+  /react-router@7.6.0(react-dom@19.1.0)(react@19.1.0):
+    resolution: {integrity: sha512-GGufuHIVCJDbnIAXP3P9Sxzq3UUsddG3rrI3ut1q6m0FI6vxVBF3JoPQ38+W/blslLH4a5Yutp8drkEpXoddGQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -12226,7 +12226,6 @@ packages:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       set-cookie-parser: 2.7.1
-      turbo-stream: 2.4.0
     dev: false
 
   /react-scripts@5.0.1(@babel/plugin-syntax-flow@7.27.1)(@babel/plugin-transform-react-jsx@7.27.1)(eslint@8.57.1)(react@19.1.0)(typescript@5.0.2)(webpack-cli@6.0.1):
@@ -13921,10 +13920,6 @@ packages:
     dependencies:
       tslib: 1.14.1
       typescript: 5.0.2
-    dev: false
-
-  /turbo-stream@2.4.0:
-    resolution: {integrity: sha512-FHncC10WpBd2eOmGwpmQsWLDoK4cqsA/UT/GqNoaKOQnT8uzhtCbg3EoUDMvqpOSAI0S26mr0rkjzbOO6S3v1g==}
     dev: false
 
   /type-check@0.3.2:
