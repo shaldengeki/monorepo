@@ -1,3 +1,9 @@
 #!/usr/bin/env bash
 
-bazel run //:requirements.update && git add requirements.lock.txt && git commit -m "bazel run //:requirements.update" && git push
+bazel run //:requirements.update && \
+    git add requirements.lock.txt && \
+    git commit -m "bazel run //:requirements.update" && \
+    bazel run @@//:gazelle_python_manifest.update && \
+    git add gazelle_python.yaml && \
+    git commit -m "bazel run @@//:gazelle_python_manifest.update" && \
+    git push
