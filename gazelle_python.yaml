@@ -67,7 +67,7 @@ manifest:
     six: six
     socks: PySocks
     sockshandler: PySocks
-    sqlalchemy: SQLAlchemy
+    sqlalchemy: sqlalchemy
     toml: toml
     tomli: tomli
     tomlkit: tomlkit

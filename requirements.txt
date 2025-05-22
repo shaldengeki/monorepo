@@ -10,9 +10,9 @@ docker
 exceptiongroup
 filelock
 Flask>=3.1.1
-flask-cors
-Flask-Migrate>=4.0.4
-Flask-SQLAlchemy>=3.0.3
+flask-cors>=6.0.0
+Flask-Migrate>=4.1.0
+Flask-SQLAlchemy>=3.1.1
 graphql-core
 graphql-server[flask]==3.0.0b7
 identify
@@ -35,8 +35,8 @@ pytest
 pyyaml
 qbittorrent-api
 requests
-SQLAlchemy>=2.0.16
-SQLAlchemy[mypy]>=2.0.16
+SQLAlchemy>=2.0.41
+SQLAlchemy[mypy]>=2.0.41
 toml
 tomli
 tomlkit
