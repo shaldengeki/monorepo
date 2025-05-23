@@ -1,3 +1,7 @@
+# Import Aspect bazelrc presets
+
+import %workspace%/aspect.bazelrc
+
 # Enable Bzlmod for every Bazel command
 common --enable_bzlmod
 
