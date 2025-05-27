@@ -7,6 +7,7 @@ manifest:
   modules_mapping:
     30fcd23745efe32ce681__mypyc: black
     3204bda914b7f2c6f497__mypyc: mypy
+    5bae8a57b5ef85818b48__mypyc: tomli
     alembic: alembic
     asn1crypto: asn1crypto
     astroid: astroid
