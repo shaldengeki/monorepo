@@ -40,7 +40,7 @@
         "react-router-dom": "^7.6.1",
         "react-scripts": "^5.0.1",
         "typescript": "^5",
-        "web-vitals": "^4.2.4"
+        "web-vitals": "^5.0.1"
     },
     "devDependencies": {
         "@tsconfig/create-react-app": "^2.0.5",
