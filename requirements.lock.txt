@@ -754,6 +754,7 @@ typing-extensions==4.13.2 \
     # via
     #   -r requirements.txt
     #   alembic
+    #   exceptiongroup
     #   graphql-server
     #   mypy
     #   sqlalchemy
