@@ -488,6 +488,7 @@ pathspec==0.12.1 \
     # via
     #   -r requirements.txt
     #   black
+    #   mypy
 pg8000==1.31.2 \
     --hash=sha256:1ea46cf09d8eca07fe7eaadefd7951e37bee7fabe675df164f1a572ffb300876 \
     --hash=sha256:436c771ede71af4d4c22ba867a30add0bc5c942d7ab27fadbb6934a487ecc8f6
