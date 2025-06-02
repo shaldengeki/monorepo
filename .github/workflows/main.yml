@@ -81,9 +81,9 @@ jobs:
       # - name: Deploy API
       #   run: flyctl deploy
       #   working-directory: ark_nova_stats/api
-      - name: Deploy frontend
-        run: flyctl deploy
-        working-directory: ark_nova_stats/frontend
+      # - name: Deploy frontend
+      #   run: flyctl deploy
+      #   working-directory: ark_nova_stats/frontend
       # - name: Deploy worker
       #   run: flyctl deploy
       #   working-directory: ark_nova_stats/worker
