@@ -88,6 +88,10 @@ class CardRawWinRate:
                     continue
 
                 if event_data.player is not None:
+                    if event_data.player["id"] is None:
+                        raise ValueError(
+                            f"Player ID not set for log event: {event_data}"
+                        )
                     player_id: int = int(event_data.player["id"])
                     game_cards[player_id] = game_cards[player_id].union(card_names)
 
