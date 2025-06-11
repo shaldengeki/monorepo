@@ -59,6 +59,7 @@ manifest:
     pluggy: pluggy
     pre_commit: pre_commit
     py: pytest
+    pygments: pygments
     pylint: pylint
     pytest: pytest
     qbittorrentapi: qbittorrent_api
