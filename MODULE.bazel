@@ -3,13 +3,13 @@ module(
     repo_name = "com_github_shaldengeki_monorepo",
 )
 
-bazel_dep(name = "aspect_bazel_lib", version = "2.14.0")
+bazel_dep(name = "aspect_bazel_lib", version = "2.19.3")
 bazel_dep(name = "rules_proto", version = "7.1.0")
 
-bazel_dep(name = "platforms", version = "0.0.11", dev_dependency = True)
+bazel_dep(name = "platforms", version = "1.0.0", dev_dependency = True)
 
 # protoc toolchain setup.
-bazel_dep(name = "toolchains_protoc", version = "0.3.7")
+bazel_dep(name = "toolchains_protoc", version = "0.4.2")
 
 protoc = use_extension("@toolchains_protoc//protoc:extensions.bzl", "protoc")
 protoc.toolchain(
@@ -26,7 +26,7 @@ register_toolchains("@toolchains_protoc_hub//:all")
 register_toolchains("//tools/protoc:all")
 
 # python setup.
-bazel_dep(name = "rules_python", version = "1.2.0")
+bazel_dep(name = "rules_python", version = "1.4.1")
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
@@ -43,7 +43,7 @@ pip.parse(
 use_repo(pip, "py_deps")
 
 # rules_oci setup.
-bazel_dep(name = "rules_oci", version = "2.2.3")
+bazel_dep(name = "rules_oci", version = "2.2.6")
 
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 oci.pull(
@@ -56,6 +56,7 @@ oci.pull(
     ],
 )
 use_repo(oci, "ubuntu_image")
+
 oci.pull(
     name = "python3_image",
     digest = "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
@@ -71,6 +72,7 @@ oci.pull(
     ],
 )
 use_repo(oci, "python3_image")
+
 oci.pull(
     name = "nginx_debian_slim",
     digest = "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
@@ -88,7 +90,7 @@ oci.pull(
 use_repo(oci, "nginx_debian_slim", "nginx_debian_slim_linux_386", "nginx_debian_slim_linux_amd64", "nginx_debian_slim_linux_arm64_v8", "nginx_debian_slim_linux_arm_v5", "nginx_debian_slim_linux_arm_v7", "nginx_debian_slim_linux_ppc64le", "nginx_debian_slim_linux_s390x", "python3_image_linux_386", "python3_image_linux_amd64", "python3_image_linux_arm64_v8", "python3_image_linux_arm_v5", "python3_image_linux_arm_v7", "python3_image_linux_ppc64le", "python3_image_linux_s390x", "ubuntu_image_linux_amd64", "ubuntu_image_linux_arm64_v8")
 
 # js setup.
-bazel_dep(name = "aspect_rules_js", version = "2.2.0")
+bazel_dep(name = "aspect_rules_js", version = "2.3.7")
 
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
 npm.npm_translate_lock(
@@ -106,19 +108,19 @@ pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
 # bazel run -- @pnpm --dir /home/runner/work/rules_js/rules_js install
 use_repo(pnpm, "pnpm")
 
-bazel_dep(name = "aspect_rules_ts", version = "3.5.1")
+bazel_dep(name = "aspect_rules_ts", version = "3.6.0")
 
 rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext", dev_dependency = True)
 rules_ts_ext.deps()
 use_repo(rules_ts_ext, "npm_typescript")
 
-bazel_dep(name = "aspect_rules_jest", version = "0.22.0")
-bazel_dep(name = "aspect_rules_webpack", version = "0.16.0")
+bazel_dep(name = "aspect_rules_jest", version = "0.23.2")
+bazel_dep(name = "aspect_rules_webpack", version = "0.17.0")
 bazel_dep(name = "rules_pkg", version = "1.1.0")
 
 # golang setup.
-bazel_dep(name = "rules_go", version = "0.53.0")
-bazel_dep(name = "gazelle", version = "0.42.0")
+bazel_dep(name = "rules_go", version = "0.55.1")
+bazel_dep(name = "gazelle", version = "0.44.0")
 
 go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.module(
@@ -150,12 +152,12 @@ use_repo(
     "org_golang_x_text",
 )
 
-bazel_dep(name = "rules_python_gazelle_plugin", version = "1.2.0")
+bazel_dep(name = "rules_python_gazelle_plugin", version = "1.4.1")
 
 # java setup.
-bazel_dep(name = "rules_java", version = "8.11.0")
-bazel_dep(name = "contrib_rules_jvm", version = "0.28.0")
+bazel_dep(name = "rules_java", version = "8.12.0")
+bazel_dep(name = "contrib_rules_jvm", version = "0.29.0")
 
 # c++ setup.
 bazel_dep(name = "rules_cc", version = "0.1.1")
-bazel_dep(name = "googletest", version = "1.15.2")
+bazel_dep(name = "googletest", version = "1.17.0")
