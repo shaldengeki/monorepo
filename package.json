@@ -44,7 +44,7 @@
     },
     "devDependencies": {
         "@tsconfig/create-react-app": "^2.0.6",
-        "@types/jest": "^29.5.14",
+        "@types/jest": "^30.0.0",
         "@types/lodash": "^4.17.18",
         "@types/plotly.js": "^3.0.0",
         "@types/react-plotly.js": "^2.6.3",
