@@ -33,6 +33,17 @@ jobs:
         uses: actions/checkout@v4
       - name: bazel test //...
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc test //...
+  validate-fly:
+    runs-on: ubuntu-latest
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Validate fly configs
+        run: find . -name fly.toml | xargs -n 1 flyctl config validate --config
   push_ark_nova_stats:
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -54,7 +65,9 @@ jobs:
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //ark_nova_stats/frontend:production_cross_platform_image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //ark_nova_stats/worker:worker_image_dockerhub
   deploy_ark_nova_stats:
-    needs: push_ark_nova_stats
+    needs:
+      - push_ark_nova_stats
+      - validate-fly
     if: ${{ github.ref == 'refs/heads/main' }}
     concurrency:
       group: ark_nova_stats_production
@@ -65,15 +78,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - name: Deploy API
-        run: flyctl deploy
-        working-directory: ark_nova_stats/api
-      - name: Deploy frontend
-        run: flyctl deploy
-        working-directory: ark_nova_stats/frontend
-      - name: Deploy worker
-        run: flyctl deploy
-        working-directory: ark_nova_stats/worker
+      # - name: Deploy API
+      #   run: flyctl deploy
+      #   working-directory: ark_nova_stats/api
+      # - name: Deploy frontend
+      #   run: flyctl deploy
+      #   working-directory: ark_nova_stats/frontend
+      # - name: Deploy worker
+      #   run: flyctl deploy
+      #   working-directory: ark_nova_stats/worker
   push_fitbit_challenges:
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -95,7 +108,9 @@ jobs:
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/worker:worker_image_dockerhub
           bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run --build_tag_filters=manual --stamp --embed_label $(git rev-parse HEAD) //fitbit_challenges/frontend:production_cross_platform_image_dockerhub
   # deploy_fitbit_challenges:
-  #   needs: push_fitbit_challenges
+  #   needs:
+  #     - push_fitbit_challenges
+  #     - validate-fly
   #   if: ${{ github.ref == 'refs/heads/main' }}
   #   concurrency:
   #     group: fitbit_challenges_production
@@ -115,6 +130,40 @@ jobs:
   #     - name: Deploy worker
   #       run: flyctl deploy
   #       working-directory: fitbit_challenges/worker
+  deploy_golink:
+    needs:
+      - build
+      - validate-fly
+    if: ${{ github.ref == 'refs/heads/main' }}
+    concurrency:
+      group: golink_production
+      cancel-in-progress: false
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Deploy
+        run: flyctl deploy
+        working-directory: golink
+  deploy_readeck:
+    needs:
+      - build
+      - validate-fly
+    if: ${{ github.ref == 'refs/heads/main' }}
+    concurrency:
+      group: readeck_production
+      cancel-in-progress: false
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Deploy
+        run: flyctl deploy
+        working-directory: readeck
   push_home_api:
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}

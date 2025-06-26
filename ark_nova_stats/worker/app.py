@@ -18,7 +18,7 @@ from ark_nova_stats.models import (
 )
 from ark_nova_stats.worker.archives import (
     BGAWithELOArchiveCreator,
-    RawBGALogArchiveCreator,
+    EmuCupTopLevelStatsCsvArchiveCreator,
     TopLevelStatsCsvArchiveCreator,
 )
 
@@ -33,7 +33,6 @@ logger = logging.getLogger(__name__)
 def archive_logs_to_tigris(
     tigris_client, min_interval: datetime.timedelta = datetime.timedelta(days=1)
 ) -> list[GameLogArchive]:
-    # TODO: convert all of these database requests to GraphQL requests over the internal network.
     archives = []
     archive_types = [
         archive_type(
@@ -42,9 +41,9 @@ def archive_logs_to_tigris(
             min_interval=min_interval,
         )
         for archive_type in (
-            RawBGALogArchiveCreator,
             BGAWithELOArchiveCreator,
             TopLevelStatsCsvArchiveCreator,
+            EmuCupTopLevelStatsCsvArchiveCreator,
         )
     ]
     archive_types_to_create = [

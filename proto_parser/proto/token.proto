@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package proto_parser.proto;
+
+import "proto_parser/proto/file_position.proto";
+
+option go_package = "github.com/shaldengeki/monorepo/proto_parser/proto/token";
+
+message Token {
+    FilePosition start = 1;
+    FilePosition end = 2;
+
+    oneof token {
+        WhitespaceToken whitespace_token = 3;
+        IdentifierToken identifier_token = 4;
+        IntegerToken integer_token = 5;
+        FloatingPointToken floating_point_token = 6;
+        BooleanToken boolean_token = 7;
+        StringToken string_token = 8;
+        EmptyStatementToken empty_statement_token = 9;
+        ConstantToken constant_token = 10;
+    }
+}
+
+message WhitespaceToken {
+    string spaces = 1;
+}
+
+message IdentifierToken {
+    string identifier = 1;
+}
+
+message IntegerToken {
+    oneof integer_type {
+        DecimalToken decimal_token = 2;
+        OctalToken octal_token = 3;
+        HexToken hex_token = 4;
+    }
+}
+
+message DecimalToken {
+    bool negative = 1;
+    string literal = 2;
+}
+
+message OctalToken {
+    bool negative = 1;
+    string literal = 2;
+}
+
+message HexToken {
+    bool negative = 1;
+    string literal = 2;
+}
+
+message FloatingPointToken {
+    bool negative = 1;
+    oneof floating_point_type {
+        bool inf = 2;
+        bool nan = 3;
+        string literal = 4;
+    }
+}
+
+message BooleanToken {
+    bool value = 1;
+}
+
+message StringToken {
+    repeated StringSingleToken string_literals = 1;
+}
+
+enum QuotationMarkType {
+    QUOTATION_MARK_TYPE_UNKNOWN = 0;
+    QUOTATION_MARK_TYPE_SINGLE = 1;
+    QUOTATION_MARK_TYPE_DOUBLE = 2;
+}
+
+message StringSingleToken {
+    QuotationMarkType quotation_mark_type = 1;
+    string value = 2;
+}
+
+message EmptyStatementToken {}
+
+message ConstantToken {
+    // TODO
+}

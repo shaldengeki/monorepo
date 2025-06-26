@@ -45,12 +45,12 @@ module.exports = {
       inject: true,
     }),
     new webpack.ProvidePlugin({
-      process: 'process/browser',
+      process: 'process/browser.js',
     }),
   ],
   resolve: {
     alias: {
-      process: "process/browser",
+      process: "process/browser.js",
     }
   }
 };

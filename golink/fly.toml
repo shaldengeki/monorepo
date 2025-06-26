@@ -1,0 +1,27 @@
+# fly.toml app configuration file generated for golink-old-voice-2551 on 2024-12-04T23:08:26-05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'golink-old-voice-2551'
+primary_region = 'ewr'
+
+[build]
+image = "ghcr.io/tailscale/golink:main"
+
+[deploy]
+strategy = "immediate"
+
+[[vm]]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+[mounts]
+source="golink"
+destination="/home/nonroot"
+
+[http_service]
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0

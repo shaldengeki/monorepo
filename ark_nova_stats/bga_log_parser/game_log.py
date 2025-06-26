@@ -82,7 +82,7 @@ class GameLogEventData:
         return cards
 
     @property
-    def player(self) -> Optional[dict[str, int | str]]:
+    def player(self) -> Optional[dict[str, int | str | None]]:
         player_data = {
             "id": self.args.get("player_id", None),
             "name": self.args.get("player_name", None),

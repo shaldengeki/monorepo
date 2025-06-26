@@ -3,10 +3,12 @@
 # To update this file, run:
 #   bazel run //:gazelle_python_manifest.update
 
+---
 manifest:
   modules_mapping:
     30fcd23745efe32ce681__mypyc: black
-    3204bda914b7f2c6f497__mypyc: mypy
+    5bae8a57b5ef85818b48__mypyc: tomli
+    91844386ccf7a24691a0__mypyc: mypy
     alembic: alembic
     asn1crypto: asn1crypto
     astroid: astroid
@@ -27,7 +29,7 @@ manifest:
     exceptiongroup: exceptiongroup
     filelock: filelock
     flask: flask
-    flask_cors: Flask_Cors
+    flask_cors: flask_cors
     flask_migrate: Flask_Migrate
     flask_sqlalchemy: flask_sqlalchemy
     google.protobuf: protobuf
@@ -44,7 +46,7 @@ manifest:
     jinja2: jinja2
     jmespath: jmespath
     lazy_object_proxy: lazy_object_proxy
-    mako: Mako
+    mako: mako
     markupsafe: MarkupSafe
     mccabe: mccabe
     mypy: mypy
@@ -58,6 +60,7 @@ manifest:
     pluggy: pluggy
     pre_commit: pre_commit
     py: pytest
+    pygments: pygments
     pylint: pylint
     pytest: pytest
     qbittorrentapi: qbittorrent_api
@@ -67,7 +70,7 @@ manifest:
     six: six
     socks: PySocks
     sockshandler: PySocks
-    sqlalchemy: SQLAlchemy
+    sqlalchemy: sqlalchemy
     toml: toml
     tomli: tomli
     tomlkit: tomlkit

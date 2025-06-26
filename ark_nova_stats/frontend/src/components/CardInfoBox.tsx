@@ -1,13 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import Card from '../types/Card';
 import UserPlayCount from '../types/UserPlayCount';
 import Table from './Table';
+import PageLink from './PageLink';
 
 type CardInfoBoxParams = {
     card: Card;
     mostPlayedBy: UserPlayCount[];
+}
+
+type CardPlayedTableRow = {
+    "User": React.JSX.Element,
+    "Count": React.JSX.Element,
 }
 
 const CardInfoBox = ({card, mostPlayedBy}: CardInfoBoxParams) => {
@@ -17,9 +22,9 @@ const CardInfoBox = ({card, mostPlayedBy}: CardInfoBoxParams) => {
     } else if (!mostPlayedBy) {
         innerContent = <p>Error: card play info could not be retrieved!</p>;
     } else {
-        const rows = mostPlayedBy.map((userPlayCount: UserPlayCount) => {
+        const rows: CardPlayedTableRow[] = mostPlayedBy.map((userPlayCount: UserPlayCount) => {
             return {
-                "User": <Link to={"/user/" + userPlayCount.user.name}>{userPlayCount.user.name}</Link>,
+                "User": <PageLink to={"/user/" + userPlayCount.user.name}>{userPlayCount.user.name}</PageLink>,
                 "Count": <ul>{userPlayCount.count}</ul>,
             }
         });
@@ -29,8 +34,7 @@ const CardInfoBox = ({card, mostPlayedBy}: CardInfoBoxParams) => {
                 <li>BGA ID: {card.bgaId}</li>
             </ul>
             <h2 className={"text-xl"}>Most played by:</h2>
-            <Table
-                cols={["User", "Count"]}
+            <Table<CardPlayedTableRow>
                 rows={rows}
                 key="card-played-cards"
                 showFilters={false}

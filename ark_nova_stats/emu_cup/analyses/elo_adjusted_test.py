@@ -2,7 +2,7 @@ import sys
 
 import pytest
 
-from ark_nova_stats.emu_cup.analyze_games import CardWinRateELOAdjusted
+from ark_nova_stats.emu_cup.analyses.elo_adjusted import CardWinRateELOAdjusted
 
 
 class TestCardWinRateELOAdjusted:
@@ -13,8 +13,6 @@ class TestCardWinRateELOAdjusted:
 
         assert 0 == len(elo_adjusted.all_cards)
         assert 0 == len(elo_adjusted.game_card_records)
-
-    pass
 
 
 if __name__ == "__main__":

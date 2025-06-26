@@ -290,6 +290,11 @@ func (s *gameServer) ValidatePlayerSponsors(ctx context.Context, sponsorCards []
 	return []string{}
 }
 
+func (s *gameServer) ValidatePlayerMap(ctx context.Context, playerMap *player_game_state.PlayerMap) []string {
+        // TODO: implement this.
+        return []string{}
+}
+
 func (s *gameServer) ValidatePlayerHandCard(ctx context.Context, playerHandCard *player_game_state.PlayerHandCard, seenCards map[int64]int) []string {
 	if playerHandCard.GetAnimalCard() != nil {
 		card := playerHandCard.GetAnimalCard()

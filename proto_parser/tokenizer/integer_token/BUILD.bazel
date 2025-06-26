@@ -1,0 +1,26 @@
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "integer_token",
+    srcs = ["integer_token.go"],
+    importpath = "github.com/shaldengeki/monorepo/proto_parser/tokenizer/integer_token",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//proto_parser/proto:token_go_proto",
+        "//proto_parser/tokenizer/decimal_token",
+        "//proto_parser/tokenizer/errors",
+        "//proto_parser/tokenizer/hex_token",
+        "//proto_parser/tokenizer/octal_token",
+    ],
+)
+
+go_test(
+    name = "integer_token_test",
+    srcs = ["integer_token_test.go"],
+    embed = [":integer_token"],
+    deps = [
+        "//proto_parser/tokenizer/errors",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

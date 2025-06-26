@@ -1,0 +1,26 @@
+# fly.toml app configuration file generated for readeck-lively-forest-5566 on 2024-12-04T22:47:45-05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'readeck-lively-forest-5566'
+primary_region = 'ewr'
+
+[build]
+  image = 'codeberg.org/readeck/readeck:latest'
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+[mounts]
+  source = "readeck"
+  destination = "/readeck"

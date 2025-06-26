@@ -14,6 +14,14 @@ load("//tools/build_rules:nginx_conf.bzl", "nginx_conf")
 # Third-party dependencies required to build our application.
 BUILD_DEPS = [
     "//:node_modules/@apollo/client",
+    "//:node_modules/d3-array",
+    "//:node_modules/d3-collection",
+    "//:node_modules/d3-dispatch",
+    "//:node_modules/d3-path",
+    "//:node_modules/d3-quadtree",
+    "//:node_modules/d3-shape",
+    "//:node_modules/d3-timer",
+    "//:node_modules/elementary-circuits-directed-graph",
     "//:node_modules/history",
     "//:node_modules/lodash",
     "//:node_modules/plotly.js-basic-dist",

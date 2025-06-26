@@ -1,15 +1,15 @@
 import React from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery } from '@apollo/client/react/hooks';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import UserInfoBox from '../components/UserInfoBox';
 import GameLogsTable from '../components/GameLogsTable';
 import GameLog from '../types/GameLog';
 import User from '../types/User';
 import UserPlayCount from '../types/UserPlayCount';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export const USER_VIEW_QUERY = gql`
     query FetchUser($name: String!) {
@@ -20,7 +20,17 @@ export const USER_VIEW_QUERY = gql`
             recentGameLogs {
                 bgaTableId
                 users {
+                    bgaId
                     name
+                }
+                gameRatingChanges {
+                    user {
+                        bgaId
+                    }
+                    priorElo
+                    newElo
+                    priorArenaElo
+                    newArenaElo
                 }
             }
             numGameLogs
@@ -32,6 +42,8 @@ export const USER_VIEW_QUERY = gql`
                 }
                 count
             }
+            currentElo
+            currentArenaElo
         }
     }
 `;
@@ -51,7 +63,7 @@ const UserView = () => {
 
 
     let innerContent = <p></p>;
-    if (loading) innerContent = <p>Loading...</p>;
+    if (loading) innerContent = <LoadingSpinner />;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
         const user: User = data.user;
@@ -59,22 +71,22 @@ const UserView = () => {
         const recentGameLogs: GameLog[] = data.user.recentGameLogs;
         innerContent = (
             <div>
-                <PageTitle><Link to={`/user/${user.name}`} >User: {user.name}</Link></PageTitle>
                 <div className={"py-2"}>
                     <UserInfoBox user={user} commonlyPlayedCards={commonlyPlayedCards} />
                 </div>
                 <div className={"py-2"}>
                     <h2 className={"text-xl"}>Recent game logs:</h2>
-                    <GameLogsTable gameLogs={recentGameLogs} />
+                    <GameLogsTable gameLogs={recentGameLogs} currentPlayer={user} />
                 </div>
             </div>
         );
     }
 
     return (
-        <PageContainer>
+        <div>
+            <PageTitle linkTo={`/user/${name}`}>User: {name}</PageTitle>
             {innerContent}
-        </PageContainer>
+        </div>
     )
 }
 

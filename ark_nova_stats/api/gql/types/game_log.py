@@ -3,6 +3,7 @@ from typing import Any, Optional, Sequence, Type
 
 from graphql import (
     GraphQLArgument,
+    GraphQLBoolean,
     GraphQLField,
     GraphQLInt,
     GraphQLList,
@@ -18,6 +19,7 @@ from ark_nova_stats.models import Card as CardModel
 from ark_nova_stats.models import GameLog as GameLogModel
 from ark_nova_stats.models import GameLogArchive as GameLogArchiveModel
 from ark_nova_stats.models import GameLogArchiveType
+from ark_nova_stats.models import GameStatistics as GameStatisticsModel
 from ark_nova_stats.models import User as UserModel
 
 
@@ -26,6 +28,10 @@ def player_rating_change_fields() -> dict[str, GraphQLField]:
         "user": GraphQLField(
             GraphQLNonNull(user_type),
             description="The user whose ratings may have changed.",
+        ),
+        "gameLog": GraphQLField(
+            GraphQLNonNull(game_log_type),
+            description="The game this rating change is for.",
         ),
         "priorElo": GraphQLField(
             GraphQLInt,
@@ -71,6 +77,7 @@ def game_log_player_rating_changes_resolver(
     return [
         {
             "user": rating.user,
+            "gameLog": game_log,
             "priorElo": rating.prior_elo,
             "newElo": rating.new_elo,
             "priorArenaElo": rating.prior_arena_elo,
@@ -78,6 +85,12 @@ def game_log_player_rating_changes_resolver(
         }
         for rating in game_log.game_ratings
     ]
+
+
+def game_log_statistics_resolver(
+    game_log: GameLogModel, info, **args
+) -> list[GameStatisticsModel]:
+    return game_log.game_statistics
 
 
 def game_log_fields() -> dict[str, GraphQLField]:
@@ -118,6 +131,11 @@ def game_log_fields() -> dict[str, GraphQLField]:
             description="How players' ratings changed after the game.",
             resolve=game_log_player_rating_changes_resolver,
         ),
+        "statistics": GraphQLField(
+            GraphQLNonNull(GraphQLList(game_statistics_type)),
+            description="End-game statistics for this game.",
+            resolve=game_log_statistics_resolver,
+        ),
     }
 
 
@@ -131,13 +149,23 @@ game_log_type = GraphQLObjectType(
 def fetch_game_log(
     game_log: Type[GameLogModel], params: dict[str, Any]
 ) -> Optional[GameLogModel]:
-    return (game_log.query.filter(game_log.id == params["id"])).first()
+    query = game_log.query
+    if "id" in params:
+        query = query.where(game_log.id == params["id"])
+    if "bgaTableId" in params:
+        query = query.where(game_log.bga_table_id == params["bgaTableId"])
+
+    return query.first()
 
 
 game_log_filters: dict[str, GraphQLArgument] = {
     "id": GraphQLArgument(
-        GraphQLNonNull(GraphQLInt),
+        GraphQLInt,
         description="ID of the game log.",
+    ),
+    "bgaTableId": GraphQLArgument(
+        GraphQLInt,
+        description="BGA table ID for the game.",
     ),
 }
 
@@ -205,8 +233,22 @@ def submit_game_logs_field(
     )
 
 
-def fetch_game_logs(game_log_model: Type[GameLogModel]) -> list[GameLogModel]:
-    return game_log_model.query.all()
+def fetch_game_logs(
+    game_log_model: Type[GameLogModel], args: dict
+) -> list[GameLogModel]:
+    query = game_log_model.query
+    if "bgaTableIds" in args:
+        query = query.where(game_log_model.bga_table_id.in_(args["bgaTableIds"]))
+
+    return query.limit(500).all()
+
+
+fetch_game_logs_filters: dict[str, GraphQLArgument] = {
+    "bgaTableIds": GraphQLArgument(
+        GraphQLList(GraphQLInt),
+        description="List of BGA table IDs to fetch.",
+    ),
+}
 
 
 def game_logs_field(
@@ -215,8 +257,8 @@ def game_logs_field(
     return GraphQLField(
         GraphQLNonNull(GraphQLList(game_log_type)),
         description="List all game logs.",
-        args={},
-        resolve=lambda root, info, **args: fetch_game_logs(game_log_model),
+        args=fetch_game_logs_filters,
+        resolve=lambda root, info, **args: fetch_game_logs(game_log_model, args),
     )
 
 
@@ -544,14 +586,25 @@ def card_recent_users_resolver(card: CardModel, info, **args) -> Sequence[UserMo
 
 
 def card_most_played_by_resolver(card: CardModel, info, **args) -> list[dict]:
+    limit = min(10, int(args["limit"]))
+
     return [
         {"user": user, "card": card, "count": count}
-        for user, count in db.session.execute(card.most_played_by()).all()
+        for user, count in db.session.execute(card.most_played_by(num=limit)).all()
     ]
 
 
 def card_created_at_resolver(card: CardModel, info, **args) -> int:
     return int(round(card.created_at.timestamp()))
+
+
+most_played_by_filters: dict[str, GraphQLArgument] = {
+    "limit": GraphQLArgument(
+        GraphQLInt,
+        default_value=10,
+        description="How many users to return. Maximum of 10 (also the default).",
+    ),
+}
 
 
 def card_fields() -> dict[str, GraphQLField]:
@@ -582,6 +635,7 @@ def card_fields() -> dict[str, GraphQLField]:
         "mostPlayedBy": GraphQLField(
             GraphQLNonNull(GraphQLList(user_play_count_type)),
             description="Players who play this card most often.",
+            args=most_played_by_filters,
             resolve=card_most_played_by_resolver,
         ),
         "createdAt": GraphQLField(
@@ -637,4 +691,767 @@ def fetch_cards_field(
         description="List cards.",
         args={},
         resolve=lambda root, info, **args: fetch_cards(card_model),
+    )
+
+
+def game_statistics_game_log_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> GameLogModel:
+    return game_statistics.game_log
+
+
+def game_statistics_bga_table_id_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.bga_table_id
+
+
+def game_statistics_bga_user_id_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.bga_user_id
+
+
+def game_statistics_created_at_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.created_at
+
+
+def game_statistics_thinking_time_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.thinking_time
+
+
+def game_statistics_starting_position_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.starting_position
+
+
+def game_statistics_breaks_triggered_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.breaks_triggered
+
+
+def game_statistics_triggered_end_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> bool:
+    return game_statistics.triggered_end
+
+
+def game_statistics_map_id_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.map_id
+
+
+def game_statistics_actions_build_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.actions_build
+
+
+def game_statistics_actions_animals_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.actions_animals
+
+
+def game_statistics_actions_cards_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.actions_cards
+
+
+def game_statistics_actions_association_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.actions_association
+
+
+def game_statistics_actions_sponsors_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.actions_sponsors
+
+
+def game_statistics_x_tokens_gained_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.x_tokens_gained
+
+
+def game_statistics_x_actions_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.x_actions
+
+
+def game_statistics_x_tokens_used_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.x_tokens_used
+
+
+def game_statistics_money_gained_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.money_gained
+
+
+def game_statistics_money_gained_through_income_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.money_gained_through_income
+
+
+def game_statistics_money_spent_on_animals_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.money_spent_on_animals
+
+
+def game_statistics_money_spent_on_enclosures_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.money_spent_on_enclosures
+
+
+def game_statistics_money_spent_on_donations_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.money_spent_on_donations
+
+
+def game_statistics_money_spent_on_playing_cards_from_reputation_range_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.money_spent_on_playing_cards_from_reputation_range
+
+
+def game_statistics_cards_drawn_from_deck_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.cards_drawn_from_deck
+
+
+def game_statistics_cards_drawn_from_reputation_range_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.cards_drawn_from_reputation_range
+
+
+def game_statistics_cards_snapped_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.cards_snapped
+
+
+def game_statistics_cards_discarded_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.cards_discarded
+
+
+def game_statistics_played_sponsors_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.played_sponsors
+
+
+def game_statistics_played_animals_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.played_animals
+
+
+def game_statistics_released_animals_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.released_animals
+
+
+def game_statistics_association_workers_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.association_workers
+
+
+def game_statistics_association_donations_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.association_donations
+
+
+def game_statistics_association_reputation_actions_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.association_reputation_actions
+
+
+def game_statistics_association_partner_zoo_actions_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.association_partner_zoo_actions
+
+
+def game_statistics_association_university_actions_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.association_university_actions
+
+
+def game_statistics_association_conservation_project_actions_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.association_conservation_project_actions
+
+
+def game_statistics_built_enclosures_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.built_enclosures
+
+
+def game_statistics_built_kiosks_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.built_kiosks
+
+
+def game_statistics_built_pavilions_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.built_pavilions
+
+
+def game_statistics_built_unique_buildings_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.built_unique_buildings
+
+
+def game_statistics_hexes_covered_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.hexes_covered
+
+
+def game_statistics_hexes_empty_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.hexes_empty
+
+
+def game_statistics_upgraded_action_cards_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> bool:
+    return game_statistics.upgraded_action_cards
+
+
+def game_statistics_upgraded_animals_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> bool:
+    return game_statistics.upgraded_animals
+
+
+def game_statistics_upgraded_build_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> bool:
+    return game_statistics.upgraded_build
+
+
+def game_statistics_upgraded_cards_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> bool:
+    return game_statistics.upgraded_cards
+
+
+def game_statistics_upgraded_sponsors_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> bool:
+    return game_statistics.upgraded_sponsors
+
+
+def game_statistics_upgraded_association_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> bool:
+    return game_statistics.upgraded_association
+
+
+def game_statistics_icons_africa_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_africa
+
+
+def game_statistics_icons_europe_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_europe
+
+
+def game_statistics_icons_asia_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_asia
+
+
+def game_statistics_icons_australia_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_australia
+
+
+def game_statistics_icons_americas_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_americas
+
+
+def game_statistics_icons_bird_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_bird
+
+
+def game_statistics_icons_predator_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_predator
+
+
+def game_statistics_icons_herbivore_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_herbivore
+
+
+def game_statistics_icons_bear_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_bear
+
+
+def game_statistics_icons_reptile_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_reptile
+
+
+def game_statistics_icons_primate_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_primate
+
+
+def game_statistics_icons_petting_zoo_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_petting_zoo
+
+
+def game_statistics_icons_sea_animal_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_sea_animal
+
+
+def game_statistics_icons_water_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_water
+
+
+def game_statistics_icons_rock_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_rock
+
+
+def game_statistics_icons_science_resolver(
+    game_statistics: GameStatisticsModel, info, **args
+) -> int:
+    return game_statistics.icons_science
+
+
+def game_statistics_fields() -> dict[str, GraphQLField]:
+    return {
+        "id": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="Unique ID of this set of game statistics",
+        ),
+        "gameLog": GraphQLField(
+            GraphQLNonNull(game_log_type),
+            description="Game log that this rating change corresponds to.",
+            resolve=game_statistics_game_log_resolver,
+        ),
+        "user": GraphQLField(
+            GraphQLNonNull(user_type),
+            description="User that this rating change corresponds to.",
+        ),
+        "bgaTableId": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The BGA table ID for this game log and user.",
+            resolve=game_statistics_bga_table_id_resolver,
+        ),
+        "bgaUserId": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The BGA user id for this game log and user.",
+            resolve=game_statistics_bga_user_id_resolver,
+        ),
+        "createdAt": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="When the statistics for this game log and user were recorded.",
+            resolve=game_statistics_created_at_resolver,
+        ),
+        "score": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="Player's score.",
+        ),
+        "rank": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="Player's final rank. The winner has rank 1.",
+        ),
+        "thinkingTime": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The thinking time, in seconds, for this game log and user.",
+            resolve=game_statistics_thinking_time_resolver,
+        ),
+        "startingPosition": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The starting position for this game log and user.",
+            resolve=game_statistics_starting_position_resolver,
+        ),
+        "breaksTriggered": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of breaks triggered by this user in this game.",
+            resolve=game_statistics_breaks_triggered_resolver,
+        ),
+        "triggeredEnd": GraphQLField(
+            GraphQLNonNull(GraphQLBoolean),
+            description="Whether the user in this game triggered the end of the game.",
+            resolve=game_statistics_triggered_end_resolver,
+        ),
+        "mapId": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The map ID for this game log and user.",
+            resolve=game_statistics_map_id_resolver,
+        ),
+        "actionsBuild": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of build actions for this game log and user.",
+            resolve=game_statistics_actions_build_resolver,
+        ),
+        "actionsAnimals": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of animals actions for this game log and user.",
+            resolve=game_statistics_actions_animals_resolver,
+        ),
+        "actionsCards": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of cards actions for this game log and user.",
+            resolve=game_statistics_actions_cards_resolver,
+        ),
+        "actionsAssociation": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of association actions for this game log and user.",
+            resolve=game_statistics_actions_association_resolver,
+        ),
+        "actionsSponsors": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of sponsors actions for this game log and user.",
+            resolve=game_statistics_actions_sponsors_resolver,
+        ),
+        "xTokensGained": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of X tokens gained for this game log and user.",
+            resolve=game_statistics_x_tokens_gained_resolver,
+        ),
+        "xActions": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of X actions taken for this game log and user.",
+            resolve=game_statistics_x_actions_resolver,
+        ),
+        "xTokensUsed": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of X tokens used for this game log and user.",
+            resolve=game_statistics_x_tokens_used_resolver,
+        ),
+        "moneyGained": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The money gained for this game log and user.",
+            resolve=game_statistics_money_gained_resolver,
+        ),
+        "moneyGainedThroughIncome": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The money gained through income for this game log and user.",
+            resolve=game_statistics_money_gained_through_income_resolver,
+        ),
+        "moneySpentOnAnimals": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The money spent on animals for this game log and user.",
+            resolve=game_statistics_money_spent_on_animals_resolver,
+        ),
+        "moneySpentOnEnclosures": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The money spent on enclosures for this game log and user.",
+            resolve=game_statistics_money_spent_on_enclosures_resolver,
+        ),
+        "moneySpentOnDonations": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The money spent on donations for this game log and user.",
+            resolve=game_statistics_money_spent_on_donations_resolver,
+        ),
+        "moneySpentOnPlayingCardsFromReputationRange": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The money spent on playing cards from reputation range for this game log and user.",
+            resolve=game_statistics_money_spent_on_playing_cards_from_reputation_range_resolver,
+        ),
+        "cardsDrawnFromDeck": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of cards drawn from deck for this game log and user.",
+            resolve=game_statistics_cards_drawn_from_deck_resolver,
+        ),
+        "cardsDrawnFromReputationRange": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of cards drawn from reputation range for this game log and user.",
+            resolve=game_statistics_cards_drawn_from_reputation_range_resolver,
+        ),
+        "cardsSnapped": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of cards snapped for this game log and user.",
+            resolve=game_statistics_cards_snapped_resolver,
+        ),
+        "cardsDiscarded": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of cards discarded for this game log and user.",
+            resolve=game_statistics_cards_discarded_resolver,
+        ),
+        "playedSponsors": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of played sponsors for this game log and user.",
+            resolve=game_statistics_played_sponsors_resolver,
+        ),
+        "playedAnimals": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of played animals for this game log and user.",
+            resolve=game_statistics_played_animals_resolver,
+        ),
+        "releasedAnimals": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of released animals for this game log and user.",
+            resolve=game_statistics_released_animals_resolver,
+        ),
+        "associationWorkers": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of association workers for this game log and user.",
+            resolve=game_statistics_association_workers_resolver,
+        ),
+        "associationDonations": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of association donations for this game log and user.",
+            resolve=game_statistics_association_donations_resolver,
+        ),
+        "associationReputationActions": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of association reputation actions for this game log and user.",
+            resolve=game_statistics_association_reputation_actions_resolver,
+        ),
+        "associationPartnerZooActions": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of association partner zoo actions for this game log and user.",
+            resolve=game_statistics_association_partner_zoo_actions_resolver,
+        ),
+        "associationUniversityActions": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of association university actions for this game log and user.",
+            resolve=game_statistics_association_university_actions_resolver,
+        ),
+        "associationConservationProjectActions": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of association conservation project actions for this game log and user.",
+            resolve=game_statistics_association_conservation_project_actions_resolver,
+        ),
+        "builtEnclosures": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of built enclosures for this game log and user.",
+            resolve=game_statistics_built_enclosures_resolver,
+        ),
+        "builtKiosks": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of built kiosks for this game log and user.",
+            resolve=game_statistics_built_kiosks_resolver,
+        ),
+        "builtPavilions": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of built pavilions for this game log and user.",
+            resolve=game_statistics_built_pavilions_resolver,
+        ),
+        "builtUniqueBuildings": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of built unique buildings for this game log and user.",
+            resolve=game_statistics_built_unique_buildings_resolver,
+        ),
+        "hexesCovered": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of covered map hexes for this game log and user.",
+            resolve=game_statistics_hexes_covered_resolver,
+        ),
+        "hexesEmpty": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of empty max hexes for this game log and user.",
+            resolve=game_statistics_hexes_empty_resolver,
+        ),
+        "upgradedActionCards": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of upgraded action cards for this game log and user.",
+            resolve=game_statistics_upgraded_action_cards_resolver,
+        ),
+        "upgradedAnimals": GraphQLField(
+            GraphQLNonNull(GraphQLBoolean),
+            description="Whether the user upgraded animals in this game.",
+            resolve=game_statistics_upgraded_animals_resolver,
+        ),
+        "upgradedBuild": GraphQLField(
+            GraphQLNonNull(GraphQLBoolean),
+            description="Whether the user upgraded build in this game.",
+            resolve=game_statistics_upgraded_build_resolver,
+        ),
+        "upgradedCards": GraphQLField(
+            GraphQLNonNull(GraphQLBoolean),
+            description="Whether the user upgraded cards in this game.",
+            resolve=game_statistics_upgraded_cards_resolver,
+        ),
+        "upgradedSponsors": GraphQLField(
+            GraphQLNonNull(GraphQLBoolean),
+            description="Whether the user upgraded sponsors in this game.",
+            resolve=game_statistics_upgraded_sponsors_resolver,
+        ),
+        "upgradedAssociation": GraphQLField(
+            GraphQLNonNull(GraphQLBoolean),
+            description="Whether the user upgraded association in this game.",
+            resolve=game_statistics_upgraded_association_resolver,
+        ),
+        "iconsAfrica": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of africa icons for this game log and user.",
+            resolve=game_statistics_icons_africa_resolver,
+        ),
+        "iconsEurope": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of europe icons for this game log and user.",
+            resolve=game_statistics_icons_europe_resolver,
+        ),
+        "iconsAsia": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of asia icons for this game log and user.",
+            resolve=game_statistics_icons_asia_resolver,
+        ),
+        "iconsAustralia": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of australia icons for this game log and user.",
+            resolve=game_statistics_icons_australia_resolver,
+        ),
+        "iconsAmericas": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of americas icons for this game log and user.",
+            resolve=game_statistics_icons_americas_resolver,
+        ),
+        "iconsBird": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of bird icons for this game log and user.",
+            resolve=game_statistics_icons_bird_resolver,
+        ),
+        "iconsPredator": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of predator icons for this game log and user.",
+            resolve=game_statistics_icons_predator_resolver,
+        ),
+        "iconsHerbivore": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of herbivore icons for this game log and user.",
+            resolve=game_statistics_icons_herbivore_resolver,
+        ),
+        "iconsBear": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of bear icons for this game log and user.",
+            resolve=game_statistics_icons_bear_resolver,
+        ),
+        "iconsReptile": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of reptile icons for this game log and user.",
+            resolve=game_statistics_icons_reptile_resolver,
+        ),
+        "iconsPrimate": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of primate icons for this game log and user.",
+            resolve=game_statistics_icons_primate_resolver,
+        ),
+        "iconsPettingZoo": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of petting_zoo icons for this game log and user.",
+            resolve=game_statistics_icons_petting_zoo_resolver,
+        ),
+        "iconsSeaAnimal": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of sea_animal icons for this game log and user.",
+            resolve=game_statistics_icons_sea_animal_resolver,
+        ),
+        "iconsWater": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of water icons for this game log and user.",
+            resolve=game_statistics_icons_water_resolver,
+        ),
+        "iconsRock": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of rock icons for this game log and user.",
+            resolve=game_statistics_icons_rock_resolver,
+        ),
+        "iconsScience": GraphQLField(
+            GraphQLNonNull(GraphQLInt),
+            description="The number of science icons for this game log and user.",
+            resolve=game_statistics_icons_science_resolver,
+        ),
+    }
+
+
+game_statistics_type = GraphQLObjectType(
+    "GameStatistics",
+    description="End-game statistics for a game.",
+    fields=game_statistics_fields,
+)
+
+
+def fetch_game_statistics(
+    game_statistics_model: Type[GameStatisticsModel], args: dict
+) -> list[GameStatisticsModel]:
+    query = game_statistics_model.query
+    table_ids = [int(i) for i in args["bgaTableIds"]]
+    query = query.where(game_statistics_model.bga_table_id.in_(table_ids))
+
+    return query.order_by(asc(game_statistics_model.bga_table_id)).all()
+
+
+fetch_game_statistics_filters: dict[str, GraphQLArgument] = {
+    "bgaTableIds": GraphQLArgument(
+        GraphQLNonNull(GraphQLList(GraphQLInt)),
+        description="List of BGA table IDs to fetch.",
+    ),
+}
+
+
+def fetch_game_statistics_field(
+    game_statistics_model: Type[GameStatisticsModel],
+) -> GraphQLField:
+    return GraphQLField(
+        GraphQLNonNull(GraphQLList(game_statistics_type)),
+        description="Retrieves game statistics for one or more games.",
+        args=fetch_game_statistics_filters,
+        resolve=lambda root, info, **args: fetch_game_statistics(
+            game_statistics_model, args
+        ),
     )

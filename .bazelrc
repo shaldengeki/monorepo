@@ -1,3 +1,10 @@
+# Import Aspect bazelrc presets
+
+import %workspace%/aspect.bazelrc
+
+# Enable Bzlmod for every Bazel command
+common --enable_bzlmod
+
 test --test_output=errors
 
 # Do NOT implicitly create empty __init__.py files in the runfiles tree.
@@ -8,9 +15,18 @@ test --test_output=errors
 # Python targets as required.
 build --incompatible_default_to_explicit_init_py
 
-# Enable protobuf toolchain.
-common --incompatible_enable_proto_toolchain_resolution
-
 # passes an argument `--skipLibCheck` to *every* spawn of tsc
 # Bazel 6.4 or greater: 'common' means 'any command that supports this flag'
 common --@aspect_rules_ts//ts:skipLibCheck=always
+
+# Use protoc toolchain, to avoid recompiling protoc.
+common --incompatible_enable_proto_toolchain_resolution
+
+# Break protoc compilation deliberately.
+common --per_file_copt=external/.*protobuf.*@--PROTOBUF_WAS_NOT_SUPPOSED_TO_BE_BUILT
+common --host_per_file_copt=external/.*protobuf.*@--PROTOBUF_WAS_NOT_SUPPOSED_TO_BE_BUILT
+common --per_file_copt=external/.*grpc.*@--GRPC_WAS_NOT_SUPPOSED_TO_BE_BUILT
+common --host_per_file_copt=external/.*grpc.*@--GRPC_WAS_NOT_SUPPOSED_TO_BE_BUILT
+
+# Some of our globs are empty.
+common --incompatible_disallow_empty_glob=false

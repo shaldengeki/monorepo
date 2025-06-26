@@ -9,12 +9,12 @@ distlib
 docker
 exceptiongroup
 filelock
-Flask>=2.2
+Flask
 flask-cors
-Flask-Migrate>=4.0.4
-Flask-SQLAlchemy>=3.0.3
+Flask-Migrate
+Flask-SQLAlchemy
 graphql-core
-graphql-server[flask]==3.0.0b7
+graphql-server[flask]
 identify
 importlib-metadata
 importlib-resources
@@ -34,8 +34,8 @@ pytest
 pyyaml
 qbittorrent-api
 requests
-SQLAlchemy>=2.0.16
-SQLAlchemy[mypy]>=2.0.16
+SQLAlchemy
+SQLAlchemy[mypy]
 toml
 tomli
 tomlkit

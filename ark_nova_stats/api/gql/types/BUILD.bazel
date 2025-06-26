@@ -1,4 +1,4 @@
-load("@rules_python//python:defs.bzl", "py_library")
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
 py_library(
     name = "game_log",
@@ -23,5 +23,16 @@ py_library(
         "//ark_nova_stats:models_py",
         "//ark_nova_stats/bga_log_parser:game_ratings",
         "@py_deps//graphql_core",
+        "@py_deps//sqlalchemy",
+    ],
+)
+
+py_test(
+    name = "game_rating_test",
+    size = "small",
+    srcs = ["game_rating_test.py"],
+    deps = [
+        ":game_rating",
+        "@py_deps//pytest",
     ],
 )

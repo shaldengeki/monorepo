@@ -12,6 +12,7 @@ py_binary(
     visibility = ["//:__subpackages__"],
     deps = [
         ":player_elos",
+        ":tables",
         "//ark_nova_stats/bga_log_parser:exceptions",
         "//ark_nova_stats/bga_log_parser:game_log",
         "//ark_nova_stats/emu_cup/analyses:elo_adjusted",
@@ -23,5 +24,11 @@ py_binary(
 py_library(
     name = "player_elos",
     srcs = ["player_elos.py"],
+    visibility = ["//:__subpackages__"],
+)
+
+py_library(
+    name = "tables",
+    srcs = ["tables.py"],
     visibility = ["//:__subpackages__"],
 )

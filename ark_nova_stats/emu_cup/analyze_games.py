@@ -20,66 +20,7 @@ from ark_nova_stats.emu_cup.analyses.win_rates import (
     OpeningHandRawWinRate,
 )
 from ark_nova_stats.emu_cup.player_elos import PlayerELOs
-
-EMU_CUP_GAME_TABLE_IDS = set(
-    [
-        539719810,
-        539682665,
-        539690819,
-        539714189,
-        539739367,
-        539768389,
-        539956725,
-        540065264,
-        540172423,
-        540191201,
-        540203937,
-        540221827,
-        540290164,
-        540316010,
-        540306709,
-        540617341,
-        540640875,
-        540647292,
-        540894619,
-        540955752,
-        540950947,
-        541132564,
-        541206562,
-        541429802,
-        541463814,
-        541462291,
-        541497323,
-        541494297,
-        541527117,
-        541551348,
-        541803532,
-        541950717,
-        541976632,
-        542023324,
-        542171714,
-        542235867,
-        542255543,
-        542364386,
-        542569160,
-        542589556,
-        542983232,
-        543080510,
-        543092478,
-        543430761,
-        543472681,
-        543808017,
-        543853166,
-        543957417,
-        544250311,
-        544352216,
-        544611344,
-        545060181,
-        545100776,
-        545140355,
-        545339082,
-    ]
-)
+from ark_nova_stats.emu_cup.tables import EMU_CUP_GAME_TABLE_IDS
 
 
 def list_game_datafiles() -> list[Path]:
@@ -112,7 +53,7 @@ def main(working_dir: str) -> int:
                 print(f"{p} doesn't have stats set!")
                 continue
             elos: dict[int, PlayerELOs] = {
-                user_id: PlayerELOs(id=user_id, **vals)
+                int(user_id): PlayerELOs(id=user_id, **vals)
                 for user_id, vals in parsed_file["elos"].items()
             }
 

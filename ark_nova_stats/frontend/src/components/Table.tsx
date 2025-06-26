@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import _ from 'lodash'
 
-const renderColumn = (col: string, showFilters: Boolean, filters: _.Dictionary<any>, setFilter: Function, tablePrefix: string) => {
+const renderColumn = (col: string, showFilters: Boolean | undefined, filters: _.Dictionary<any>, setFilter: Function, tablePrefix: string) => {
   const filterInput = (
     <input
       className="border w-full"
@@ -36,42 +36,62 @@ const renderRow = (row: any, idx: number, cols: Array<string>, tablePrefix: stri
   return (
         <tr key={rowPrefix}>
             {cols.map((col) => {
-              return <td key={`${rowPrefix}-col-${col}`} className="border px-4 py-2">{row[col]}</td>
+              return <td key={`${rowPrefix}-col-${col}`} className="border px-4 py-2 truncate">{row[col]}</td>
             })}
         </tr>
   )
 }
 
-type TableProps = {
-  cols: Array<string>,
-  rows: Array<any>,
-  key: string,
-  showFilters?: Boolean
-};
+interface TableRow {
+  [index: string]:React.JSX.Element;
+}
 
-const Table = ({ cols, rows, key, showFilters = true }: TableProps) => {
-  const [filters, setFilter] = useColumnFilters(cols)
+interface TableProps<T extends TableRow> {
+  key: string;
+  rows: Array<T>;
+  showFilters?: Boolean;
+}
+
+function Table<T extends TableRow>({ key, rows, showFilters }: TableProps<T>) {
   const tablePrefix = `Table-${key}`
+  const cols: string[] = rows.length < 1 ? [] : Object.keys(rows[0]);
+  const [filters, setFilter] = useColumnFilters(cols)
 
-  let shownRows = rows || []
-  if (showFilters) {
-    _.forEach(cols, (col) => {
-      if (filters[col]) {
-        shownRows = _.filter(shownRows, (txn) => { return _.upperCase(txn[col]).includes(_.upperCase(filters[col])) })
-      }
-    })
+  let tableHead = <p>No data to show!</p>;
+  let tableBody = <></>;
+
+  if (rows.length > 0) {
+    let shownRows = rows || []
+    if (showFilters) {
+      _.forEach(cols, (col) => {
+        if (filters[col]) {
+          shownRows = _.filter(shownRows, (row: T) => {
+            return _.upperCase(row[col].props.children).includes(_.upperCase(filters[col]))
+          })
+        }
+      })
+    }
+
+    tableHead = (
+      <thead>
+        <tr>
+            {cols.map(col => renderColumn(col, showFilters, filters, setFilter, tablePrefix))}
+        </tr>
+      </thead>
+    );
+
+    tableBody = (
+      <tbody>
+        {shownRows.map((row, idx) => renderRow(row, idx, cols, tablePrefix))}
+      </tbody>
+    );
+
   }
 
   return (
         <table key={tablePrefix} className="w-full table-fixed text-center">
-            <thead>
-                <tr>
-                    {cols.map(col => renderColumn(col, showFilters, filters, setFilter, tablePrefix))}
-                </tr>
-            </thead>
-            <tbody>
-                {shownRows.map((row, idx) => renderRow(row, idx, cols, tablePrefix))}
-            </tbody>
+          { tableHead }
+          { tableBody }
         </table>
   )
 }

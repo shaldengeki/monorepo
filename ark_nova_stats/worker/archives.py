@@ -11,14 +11,8 @@ import sqlalchemy
 from sqlalchemy import desc
 
 from ark_nova_stats.config import db
-from ark_nova_stats.models import (
-    GameLog,
-    GameLogArchive,
-    GameLogArchiveType,
-    GameRating,
-    GameStatistics,
-    User,
-)
+from ark_nova_stats.emu_cup.tables import EMU_CUP_GAME_TABLE_IDS
+from ark_nova_stats.models import GameLog, GameLogArchive, GameLogArchiveType, User
 
 
 class GameLogArchiveCreator:
@@ -39,11 +33,17 @@ class GameLogArchiveCreator:
     def archive_type(self) -> GameLogArchiveType:
         raise NotImplementedError
 
+    def should_include_game_log(self, game_log: GameLog) -> bool:
+        return True
+
     def process_game_log(self, game_log: GameLog) -> None:
+        if not self.should_include_game_log(game_log):
+            return
+
         self.num_logs += 1
         game_users: list[User] = game_log.users
         self.users.update(set([u.name for u in game_users]))
-        if self.last_log is None or self.last_log.end_at < game_log.end_at:
+        if self.last_log is None or self.last_log.game_end < game_log.game_end:
             self.last_log = game_log
 
     @property
@@ -90,9 +90,7 @@ class GameLogArchiveCreator:
         return True
 
     def game_logs(self) -> "sqlalchemy.orm.query.Query[GameLog]":
-        return (
-            GameLog.query.join(GameRating).join(GameStatistics).join(User).yield_per(10)
-        )
+        return GameLog.query.yield_per(10)
 
     def create_archive_tempfile(self, directory: str) -> tarfile.TarFile:
         self.logger.info(f"Creating archive at: {self.filename}")
@@ -311,6 +309,7 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
         return [
             "bga_table_id",
             "user_id",
+            "user_name",
             "prior_elo",
             "new_elo",
             "prior_arena_elo",
@@ -385,11 +384,15 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
 
     def process_game_log(self, game_log: GameLog) -> None:
         super(TopLevelStatsCsvArchiveCreator, self).process_game_log(game_log)
+        if not self.should_include_game_log(game_log):
+            return
+
         rows: list[dict] = []
         for user in game_log.users:
             row = {k: None for k in self.csv_field_names}
             row["bga_table_id"] = game_log.bga_table_id
             row["user_id"] = user.bga_id
+            row["user_name"] = user.name
 
             for rating in game_log.game_ratings:
                 if rating.user_id == user.bga_id:
@@ -496,3 +499,36 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
         os.fsync(self.archive_tempfile)
         super(TopLevelStatsCsvArchiveCreator, self).upload_archive()
         self.csv_file.close()
+
+
+class EmuCupTopLevelStatsCsvArchiveCreator(TopLevelStatsCsvArchiveCreator):
+    @property
+    def archive_type(self) -> GameLogArchiveType:
+        return GameLogArchiveType.EMU_CUP_TOP_LEVEL_STATS_CSV
+
+    def game_logs(self) -> "sqlalchemy.orm.query.Query[GameLog]":
+        return GameLog.query.where(
+            GameLog.bga_table_id.in_(EMU_CUP_GAME_TABLE_IDS)
+        ).yield_per(10)
+
+    def should_include_game_log(self, game_log: GameLog) -> bool:
+        if not super().should_include_game_log(game_log):
+            return False
+
+        return bool(game_log.bga_table_id in EMU_CUP_GAME_TABLE_IDS)
+
+    def should_create_archive(self) -> bool:
+        if not super().should_create_archive():
+            return False
+
+        last_archive: Optional[GameLogArchive] = (
+            GameLogArchive.query.filter(
+                GameLogArchive.archive_type == self.archive_type
+            )
+            .order_by(desc(GameLogArchive.last_game_log_id))
+            .first()
+        )
+        if last_archive is None:
+            return True
+
+        return bool(max(EMU_CUP_GAME_TABLE_IDS) > last_archive.last_game_log.id)
