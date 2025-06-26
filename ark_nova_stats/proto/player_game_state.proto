@@ -73,9 +73,10 @@ message PlayerMap {
 
 message PlayerHandCard {
     oneof card {
-        AnimalCard animal_card = 1;
-        SponsorCard sponsor_card = 2;
-        EndgameScoringCard endgame_scoring_card = 3;
+        EndgameScoringCard endgame_scoring_card = 1;
+        AnimalCard animal_card = 2;
+        SponsorCard sponsor_card = 3;
+        ConservationProjectCard conservation_project_card = 4;
     }
 }
 
