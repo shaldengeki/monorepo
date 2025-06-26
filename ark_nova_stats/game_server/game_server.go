@@ -299,7 +299,7 @@ func (s *gameServer) ValidatePlayerHandCard(ctx context.Context, playerHandCard 
 		card := playerHandCard.GetAnimalCard()
 
 		if card.Card.CardId < 1 {
-			return []string{"Card ID must be >= 1"}
+			return []string{"Animal card ID must be >= 1"}
 		}
 
 		if _, found := seenCards[card.Card.CardId]; found {
@@ -311,7 +311,7 @@ func (s *gameServer) ValidatePlayerHandCard(ctx context.Context, playerHandCard 
 		card := playerHandCard.GetSponsorCard()
 
 		if card.Card.CardId < 1 {
-			return []string{"Card ID must be >= 1"}
+			return []string{"Sponsor card ID must be >= 1"}
 		}
 
 		if _, found := seenCards[card.Card.CardId]; found {
@@ -323,7 +323,7 @@ func (s *gameServer) ValidatePlayerHandCard(ctx context.Context, playerHandCard 
 		card := playerHandCard.GetEndgameScoringCard()
 
 		if card.Card.CardId < 1 {
-			return []string{"Card ID must be >= 1"}
+			return []string{"Endgame scoring card ID must be >= 1"}
 		}
 
 		if _, found := seenCards[card.Card.CardId]; found {
