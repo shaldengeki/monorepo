@@ -145,7 +145,6 @@ func (s *gameServer) ValidatePlayerConservationProjectReward(ctx context.Context
 		} else {
 			seenOneTimeRewards[oneTimeReward] = 1
 		}
-
 	} else {
 		return []string{"Conservation project reward cannot be unknown type"}
 	}
@@ -291,8 +290,8 @@ func (s *gameServer) ValidatePlayerSponsors(ctx context.Context, sponsorCards []
 }
 
 func (s *gameServer) ValidatePlayerMap(ctx context.Context, playerMap *player_game_state.PlayerMap) []string {
-        // TODO: implement this.
-        return []string{}
+	// TODO: implement this.
+	return []string{}
 }
 
 func (s *gameServer) ValidatePlayerHandCard(ctx context.Context, playerHandCard *player_game_state.PlayerHandCard, seenCards map[int64]int) []string {
@@ -348,11 +347,6 @@ func (s *gameServer) ValidatePlayerHand(ctx context.Context, hand *player_game_s
 		}
 	}
 
-	return []string{}
-}
-
-func (s *gameServer) ValidatePlayerMap(ctx context.Context, map *player_game_state.PlayerMap) []string {
-	// TODO implement this.
 	return []string{}
 }
 
