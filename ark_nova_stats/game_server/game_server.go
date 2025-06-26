@@ -295,26 +295,27 @@ func (s *gameServer) ValidatePlayerMap(ctx context.Context, playerMap *player_ga
 }
 
 func (s *gameServer) ValidatePlayerHandCard(ctx context.Context, playerHandCard *player_game_state.PlayerHandCard, seenCards map[int64]int) []string {
+	card := nil
 	if playerHandCard.GetAnimalCard() != nil {
-		card := playerHandCard.GetAnimalCard()
+		card = playerHandCard.GetAnimalCard()
 
 		if card.Card.CardId < 1 {
 			return []string{"Animal card ID must be >= 1"}
 		}
 	} else if playerHandCard.GetSponsorCard() != nil {
-		card := playerHandCard.GetSponsorCard()
+		card = playerHandCard.GetSponsorCard()
 
 		if card.Card.CardId < 1 {
 			return []string{"Sponsor card ID must be >= 1"}
 		}
 	} else if playerHandCard.GetConservationProjectCard() != nil {
-		card := playerHandCard.GetConservationProjectCard()
+		card = playerHandCard.GetConservationProjectCard()
 
 		if card.Card.CardId < 1 {
 			return []string{"Conservation project card ID must be >= 1"}
 		}
 	} else if playerHandCard.GetEndgameScoringCard() != nil {
-		card := playerHandCard.GetEndgameScoringCard()
+		card = playerHandCard.GetEndgameScoringCard()
 
 		if card.Card.CardId < 1 {
 			return []string{"Endgame scoring card ID must be >= 1"}
