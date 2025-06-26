@@ -295,39 +295,51 @@ func (s *gameServer) ValidatePlayerMap(ctx context.Context, playerMap *player_ga
 }
 
 func (s *gameServer) ValidatePlayerHandCard(ctx context.Context, playerHandCard *player_game_state.PlayerHandCard, seenCards map[int64]int) []string {
-	card := nil
-	if playerHandCard.GetAnimalCard() != nil {
-		card = playerHandCard.GetAnimalCard()
-
+	switch x := playerHandCard.Card.(type) {
+	case *player_game_state.PlayerHandCard_EndgameScoringCard:
+		card := playerHandCard.GetEndgameScoringCard()
 		if card.Card.CardId < 1 {
-			return []string{"Animal card ID must be >= 1"}
+			return []string{"Card ID must be >= 1"}
 		}
-	} else if playerHandCard.GetSponsorCard() != nil {
-		card = playerHandCard.GetSponsorCard()
-
+		if _, found := seenCards[card.Card.CardId]; found {
+			return []string{"Player has duplicate hand cards"}
+		} else {
+			seenCards[card.Card.CardId] = 1
+		}
+	case *player_game_state.PlayerHandCard_AnimalCard:
+		card := playerHandCard.GetAnimalCard()
 		if card.Card.CardId < 1 {
-			return []string{"Sponsor card ID must be >= 1"}
+			return []string{"Card ID must be >= 1"}
 		}
-	} else if playerHandCard.GetConservationProjectCard() != nil {
-		card = playerHandCard.GetConservationProjectCard()
-
+		if _, found := seenCards[card.Card.CardId]; found {
+			return []string{"Player has duplicate hand cards"}
+		} else {
+			seenCards[card.Card.CardId] = 1
+		}
+	case *player_game_state.PlayerHandCard_SponsorCard:
+		card := playerHandCard.GetSponsorCard()
 		if card.Card.CardId < 1 {
-			return []string{"Conservation project card ID must be >= 1"}
+			return []string{"Card ID must be >= 1"}
 		}
-	} else if playerHandCard.GetEndgameScoringCard() != nil {
-		card = playerHandCard.GetEndgameScoringCard()
-
+		if _, found := seenCards[card.Card.CardId]; found {
+			return []string{"Player has duplicate hand cards"}
+		} else {
+			seenCards[card.Card.CardId] = 1
+		}
+	case *player_game_state.PlayerHandCard_ConservationProjectCard:
+		card := playerHandCard.GetConservationProjectCard()
 		if card.Card.CardId < 1 {
-			return []string{"Endgame scoring card ID must be >= 1"}
+			return []string{"Card ID must be >= 1"}
 		}
-	} else {
+		if _, found := seenCards[card.Card.CardId]; found {
+			return []string{"Player has duplicate hand cards"}
+		} else {
+			seenCards[card.Card.CardId] = 1
+		}
+	case nil:
 		return []string{"Hand card must have a Card object set"}
-	}
-
-	if _, found := seenCards[card.Card.CardId]; found {
-		return []string{"Player has duplicate hand cards"}
-	} else {
-		seenCards[card.Card.CardId] = 1
+	default:
+		return []string{fmt.Sprintf("Player hand has a card of unexpected type %T", x)}
 	}
 
 	return []string{}
