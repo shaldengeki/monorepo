@@ -470,21 +470,38 @@ func main() {
 
 /*
 	TODO:
+		- write proto for the state of each map
+			- conservation rewards
+			- number of partner zoos
+			- number of universities
+			- number of workers
 		- write tests for invalid states within each board component, like:
-			- invalid buildings (off grid, two of one, enclosure over-occupied, etc)
-			- invalid partner zoos (two of one)
-			- invalid animals (too many for the enclosures we have)
+			- invalid buildings (off grid, overlapping)
+			- invalid conservation projects (not the map's, the same one taken twice)
+			- invalid partner zoos or universities (too many for the map)
+			- invalid workers (too many for the map)
 		- implement ValidateState, passing each test
 
-		future directions:
-		- spin up game server
-			- spin up game server, backed by postgres
+		- backend
+			- spin up game server
 			- create database tables
-			- backfill with BGA game logs
-				- Add a CreateTable rpc
-				- In Python, add worker logic to call CreateTable with game logs
+			- create seed games at given states
 			- in stats db, call GetState and render endgame state
+
+		- single action
+			- create new rpc for taking an action for a given game
+				- probably have to create a bunch of proto types?
+			- call ValidateState at the end of the action
+			- write tests for invalid actions
+			- implement ValidateAction, passing each test
+
+		- backfill data
+			- take BGA archives, create tables, take actions
+			- in Python worker, add logic to do the same
+
 		- support play
-			- add protos for taking actions
-			- add TakeAction rpc and implement it, returning GameState
+
+		- game engine
+			- add logic to evaluate outcomes of possible actions
+			- add RPC to recommend moves given a state
 */
