@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 
 from proto_registry.config import db
 
-
 # SQLAlchemy defines the db.Model type dynamically, which doesn't work with mypy.
 # We therefore import it explicitly in the typechecker, so this resolves.
 if TYPE_CHECKING:

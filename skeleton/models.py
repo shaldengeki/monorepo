@@ -4,7 +4,7 @@ import decimal
 import enum
 import itertools
 import random
-from typing import Generator, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Generator, Optional
 
 import requests
 from sqlalchemy import ForeignKey, desc
@@ -14,7 +14,6 @@ from sqlalchemy.sql import func
 from sqlalchemy.sql.functions import now
 
 from skeleton.config import db
-
 
 # SQLAlchemy defines the db.Model type dynamically, which doesn't work with mypy.
 # We therefore import it explicitly in the typechecker, so this resolves.

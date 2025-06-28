@@ -1,8 +1,7 @@
 import datetime
-
-from mc_manager.config import db
 from typing import TYPE_CHECKING
 
+from mc_manager.config import db
 
 # SQLAlchemy defines the db.Model type dynamically, which doesn't work with mypy.
 # We therefore import it explicitly in the typechecker, so this resolves.

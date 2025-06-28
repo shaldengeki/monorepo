@@ -1,6 +1,6 @@
 import datetime
 import enum
-from typing import Generator, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Generator, Optional
 
 from sqlalchemy import ForeignKey, Select, desc, func, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -8,7 +8,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ark_nova_stats.bga_log_parser.exceptions import StatsNotSetError
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import db
-
 
 # SQLAlchemy defines the db.Model type dynamically, which doesn't work with mypy.
 # We therefore import it explicitly in the typechecker, so this resolves.

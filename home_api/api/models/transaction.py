@@ -1,6 +1,6 @@
-from home_api.config import db
 from typing import TYPE_CHECKING
 
+from home_api.config import db
 
 # SQLAlchemy defines the db.Model type dynamically, which doesn't work with mypy.
 # We therefore import it explicitly in the typechecker, so this resolves.
