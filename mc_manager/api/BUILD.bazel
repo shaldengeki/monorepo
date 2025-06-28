@@ -1,5 +1,5 @@
 load("@py_deps//:requirements.bzl", "requirement")
-load("//tools/build_rules/api:defs.bzl", "api_image")
+load("//tools/build_rules/api:defs.bzl", "graphql_api_image")
 
 py_library(
     name = "api_lib",
@@ -19,7 +19,7 @@ py_library(
     ],
 )
 
-api_image(
+graphql_api_image(
     name = "api_image",
     app_package = "mc_manager.api.app",
     docker_hub_repository = "docker.io/shaldengeki/mc-manager-api",
