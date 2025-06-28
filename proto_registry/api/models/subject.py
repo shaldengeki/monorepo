@@ -1,9 +1,18 @@
 import datetime
+from typing import TYPE_CHECKING
 
 from proto_registry.config import db
 
 
-class Subject(db.Model):
+# SQLAlchemy defines the db.Model type dynamically, which doesn't work with mypy.
+# We therefore import it explicitly in the typechecker, so this resolves.
+if TYPE_CHECKING:
+    from flask_sqlalchemy.model import Model
+else:
+    Model = db.Model
+
+
+class Subject(Model):
     __tablename__ = "subjects"
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(

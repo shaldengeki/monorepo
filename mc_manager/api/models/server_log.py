@@ -3,9 +3,18 @@ import datetime
 from mc_manager.api.models.server import Server
 from mc_manager.api.models.server_backup import ServerBackup
 from mc_manager.config import db
+from typing import TYPE_CHECKING
 
 
-class ServerLog(db.Model):
+# SQLAlchemy defines the db.Model type dynamically, which doesn't work with mypy.
+# We therefore import it explicitly in the typechecker, so this resolves.
+if TYPE_CHECKING:
+    from flask_sqlalchemy.model import Model
+else:
+    Model = db.Model
+
+
+class ServerLog(Model):
     __tablename__ = "server_logs"
     id = db.Column(db.Integer, primary_key=True)
     server_id = db.Column(db.Integer, db.ForeignKey(Server.id), nullable=False)

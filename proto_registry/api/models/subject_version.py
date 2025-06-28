@@ -3,9 +3,18 @@ import enum
 import json
 
 from sqlalchemy import Enum
+from typing import TYPE_CHECKING
 
 from proto_registry.api.models.subject import Subject
 from proto_registry.config import db
+
+
+# SQLAlchemy defines the db.Model type dynamically, which doesn't work with mypy.
+# We therefore import it explicitly in the typechecker, so this resolves.
+if TYPE_CHECKING:
+    from flask_sqlalchemy.model import Model
+else:
+    Model = db.Model
 
 
 class SchemaType(enum.Enum):
@@ -31,7 +40,7 @@ subject_version_reference_table = db.Table(
 )
 
 
-class SubjectVersion(db.Model):
+class SubjectVersion(Model):
     __tablename__ = "subject_versions"
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(

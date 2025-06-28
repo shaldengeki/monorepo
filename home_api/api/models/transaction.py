@@ -1,7 +1,16 @@
 from home_api.config import db
+from typing import TYPE_CHECKING
 
 
-class Transaction(db.Model):
+# SQLAlchemy defines the db.Model type dynamically, which doesn't work with mypy.
+# We therefore import it explicitly in the typechecker, so this resolves.
+if TYPE_CHECKING:
+    from flask_sqlalchemy.model import Model
+else:
+    Model = db.Model
+
+
+class Transaction(Model):
     __tablename__ = "transactions"
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.TIMESTAMP(timezone=True), nullable=False)
