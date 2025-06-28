@@ -1,5 +1,5 @@
 load("@rules_python//python:defs.bzl", "py_library")
-load("//tools/build_rules/api:defs.bzl", "api_image")
+load("//tools/build_rules/api:defs.bzl", "graphql_api_image")
 
 py_library(
     name = "app",
@@ -12,7 +12,7 @@ py_library(
     ],
 )
 
-api_image(
+graphql_api_image(
     name = "api_image",
     app_package = "skeleton.api.app",
     docker_hub_repository = "docker.io/shaldengeki/skeleton-api",

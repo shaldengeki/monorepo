@@ -1,7 +1,7 @@
 """
-api_image.bzl
+graphql_api_image.bzl
 
-A macro used to define an API container image.
+A macro used to define a GraphQL API container image.
 """
 
 load("@rules_python//python:defs.bzl", "py_binary")
@@ -9,7 +9,7 @@ load("//tools/build_rules:cross_platform_image.bzl", "cross_platform_image")
 load("//tools/build_rules:py_layer.bzl", "py_oci_image")
 load("//tools/build_rules/api:main_py.bzl", "main_py")
 
-def api_image(
+def graphql_api_image(
         name,
         app_package,
         deps,
@@ -21,7 +21,7 @@ def api_image(
         base_image = "@python3_image",
         visibility = None):
     """
-    Defines a set of API images for our application.
+    Defines a set of GraphQL API images for our application.
 
     Args:
         name (str): Prefix to append to the generated targets.
