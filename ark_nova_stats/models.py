@@ -1,6 +1,6 @@
 import datetime
 import enum
-from typing import Generator, Optional
+from typing import TYPE_CHECKING, Generator, Optional
 
 from sqlalchemy import ForeignKey, Select, desc, func, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -9,8 +9,15 @@ from ark_nova_stats.bga_log_parser.exceptions import StatsNotSetError
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
 from ark_nova_stats.config import db
 
+# SQLAlchemy defines the db.Model type dynamically, which doesn't work with mypy.
+# We therefore import it explicitly in the typechecker, so this resolves.
+if TYPE_CHECKING:
+    from flask_sqlalchemy.model import Model
+else:
+    Model = db.Model
 
-class GameParticipation(db.Model):
+
+class GameParticipation(Model):
     __tablename__ = "game_participations"
     user_id: Mapped[int] = mapped_column(ForeignKey("users.bga_id"), primary_key=True)
     game_log_id: Mapped[int] = mapped_column(
@@ -26,7 +33,7 @@ class GameParticipation(db.Model):
     game_log: Mapped["GameLog"] = relationship(back_populates="user_participations")
 
 
-class GameLog(db.Model):
+class GameLog(Model):
     __tablename__ = "game_logs"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -65,7 +72,7 @@ class GameLog(db.Model):
 
     def create_related_objects(
         self, parsed_logs: ParsedGameLog
-    ) -> Generator[db.Model, None, None]:
+    ) -> Generator[Model, None, None]:
         # Add users if not present.
         present_users = User.query.filter(
             User.bga_id.in_([user.id for user in parsed_logs.data.players])
@@ -103,7 +110,7 @@ class GameLog(db.Model):
 
     def create_card_and_plays(
         self, parsed_logs: ParsedGameLog
-    ) -> Generator[db.Model, None, None]:
+    ) -> Generator[Model, None, None]:
         cards = {}
         # Now create a card & card play.
         for play in parsed_logs.data.card_plays:
@@ -127,7 +134,7 @@ class GameLog(db.Model):
 
     def create_game_statistics(
         self, parsed_logs: ParsedGameLog
-    ) -> Generator[db.Model, None, None]:
+    ) -> Generator[Model, None, None]:
         try:
             for s in parsed_logs.parse_game_stats().player_stats:
                 yield GameStatistics(
@@ -205,7 +212,7 @@ class GameLog(db.Model):
             return
 
 
-class User(db.Model):
+class User(Model):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -259,7 +266,7 @@ class User(db.Model):
             select(Card, func.count())
             .join(CardPlay, CardPlay.card_id == Card.id)
             .where(CardPlay.user_id == self.bga_id)
-            .group_by(Card)
+            .group_by(Card.id)
             .order_by(desc(func.count()))
             .limit(num)
         )
@@ -316,7 +323,7 @@ class GameLogArchiveType(enum.IntEnum):
     EMU_CUP_TOP_LEVEL_STATS_CSV = 4
 
 
-class GameLogArchive(db.Model):
+class GameLogArchive(Model):
     __tablename__ = "game_log_archives"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -334,7 +341,7 @@ class GameLogArchive(db.Model):
     last_game_log: Mapped[GameLog] = relationship(back_populates="archives")
 
 
-class Card(db.Model):
+class Card(Model):
     __tablename__ = "cards"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -388,13 +395,13 @@ class Card(db.Model):
             select(User, func.count())
             .join(CardPlay, CardPlay.user_id == User.bga_id)
             .where(CardPlay.card_id == self.id)
-            .group_by(User)
+            .group_by(User.id)
             .order_by(desc(func.count()))
             .limit(num)
         )
 
 
-class CardPlay(db.Model):
+class CardPlay(Model):
     __tablename__ = "game_log_cards"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -412,7 +419,7 @@ class CardPlay(db.Model):
     card: Mapped["Card"] = relationship(back_populates="plays")
 
 
-class GameRating(db.Model):
+class GameRating(Model):
     __tablename__ = "game_ratings"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -431,7 +438,7 @@ class GameRating(db.Model):
     game_log: Mapped["GameLog"] = relationship(back_populates="game_ratings")
 
 
-class GameStatistics(db.Model):
+class GameStatistics(Model):
     __tablename__ = "game_statistics"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
