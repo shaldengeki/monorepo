@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# a git hook to add an emoji to the start of the commit message.
+# to use this, move this to .git/hooks
+EMOJIS=(art zap fire bug ambulance sparkles memo rocket lipstick tada white_check_mark lock closed_lock_with_key bookmark rotating_light construction green_heart arrow_down arrow_up pushpin construction_worker chart_with_upwards_trend recycle heavy_plus_sign heavy_minus_sign wrench hammer globe_with_meridians pencil2 poop rewind twisted_rightwards_arrows package alien truck page_facing_up boom bento wheelchair bulb beers speech_balloon card_file_box loud_sound mute busts_in_silhouette children_crossing building_construction iphone clown_face egg see_no_evil camera_flash alembic mag label seedling triangular_flag_on_post goal_net dizzy wastebasket passport_control adhesive_bandage monocle_face coffin test_tube necktie stethoscope bricks technologist money_with_wings thread safety_vest)
+
+emoji=${EMOJIS[ $RANDOM % ${#EMOJIS[@]} ]}
+
+priorCommitFile="$1"
+priorCommit=$(cat - "$priorCommitFile")
+
+if [[ $priorCommit =~ ^: ]]; then
+    # There's already an emoji at the start; do nothing.
+    echo "Already have an emoji; do nothing"
+else
+    # Prepend an emoji to the commit message.
+    echo -n ":$emoji: "|cat - "$priorCommitFile" > /tmp/out && mv /tmp/out "$priorCommitFile"
+fi
