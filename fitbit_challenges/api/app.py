@@ -74,9 +74,9 @@ def fitbit_authorize():
     )
     db.session.commit()
 
-    user: models.User = models.User.query.filter(
+    user: models.User = db.session.execute(db.select(models.User).filter(
         models.User.fitbit_user_id == token_data["user_id"]
-    ).first()
+    ).first()).scalar_one()
     subscription: Optional[models.FitbitSubscription] = user.create_subscription(
         app.config["FITBIT_CLIENT"]
     )

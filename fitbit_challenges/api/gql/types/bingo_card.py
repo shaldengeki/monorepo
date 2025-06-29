@@ -110,13 +110,13 @@ def flip_bingo_tile(bingo_tile_model: Type[BingoTile], *args, **kwargs) -> Bingo
     if current_user is None:
         raise ValueError("You must be signed in to flip a bingo tile.")
 
-    tile = (
-        bingo_tile_model.query.join(bingo_tile_model.bingo_card)
+    tile = db.session.execute(
+        db.select(bingo_tile_model).join(bingo_tile_model.bingo_card)
         .filter(bingo_tile_model.id == tile_id)
         .filter(BingoCard.user == current_user)
         .filter(BingoTile.flipped == False)
         .first()
-    )
+    ).scalar_one_or_none()
     if tile is None:
         raise ValueError(f"No bingo tile with id {tile_id} found.")
 
@@ -288,11 +288,11 @@ bingo_challenge_type = GraphQLObjectType(
 def fetch_bingo_challenge(
     challenge_model: Type[Challenge], params: dict[str, Any]
 ) -> Optional[Challenge]:
-    return (
-        challenge_model.query.filter(
+    return db.session.execute(
+        db.select(challenge_model).filter(
             challenge_model.challenge_type == ChallengeType.BINGO.value
-        ).filter(challenge_model.id == params["id"])
-    ).first()
+        ).filter(challenge_model.id == params["id"]).first()
+    ).scalar_one_or_none()
 
 
 bingo_challenge_filters: dict[str, GraphQLArgument] = {

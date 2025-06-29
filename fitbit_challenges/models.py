@@ -4,7 +4,7 @@ import decimal
 import enum
 import itertools
 import random
-from typing import Generator, Optional
+from typing import Generator, Iterable, Optional
 
 import requests
 from sqlalchemy import ForeignKey, desc
@@ -92,17 +92,17 @@ class Challenge(Base):  # type: ignore
         return datetime.datetime.now(tz=datetime.timezone.utc) >= self.seal_at
 
     @property
-    def users_list(self) -> list["User"]:
+    def users_list(self) -> Iterable["User"]:
         user_ids = [user.fitbit_user_id for user in self.users]
-        return (
-            User.query.filter(User.fitbit_user_id.in_(user_ids))
+        return db.session.execute(
+            db.select(User).filter(User.fitbit_user_id.in_(user_ids))
             .order_by(User.display_name)
             .all()
-        )
+        ).scalars()
 
-    def activities(self) -> list["UserActivity"]:
-        return (
-            UserActivity.query.filter(
+    def activities(self) -> Iterable["UserActivity"]:
+        return db.session.execute(
+            db.select(UserActivity).filter(
                 UserActivity.user.in_(
                     membership.fitbit_user_id for membership in self.user_memberships
                 )
@@ -115,11 +115,11 @@ class Challenge(Base):  # type: ignore
             .filter(UserActivity.created_at < self.seal_at)
             .order_by(desc(UserActivity.created_at))
             .all()
-        )
+        ).scalars()
 
-    def activities_for_user(self, user: "User") -> list["UserActivity"]:
-        return (
-            UserActivity.query.filter(UserActivity.user == user.fitbit_user_id)
+    def activities_for_user(self, user: "User") -> Iterable["UserActivity"]:
+        return db.session.execute(
+            db.select(UserActivity).filter(UserActivity.user == user.fitbit_user_id)
             .filter(
                 func.date_trunc("day", UserActivity.record_date)
                 >= func.date_trunc("day", self.start_at)
@@ -127,7 +127,7 @@ class Challenge(Base):  # type: ignore
             .filter(UserActivity.record_date < self.end_at)
             .order_by(desc(UserActivity.created_at))
             .all()
-        )
+        ).scalars()
 
     def latest_activities_per_day_for_user(
         self, user: "User"
@@ -286,17 +286,17 @@ class User(Base):  # type: ignore
         return new_subscription
 
     def challenges_query(self):
-        return Challenge.query.filter(
+        return db.select(Challenge).filter(
             Challenge.id.in_(
                 membership.challenge_id for membership in self.challenge_memberships
             )
         )
 
-    def past_challenges(self) -> list["Challenge"]:
-        return self.challenges_query().filter(Challenge.end_at < now()).all()
+    def past_challenges(self) -> Iterable["Challenge"]:
+        return db.session.execute(self.challenges_query().filter(Challenge.end_at < now()).all()).scalars()
 
-    def active_challenges(self) -> list["Challenge"]:
-        return self.challenges_query().filter(Challenge.end_at >= now()).all()
+    def active_challenges(self) -> Iterable["Challenge"]:
+        return db.session.execute(self.challenges_query().filter(Challenge.end_at >= now()).all()).scalars()
 
     def activities_within_timespan(
         self, start: datetime.datetime, end: datetime.datetime
