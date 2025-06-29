@@ -14,8 +14,7 @@ from graphql import (
 )
 from sqlalchemy import desc
 
-from mc_manager.api.models.server_backup import ServerBackup
-from mc_manager.api.models.server_log import ServerLog
+from mc_manager.api.models import ServerBackup, ServerLog
 from mc_manager.config import db
 
 serverLogStateEnum = GraphQLEnumType(

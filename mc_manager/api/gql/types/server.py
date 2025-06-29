@@ -12,9 +12,7 @@ from graphql import (
 from sqlalchemy import desc
 
 from mc_manager.api.gql.types.server_log import serverLogStateEnum
-from mc_manager.api.models.server import Server
-from mc_manager.api.models.server_backup import ServerBackup
-from mc_manager.api.models.server_log import ServerLog
+from mc_manager.api.models import Server, ServerBackup, ServerLog
 from mc_manager.config import db
 
 
