@@ -8,13 +8,14 @@ Create Date: 2023-04-15 20:14:18.608315
 
 import sqlalchemy as sa
 from alembic import op
+from typing import Optional
 from sqlalchemy.sql.functions import now
 
 # revision identifiers, used by Alembic.
 revision = "fc584ec8e573"
 down_revision = None
-branch_labels = None
-depends_on = None
+branch_labels: Optional[tuple[str]] = None
+depends_on: Optional[str] = None
 
 
 def upgrade():

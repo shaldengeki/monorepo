@@ -10,6 +10,7 @@ import json
 
 import sqlalchemy as sa
 from alembic import op
+from typing import Optional
 from sqlalchemy import orm
 from sqlalchemy.sql.functions import now
 
@@ -21,8 +22,8 @@ from ark_nova_stats.models import User as UserModel
 # revision identifiers, used by Alembic.
 revision = "bd2396f61798"
 down_revision = "8c749a7279e7"
-branch_labels = None
-depends_on = None
+branch_labels: Optional[tuple[str]] = None
+depends_on: Optional[str] = None
 
 
 def upgrade():

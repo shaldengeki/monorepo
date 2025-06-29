@@ -11,6 +11,7 @@ import logging
 
 import sqlalchemy as sa
 from alembic import op
+from typing import Optional
 from sqlalchemy import orm
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as BGAGameLog
@@ -19,8 +20,8 @@ from ark_nova_stats.models import GameLog as GameLogModel
 # revision identifiers, used by Alembic.
 revision = "8c749a7279e7"
 down_revision = "2ce11871a414"
-branch_labels = None
-depends_on = None
+branch_labels: Optional[tuple[str]] = None
+depends_on: Optional[str] = None
 
 
 def upgrade():
