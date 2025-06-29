@@ -1,4 +1,5 @@
 import datetime
+from typing import Iterable
 
 from graphql import (
     GraphQLArgument,
@@ -79,8 +80,8 @@ serverBackupType = GraphQLObjectType(
 )
 
 
-def fetch_server_backups(params):
-    query_obj = ServerBackup.query
+def fetch_server_backups(params) -> Iterable[ServerBackup]:
+    query_obj = db.select(ServerBackup)
     if params.get("earliestDate", False):
         query_obj = query_obj.filter(
             ServerBackup.created
@@ -107,7 +108,7 @@ def fetch_server_backups(params):
     limit = min((100, int(params["limit"])))
     query_obj = query_obj.limit(limit)
 
-    return query_obj.all()
+    return db.session.execute(query_obj.all()).scalars()
 
 
 serverBackupsFilters = {
@@ -192,7 +193,9 @@ def createServerBackupField():
 
 
 def update_server_backup(params):
-    server_backup = ServerBackup.query.filter(ServerBackup.id == params["id"]).first()
+    server_backup = db.session.execute(
+        db.select(ServerBackup).filter(ServerBackup.id == params["id"]).first()
+    ).scalar_one_or_none()
     if server_backup is None:
         raise ValueError(
             f"Server backup with id {params['id']} doesn't exist, and can't be updated."
@@ -239,7 +242,9 @@ def updateServerBackupField():
 
 
 def delete_server_backup(params):
-    server_backup = ServerBackup.query.filter(ServerBackup.id == params["id"]).first()
+    server_backup = db.session.execute(
+        db.select(ServerBackup).filter(ServerBackup.id == params["id"]).first()
+    ).scalar_one_or_none()
     if server_backup is None:
         raise ValueError(
             f"Server backup with id {params['id']} doesn't exist, and can't be deleted."

@@ -1,4 +1,5 @@
 import datetime
+from typing import Iterable
 
 from graphql import (
     GraphQLArgument,
@@ -87,8 +88,8 @@ serverLogType = GraphQLObjectType(
 )
 
 
-def fetch_server_logs(params):
-    query_obj = ServerLog.query
+def fetch_server_logs(params) -> Iterable[ServerLog]:
+    query_obj = db.select(ServerLog)
     if params.get("earliestDate", False):
         query_obj = query_obj.filter(
             ServerLog.created
@@ -106,7 +107,9 @@ def fetch_server_logs(params):
     if params.get("error", False):
         query_obj = query_obj.filter(ServerLog.error != None)
 
-    return query_obj.order_by(desc(ServerLog.created)).all()
+    return db.session.execute(
+        query_obj.order_by(desc(ServerLog.created)).all()
+    ).scalars()
 
 
 serverLogsFilters = {
@@ -142,9 +145,11 @@ def serverLogsField():
 def create_server_log(args):
     backup = None
     if args.get("backupId") is not None:
-        backup = ServerBackup.query.filter(
-            ServerBackup.id == int(args.get("backupId"))
-        ).first()
+        backup = db.session.execute(
+            db.select(ServerBackup)
+            .filter(ServerBackup.id == int(args.get("backupId")))
+            .first()
+        ).scalar_one()
 
     server_log = ServerLog(
         server_id=args["serverId"],
