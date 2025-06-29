@@ -1,5 +1,5 @@
 import datetime
-from typing import Any, Type
+from typing import Any, Iterable, Type
 
 from graphql import (
     GraphQLArgument,
@@ -70,8 +70,8 @@ user_activity_type = GraphQLObjectType(
 
 def fetch_user_activities(
     user_activity_model: Type[UserActivity], params: dict[str, Any]
-):
-    query_obj = user_activity_model.query
+) -> Iterable[UserActivity]:
+    query_obj = db.select(user_activity_model)
     if params.get("users", []):
         query_obj = query_obj.filter(user_activity_model.user.in_(params["users"]))
     if params.get("recordedAfter", []):
@@ -84,7 +84,7 @@ def fetch_user_activities(
             user_activity_model.record_date
             <= datetime.datetime.utcfromtimestamp(int(params["recordedBefore"]))
         )
-    return query_obj.order_by(desc(user_activity_model.created_at)).all()
+    return db.session.execute(query_obj.order_by(desc(user_activity_model.created_at))).scalars()
 
 
 user_activities_filters: dict[str, GraphQLArgument] = {
@@ -168,9 +168,9 @@ def create_user_activity_field(
 def update_user_activity(
     user_activity_model: Type[UserActivity], args: dict[str, Any]
 ) -> UserActivity:
-    user_activity = user_activity_model.query.filter(
+    user_activity = db.session.execute(db.select(user_activity_model).filter(
         user_activity_model.id == int(args["id"])
-    ).first()
+    ).first()).scalar_one_or_none()
     if user_activity is None:
         raise ValueError(
             f"User activity with id {args['id']} doesn't exist, and can't be updated."

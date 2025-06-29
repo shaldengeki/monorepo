@@ -17,7 +17,7 @@ def maybe_fetch_subscription_notification() -> Optional[SubscriptionNotification
         update(SubscriptionNotification)
         .where(
             SubscriptionNotification.id.in_(
-                SubscriptionNotification.query.with_entities(
+                db.select(SubscriptionNotification).with_entities(
                     SubscriptionNotification.id
                 )
                 .filter(SubscriptionNotification.processed_at == None)
@@ -92,14 +92,14 @@ def process_subscription_notifications(client: FitbitClient) -> None:
             active_minutes=active_minutes,
             distance_km=distance_km,
         )
-        last_activity = (
-            UserActivity.query.filter(
+        last_activity = db.session.execute(
+            db.select(UserActivity).filter(
                 UserActivity.record_date == notification.date.date()
             )
             .filter(UserActivity.user == notification.fitbit_user_id)
             .order_by(desc(UserActivity.created_at))
             .first()
-        )
+        ).scalar_one_or_none()
         if not last_activity or (
             last_activity.steps != new_activity.steps
             or last_activity.active_minutes != new_activity.active_minutes

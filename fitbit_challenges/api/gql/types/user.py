@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Iterable, Optional, Type
 
 from flask import Flask, session
 from graphql import (
@@ -11,6 +11,7 @@ from graphql import (
 )
 
 from fitbit_challenges.api.gql.types.user_activities import user_activity_type
+from fitbit_challenges.config import db
 from fitbit_challenges.models import User
 
 
@@ -83,8 +84,8 @@ user_type = GraphQLObjectType(
 )
 
 
-def fetch_users(user_model: Type[User]) -> list[User]:
-    return user_model.query.all()
+def fetch_users(user_model: Type[User]) -> Iterable[User]:
+    return db.session.execute(db.select(user_model).all()).scalars()
 
 
 def users_field(user_model: Type[User]) -> GraphQLField:
@@ -97,13 +98,13 @@ def users_field(user_model: Type[User]) -> GraphQLField:
 def fetch_current_user(app: Flask, user_model: Type[User]) -> Optional[User]:
     if app.config["DEBUG"]:
         # In development, user is logged in.
-        return user_model.query.first()
+        return db.session.execute(db.select(user_model).first()).scalar_one_or_none()
 
     if "fitbit_user_id" not in session:
         return None
-    user = user_model.query.filter(
+    user = db.session.execute(db.select(user_model).filter(
         user_model.fitbit_user_id == session["fitbit_user_id"]
-    ).first()
+    ).first()).scalar_one_or_none()
     if not user:
         session.pop("fitbit_user_id")
         return None
