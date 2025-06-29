@@ -22,9 +22,8 @@ class ServerLog(Base):
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
         nullable=False,
     )
-    state: Mapped[str]
+    state: Mapped[str] = mapped_column(String, nullable=False)
     error: Mapped[str]
-    remote_path: Mapped[str]
     server: Mapped["Server"] = relationship(back_populates="logs")
     backup: Mapped["ServerBackup"] = relationship(back_populates="logs")
 
@@ -41,9 +40,9 @@ class ServerBackup(Base):
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
         nullable=False,
     )
-    state: Mapped[str]
+    state: Mapped[str] = mapped_column(String, nullable=False)
     error: Mapped[str]
-    remote_path: Mapped[str]
+    remote_path: Mapped[str] = mapped_column(String, nullable=False)
     server: Mapped["Server"] = relationship(back_populates="backups")
     logs: Mapped["ServerLog"] = relationship(back_populates="backup")
 
@@ -59,13 +58,13 @@ class Server(Base):
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
         nullable=False,
     )
-    created_by: Mapped[str]
-    name: Mapped[str]
-    port: Mapped[int] = mapped_column(String, unique=True)
-    timezone: Mapped[str]
-    zipfile: Mapped[str]
+    created_by: Mapped[str] = mapped_column(String, nullable=False)
+    name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    port: Mapped[int] = mapped_column(String, nullable=False, unique=True)
+    timezone: Mapped[str] = mapped_column(String, nullable=False)
+    zipfile: Mapped[str] = mapped_column(String, nullable=False)
     motd: Mapped[str]
-    memory: Mapped[str]
+    memory: Mapped[str] = mapped_column(String, nullable=False)
 
     logs: Mapped["ServerLog"] = relationship(
         back_populates="server", order_by="desc(ServerLog.created)"
