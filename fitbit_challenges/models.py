@@ -9,7 +9,7 @@ from typing import Generator, Optional
 import requests
 from sqlalchemy import ForeignKey, desc
 from sqlalchemy.dialects.postgresql import insert
-from sqlalchemy.orm import Mapped, mapped_column, relationship, DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from sqlalchemy.sql.functions import now
 
@@ -17,8 +17,10 @@ from fitbit_challenges.bingo_card_pattern import USABLE_PATTERNS, BingoCardPatte
 from fitbit_challenges.config import db
 from fitbit_challenges.fitbit_client import FitbitClient
 
+
 class Base(DeclarativeBase):
     pass
+
 
 @dataclasses.dataclass
 class TotalAmounts:
@@ -541,7 +543,9 @@ class BingoCard(Base):  # type: ignore
                     ]
                 )
             else:
-                raise ValueError(f"Tile {tile.id} must have one of steps, active_minutes, or distance_km")
+                raise ValueError(
+                    f"Tile {tile.id} must have one of steps, active_minutes, or distance_km"
+                )
 
             tile.bonus_type = bonus_type.value
             amount: Optional[int | decimal.Decimal]
