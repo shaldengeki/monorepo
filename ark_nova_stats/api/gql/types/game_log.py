@@ -1,5 +1,5 @@
 import json
-from typing import Any, Optional, Sequence, Type
+from typing import Any, Iterable, Optional, Sequence, Type
 
 from graphql import (
     GraphQLArgument,
@@ -149,13 +149,13 @@ game_log_type = GraphQLObjectType(
 def fetch_game_log(
     game_log: Type[GameLogModel], params: dict[str, Any]
 ) -> Optional[GameLogModel]:
-    query = game_log.query
+    query = db.select(game_log)
     if "id" in params:
         query = query.where(game_log.id == params["id"])
     if "bgaTableId" in params:
         query = query.where(game_log.bga_table_id == params["bgaTableId"])
 
-    return query.first()
+    return db.session.execute(query.first()).scalar_one()
 
 
 game_log_filters: dict[str, GraphQLArgument] = {
@@ -201,9 +201,9 @@ def submit_game_logs(
         log.id = 1
     else:
         # Only create the log if it doesn't already exist.
-        existing_log: GameLogModel | None = game_log_model.query.filter(
+        existing_log: GameLogModel | None = db.session.execute(db.select(game_log_model).filter(
             game_log_model.bga_table_id == log.bga_table_id
-        ).first()
+        ).first()).scalar_one()
         if existing_log is None:
             db.session.add(log)
         else:
@@ -235,12 +235,12 @@ def submit_game_logs_field(
 
 def fetch_game_logs(
     game_log_model: Type[GameLogModel], args: dict
-) -> list[GameLogModel]:
-    query = game_log_model.query
+) -> Iterable[GameLogModel]:
+    query = db.select(game_log_model)
     if "bgaTableIds" in args:
         query = query.where(game_log_model.bga_table_id.in_(args["bgaTableIds"]))
 
-    return query.limit(500).all()
+    return db.session.scalars(query.limit(500))
 
 
 fetch_game_logs_filters: dict[str, GraphQLArgument] = {
@@ -262,8 +262,8 @@ def game_logs_field(
     )
 
 
-def fetch_recent_game_logs(game_log_model: Type[GameLogModel]) -> list[GameLogModel]:
-    return game_log_model.query.order_by(desc(game_log_model.game_end)).limit(10).all()
+def fetch_recent_game_logs(game_log_model: Type[GameLogModel]) -> Iterable[GameLogModel]:
+    return db.select(game_log_model).order_by(desc(game_log_model.game_end)).limit(10).all()
 
 
 def recent_game_logs_field(
@@ -393,7 +393,7 @@ def fetch_user(
     user_model: Type[UserModel],
     params: dict[str, Any],
 ) -> Optional[UserModel]:
-    return user_model.query.where(user_model.name == params["name"]).first()
+    return db.session.execute(db.select(user_model).where(user_model.name == params["name"])).scalar_one_or_none()
 
 
 def fetch_user_field(
@@ -434,17 +434,17 @@ stats_type = GraphQLObjectType(
 def fetch_stats(
     game_log_model: Type[GameLogModel], user_model: Type[UserModel]
 ) -> dict:
-    most_recent_submission = game_log_model.query.order_by(
+    most_recent_submission = db.session.execute(db.select(game_log_model).order_by(
         desc(game_log_model.created_at)
-    ).first()
+    )).scalar_one_or_none()
     if most_recent_submission is None:
         most_recent_time = None
     else:
         most_recent_time = int(most_recent_submission.created_at.timestamp())
 
     return {
-        "numGameLogs": game_log_model.query.count(),
-        "numPlayers": user_model.query.count(),
+        "numGameLogs": db.session.execute(db.select(game_log_model).count()).scalar_one(),
+        "numPlayers": db.session.execute(db.select(user_model).query.count()).scalar_one(),
         "mostRecentSubmission": most_recent_time,
     }
 
@@ -550,12 +550,11 @@ game_log_archive_type = GraphQLObjectType(
 
 def fetch_recent_game_log_archives(
     game_log_archive_model: Type[GameLogArchiveModel],
-) -> list[GameLogArchiveModel]:
-    return (
-        game_log_archive_model.query.order_by(desc(game_log_archive_model.created_at))
+) -> Iterable[GameLogArchiveModel]:
+    return db.session.execute(
+        db.select(game_log_archive_model).order_by(desc(game_log_archive_model.created_at))
         .limit(10)
-        .all()
-    )
+    ).scalars()
 
 
 def recent_game_log_archives_field(
@@ -657,7 +656,7 @@ def fetch_card(
     card_model: Type[CardModel],
     params: dict[str, Any],
 ) -> Optional[CardModel]:
-    return card_model.query.where(card_model.bga_id == params["id"]).first()
+    return db.session.execute(db.select(card_model).where(card_model.bga_id == params["id"]).first()).scalar_one_or_none()
 
 
 fetch_card_filters: dict[str, GraphQLArgument] = {
@@ -679,8 +678,8 @@ def fetch_card_field(
     )
 
 
-def fetch_cards(card_model: Type[CardModel]) -> list[CardModel]:
-    return card_model.query.order_by(asc(card_model.name)).all()
+def fetch_cards(card_model: Type[CardModel]) -> Iterable[CardModel]:
+    return db.session.execute(db.select(card_model).order_by(asc(card_model.name)).all()).scalars()
 
 
 def fetch_cards_field(
@@ -1428,12 +1427,12 @@ game_statistics_type = GraphQLObjectType(
 
 def fetch_game_statistics(
     game_statistics_model: Type[GameStatisticsModel], args: dict
-) -> list[GameStatisticsModel]:
-    query = game_statistics_model.query
+) -> Iterable[GameStatisticsModel]:
+    query = db.select(game_statistics_model)
     table_ids = [int(i) for i in args["bgaTableIds"]]
     query = query.where(game_statistics_model.bga_table_id.in_(table_ids))
 
-    return query.order_by(asc(game_statistics_model.bga_table_id)).all()
+    return db.session.execute(query.order_by(asc(game_statistics_model.bga_table_id)).all()).scalars()
 
 
 fetch_game_statistics_filters: dict[str, GraphQLArgument] = {

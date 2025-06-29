@@ -5,7 +5,7 @@ import logging
 import os
 import tarfile
 import tempfile
-from typing import Optional
+from typing import Iterable, Optional
 
 import sqlalchemy
 from sqlalchemy import desc
@@ -60,13 +60,12 @@ class GameLogArchiveCreator:
 
     def should_create_archive(self) -> bool:
         # First, bail if we've uploaded an archive recently.
-        last_archive: Optional[GameLogArchive] = (
-            GameLogArchive.query.filter(
+        last_archive: Optional[GameLogArchive] = db.session.execute(db.select(GameLogArchive).filter(
                 GameLogArchive.archive_type == self.archive_type
             )
             .order_by(desc(GameLogArchive.created_at))
             .first()
-        )
+        ).scalar_one_or_none()
         if last_archive is None:
             return True
 
@@ -78,9 +77,9 @@ class GameLogArchiveCreator:
             return False
 
         # Next, check to see if we have new logs to include in the archive.
-        new_logs = GameLog.query.where(
+        new_logs = db.session.execute(db.select(GameLog).where(
             GameLog.id > last_archive.last_game_log_id
-        ).count()
+        ).count()).scalar_one()
         if new_logs == 0:
             self.logger.debug(
                 f"No new logs to include since game ID {last_archive.last_game_log_id}; skipping."
@@ -89,8 +88,8 @@ class GameLogArchiveCreator:
 
         return True
 
-    def game_logs(self) -> "sqlalchemy.orm.query.Query[GameLog]":
-        return GameLog.query.yield_per(10)
+    def game_logs(self) -> Iterable[GameLog]:
+        return db.select(GameLog).yield_per(10)
 
     def create_archive_tempfile(self, directory: str) -> tarfile.TarFile:
         self.logger.info(f"Creating archive at: {self.filename}")
@@ -506,8 +505,8 @@ class EmuCupTopLevelStatsCsvArchiveCreator(TopLevelStatsCsvArchiveCreator):
     def archive_type(self) -> GameLogArchiveType:
         return GameLogArchiveType.EMU_CUP_TOP_LEVEL_STATS_CSV
 
-    def game_logs(self) -> "sqlalchemy.orm.query.Query[GameLog]":
-        return GameLog.query.where(
+    def game_logs(self) -> Iterable[GameLog]:
+        return db.select(GameLog).where(
             GameLog.bga_table_id.in_(EMU_CUP_GAME_TABLE_IDS)
         ).yield_per(10)
 
@@ -521,13 +520,12 @@ class EmuCupTopLevelStatsCsvArchiveCreator(TopLevelStatsCsvArchiveCreator):
         if not super().should_create_archive():
             return False
 
-        last_archive: Optional[GameLogArchive] = (
-            GameLogArchive.query.filter(
+        last_archive: Optional[GameLogArchive] = db.session.execute(db.select(GameLogArchive).filter(
                 GameLogArchive.archive_type == self.archive_type
             )
             .order_by(desc(GameLogArchive.last_game_log_id))
             .first()
-        )
+        ).scalar_one_or_none()
         if last_archive is None:
             return True
 

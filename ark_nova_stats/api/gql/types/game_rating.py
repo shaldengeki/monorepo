@@ -1,4 +1,4 @@
-from typing import Any, Optional, Type
+from typing import Any, Iterable, Optional, Type
 
 from graphql import (
     GraphQLArgument,
@@ -139,11 +139,11 @@ def submit_game_ratings(
         else:
             # Only try to create this if it doesn't already exist.
             if (
-                game_rating_model.query.filter(
+                db.session.execute(db.select(game_rating_model).filter(
                     game_rating_model.bga_table_id == table_id
                 )
                 .filter(game_rating_model.user_id == player_id)
-                .count()
+                .count()).scalar_one()
                 == 0
             ):
                 db.session.add(rating)
@@ -177,12 +177,12 @@ def submit_game_ratings_field(
 
 def fetch_game_ratings(
     game_rating_model: Type[GameRatingModel], args: dict
-) -> list[GameRatingModel]:
-    query = game_rating_model.query
+) -> Iterable[GameRatingModel]:
+    query = db.select(game_rating_model)
     table_ids = [int(i) for i in args["bgaTableIds"]]
     query = query.where(game_rating_model.bga_table_id.in_(table_ids))
 
-    return query.order_by(asc(game_rating_model.bga_table_id)).all()
+    return db.session.execute(query.order_by(asc(game_rating_model.bga_table_id)).all()).scalars()
 
 
 fetch_game_ratings_filters: dict[str, GraphQLArgument] = {

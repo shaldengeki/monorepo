@@ -4,6 +4,7 @@ import logging
 import os
 import tempfile
 import time
+from typing import Optional
 
 import boto3
 
@@ -82,8 +83,7 @@ def archive_logs_to_tigris(
 def populate_card_play_actions() -> None:
     logger.info(f"Populating card play actions.")
     card_ids = set()
-
-    for game_log in GameLog.query.yield_per(10):  # type: ignore
+    for game_log in db.session.execute(db.select(GameLog)).yield_per(10):
         parsed_log = BGAGameLog(**json.loads(game_log.log))
         # First, create underlying card models.
         for play in parsed_log.data.card_plays:
@@ -91,12 +91,12 @@ def populate_card_play_actions() -> None:
             if play.card.id in card_ids:
                 continue
 
-            find_card = Card.query.where(Card.bga_id == play.card.id).count()
+            find_card = db.session.execute(db.select(Card).where(Card.bga_id == play.card.id).count()).scalar_one()
             if find_card > 0:
                 card_ids.add(play.card.id)
                 continue
 
-            card = Card(name=play.card.name, bga_id=play.card.id)  # type: ignore
+            card = Card(name=play.card.name, bga_id=play.card.id)
             logger.info(f"Staging card creation for: {play.card.id}")
             db.session.add(card)
             card_ids.add(play.card.id)
@@ -106,27 +106,26 @@ def populate_card_play_actions() -> None:
 
     # Now create all the card plays.
     logging.info("Creating card plays.")
-    for log_model in GameLog.query.yield_per(10):  # type: ignore
-        parsed_log = BGAGameLog(**json.loads(log_model.log))
+    for game_log in db.session.execute(db.select(GameLog)).yield_per(10):
+        parsed_log = BGAGameLog(**json.loads(game_log.log))
         for play in parsed_log.data.card_plays:
-            find_play = CardPlay.query.where(
-                CardPlay.game_log_id == log_model.id
-                and CardPlay.card_id == card.id
+            find_play = db.session.execute(db.select(CardPlay).where(
+                CardPlay.game_log_id == game_log.id
+                and CardPlay.card_id == play.card.id
                 and CardPlay.user_id == play.player.id
                 and CardPlay.move == play.move
-            ).count()
+            ).count()).scalar_one()
             if find_play > 0:
                 continue
 
-            find_card = Card.query.where(Card.bga_id == play.card.id).limit(1).all()
-            card = find_card[0]
+            card = db.session.execute(db.select(Card).where(Card.bga_id == play.card.id).limit(1)).scalar_one()
             logger.info(
-                f"Staging card play creation for game ID {log_model.id}, card {card.id}"
+                f"Staging card play creation for game ID {game_log.id}, card {play.card.id}"
             )
 
             db.session.add(
-                CardPlay(  # type: ignore
-                    game_log_id=log_model.id,
+                CardPlay(
+                    game_log_id=game_log.id,
                     card=card,
                     user_id=play.player.id,
                     move=play.move,
@@ -142,7 +141,7 @@ def populate_card_play_actions() -> None:
 def populate_game_log_start_end() -> None:
     logger.info(f"Populating game log start & ends.")
     updated = 0
-    for game_log in GameLog.query.where(GameLog.game_start == None).limit(25).yield_per(10):  # type: ignore
+    for game_log in db.session.execute(db.select(GameLog).where(GameLog.game_start == None).limit(25)).yield_per(10):
         parsed_log = BGAGameLog(**json.loads(game_log.log))
         game_log.game_start = parsed_log.game_start
         game_log.game_end = parsed_log.game_end
@@ -156,7 +155,7 @@ def populate_game_log_start_end() -> None:
 def populate_game_statistics() -> None:
     logger.info(f"Populating game statistics.")
     updated = 0
-    for game_log in GameLog.query.outerjoin(GameStatistics).where(GameStatistics.bga_table_id == None).limit(25).yield_per(10):  # type: ignore
+    for game_log in db.session.execute(db.select(GameLog).outerjoin(GameStatistics).where(GameStatistics.bga_table_id == None).limit(25)).yield_per(10):
         parsed_log = BGAGameLog(**json.loads(game_log.log))
         for s in game_log.create_game_statistics(parsed_log):
             db.session.add(s)
@@ -171,7 +170,7 @@ API_SECRET_KEY = os.getenv("API_WORKER_SECRET")
 
 
 def main() -> int:
-    tigris_client = boto3.client("s3", endpoint_url=os.getenv("AWS_ENDPOINT_URL_S3"))
+    tigris_client = boto3.client("s3", endpoint_url=os.getenv("AWS_ENDPOINT_URL_S3"))  # type: ignore
     with app.app_context():
         while True:
             start = time.time()
