@@ -201,9 +201,11 @@ def submit_game_logs(
         log.id = 1
     else:
         # Only create the log if it doesn't already exist.
-        existing_log: GameLogModel | None = db.session.execute(db.select(game_log_model).filter(
-            game_log_model.bga_table_id == log.bga_table_id
-        ).first()).scalar_one()
+        existing_log: GameLogModel | None = db.session.execute(
+            db.select(game_log_model)
+            .filter(game_log_model.bga_table_id == log.bga_table_id)
+            .first()
+        ).scalar_one()
         if existing_log is None:
             db.session.add(log)
         else:
@@ -262,8 +264,15 @@ def game_logs_field(
     )
 
 
-def fetch_recent_game_logs(game_log_model: Type[GameLogModel]) -> Iterable[GameLogModel]:
-    return db.select(game_log_model).order_by(desc(game_log_model.game_end)).limit(10).all()
+def fetch_recent_game_logs(
+    game_log_model: Type[GameLogModel],
+) -> Iterable[GameLogModel]:
+    return (
+        db.select(game_log_model)
+        .order_by(desc(game_log_model.game_end))
+        .limit(10)
+        .all()
+    )
 
 
 def recent_game_logs_field(
@@ -393,7 +402,9 @@ def fetch_user(
     user_model: Type[UserModel],
     params: dict[str, Any],
 ) -> Optional[UserModel]:
-    return db.session.execute(db.select(user_model).where(user_model.name == params["name"])).scalar_one_or_none()
+    return db.session.execute(
+        db.select(user_model).where(user_model.name == params["name"])
+    ).scalar_one_or_none()
 
 
 def fetch_user_field(
@@ -434,17 +445,21 @@ stats_type = GraphQLObjectType(
 def fetch_stats(
     game_log_model: Type[GameLogModel], user_model: Type[UserModel]
 ) -> dict:
-    most_recent_submission = db.session.execute(db.select(game_log_model).order_by(
-        desc(game_log_model.created_at)
-    )).scalar_one_or_none()
+    most_recent_submission = db.session.execute(
+        db.select(game_log_model).order_by(desc(game_log_model.created_at))
+    ).scalar_one_or_none()
     if most_recent_submission is None:
         most_recent_time = None
     else:
         most_recent_time = int(most_recent_submission.created_at.timestamp())
 
     return {
-        "numGameLogs": db.session.execute(db.select(game_log_model).count()).scalar_one(),
-        "numPlayers": db.session.execute(db.select(user_model).query.count()).scalar_one(),
+        "numGameLogs": db.session.execute(
+            db.select(game_log_model).count()
+        ).scalar_one(),
+        "numPlayers": db.session.execute(
+            db.select(user_model).query.count()
+        ).scalar_one(),
         "mostRecentSubmission": most_recent_time,
     }
 
@@ -552,7 +567,8 @@ def fetch_recent_game_log_archives(
     game_log_archive_model: Type[GameLogArchiveModel],
 ) -> Iterable[GameLogArchiveModel]:
     return db.session.execute(
-        db.select(game_log_archive_model).order_by(desc(game_log_archive_model.created_at))
+        db.select(game_log_archive_model)
+        .order_by(desc(game_log_archive_model.created_at))
         .limit(10)
     ).scalars()
 
@@ -656,7 +672,9 @@ def fetch_card(
     card_model: Type[CardModel],
     params: dict[str, Any],
 ) -> Optional[CardModel]:
-    return db.session.execute(db.select(card_model).where(card_model.bga_id == params["id"]).first()).scalar_one_or_none()
+    return db.session.execute(
+        db.select(card_model).where(card_model.bga_id == params["id"]).first()
+    ).scalar_one_or_none()
 
 
 fetch_card_filters: dict[str, GraphQLArgument] = {
@@ -679,7 +697,9 @@ def fetch_card_field(
 
 
 def fetch_cards(card_model: Type[CardModel]) -> Iterable[CardModel]:
-    return db.session.execute(db.select(card_model).order_by(asc(card_model.name)).all()).scalars()
+    return db.session.execute(
+        db.select(card_model).order_by(asc(card_model.name)).all()
+    ).scalars()
 
 
 def fetch_cards_field(
@@ -1432,7 +1452,9 @@ def fetch_game_statistics(
     table_ids = [int(i) for i in args["bgaTableIds"]]
     query = query.where(game_statistics_model.bga_table_id.in_(table_ids))
 
-    return db.session.execute(query.order_by(asc(game_statistics_model.bga_table_id)).all()).scalars()
+    return db.session.execute(
+        query.order_by(asc(game_statistics_model.bga_table_id)).all()
+    ).scalars()
 
 
 fetch_game_statistics_filters: dict[str, GraphQLArgument] = {

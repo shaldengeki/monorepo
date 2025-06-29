@@ -71,9 +71,11 @@ class GameLog(Base):
         self, parsed_logs: ParsedGameLog
     ) -> Generator[Base, None, None]:
         # Add users if not present.
-        present_users = db.session.execute(db.select(User).filter(
-            User.bga_id.in_([user.id for user in parsed_logs.data.players])
-        ).all()).scalars()
+        present_users = db.session.execute(
+            db.select(User)
+            .filter(User.bga_id.in_([user.id for user in parsed_logs.data.players]))
+            .all()
+        ).scalars()
         bga_id_to_user = {present.bga_id: present for present in present_users}
         present_user_ids = set(present.bga_id for present in present_users)
 
@@ -113,7 +115,9 @@ class GameLog(Base):
         for play in parsed_logs.data.card_plays:
             if play.card.id not in cards:
                 # Check to see if it exists.
-                find_card = db.session.execute(db.select(Card).where(Card.bga_id == play.card.id).limit(1).all()).scalars()
+                find_card = db.session.execute(
+                    db.select(Card).where(Card.bga_id == play.card.id).limit(1).all()
+                ).scalars()
                 try:
                     card = next(find_card)
                 except StopIteration:
@@ -241,21 +245,24 @@ class User(Base):
 
     @property
     def num_game_logs(self) -> int:
-        return db.session.execute(db.select(GameParticipation).where(
-            GameParticipation.user_id == self.bga_id
-        ).count()).scalar_one()
+        return db.session.execute(
+            db.select(GameParticipation)
+            .where(GameParticipation.user_id == self.bga_id)
+            .count()
+        ).scalar_one()
 
     @property
     def recent_game_logs(self) -> list["GameLog"]:
         return [
             p.game_log
-            for p in db.session.execute(db.select(GameParticipation).where(
-                GameParticipation.user_id == self.bga_id
-            )
-            .join(GameLog, GameLog.id == GameParticipation.game_log_id)
-            .order_by(desc(GameLog.game_end))
-            .limit(10)
-            .all()).scalars()
+            for p in db.session.execute(
+                db.select(GameParticipation)
+                .where(GameParticipation.user_id == self.bga_id)
+                .join(GameLog, GameLog.id == GameParticipation.game_log_id)
+                .order_by(desc(GameLog.game_end))
+                .limit(10)
+                .all()
+            ).scalars()
         ]
 
     def commonly_played_cards(self, num=10) -> Select[tuple["Card", int]]:
@@ -278,16 +285,15 @@ class User(Base):
         )
 
     def current_elo(self) -> Optional[int]:
-        latest_rating: Optional[GameRating] = (
-            db.session.execute(db.select(GameRating).join(
-                GameLog, GameLog.bga_table_id == GameRating.bga_table_id
-            )
+        latest_rating: Optional[GameRating] = db.session.execute(
+            db.select(GameRating)
+            .join(GameLog, GameLog.bga_table_id == GameRating.bga_table_id)
             .where(GameRating.user_id == self.bga_id)
             .where(GameRating.new_elo != None)
             .order_by(desc(GameLog.game_end))
             .limit(1)
-            .first()).scalar_one_or_none()
-        )
+            .first()
+        ).scalar_one_or_none()
 
         if latest_rating is None:
             return None
@@ -295,16 +301,15 @@ class User(Base):
         return latest_rating.new_elo
 
     def current_arena_elo(self) -> Optional[int]:
-        latest_rating: Optional[GameRating] = (
-            db.session.execute(db.select(GameRating).join(
-                GameLog, GameLog.bga_table_id == GameRating.bga_table_id
-            )
+        latest_rating: Optional[GameRating] = db.session.execute(
+            db.select(GameRating)
+            .join(GameLog, GameLog.bga_table_id == GameRating.bga_table_id)
             .where(GameRating.user_id == self.bga_id)
             .where(GameRating.new_arena_elo != None)
             .order_by(desc(GameLog.game_end))
             .limit(1)
-            .first()).scalar_one_or_none()
-        )
+            .first()
+        ).scalar_one_or_none()
 
         if latest_rating is None:
             return None

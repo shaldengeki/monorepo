@@ -91,7 +91,9 @@ def populate_card_play_actions() -> None:
             if play.card.id in card_ids:
                 continue
 
-            find_card = db.session.execute(db.select(Card).where(Card.bga_id == play.card.id).count()).scalar_one()
+            find_card = db.session.execute(
+                db.select(Card).where(Card.bga_id == play.card.id).count()
+            ).scalar_one()
             if find_card > 0:
                 card_ids.add(play.card.id)
                 continue
@@ -109,16 +111,22 @@ def populate_card_play_actions() -> None:
     for game_log in db.session.execute(db.select(GameLog)).yield_per(10):
         parsed_log = BGAGameLog(**json.loads(game_log.log))
         for play in parsed_log.data.card_plays:
-            find_play = db.session.execute(db.select(CardPlay).where(
-                CardPlay.game_log_id == game_log.id
-                and CardPlay.card_id == play.card.id
-                and CardPlay.user_id == play.player.id
-                and CardPlay.move == play.move
-            ).count()).scalar_one()
+            find_play = db.session.execute(
+                db.select(CardPlay)
+                .where(
+                    CardPlay.game_log_id == game_log.id
+                    and CardPlay.card_id == play.card.id
+                    and CardPlay.user_id == play.player.id
+                    and CardPlay.move == play.move
+                )
+                .count()
+            ).scalar_one()
             if find_play > 0:
                 continue
 
-            card = db.session.execute(db.select(Card).where(Card.bga_id == play.card.id).limit(1)).scalar_one()
+            card = db.session.execute(
+                db.select(Card).where(Card.bga_id == play.card.id).limit(1)
+            ).scalar_one()
             logger.info(
                 f"Staging card play creation for game ID {game_log.id}, card {play.card.id}"
             )
@@ -141,7 +149,9 @@ def populate_card_play_actions() -> None:
 def populate_game_log_start_end() -> None:
     logger.info(f"Populating game log start & ends.")
     updated = 0
-    for game_log in db.session.execute(db.select(GameLog).where(GameLog.game_start == None).limit(25)).yield_per(10):
+    for game_log in db.session.execute(
+        db.select(GameLog).where(GameLog.game_start == None).limit(25)
+    ).yield_per(10):
         parsed_log = BGAGameLog(**json.loads(game_log.log))
         game_log.game_start = parsed_log.game_start
         game_log.game_end = parsed_log.game_end
@@ -155,7 +165,12 @@ def populate_game_log_start_end() -> None:
 def populate_game_statistics() -> None:
     logger.info(f"Populating game statistics.")
     updated = 0
-    for game_log in db.session.execute(db.select(GameLog).outerjoin(GameStatistics).where(GameStatistics.bga_table_id == None).limit(25)).yield_per(10):
+    for game_log in db.session.execute(
+        db.select(GameLog)
+        .outerjoin(GameStatistics)
+        .where(GameStatistics.bga_table_id == None)
+        .limit(25)
+    ).yield_per(10):
         parsed_log = BGAGameLog(**json.loads(game_log.log))
         for s in game_log.create_game_statistics(parsed_log):
             db.session.add(s)
