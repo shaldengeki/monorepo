@@ -102,9 +102,11 @@ def fetch_current_user(app: Flask, user_model: Type[User]) -> Optional[User]:
 
     if "fitbit_user_id" not in session:
         return None
-    user = db.session.execute(db.select(user_model).filter(
-        user_model.fitbit_user_id == session["fitbit_user_id"]
-    ).first()).scalar_one_or_none()
+    user = db.session.execute(
+        db.select(user_model)
+        .filter(user_model.fitbit_user_id == session["fitbit_user_id"])
+        .first()
+    ).scalar_one_or_none()
     if not user:
         session.pop("fitbit_user_id")
         return None

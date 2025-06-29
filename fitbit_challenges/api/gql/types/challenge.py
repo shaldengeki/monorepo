@@ -171,11 +171,15 @@ challenge_type = GraphQLObjectType(
 )
 
 
-def fetch_challenges(challenge_model: Type[Challenge], params: dict[str, Any]) -> Iterable[Challenge]:
+def fetch_challenges(
+    challenge_model: Type[Challenge], params: dict[str, Any]
+) -> Iterable[Challenge]:
     query_obj = db.select(challenge_model)
     if params.get("id", False):
         query_obj = query_obj.filter(challenge_model.id == params["id"])
-    return db.session.execute(query_obj.order_by(desc(challenge_model.start_at)).all()).scalars()
+    return db.session.execute(
+        query_obj.order_by(desc(challenge_model.start_at)).all()
+    ).scalars()
 
 
 challenges_filters: dict[str, GraphQLArgument] = {
@@ -207,9 +211,11 @@ def create_challenge(
     users = []
     not_found_user_ids = []
     for fitbit_user_id in args["users"]:
-        user = db.session.execute(db.select(user_model).filter(
-            user_model.fitbit_user_id == fitbit_user_id
-        ).first()).scalar_one_or_none()
+        user = db.session.execute(
+            db.select(user_model)
+            .filter(user_model.fitbit_user_id == fitbit_user_id)
+            .first()
+        ).scalar_one_or_none()
         if user is None:
             not_found_user_ids.append(fitbit_user_id)
             continue
@@ -248,7 +254,9 @@ def create_challenge(
 
     if ChallengeType.BINGO.value == challenge_type:
         pattern = random.choice(BingoCard.PATTERNS)
-        for user in db.session.execute(db.select(User).filter(User.fitbit_user_id.in_(args["users"])).all()).scalars():
+        for user in db.session.execute(
+            db.select(User).filter(User.fitbit_user_id.in_(args["users"])).all()
+        ).scalars():
             card = BingoCard()
             card.create_for_user_and_challenge(
                 user=user,

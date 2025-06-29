@@ -84,7 +84,9 @@ def fetch_user_activities(
             user_activity_model.record_date
             <= datetime.datetime.utcfromtimestamp(int(params["recordedBefore"]))
         )
-    return db.session.execute(query_obj.order_by(desc(user_activity_model.created_at))).scalars()
+    return db.session.execute(
+        query_obj.order_by(desc(user_activity_model.created_at))
+    ).scalars()
 
 
 user_activities_filters: dict[str, GraphQLArgument] = {
@@ -168,9 +170,11 @@ def create_user_activity_field(
 def update_user_activity(
     user_activity_model: Type[UserActivity], args: dict[str, Any]
 ) -> UserActivity:
-    user_activity = db.session.execute(db.select(user_activity_model).filter(
-        user_activity_model.id == int(args["id"])
-    ).first()).scalar_one_or_none()
+    user_activity = db.session.execute(
+        db.select(user_activity_model)
+        .filter(user_activity_model.id == int(args["id"]))
+        .first()
+    ).scalar_one_or_none()
     if user_activity is None:
         raise ValueError(
             f"User activity with id {args['id']} doesn't exist, and can't be updated."
