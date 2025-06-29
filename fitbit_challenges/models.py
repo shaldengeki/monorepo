@@ -9,7 +9,7 @@ from typing import Generator, Optional
 import requests
 from sqlalchemy import ForeignKey, desc
 from sqlalchemy.dialects.postgresql import insert
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, DeclarativeBase
 from sqlalchemy.sql import func
 from sqlalchemy.sql.functions import now
 
@@ -17,6 +17,8 @@ from fitbit_challenges.bingo_card_pattern import USABLE_PATTERNS, BingoCardPatte
 from fitbit_challenges.config import db
 from fitbit_challenges.fitbit_client import FitbitClient
 
+class Base(DeclarativeBase):
+    pass
 
 @dataclasses.dataclass
 class TotalAmounts:
@@ -38,7 +40,7 @@ class ChallengeType(enum.Enum):
     BINGO = 2
 
 
-class Challenge(db.Model):  # type: ignore
+class Challenge(Base):  # type: ignore
     __tablename__ = "challenges"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -151,7 +153,7 @@ class Challenge(db.Model):  # type: ignore
         return total_amounts
 
 
-class FitbitSubscription(db.Model):  # type: ignore
+class FitbitSubscription(Base):  # type: ignore
     __tablename__ = "fitbit_subscriptions"
     id: Mapped[int] = mapped_column(primary_key=True)
     fitbit_user_id: Mapped[str] = mapped_column(ForeignKey("users.fitbit_user_id"))
@@ -163,7 +165,7 @@ class FitbitSubscription(db.Model):  # type: ignore
         )
 
 
-class SubscriptionNotification(db.Model):  # type: ignore
+class SubscriptionNotification(Base):  # type: ignore
     __tablename__ = "subscription_notifications"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -184,7 +186,7 @@ class SubscriptionNotification(db.Model):  # type: ignore
         return "<SubscriptionNotification {id}>".format(id=self.id)
 
 
-class User(db.Model):  # type: ignore
+class User(Base):  # type: ignore
     __tablename__ = "users"
 
     fitbit_user_id: Mapped[str] = mapped_column(db.Unicode(100), primary_key=True)
@@ -245,7 +247,7 @@ class User(db.Model):  # type: ignore
             user_id, access_token
         )
         return (
-            insert(cls.__table__)
+            insert(cls)
             .values(
                 fitbit_user_id=user_id,
                 display_name=display_name,
@@ -327,7 +329,7 @@ class User(db.Model):  # type: ignore
         return max(self.activities, key=lambda a: a.created_at)
 
 
-class ChallengeMembership(db.Model):  # type: ignore
+class ChallengeMembership(Base):  # type: ignore
     __tablename__ = "challenge_memberships"
     fitbit_user_id: Mapped[str] = mapped_column(
         ForeignKey("users.fitbit_user_id"), primary_key=True
@@ -344,7 +346,7 @@ class ChallengeMembership(db.Model):  # type: ignore
     challenge: Mapped["Challenge"] = relationship(back_populates="user_memberships")
 
 
-class UserActivity(db.Model):  # type: ignore
+class UserActivity(Base):  # type: ignore
     __tablename__ = "user_activities"
     id: Mapped[int] = mapped_column(primary_key=True)
     created_at: Mapped[datetime.datetime] = mapped_column(
@@ -408,7 +410,7 @@ class BingoTileBonusType(enum.Enum):
     HALVE = 3
 
 
-class BingoCard(db.Model):  # type: ignore
+class BingoCard(Base):  # type: ignore
     __tablename__ = "bingo_cards"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -538,6 +540,8 @@ class BingoCard(db.Model):  # type: ignore
                         BingoTileBonusType.HALVE,
                     ]
                 )
+            else:
+                raise ValueError(f"Tile {tile.id} must have one of steps, active_minutes, or distance_km")
 
             tile.bonus_type = bonus_type.value
             amount: Optional[int | decimal.Decimal]
@@ -787,7 +791,7 @@ class BingoCard(db.Model):  # type: ignore
         return max_flipped_at
 
 
-class BingoTile(db.Model):  # type: ignore
+class BingoTile(Base):  # type: ignore
     __tablename__ = "bingo_tiles"
 
     id: Mapped[int] = mapped_column(primary_key=True)

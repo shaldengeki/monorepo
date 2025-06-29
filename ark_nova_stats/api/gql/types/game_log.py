@@ -715,7 +715,7 @@ def game_statistics_bga_user_id_resolver(
 def game_statistics_created_at_resolver(
     game_statistics: GameStatisticsModel, info, **args
 ) -> int:
-    return game_statistics.created_at
+    return int(round(game_statistics.created_at.timestamp()))
 
 
 def game_statistics_thinking_time_resolver(
@@ -948,7 +948,7 @@ def game_statistics_hexes_empty_resolver(
 
 def game_statistics_upgraded_action_cards_resolver(
     game_statistics: GameStatisticsModel, info, **args
-) -> bool:
+) -> int:
     return game_statistics.upgraded_action_cards
 
 
