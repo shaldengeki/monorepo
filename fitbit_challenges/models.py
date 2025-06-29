@@ -95,14 +95,16 @@ class Challenge(Base):  # type: ignore
     def users_list(self) -> Iterable["User"]:
         user_ids = [user.fitbit_user_id for user in self.users]
         return db.session.execute(
-            db.select(User).filter(User.fitbit_user_id.in_(user_ids))
+            db.select(User)
+            .filter(User.fitbit_user_id.in_(user_ids))
             .order_by(User.display_name)
             .all()
         ).scalars()
 
     def activities(self) -> Iterable["UserActivity"]:
         return db.session.execute(
-            db.select(UserActivity).filter(
+            db.select(UserActivity)
+            .filter(
                 UserActivity.user.in_(
                     membership.fitbit_user_id for membership in self.user_memberships
                 )
@@ -119,7 +121,8 @@ class Challenge(Base):  # type: ignore
 
     def activities_for_user(self, user: "User") -> Iterable["UserActivity"]:
         return db.session.execute(
-            db.select(UserActivity).filter(UserActivity.user == user.fitbit_user_id)
+            db.select(UserActivity)
+            .filter(UserActivity.user == user.fitbit_user_id)
             .filter(
                 func.date_trunc("day", UserActivity.record_date)
                 >= func.date_trunc("day", self.start_at)
@@ -293,10 +296,14 @@ class User(Base):  # type: ignore
         )
 
     def past_challenges(self) -> Iterable["Challenge"]:
-        return db.session.execute(self.challenges_query().filter(Challenge.end_at < now()).all()).scalars()
+        return db.session.execute(
+            self.challenges_query().filter(Challenge.end_at < now()).all()
+        ).scalars()
 
     def active_challenges(self) -> Iterable["Challenge"]:
-        return db.session.execute(self.challenges_query().filter(Challenge.end_at >= now()).all()).scalars()
+        return db.session.execute(
+            self.challenges_query().filter(Challenge.end_at >= now()).all()
+        ).scalars()
 
     def activities_within_timespan(
         self, start: datetime.datetime, end: datetime.datetime

@@ -111,7 +111,8 @@ def flip_bingo_tile(bingo_tile_model: Type[BingoTile], *args, **kwargs) -> Bingo
         raise ValueError("You must be signed in to flip a bingo tile.")
 
     tile = db.session.execute(
-        db.select(bingo_tile_model).join(bingo_tile_model.bingo_card)
+        db.select(bingo_tile_model)
+        .join(bingo_tile_model.bingo_card)
         .filter(bingo_tile_model.id == tile_id)
         .filter(BingoCard.user == current_user)
         .filter(BingoTile.flipped == False)
@@ -289,9 +290,10 @@ def fetch_bingo_challenge(
     challenge_model: Type[Challenge], params: dict[str, Any]
 ) -> Optional[Challenge]:
     return db.session.execute(
-        db.select(challenge_model).filter(
-            challenge_model.challenge_type == ChallengeType.BINGO.value
-        ).filter(challenge_model.id == params["id"]).first()
+        db.select(challenge_model)
+        .filter(challenge_model.challenge_type == ChallengeType.BINGO.value)
+        .filter(challenge_model.id == params["id"])
+        .first()
     ).scalar_one_or_none()
 
 
