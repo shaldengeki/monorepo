@@ -12,7 +12,7 @@ from typing import Optional
 
 # revision identifiers, used by Alembic.
 revision = "e683a9926450"
-down_revision = None
+down_revision: Optional[str] = None
 branch_labels: Optional[tuple[str]] = None
 depends_on: Optional[str] = None
 

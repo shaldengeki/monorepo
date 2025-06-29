@@ -389,7 +389,7 @@ class TopLevelStatsCsvArchiveCreator(GameLogArchiveCreator):
 
         rows: list[dict] = []
         for user in game_log.users:
-            row = {k: None for k in self.csv_field_names}
+            row: dict = {k: None for k in self.csv_field_names}
             row["bga_table_id"] = game_log.bga_table_id
             row["user_id"] = user.bga_id
             row["user_name"] = user.name

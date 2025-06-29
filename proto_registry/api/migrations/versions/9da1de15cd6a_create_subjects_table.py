@@ -14,7 +14,7 @@ from typing import Optional
 
 # revision identifiers, used by Alembic.
 revision = "9da1de15cd6a"
-down_revision = None
+down_revision: Optional[str] = None
 branch_labels: Optional[tuple[str]] = None
 depends_on: Optional[str] = None
 
