@@ -39,6 +39,7 @@ def test_submit_game_ratings(client: FlaskClient) -> None:
             },
         },
     )
+    assert response.json is not None
     assert response.json.get(
         "data", {}
     ), f"data field not set on response json: {response.json}"
@@ -89,6 +90,7 @@ def test_submit_non_arena_game_ratings(client: FlaskClient) -> None:
             },
         },
     )
+    assert response.json is not None
     assert response.json.get(
         "data", {}
     ), f"data field not set on response json: {response.json}"

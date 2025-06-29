@@ -33,6 +33,7 @@ def test_submit_game_logs(client: FlaskClient) -> None:
             },
         },
     )
+    assert response.json is not None
     assert response.json.get(
         "data", {}
     ), f"data field not set on response json: {response.json}"

@@ -8,6 +8,7 @@ Create Date: 2024-09-18 21:22:18.098754
 
 import json
 import logging
+from typing import Optional
 
 import sqlalchemy as sa
 from alembic import op
@@ -19,8 +20,8 @@ from ark_nova_stats.models import GameLog as GameLogModel
 # revision identifiers, used by Alembic.
 revision = "cfe96b7f8238"
 down_revision = "b240d476fde9"
-branch_labels = None
-depends_on = None
+branch_labels: Optional[tuple[str]] = None
+depends_on: Optional[str] = None
 
 
 def upgrade():

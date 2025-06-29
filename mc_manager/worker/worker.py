@@ -514,7 +514,7 @@ def start_container(
     docker_client.containers.run(
         "itzg/minecraft-server",
         detach=True,
-        ports={int(server["port"]): 25565},
+        ports={str(server["port"]): 25565},
         name=server["name"],
         volumes={f"{host_path}/{server['name']}": {"bind": "/data", "mode": "rw"}},
         environment={

@@ -1,27 +1,31 @@
-from typing import TYPE_CHECKING
+import datetime
+
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from home_api.config import db
 
-# SQLAlchemy defines the db.Model type dynamically, which doesn't work with mypy.
-# We therefore import it explicitly in the typechecker, so this resolves.
-if TYPE_CHECKING:
-    from flask_sqlalchemy.model import Model
-else:
-    Model = db.Model
+
+class Base(DeclarativeBase):
+    pass
 
 
-class Transaction(Model):
+class Transaction(Base):
     __tablename__ = "transactions"
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.TIMESTAMP(timezone=True), nullable=False)
-    description = db.Column(db.Unicode(500), nullable=False)
-    original_description = db.Column(db.Unicode(500), nullable=False)
-    amount = db.Column(db.Integer, nullable=False)
-    type = db.Column(db.Unicode(100), nullable=False)
-    category = db.Column(db.Unicode(100), nullable=False)
-    account = db.Column(db.Unicode(100), nullable=False)
-    labels = db.Column(db.Unicode(500), nullable=True)
-    notes = db.Column(db.Unicode(500), nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    date: Mapped[datetime.datetime] = mapped_column(
+        db.TIMESTAMP(timezone=True),
+        default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
+        nullable=False,
+    )
+    description: Mapped[str] = mapped_column(String, nullable=False)
+    original_description: Mapped[str] = mapped_column(String, nullable=False)
+    amount: Mapped[int] = mapped_column(Integer, nullable=False)
+    type: Mapped[str] = mapped_column(String, nullable=False)
+    category: Mapped[str] = mapped_column(String, nullable=False)
+    account: Mapped[str] = mapped_column(String, nullable=False)
+    labels: Mapped[str]
+    notes: Mapped[str]
 
     def __repr__(self):
         return "<Transaction {id}>".format(id=self.id)

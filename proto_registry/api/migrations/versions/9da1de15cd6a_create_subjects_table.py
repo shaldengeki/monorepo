@@ -7,15 +7,16 @@ Create Date: 2022-07-21 04:15:20.943034
 """
 
 import datetime
+from typing import Optional
 
 import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "9da1de15cd6a"
-down_revision = None
-branch_labels = None
-depends_on = None
+down_revision: Optional[str] = None
+branch_labels: Optional[tuple[str]] = None
+depends_on: Optional[str] = None
 
 
 def upgrade():

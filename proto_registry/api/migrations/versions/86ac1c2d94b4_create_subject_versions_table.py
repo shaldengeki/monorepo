@@ -8,6 +8,7 @@ Create Date: 2022-07-21 04:39:32.310089
 
 import datetime
 import enum
+from typing import Optional
 
 import sqlalchemy as sa
 from alembic import op
@@ -15,8 +16,8 @@ from alembic import op
 # revision identifiers, used by Alembic.
 revision = "86ac1c2d94b4"
 down_revision = "9da1de15cd6a"
-branch_labels = None
-depends_on = None
+branch_labels: Optional[tuple[str]] = None
+depends_on: Optional[str] = None
 
 
 class SchemaType(enum.Enum):

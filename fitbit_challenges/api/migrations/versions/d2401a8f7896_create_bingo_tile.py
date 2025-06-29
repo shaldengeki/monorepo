@@ -6,6 +6,8 @@ Create Date: 2023-06-19 01:22:41.532924
 
 """
 
+from typing import Optional
+
 import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.sql.functions import now
@@ -13,8 +15,8 @@ from sqlalchemy.sql.functions import now
 # revision identifiers, used by Alembic.
 revision = "d2401a8f7896"
 down_revision = "9dafaf879435"
-branch_labels = None
-depends_on = None
+branch_labels: Optional[tuple[str]] = None
+depends_on: Optional[str] = None
 
 
 def upgrade():
