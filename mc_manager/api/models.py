@@ -1,17 +1,22 @@
 import datetime
+
 from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column, relationship, DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 from mc_manager.config import db
 
+
 class Base(DeclarativeBase):
     pass
+
 
 class ServerLog(Base):
     __tablename__ = "server_logs"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     server_id: Mapped[int] = mapped_column(ForeignKey("servers.id"), primary_key=True)
-    backup_id: Mapped[int] = mapped_column(ForeignKey("server_backups.id"), primary_key=True)
+    backup_id: Mapped[int] = mapped_column(
+        ForeignKey("server_backups.id"), primary_key=True
+    )
     created: Mapped[datetime.datetime] = mapped_column(
         db.TIMESTAMP(timezone=True),
         default=lambda: datetime.datetime.now(tz=datetime.timezone.utc),
@@ -45,6 +50,7 @@ class ServerBackup(Base):
     def __repr__(self):
         return "<ServerBackup {id}>".format(id=self.id)
 
+
 class Server(Base):
     __tablename__ = "servers"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -61,8 +67,12 @@ class Server(Base):
     motd: Mapped[str]
     memory: Mapped[str]
 
-    logs: Mapped["ServerLog"] = relationship(back_populates="server", order_by="desc(ServerLog.created)")
-    backups: Mapped["ServerBackup"] = relationship(back_populates="server", order_by="desc(ServerBackup.created)")
+    logs: Mapped["ServerLog"] = relationship(
+        back_populates="server", order_by="desc(ServerLog.created)"
+    )
+    backups: Mapped["ServerBackup"] = relationship(
+        back_populates="server", order_by="desc(ServerBackup.created)"
+    )
 
     def __repr__(self):
         return "<Server {id}>".format(id=self.id)

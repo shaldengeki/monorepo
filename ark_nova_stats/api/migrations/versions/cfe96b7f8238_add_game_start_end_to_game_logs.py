@@ -8,10 +8,10 @@ Create Date: 2024-09-18 21:22:18.098754
 
 import json
 import logging
+from typing import Optional
 
 import sqlalchemy as sa
 from alembic import op
-from typing import Optional
 from sqlalchemy import orm
 
 from ark_nova_stats.bga_log_parser.game_log import GameLog as BGAGameLog

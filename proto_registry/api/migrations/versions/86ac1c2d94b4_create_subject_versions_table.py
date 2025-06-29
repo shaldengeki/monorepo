@@ -8,10 +8,10 @@ Create Date: 2022-07-21 04:39:32.310089
 
 import datetime
 import enum
+from typing import Optional
 
 import sqlalchemy as sa
 from alembic import op
-from typing import Optional
 
 # revision identifiers, used by Alembic.
 revision = "86ac1c2d94b4"

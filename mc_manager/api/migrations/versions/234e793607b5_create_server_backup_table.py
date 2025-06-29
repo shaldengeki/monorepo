@@ -7,10 +7,10 @@ Create Date: 2020-12-24 14:50:28.952014
 """
 
 import datetime
+from typing import Optional
 
 import sqlalchemy as sa
 from alembic import op
-from typing import Optional
 
 # revision identifiers, used by Alembic.
 revision = "234e793607b5"

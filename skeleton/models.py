@@ -9,14 +9,16 @@ from typing import Generator, Optional
 import requests
 from sqlalchemy import ForeignKey, desc
 from sqlalchemy.dialects.postgresql import insert
-from sqlalchemy.orm import Mapped, mapped_column, relationship, DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from sqlalchemy.sql.functions import now
 
 from skeleton.config import db
 
+
 class Base(DeclarativeBase):
     pass
+
 
 class ExampleModel(Base):
     __tablename__ = "example_models"

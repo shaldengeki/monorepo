@@ -2,11 +2,11 @@ import datetime
 import enum
 import json
 
-from sqlalchemy import Enum
-from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column, relationship, DeclarativeBase
+from sqlalchemy import Enum, ForeignKey, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 from proto_registry.config import db
+
 
 class Base(DeclarativeBase):
     pass
@@ -21,10 +21,13 @@ class Subject(Base):
         nullable=False,
     )
     name: Mapped[str] = mapped_column(String, unique=True)
-    versions: Mapped["SubjectVersion"] = relationship(back_populates="subject", order_by="desc(SubjectVersion.version_id)")
+    versions: Mapped["SubjectVersion"] = relationship(
+        back_populates="subject", order_by="desc(SubjectVersion.version_id)"
+    )
 
     def __repr__(self):
         return f"<Subject name={self.name}>"
+
 
 class SchemaType(enum.Enum):
     AVRO = 1
@@ -59,10 +62,14 @@ class SubjectVersion(Base):
         nullable=False,
     )
     version_id: Mapped[int]
-    schema_type: Mapped[SchemaType] = mapped_column(Enum(SchemaType), nullable=True, default=SchemaType.AVRO)
+    schema_type: Mapped[SchemaType] = mapped_column(
+        Enum(SchemaType), nullable=True, default=SchemaType.AVRO
+    )
     schema: Mapped[str]
 
-    subject: Mapped["Subject"] = relationship(back_populates="versions", order_by="desc(SubjectVersion.version_id)")
+    subject: Mapped["Subject"] = relationship(
+        back_populates="versions", order_by="desc(SubjectVersion.version_id)"
+    )
     references: Mapped["SubjectVersion"] = relationship(
         "SubjectVersion",
         secondary=subject_version_reference_table,

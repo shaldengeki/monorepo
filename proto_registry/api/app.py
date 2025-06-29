@@ -3,7 +3,7 @@ import json
 from flask import abort, request
 from sqlalchemy import asc
 
-from proto_registry.api.models import Subject, SchemaType, SubjectVersion
+from proto_registry.api.models import SchemaType, Subject, SubjectVersion
 from proto_registry.config import app, db
 
 

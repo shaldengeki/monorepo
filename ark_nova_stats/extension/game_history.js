@@ -7,14 +7,14 @@ const apiEndpoint = "https://api.arknova.ouguo.us/graphql";
 function makeAPIRequest(body) {
     let apiHeaders = new Headers();
     apiHeaders.append("Content-Type", "application/json");
-  
+
     let apiRequest = new Request(apiEndpoint, {
       method: "POST",
       headers: apiHeaders,
       body: body,
       mode: "no-cors",
     });
-  
+
     return fetch(apiRequest);
 }
 

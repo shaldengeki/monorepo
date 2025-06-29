@@ -7,10 +7,10 @@ Create Date: 2024-07-28 22:38:48.238351
 """
 
 import json
+from typing import Optional
 
 import sqlalchemy as sa
 from alembic import op
-from typing import Optional
 from sqlalchemy import orm
 from sqlalchemy.sql.functions import now
 

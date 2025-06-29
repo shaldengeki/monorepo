@@ -1,7 +1,9 @@
 import datetime
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from home_api.config import db
+
 
 class Base(DeclarativeBase):
     pass

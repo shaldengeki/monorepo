@@ -3,7 +3,7 @@ import enum
 from typing import Generator, Optional
 
 from sqlalchemy import ForeignKey, Select, desc, func, select
-from sqlalchemy.orm import Mapped, mapped_column, relationship, DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 from ark_nova_stats.bga_log_parser.exceptions import StatsNotSetError
 from ark_nova_stats.bga_log_parser.game_log import GameLog as ParsedGameLog
@@ -12,6 +12,7 @@ from ark_nova_stats.config import db
 
 class Base(DeclarativeBase):
     pass
+
 
 class GameParticipation(Base):
     __tablename__ = "game_participations"
