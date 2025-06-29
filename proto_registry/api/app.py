@@ -13,14 +13,18 @@ def hello_world():
 
 
 @app.route("/subjects/")
-def get_subjects():
-    subjects = Subject.query.order_by(asc(Subject.id)).all()
+def get_subjects() -> str:
+    subjects = db.session.execute(
+        db.select(Subject).order_by(asc(Subject.id)).all()
+    ).scalars()
     return json.dumps([subject.name for subject in subjects])
 
 
 @app.route("/subjects/<subject_name>/", methods=["DELETE"])
 def delete_subject(subject_name: str) -> str:
-    subject = Subject.query.filter(Subject.name == subject_name).first()
+    subject = db.session.execute(
+        db.select(Subject).filter(Subject.name == subject_name).first()
+    ).scalar_one_or_none()
     if subject is None:
         abort(404)
 
@@ -34,7 +38,9 @@ def delete_subject(subject_name: str) -> str:
 
 @app.route("/subjects/<subject_name>/", methods=["POST"])
 def check_subject_schema(subject_name: str) -> str:
-    subject = Subject.query.filter(Subject.name == subject_name).first()
+    subject = db.session.execute(
+        db.select(Subject).filter(Subject.name == subject_name).first()
+    ).scalar_one_or_none()
     if subject is None:
         abort(404)
 
@@ -55,9 +61,14 @@ def check_subject_schema(subject_name: str) -> str:
         [f"{reference['subject']}/{reference['version']}" for reference in references]
     )
 
-    version = SubjectVersion.query.filter(
-        SubjectVersion.schema == schema and SubjectVersion.schema_type == schema_type
-    ).first()
+    version = db.session.execute(
+        db.select(SubjectVersion)
+        .filter(
+            SubjectVersion.schema == schema
+            and SubjectVersion.schema_type == schema_type
+        )
+        .first()
+    ).scalar_one_or_none()
 
     if version is None:
         abort(404)
@@ -83,7 +94,9 @@ def check_subject_schema(subject_name: str) -> str:
 
 @app.route("/subjects/<subject_name>/versions/")
 def get_subject_versions(subject_name: str) -> str:
-    subject = Subject.query.filter(Subject.name == subject_name).first()
+    subject = db.session.execute(
+        db.select(Subject).filter(Subject.name == subject_name).first()
+    ).scalar_one_or_none()
     if subject is None:
         abort(404)
 
@@ -92,7 +105,9 @@ def get_subject_versions(subject_name: str) -> str:
 
 @app.route("/subjects/<subject_name>/versions/", methods=["POST"])
 def create_subject_version(subject_name: str) -> str:
-    subject = Subject.query.filter(Subject.name == subject_name).first()
+    subject = db.session.execute(
+        db.select(Subject).filter(Subject.name == subject_name).first()
+    ).scalar_one_or_none()
     if subject is None:
         subject = Subject(name=subject_name)
         db.session.add(subject)
@@ -111,20 +126,23 @@ def create_subject_version(subject_name: str) -> str:
 
     references: list[dict] = json_data.get("references", [])
 
-    reference_subjects = Subject.query.filter(
-        Subject.name in [reference["subject"] for reference in references]
-    ).all()
+    reference_subjects = (
+        db.select(Subject)
+        .filter(Subject.name in [reference["subject"] for reference in references])
+        .all()
+    )
 
     reference_names = [
         f"{reference['subject']}/{reference['version']}" for reference in references
     ]
-    reference_versions = (
-        SubjectVersion.query.join(Subject, SubjectVersion.subject_id == Subject.id)
+    reference_versions = db.session.execute(
+        db.select(SubjectVersion)
+        .join(Subject, SubjectVersion.subject_id == Subject.id)
         .filter(
             SubjectVersion.subject_id in [subject.id for subject in reference_subjects]
         )
         .all()
-    )
+    ).scalars()
     reference_versions = [
         version
         for version in reference_versions
@@ -158,13 +176,14 @@ def create_subject_version(subject_name: str) -> str:
 
 @app.route("/subjects/<subject_name>/versions/<int:version_id>/")
 def get_subject_version(subject_name: str, version_id: int) -> str:
-    version = (
-        SubjectVersion.query.join(Subject, SubjectVersion.subject_id == Subject.id)
+    version = db.session.execute(
+        db.select(SubjectVersion)
+        .join(Subject, SubjectVersion.subject_id == Subject.id)
         .filter(
             Subject.name == subject_name and SubjectVersion.version_id == version_id
         )
         .first()
-    )
+    ).scalar_one_or_none()
 
     if version is None:
         abort(404)
@@ -185,13 +204,14 @@ def get_subject_version(subject_name: str, version_id: int) -> str:
 
 @app.route("/subjects/<subject_name>/versions/<int:version_id>/referencedby/")
 def get_subject_version_referencedby(subject_name: str, version_id: int) -> str:
-    version = (
-        SubjectVersion.query.join(Subject, SubjectVersion.subject_id == Subject.id)
+    version = db.session.execute(
+        db.select(SubjectVersion)
+        .join(Subject, SubjectVersion.subject_id == Subject.id)
         .filter(
             Subject.name == subject_name and SubjectVersion.version_id == version_id
         )
         .first()
-    )
+    ).scalar_one_or_none()
 
     if version is None:
         abort(404)
@@ -201,13 +221,14 @@ def get_subject_version_referencedby(subject_name: str, version_id: int) -> str:
 
 @app.route("/subjects/<subject_name>/versions/<int:version_id>/schema/")
 def get_subject_version_schema(subject_name: str, version_id: int) -> str:
-    version = (
-        SubjectVersion.query.join(Subject, SubjectVersion.subject_id == Subject.id)
+    version = db.session.execute(
+        db.select(SubjectVersion)
+        .join(Subject, SubjectVersion.subject_id == Subject.id)
         .filter(
             Subject.name == subject_name and SubjectVersion.version_id == version_id
         )
         .first()
-    )
+    ).scalar_one_or_none()
 
     if version is None:
         abort(404)

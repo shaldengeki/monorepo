@@ -1,6 +1,7 @@
 import collections
 import datetime
 import itertools
+from typing import Iterable
 
 from graphql import (
     GraphQLArgument,
@@ -17,6 +18,7 @@ from sqlalchemy import asc, desc, distinct
 from sqlalchemy.sql import func
 
 from home_api.api.models.transaction import Transaction
+from home_api.config import db
 
 transactionTypeEnum = GraphQLEnumType(
     "TransactionType",
@@ -146,8 +148,8 @@ amountRangeType = GraphQLObjectType(
 AmountRange = collections.namedtuple("AmountRange", ["min", "max"])
 
 
-def fetch_transactions(params):
-    query_obj = Transaction.query
+def fetch_transactions(params) -> Iterable[Transaction]:
+    query_obj = db.select(Transaction)
     if params.get("earliestDate", False):
         query_obj = query_obj.filter(
             Transaction.date
@@ -176,7 +178,9 @@ def fetch_transactions(params):
         query_obj = query_obj.filter(Transaction.account == params["account"])
     elif params.get("accounts", False):
         query_obj = query_obj.filter(Transaction.account.in_(params["accounts"]))
-    return query_obj.order_by(desc(Transaction.date)).all()
+    return db.session.execute(
+        query_obj.order_by(desc(Transaction.date)).all()
+    ).scalars()
 
 
 AggregatedTransaction = collections.namedtuple(
@@ -268,13 +272,17 @@ def amountByMonthField():
 
 
 def fetch_transaction_date_range():
-    min_txn = Transaction.query.order_by(asc(Transaction.date)).first()
+    min_txn = db.session.execute(
+        db.select(Transaction).order_by(asc(Transaction.date)).first()
+    ).scalar_one_or_none()
     if min_txn is None:
         min_ts = 0
     else:
         min_ts = min_txn.date.timestamp()
 
-    max_txn = Transaction.query.order_by(desc(Transaction.date)).first()
+    max_txn = db.session.execute(
+        db.select(Transaction).order_by(desc(Transaction.date)).first()
+    ).scalar_one_or_none()
     if max_txn is None:
         max_ts = 0
     else:
@@ -284,13 +292,17 @@ def fetch_transaction_date_range():
 
 
 def fetch_transaction_amount_range():
-    min_txn = Transaction.query.order_by(asc(Transaction.amount)).first()
+    min_txn = db.session.execute(
+        db.select(Transaction).order_by(asc(Transaction.amount)).first()
+    ).scalar_one_or_none()
     if min_txn is None:
         min_amt = 0
     else:
         min_amt = min_txn.amount
 
-    max_txn = Transaction.query.order_by(desc(Transaction.amount)).first()
+    max_txn = db.session.execute(
+        db.select(Transaction).order_by(desc(Transaction.amount)).first()
+    ).scalar_one_or_none()
     if max_txn is None:
         max_amt = 0
     else:
@@ -313,12 +325,13 @@ def amountRangeField():
     )
 
 
-def fetch_transaction_accounts():
-    accounts = (
-        Transaction.query.order_by(asc(Transaction.account))
+def fetch_transaction_accounts() -> list[str]:
+    accounts = db.session.execute(
+        db.select(Transaction)
+        .order_by(asc(Transaction.account))
         .distinct(Transaction.account)
         .all()
-    )
+    ).scalars()
     return [t.account for t in accounts]
 
 
@@ -329,12 +342,13 @@ def accountsField():
     )
 
 
-def fetch_transaction_categories():
-    categories = (
-        Transaction.query.order_by(asc(Transaction.category))
+def fetch_transaction_categories() -> list[str]:
+    categories = db.session.execute(
+        db.select(Transaction)
+        .order_by(asc(Transaction.category))
         .distinct(Transaction.category)
         .all()
-    )
+    ).scalars()
     return [t.category for t in categories]
 
 
@@ -345,12 +359,13 @@ def categoriesField():
     )
 
 
-def fetch_transaction_types():
-    types = (
-        Transaction.query.order_by(asc(Transaction.type))
+def fetch_transaction_types() -> list[str]:
+    types = db.session.execute(
+        db.select(Transaction)
+        .order_by(asc(Transaction.type))
         .distinct(Transaction.type)
         .all()
-    )
+    ).scalars()
     return [t.type for t in types]
 
 

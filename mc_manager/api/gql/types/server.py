@@ -1,4 +1,5 @@
 import datetime
+from typing import Iterable
 
 from graphql import (
     GraphQLArgument,
@@ -28,8 +29,8 @@ def latestLogResolver(server):
     return server.logs[0]
 
 
-def backupsResolver(server, args):
-    query_obj = ServerBackup.query.filter(ServerBackup.server_id == server.id)
+def backupsResolver(server, args) -> Iterable[ServerBackup]:
+    query_obj = db.select(ServerBackup).filter(ServerBackup.server_id == server.id)
     if args.get("after", False):
         query_obj = query_obj.filter(ServerBackup.id > int(args["after"]))
 
@@ -38,7 +39,7 @@ def backupsResolver(server, args):
     limit = min((100, int(args["limit"])))
     query_obj = query_obj.limit(limit)
 
-    return query_obj.all()
+    return db.session.execute(query_obj.all()).scalars()
 
 
 def serverTypeResolver():
@@ -123,8 +124,8 @@ serverType = GraphQLObjectType(
 )
 
 
-def fetch_servers(params):
-    query_obj = Server.query
+def fetch_servers(params) -> Iterable[Server]:
+    query_obj = db.select(Server)
     if params.get("earliestDate", False):
         query_obj = query_obj.filter(
             Server.created
@@ -146,7 +147,7 @@ def fetch_servers(params):
     if params.get("zipfile", False):
         query_obj = query_obj.filter(Server.zipfile == params["zipfile"])
 
-    return query_obj.order_by(desc(Server.created)).all()
+    return db.session.execute(query_obj.order_by(desc(Server.created)).all()).scalars()
 
 
 serversFilters = {

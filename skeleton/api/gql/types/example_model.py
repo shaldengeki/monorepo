@@ -35,7 +35,9 @@ example_model_type = GraphQLObjectType(
 def fetch_example_model(
     example_model: Type[ExampleModel], params: dict[str, Any]
 ) -> Optional[ExampleModel]:
-    return (example_model.query.filter(example_model.id == params["id"])).first()
+    return db.session.execute(
+        db.select(example_model).filter(example_model.id == params["id"]).first()
+    ).scalar_one_or_none()
 
 
 example_model_filters: dict[str, GraphQLArgument] = {

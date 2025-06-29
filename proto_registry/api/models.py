@@ -21,7 +21,7 @@ class Subject(Base):
         nullable=False,
     )
     name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
-    versions: Mapped["SubjectVersion"] = relationship(
+    versions: Mapped[list["SubjectVersion"]] = relationship(
         back_populates="subject", order_by="desc(SubjectVersion.version_id)"
     )
 
@@ -70,7 +70,7 @@ class SubjectVersion(Base):
     subject: Mapped["Subject"] = relationship(
         back_populates="versions", order_by="desc(SubjectVersion.version_id)"
     )
-    references: Mapped["SubjectVersion"] = relationship(
+    references: Mapped[list["SubjectVersion"]] = relationship(
         "SubjectVersion",
         secondary=subject_version_reference_table,
         primaryjoin=id == subject_version_reference_table.c.referrer_id,
