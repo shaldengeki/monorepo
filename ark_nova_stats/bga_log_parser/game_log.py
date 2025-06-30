@@ -8,8 +8,11 @@ from ark_nova_stats.bga_log_parser.exceptions import (
     PlayerNotFoundError,
     StatsNotSetError,
 )
-from ark_nova_stats.bga_log_parser.proto.game_pb2 import Game
-from ark_nova_stats.bga_log_parser.proto.stats_pb2 import PlayerStats, Stats
+from ark_nova_stats.bga_log_parser.proto.game_pb2 import Game  # type: ignore
+from ark_nova_stats.bga_log_parser.proto.stats_pb2 import (  # type: ignore
+    PlayerStats,
+    Stats,
+)
 
 
 @dataclass

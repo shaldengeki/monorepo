@@ -7,7 +7,7 @@ import os
 import sys
 from pathlib import Path
 
-from python.runfiles import Runfiles
+from python.runfiles import Runfiles  # type: ignore
 
 from ark_nova_stats.bga_log_parser.exceptions import StatsNotSetError
 from ark_nova_stats.bga_log_parser.game_log import GameLog

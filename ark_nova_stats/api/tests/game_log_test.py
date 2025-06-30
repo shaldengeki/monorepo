@@ -2,7 +2,7 @@ import sys
 
 import pytest
 from flask.testing import FlaskClient
-from python.runfiles import Runfiles
+from python.runfiles import Runfiles  # type: ignore
 
 from ark_nova_stats.api.tests.fixtures import app, client
 

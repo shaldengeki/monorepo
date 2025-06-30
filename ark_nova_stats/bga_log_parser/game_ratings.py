@@ -2,7 +2,7 @@ import json
 
 from google.protobuf.json_format import ParseDict
 
-from ark_nova_stats.bga_log_parser.proto.ratings_pb2 import GameRatings
+from ark_nova_stats.bga_log_parser.proto.ratings_pb2 import GameRatings  # type: ignore
 
 
 def parse_ratings(raw_ratings: str) -> GameRatings:

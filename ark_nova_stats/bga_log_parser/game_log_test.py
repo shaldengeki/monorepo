@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 import pytest
-from python.runfiles import Runfiles
+from python.runfiles import Runfiles  # type: ignore
 
 from ark_nova_stats.bga_log_parser.exceptions import NonArkNovaReplayError
 from ark_nova_stats.bga_log_parser.game_log import GameLog, GameLogEventData

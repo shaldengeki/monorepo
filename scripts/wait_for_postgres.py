@@ -6,7 +6,7 @@ import sys
 import time
 from urllib.parse import urlparse
 
-import pg8000.native
+import pg8000.native  # type: ignore
 
 from base.flask_app import database_uri
 
@@ -48,7 +48,7 @@ def wait_for_postgres() -> None:
                 password=password,
                 ssl_context=False,
             )
-        except pg8000.exceptions.InterfaceError:
+        except pg8000.exceptions.InterfaceError:  # type: ignore
             print("Postgres is unavailable - sleeping")
             time.sleep(1)
             continue
