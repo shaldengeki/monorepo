@@ -41,7 +41,7 @@ func TestGetState_WhenEmptyStateProviderGiven_ReturnsEmptyState(t *testing.T) {
 
 func TestGetState_WhenStaticStateProviderGiven_ReturnsPopulatedState(t *testing.T) {
 	state := game_state.GameState{Round: 1, BreakCount: 2, BreakMax: 3}
-	s := New(game_state_provider.NewStaticGameStateProvider(state))
+	s := New(game_state_provider.NewStaticGameStateProvider(&state))
 	r := server.GetStateRequest{GameId: 1}
 	actual, err := s.GetState(nil, &r)
 	if err != nil {
@@ -129,7 +129,7 @@ func TestValidateState_WhenBreakMaxMismatchPlayerCount_ReturnsError(t *testing.T
 
 	// One-player should have a break of 5.
 	playerGameStates := []*player_game_state.PlayerGameState{
-		&player_game_state.PlayerGameState{},
+		{},
 	}
 	r := server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 6, PlayerGameStates: playerGameStates}}
 	res, err := s.ValidateState(nil, &r)
@@ -143,8 +143,8 @@ func TestValidateState_WhenBreakMaxMismatchPlayerCount_ReturnsError(t *testing.T
 
 	// Two-player should have a break of 9.
 	playerGameStates = []*player_game_state.PlayerGameState{
-		&player_game_state.PlayerGameState{},
-		&player_game_state.PlayerGameState{},
+		{},
+		{},
 	}
 	r = server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 8, PlayerGameStates: playerGameStates}}
 	res, err = s.ValidateState(nil, &r)
@@ -158,9 +158,9 @@ func TestValidateState_WhenBreakMaxMismatchPlayerCount_ReturnsError(t *testing.T
 
 	// Three-player should have a break of 13.
 	playerGameStates = []*player_game_state.PlayerGameState{
-		&player_game_state.PlayerGameState{},
-		&player_game_state.PlayerGameState{},
-		&player_game_state.PlayerGameState{},
+		{},
+		{},
+		{},
 	}
 	r = server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 14, PlayerGameStates: playerGameStates}}
 	res, err = s.ValidateState(nil, &r)
@@ -174,10 +174,10 @@ func TestValidateState_WhenBreakMaxMismatchPlayerCount_ReturnsError(t *testing.T
 
 	// Four-player should have a break of 17.
 	playerGameStates = []*player_game_state.PlayerGameState{
-		&player_game_state.PlayerGameState{},
-		&player_game_state.PlayerGameState{},
-		&player_game_state.PlayerGameState{},
-		&player_game_state.PlayerGameState{},
+		{},
+		{},
+		{},
+		{},
 	}
 	r = server.ValidateStateRequest{GameState: &game_state.GameState{Round: 1, BreakMax: 16, PlayerGameStates: playerGameStates}}
 	res, err = s.ValidateState(nil, &r)
@@ -315,12 +315,12 @@ func TestValidatePlayerGameState_WhenTooManyActionCards_ReturnsError(t *testing.
 	state := player_game_state.PlayerGameState{
 		PlayerId: 1,
 		ActionCards: []*player_game_state.PlayerActionCard{
-			&player_game_state.PlayerActionCard{},
-			&player_game_state.PlayerActionCard{},
-			&player_game_state.PlayerActionCard{},
-			&player_game_state.PlayerActionCard{},
-			&player_game_state.PlayerActionCard{},
-			&player_game_state.PlayerActionCard{},
+			{},
+			{},
+			{},
+			{},
+			{},
+			{},
 		},
 	}
 
@@ -333,7 +333,7 @@ func TestValidatePlayerGameState_WhenTooManyActionCards_ReturnsError(t *testing.
 func TestValidatePlayerActionCard_WhenUnknownActionCard_ReturnsError(t *testing.T) {
 	s := New(nil)
 	actionCards := []*player_game_state.PlayerActionCard{
-		&player_game_state.PlayerActionCard{
+		{
 			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_UNKNOWN,
 			Strength: 1,
 		},
@@ -348,11 +348,11 @@ func TestValidatePlayerActionCard_WhenUnknownActionCard_ReturnsError(t *testing.
 func TestValidatePlayerActionCard_WhenDuplicateActionCard_ReturnsError(t *testing.T) {
 	s := New(nil)
 	actionCards := []*player_game_state.PlayerActionCard{
-		&player_game_state.PlayerActionCard{
+		{
 			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
 			Strength: 1,
 		},
-		&player_game_state.PlayerActionCard{
+		{
 			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
 			Strength: 2,
 		},
@@ -367,7 +367,7 @@ func TestValidatePlayerActionCard_WhenDuplicateActionCard_ReturnsError(t *testin
 func TestValidatePlayerActionCard_WhenActionCardStrengthZero_ReturnsError(t *testing.T) {
 	s := New(nil)
 	actionCards := []*player_game_state.PlayerActionCard{
-		&player_game_state.PlayerActionCard{
+		{
 			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
 			Strength: 0,
 		},
@@ -382,7 +382,7 @@ func TestValidatePlayerActionCard_WhenActionCardStrengthZero_ReturnsError(t *tes
 func TestValidatePlayerActionCard_WhenActionCardStrengthTooHigh_ReturnsError(t *testing.T) {
 	s := New(nil)
 	actionCards := []*player_game_state.PlayerActionCard{
-		&player_game_state.PlayerActionCard{
+		{
 			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
 			Strength: 6,
 		},
@@ -397,11 +397,11 @@ func TestValidatePlayerActionCard_WhenActionCardStrengthTooHigh_ReturnsError(t *
 func TestValidatePlayerActionCard_WhenActionCardStrengthDuplicated_ReturnsError(t *testing.T) {
 	s := New(nil)
 	actionCards := []*player_game_state.PlayerActionCard{
-		&player_game_state.PlayerActionCard{
+		{
 			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
 			Strength: 6,
 		},
-		&player_game_state.PlayerActionCard{
+		{
 			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
 			Strength: 6,
 		},
@@ -441,7 +441,7 @@ func TestValidatePlayerActionCardToken_WhenActionCardTokensLessThanOne_ReturnsEr
 func TestValidatePlayerConservationProjectReward_WhenRecurringTypeUnknown_ReturnsError(t *testing.T) {
 	s := New(nil)
 	rewards := []*associate.ConservationProjectReward{
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_RecurringReward{
 				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_UNKNOWN,
 			},
@@ -457,7 +457,7 @@ func TestValidatePlayerConservationProjectReward_WhenRecurringTypeUnknown_Return
 func TestValidatePlayerConservationProjectReward_WhenOneTimeTypeUnknown_ReturnsError(t *testing.T) {
 	s := New(nil)
 	rewards := []*associate.ConservationProjectReward{
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
 				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN,
 			},
@@ -473,12 +473,12 @@ func TestValidatePlayerConservationProjectReward_WhenOneTimeTypeUnknown_ReturnsE
 func TestValidatePlayerConservationProjectReward_WhenDuplicateRecurring_ReturnsError(t *testing.T) {
 	s := New(nil)
 	rewards := []*associate.ConservationProjectReward{
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_RecurringReward{
 				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_SNAPPING,
 			},
 		},
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_RecurringReward{
 				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_SNAPPING,
 			},
@@ -494,12 +494,12 @@ func TestValidatePlayerConservationProjectReward_WhenDuplicateRecurring_ReturnsE
 func TestValidatePlayerConservationProjectReward_WhenDuplicateOneTime_ReturnsError(t *testing.T) {
 	s := New(nil)
 	rewards := []*associate.ConservationProjectReward{
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
 				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
 			},
 		},
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
 				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
 			},
@@ -515,42 +515,42 @@ func TestValidatePlayerConservationProjectReward_WhenDuplicateOneTime_ReturnsErr
 func TestValidatePlayerConservationProjectReward_WhenTooManyRewards_ReturnsError(t *testing.T) {
 	s := New(nil)
 	rewards := []*associate.ConservationProjectReward{
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
 				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
 			},
 		},
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
 				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_ASSOCIATION_WORKER,
 			},
 		},
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
 				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_TWELVE_MONEY,
 			},
 		},
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
 				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_THREE_X,
 			},
 		},
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
 				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNIVERSITY,
 			},
 		},
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
 				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
 			},
 		},
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
 				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_DETERMINATION,
 			},
 		},
-		&associate.ConservationProjectReward{
+		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
 				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_TWO_REPUTATION,
 			},
@@ -625,7 +625,7 @@ func TestValidatePlayerAnimals_WhenCardIdNotSet_ReturnsError(t *testing.T) {
 	s := New(nil)
 
 	cards := []*cards.AnimalCard{
-		&cards.AnimalCard{
+		{
 			Card: &cards.Card{},
 		},
 	}
@@ -640,17 +640,17 @@ func TestValidatePlayerAnimals_WithDuplicateAnimals_ReturnsError(t *testing.T) {
 	s := New(nil)
 
 	cards := []*cards.AnimalCard{
-		&cards.AnimalCard{
+		{
 			Card: &cards.Card{
 				CardId: 1,
 			},
 		},
-		&cards.AnimalCard{
+		{
 			Card: &cards.Card{
 				CardId: 2,
 			},
 		},
-		&cards.AnimalCard{
+		{
 			Card: &cards.Card{
 				CardId: 1,
 			},
@@ -678,7 +678,7 @@ func TestValidatePlayerSponsors_WhenCardIdNotSet_ReturnsError(t *testing.T) {
 	s := New(nil)
 
 	cards := []*cards.SponsorCard{
-		&cards.SponsorCard{
+		{
 			Card: &cards.Card{},
 		},
 	}
@@ -693,17 +693,17 @@ func TestValidatePlayerSponsors_WithDuplicateSponsors_ReturnsError(t *testing.T)
 	s := New(nil)
 
 	cards := []*cards.SponsorCard{
-		&cards.SponsorCard{
+		{
 			Card: &cards.Card{
 				CardId: 1,
 			},
 		},
-		&cards.SponsorCard{
+		{
 			Card: &cards.Card{
 				CardId: 2,
 			},
 		},
-		&cards.SponsorCard{
+		{
 			Card: &cards.Card{
 				CardId: 1,
 			},
@@ -731,7 +731,7 @@ func TestValidatePlayerHand_WhenCardIdNotSet_ReturnsError(t *testing.T) {
 	s := New(nil)
 
 	cards := []*player_game_state.PlayerHandCard{
-		&player_game_state.PlayerHandCard{
+		{
 			Card: &player_game_state.PlayerHandCard_AnimalCard{
 				AnimalCard: &cards.AnimalCard{
 					Card: &cards.Card{},
@@ -750,7 +750,7 @@ func TestValidatePlayerHand_WithDuplicateCards_ReturnsError(t *testing.T) {
 	s := New(nil)
 
 	cards := []*player_game_state.PlayerHandCard{
-		&player_game_state.PlayerHandCard{
+		{
 			Card: &player_game_state.PlayerHandCard_AnimalCard{
 				AnimalCard: &cards.AnimalCard{
 					Card: &cards.Card{
@@ -759,7 +759,7 @@ func TestValidatePlayerHand_WithDuplicateCards_ReturnsError(t *testing.T) {
 				},
 			},
 		},
-		&player_game_state.PlayerHandCard{
+		{
 			Card: &player_game_state.PlayerHandCard_SponsorCard{
 				SponsorCard: &cards.SponsorCard{
 					Card: &cards.Card{
@@ -768,7 +768,7 @@ func TestValidatePlayerHand_WithDuplicateCards_ReturnsError(t *testing.T) {
 				},
 			},
 		},
-		&player_game_state.PlayerHandCard{
+		{
 			Card: &player_game_state.PlayerHandCard_AnimalCard{
 				AnimalCard: &cards.AnimalCard{
 					Card: &cards.Card{

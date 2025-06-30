@@ -11,7 +11,7 @@ import time
 from typing import Any, Dict, Iterable, List, NoReturn, Optional
 
 import boto3
-import docker
+import docker  # type: ignore
 import requests
 from boto3.exceptions import S3UploadFailedError
 
@@ -303,7 +303,7 @@ def back_up_server(
         )
     except S3UploadFailedError as e:
         logger.error(f"Uploading backup to S3 failed with error {e}")
-        error = e.message
+        error = e.message  # type: ignore
 
     # Either way, delete the temporary backup.
     logger.error(f"Deleting temporary backup at {file_path}")
@@ -412,7 +412,7 @@ def clean_up_backups(
 
 def process_server_restoration(
     client: docker.DockerClient,
-    containers: List[docker.models.containers.Container],
+    containers: List[docker.models.containers.Container],  # type: ignore
     server: Dict[str, Any],
     host: str,
     port: int,
@@ -535,7 +535,7 @@ def start_container(
 
 
 def process_server_stop(
-    containers: List[docker.models.containers.Container],
+    containers: List[docker.models.containers.Container],  # type: ignore
     server: Dict[str, Any],
     host: str,
     port: int,
