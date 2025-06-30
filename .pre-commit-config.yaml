@@ -50,3 +50,8 @@ repos:
                     -   eslint-plugin-promise@6.1.1
                     -   eslint-plugin-react@7.32.2
                     -   eslint-config-react-app
+    -   repo: https://github.com/kunyi731/pre-commit-gazelle
+        rev: 'v0.1.1'
+        hooks:
+            - id: bazel-gazelle
+              files: '\.(go|py|java|cc|h|bazel|bzl|BUILD)$'
