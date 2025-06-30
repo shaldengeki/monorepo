@@ -46,23 +46,23 @@ blinker==1.9.0 \
     --hash=sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf \
     --hash=sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc
     # via flask
-boto3==1.38.41 \
-    --hash=sha256:6119e9f272b9f004f052ca78ce94d3fe10198bc159ae808f75c0e1b9c07518bd \
-    --hash=sha256:c6710fc533c8e1f5d1f025c74ffe1222c3659094cd51c076ec50c201a54c8f22
+boto3==1.38.46 \
+    --hash=sha256:9c8e88a32a6465e5905308708cff5b17547117f06982908bdfdb0108b4a65079 \
+    --hash=sha256:d1ca2b53138afd0341e1962bd52be6071ab7a63c5b4f89228c5ef8942c40c852
     # via -r requirements.txt
-boto3-stubs==1.38.41 \
-    --hash=sha256:1804be266bf7e114cd2485920f1388e66924f4c4b4616b452ccdfb45e5703c44 \
-    --hash=sha256:b14247cc455b03e3abe6e4c3e2e0747cebfb0a30af1b9e170ac87242905cfa93
+boto3-stubs==1.38.46 \
+    --hash=sha256:526789fc1f4a6f89f372424dc9a4109296f6bd18afab1abf5d281a94f5cfb770 \
+    --hash=sha256:e60f1bee8fed90213725de68bdcfc1bf8765030596962656e06c131bb779972d
     # via -r requirements.txt
-botocore==1.38.41 \
-    --hash=sha256:06069a06f1352accb1f6c9505d6e323753627112be80a9d2e057c6d9c9779ffd \
-    --hash=sha256:98e3fed636ebb519320c4b2d078db6fa6099b052b4bb9b5c66632a5a7fe72507
+botocore==1.38.46 \
+    --hash=sha256:8798e5a418c27cf93195b077153644aea44cb171fcd56edc1ecebaa1e49e226e \
+    --hash=sha256:89ca782ffbf2e8769ca9c89234cfa5ca577f1987d07d913ee3c68c4776b1eb5b
     # via
     #   boto3
     #   s3transfer
-botocore-stubs==1.38.30 \
-    --hash=sha256:291d7bf39a316c00a8a55b7255489b02c0cea1a343482e7784e8d1e235bae995 \
-    --hash=sha256:2efb8bdf36504aff596c670d875d8f7dd15205277c15c4cea54afdba8200c266
+botocore-stubs==1.38.46 \
+    --hash=sha256:a04e69766ab8bae338911c1897492f88d05cd489cd75f06e6eb4f135f9da8c7b \
+    --hash=sha256:cc21d9a7dd994bdd90872db4664d817c4719b51cda8004fd507a4bf65b085a75
     # via boto3-stubs
 certifi==2025.6.15 \
     --hash=sha256:2e0c7ce7cb5d8f8634ca55d2ba7e6ec2689a2fd6537d8dec1296a477a4910057 \
@@ -728,9 +728,9 @@ tomlkit==0.13.3 \
     # via
     #   -r requirements.txt
     #   pylint
-types-awscrt==0.27.2 \
-    --hash=sha256:49a045f25bbd5ad2865f314512afced933aed35ddbafc252e2268efa8a787e4e \
-    --hash=sha256:acd04f57119eb15626ab0ba9157fc24672421de56e7bd7b9f61681fedee44e91
+types-awscrt==0.27.4 \
+    --hash=sha256:a8c4b9d9ae66d616755c322aba75ab9bd793c6fef448917e6de2e8b8cdf66fb4 \
+    --hash=sha256:c019ba91a097e8a31d6948f6176ede1312963f41cdcacf82482ac877cbbcf390
     # via botocore-stubs
 types-flask-cors==6.0.0.20250520 \
     --hash=sha256:8898ed43a6b68d0b3b499e1d2f7aa696a99a001610de44e09fc6f404d16eb704 \
