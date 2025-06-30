@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
-	"net"
 
 	"github.com/shaldengeki/monorepo/ark_nova_stats/game_server/game_state_provider"
 
@@ -14,8 +12,6 @@ import (
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/cards"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state"
 	"github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state"
-
-	"google.golang.org/grpc"
 )
 
 type gameServer struct {
@@ -31,7 +27,7 @@ func (s *gameServer) GetState(ctx context.Context, request *server.GetStateReque
 
 	state, err := s.gameStateProvider.GetState(ctx, request.GameId)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Could not fetch game state: %v", err))
+		return nil, fmt.Errorf("Could not fetch game state: %v", err)
 	}
 
 	r := server.GetStateResponse{GameState: state}
@@ -435,7 +431,7 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		return &server.ValidateStateResponse{ValidationErrors: errs}, nil
 	}
 
-	if request.GameState.PlayerGameStates == nil || len(request.GameState.PlayerGameStates) < 1 {
+	if len(request.GameState.PlayerGameStates) < 1 {
 		return &server.ValidateStateResponse{ValidationErrors: []string{"At least one player game state must be passed"}}, nil
 	}
 
@@ -455,17 +451,6 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 
 func New(gameStateProvider game_state_provider.GameStateProvider) *gameServer {
 	return &gameServer{gameStateProvider: gameStateProvider}
-}
-
-func main() {
-	lis, err := net.Listen("tcp", "localhost:5003")
-	if err != nil {
-		log.Fatalf("Failed to listen: %v", err)
-	}
-
-	grpcServer := grpc.NewServer()
-	server.RegisterGameServerServer(grpcServer, New(nil))
-	grpcServer.Serve(lis)
 }
 
 /*
