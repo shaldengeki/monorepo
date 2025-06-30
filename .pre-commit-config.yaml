@@ -4,6 +4,7 @@ ci:
     skip:
         - buildifier
         - buildifier-lint
+        - bazel-gazelle
 
 repos:
     -   repo: https://github.com/pre-commit/pre-commit-hooks
