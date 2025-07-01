@@ -49,6 +49,7 @@ def grpc_api_image(
     tar(
         name = name + "_grpc_tar",
         srcs = [binary] + additional_srcs,
+        tags = tags,
     )
 
     oci_image(
@@ -56,7 +57,7 @@ def grpc_api_image(
         base = base,
         cmd = [binary.package + "/" + binary.name + "_/" + binary.name],
         tars = [":" + name + "_grpc_tar"],
-        tags = kwargs.get("tags", []),
+        tags = tags,
     )
 
     cross_platform_image(

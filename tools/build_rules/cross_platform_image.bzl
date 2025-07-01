@@ -13,7 +13,8 @@ def cross_platform_image(
         repository,
         repo_tags,
         stamp_file = "//:stamped",
-        visibility = None):
+        visibility = None,
+        tags = None):
     """
     Defines a cross-platform container image, usable on both arm64 and x86_64.
 
@@ -24,9 +25,15 @@ def cross_platform_image(
         repo_tags (list[str]): List of repo + tag pairs that the container images should be loaded under.
         stamp_file (file): File containing image tags that the image should be pushed under.
         visibility (list[str]): Visibility to set on all the targets.
+        tags (dict): Tags to pass to the underlying rules.
     """
     if visibility == None:
         visibility = ["//visibility:public"]
+
+    if tags == None:
+        tags = []
+    if "manual" not in tags:
+        tags.append("manual")
 
     platform_transition_filegroup(
         name = name,
@@ -35,7 +42,7 @@ def cross_platform_image(
             "@platforms//cpu:arm64": "//tools/build_rules:linux_arm64",
             "@platforms//cpu:x86_64": "//tools/build_rules:linux_amd64",
         }),
-        tags = ["manual"],
+        tags = tags,
         visibility = visibility,
     )
 
@@ -44,7 +51,7 @@ def cross_platform_image(
         image = name,
         repo_tags = repo_tags,
         visibility = visibility,
-        tags = ["manual"],
+        tags = tags,
     )
 
     oci_push(
@@ -53,5 +60,5 @@ def cross_platform_image(
         remote_tags = stamp_file,
         repository = repository,
         visibility = visibility,
-        tags = ["manual"],
+        tags = tags,
     )
