@@ -1,11 +1,10 @@
-load("@py_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_library")
 
 py_library(
     name = "flask_app_py",
     srcs = ["flask_app.py"],
     data = [
-        requirement("pg8000"),
+        "@py_deps//pg8000",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -13,5 +12,6 @@ py_library(
         "@py_deps//flask_cors",
         "@py_deps//flask_migrate",
         "@py_deps//flask_sqlalchemy",
+        "@py_deps//pg8000",  # keep
     ],
 )

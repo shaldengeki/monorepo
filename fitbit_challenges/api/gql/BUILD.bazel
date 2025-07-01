@@ -7,9 +7,8 @@ py_library(
     deps = [
         "//fitbit_challenges:models_py",
         "//fitbit_challenges/api/gql/types:bingo_card",
-        "//fitbit_challenges/api/gql/types:challenge",
+        "//fitbit_challenges/api/gql/types:challenge_user",
         "//fitbit_challenges/api/gql/types:fitbit_authorization",
-        "//fitbit_challenges/api/gql/types:user",
         "//fitbit_challenges/api/gql/types:user_activities",
         "@py_deps//graphql_core",
     ],

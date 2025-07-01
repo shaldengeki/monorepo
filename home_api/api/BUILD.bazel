@@ -5,9 +5,6 @@ load("//tools/build_rules/api:defs.bzl", "graphql_api_image")
 py_library(
     name = "api_lib",
     srcs = glob(["**/*.py"]),
-    data = [
-        requirement("pg8000"),
-    ],
     imports = [".."],
     visibility = ["//home_api/api:__subpackages__"],
     deps = [
@@ -17,7 +14,6 @@ py_library(
         requirement("flask_migrate"),
         requirement("flask_sqlalchemy"),
         requirement("graphql_server"),
-        requirement("pg8000"),
     ],
 )
 

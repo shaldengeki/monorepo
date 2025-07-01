@@ -12,8 +12,12 @@ from graphql import (
     GraphQLObjectType,
 )
 
-from fitbit_challenges.api.gql.types.challenge import ChallengeType, challenge_fields
-from fitbit_challenges.api.gql.types.user import fetch_current_user, user_type
+from fitbit_challenges.api.gql.types.challenge_user import (
+    ChallengeType,
+    challenge_fields,
+    fetch_current_user,
+    user_type,
+)
 from fitbit_challenges.config import app, db
 from fitbit_challenges.models import (
     BingoCard,

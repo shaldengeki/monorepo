@@ -4,14 +4,15 @@ from fitbit_challenges.api.gql.types.bingo_card import (
     bingo_challenge_field,
     flip_bingo_tile_field,
 )
-from fitbit_challenges.api.gql.types.challenge import (
+from fitbit_challenges.api.gql.types.challenge_user import (
     challenges_field,
     create_challenge_field,
+    current_user_field,
+    users_field,
 )
 from fitbit_challenges.api.gql.types.fitbit_authorization import (
     authorize_with_fitbit_field,
 )
-from fitbit_challenges.api.gql.types.user import current_user_field, users_field
 from fitbit_challenges.api.gql.types.user_activities import (
     activities_field,
     create_user_activity_field,

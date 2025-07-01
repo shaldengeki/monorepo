@@ -9,7 +9,6 @@ py_library(
     visibility = ["//proto_registry:__subpackages__"],
     deps = [
         "//proto_registry:config_py",
-        requirement("pg8000"),
         requirement("sqlalchemy"),
     ],
 )

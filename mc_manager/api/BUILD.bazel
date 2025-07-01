@@ -15,7 +15,6 @@ py_library(
         requirement("Flask-SQLAlchemy"),
         requirement("graphql-core"),
         requirement("graphql-server"),
-        requirement("pg8000"),
         requirement("sqlalchemy"),
     ],
 )
