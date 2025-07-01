@@ -4,13 +4,28 @@ module(
 )
 
 bazel_dep(name = "aspect_bazel_lib", version = "2.19.3")
-bazel_dep(name = "rules_proto", version = "7.1.0")
 
 bazel_dep(name = "platforms", version = "1.0.0", dev_dependency = True)
 
-# protoc toolchain setup.
 bazel_dep(name = "toolchains_protoc", version = "0.4.2")
+bazel_dep(name = "protobuf", version = "29.3")
+bazel_dep(name = "rules_proto", version = "7.1.0")
+bazel_dep(name = "rules_python", version = "1.4.1")
+bazel_dep(name = "rules_oci", version = "2.2.6")
+bazel_dep(name = "aspect_rules_js", version = "2.3.7")
+bazel_dep(name = "aspect_rules_ts", version = "3.6.0")
+bazel_dep(name = "aspect_rules_jest", version = "0.23.2")
+bazel_dep(name = "aspect_rules_webpack", version = "0.17.0")
+bazel_dep(name = "rules_pkg", version = "1.1.0")
+bazel_dep(name = "rules_go", version = "0.55.1")
+bazel_dep(name = "gazelle", version = "0.44.0")
+bazel_dep(name = "rules_python_gazelle_plugin", version = "1.4.1")
+bazel_dep(name = "rules_java", version = "8.12.0")
+bazel_dep(name = "contrib_rules_jvm", version = "0.29.0")
+bazel_dep(name = "rules_cc", version = "0.1.1")
+bazel_dep(name = "googletest", version = "1.17.0")
 
+#### Protoc
 protoc = use_extension("@toolchains_protoc//protoc:extensions.bzl", "protoc")
 protoc.toolchain(
     # Creates a repository to satisfy well-known-types dependencies such as
@@ -25,9 +40,7 @@ register_toolchains("@toolchains_protoc_hub//:all")
 
 register_toolchains("//tools/protoc:all")
 
-# python setup.
-bazel_dep(name = "rules_python", version = "1.4.1")
-
+#### Python
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
     python_version = "3.12",
@@ -42,9 +55,7 @@ pip.parse(
 )
 use_repo(pip, "py_deps")
 
-# rules_oci setup.
-bazel_dep(name = "rules_oci", version = "2.2.6")
-
+#### rules_oci
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 oci.pull(
     name = "ubuntu_image",
@@ -89,9 +100,7 @@ oci.pull(
 )
 use_repo(oci, "nginx_debian_slim", "nginx_debian_slim_linux_386", "nginx_debian_slim_linux_amd64", "nginx_debian_slim_linux_arm64_v8", "nginx_debian_slim_linux_arm_v5", "nginx_debian_slim_linux_arm_v7", "nginx_debian_slim_linux_ppc64le", "nginx_debian_slim_linux_s390x", "python3_image_linux_386", "python3_image_linux_amd64", "python3_image_linux_arm64_v8", "python3_image_linux_arm_v5", "python3_image_linux_arm_v7", "python3_image_linux_ppc64le", "python3_image_linux_s390x", "ubuntu_image_linux_amd64", "ubuntu_image_linux_arm64_v8")
 
-# js setup.
-bazel_dep(name = "aspect_rules_js", version = "2.3.7")
-
+#### Javascript
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
 npm.npm_translate_lock(
     name = "npm",
@@ -108,20 +117,11 @@ pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
 # bazel run -- @pnpm --dir /home/runner/work/rules_js/rules_js install
 use_repo(pnpm, "pnpm")
 
-bazel_dep(name = "aspect_rules_ts", version = "3.6.0")
-
 rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext", dev_dependency = True)
 rules_ts_ext.deps()
 use_repo(rules_ts_ext, "npm_typescript")
 
-bazel_dep(name = "aspect_rules_jest", version = "0.23.2")
-bazel_dep(name = "aspect_rules_webpack", version = "0.17.0")
-bazel_dep(name = "rules_pkg", version = "1.1.0")
-
-# golang setup.
-bazel_dep(name = "rules_go", version = "0.55.1")
-bazel_dep(name = "gazelle", version = "0.44.0")
-
+#### Golang
 go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.module(
     # build_file_proto_mode = "disable",
@@ -151,13 +151,3 @@ use_repo(
     "org_golang_x_net",
     "org_golang_x_text",
 )
-
-bazel_dep(name = "rules_python_gazelle_plugin", version = "1.4.1")
-
-# java setup.
-bazel_dep(name = "rules_java", version = "8.12.0")
-bazel_dep(name = "contrib_rules_jvm", version = "0.29.0")
-
-# c++ setup.
-bazel_dep(name = "rules_cc", version = "0.1.1")
-bazel_dep(name = "googletest", version = "1.17.0")

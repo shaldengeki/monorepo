@@ -58,6 +58,7 @@ gazelle_python_manifest(
 # gazelle:go_grpc_compilers @rules_go//proto:go_grpc
 
 # gazelle:python_generation_mode file
+# gazelle:map_kind py_proto_library py_proto_library @protobuf//bazel:py_proto_library.bzl
 
 # Resolve the bazel runfiles library.
 # gazelle:resolve py python.runfiles @rules_python//python/runfiles
