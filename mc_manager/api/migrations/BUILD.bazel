@@ -1,7 +1,19 @@
+load("@rules_python//python:defs.bzl", "py_library")
 load("//tools/build_rules/api:defs.bzl", migrations = "api_migrations")
 
 migrations(
     app_config = "//mc_manager:config_py",
     app_package = "mc_manager.config",
     versions = glob(["versions/*.py"]),
+)
+
+py_library(
+    name = "env",
+    srcs = ["env.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//base:flask_app_py",
+        "@py_deps//alembic",
+        "@py_deps//flask",
+    ],
 )

@@ -9,10 +9,9 @@ py_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        requirement("Flask"),
-        requirement("flask-cors"),
-        requirement("Flask-Migrate"),
-        requirement("Flask-SQLAlchemy"),
-        requirement("pg8000"),
+        "@py_deps//flask",
+        "@py_deps//flask_cors",
+        "@py_deps//flask_migrate",
+        "@py_deps//flask_sqlalchemy",
     ],
 )

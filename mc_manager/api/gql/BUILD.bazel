@@ -1,0 +1,13 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "schema",
+    srcs = ["schema.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//mc_manager/api/gql/types:server",
+        "//mc_manager/api/gql/types:server_backup",
+        "//mc_manager/api/gql/types:server_log",
+        "@py_deps//graphql_core",
+    ],
+)

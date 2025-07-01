@@ -28,3 +28,21 @@ graphql_api_image(
     repo_tags = ["shaldengeki/home-api-api:latest"],
     deps = [":api_lib"],
 )
+
+py_library(
+    name = "__init__",
+    srcs = ["__init__.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [":app"],
+)
+
+py_library(
+    name = "app",
+    srcs = ["app.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//home_api:config_py",
+        "//home_api/api/graphql:schema",
+        "@py_deps//graphql_server",
+    ],
+)

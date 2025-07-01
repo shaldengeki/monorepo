@@ -1,5 +1,5 @@
 load("@py_deps//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_library")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load("//tools/build_rules/api:defs.bzl", "graphql_api_image")
 
 py_library(
@@ -20,4 +20,33 @@ graphql_api_image(
     docker_hub_repository = "docker.io/shaldengeki/proto-registry-api",
     repo_tags = ["shaldengeki/proto-registry-api:latest"],
     deps = [":api_lib"],
+)
+
+py_library(
+    name = "__init__",
+    srcs = ["__init__.py"],
+    visibility = ["//:__subpackages__"],
+    deps = ["//proto_registry:config_py"],
+)
+
+py_binary(
+    name = "app",
+    srcs = ["app.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":models",
+        "//proto_registry:config_py",
+        "@py_deps//flask",
+        "@py_deps//sqlalchemy",
+    ],
+)
+
+py_library(
+    name = "models",
+    srcs = ["models.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//proto_registry:config_py",
+        "@py_deps//sqlalchemy",
+    ],
 )

@@ -1,3 +1,5 @@
+load("@rules_go//proto:def.bzl", "go_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@rules_python//python:proto.bzl", "py_proto_library")
 
 py_proto_library(
@@ -90,4 +92,22 @@ py_proto_library(
     name = "ratings_proto_py_pb2",
     visibility = ["//visibility:public"],
     deps = [":ratings_proto"],
+)
+
+go_proto_library(
+    name = "proto_go_proto",
+    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/bga_log_parser/proto",
+    protos = [
+        ":action_proto",
+        ":animals_proto",
+        ":associate_proto",
+        ":build_proto",
+        ":cards_proto",
+        ":game_proto",
+        ":map_proto",
+        ":ratings_proto",
+        ":sponsors_proto",
+        ":stats_proto",
+    ],
+    visibility = ["//visibility:public"],
 )

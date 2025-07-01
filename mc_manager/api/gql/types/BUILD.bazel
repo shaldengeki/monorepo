@@ -1,0 +1,42 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "server",
+    srcs = ["server.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":server_backup",
+        ":server_log",
+        "//mc_manager:config_py",
+        "//mc_manager/api:models",
+        "@py_deps//graphql_core",
+        "@py_deps//sqlalchemy",
+    ],
+)
+
+py_library(
+    name = "server_backup",
+    srcs = ["server_backup.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":server",
+        "//mc_manager:config_py",
+        "//mc_manager/api:models",
+        "@py_deps//graphql_core",
+        "@py_deps//sqlalchemy",
+    ],
+)
+
+py_library(
+    name = "server_log",
+    srcs = ["server_log.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":server",
+        ":server_backup",
+        "//mc_manager:config_py",
+        "//mc_manager/api:models",
+        "@py_deps//graphql_core",
+        "@py_deps//sqlalchemy",
+    ],
+)
