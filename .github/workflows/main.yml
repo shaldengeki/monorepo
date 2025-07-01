@@ -31,6 +31,8 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-refs/heads/${{ github.base_ref }}-
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Ensure there are no gazelle diffs
+        run: scripts/gazelle -mode=diff .
       - name: bazel test //...
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc test //...
       - name: Validate MODULE.bazel.lock
