@@ -1,4 +1,5 @@
 load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
+load("@rules_buf//buf:defs.bzl", "buf_lint_test")
 load("@rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
@@ -110,4 +111,64 @@ go_proto_library(
         ":stats_proto",
     ],
     visibility = ["//visibility:public"],
+)
+
+buf_lint_test(
+    name = "action_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":action_proto"],
+)
+
+buf_lint_test(
+    name = "animals_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":animals_proto"],
+)
+
+buf_lint_test(
+    name = "associate_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":associate_proto"],
+)
+
+buf_lint_test(
+    name = "build_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":build_proto"],
+)
+
+buf_lint_test(
+    name = "cards_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":cards_proto"],
+)
+
+buf_lint_test(
+    name = "game_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":game_proto"],
+)
+
+buf_lint_test(
+    name = "map_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":map_proto"],
+)
+
+buf_lint_test(
+    name = "ratings_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":ratings_proto"],
+)
+
+buf_lint_test(
+    name = "sponsors_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":sponsors_proto"],
+)
+
+buf_lint_test(
+    name = "stats_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":stats_proto"],
 )
