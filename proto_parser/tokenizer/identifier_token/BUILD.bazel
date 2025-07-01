@@ -2,6 +2,7 @@ load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_test(
     name = "identifier_token_test",
+    size = "small",
     srcs = ["identifier_token_test.go"],
     embed = [":identifier_token"],
     deps = [

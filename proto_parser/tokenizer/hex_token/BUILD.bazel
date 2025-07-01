@@ -13,6 +13,7 @@ go_library(
 
 go_test(
     name = "hex_token_test",
+    size = "small",
     srcs = ["hex_token_test.go"],
     embed = [":hex_token"],
     deps = [

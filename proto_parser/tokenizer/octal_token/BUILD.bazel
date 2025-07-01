@@ -13,6 +13,7 @@ go_library(
 
 go_test(
     name = "octal_token_test",
+    size = "small",
     srcs = ["octal_token_test.go"],
     embed = [":octal_token"],
     deps = [

@@ -34,6 +34,7 @@ cc_library(
 
 cc_test(
     name = "crafting_interpreters_test",
+    size = "small",
     srcs = ["crafting_interpreters_test.cc"],
     features = ["treat_warnings_as_errors"],
     deps = [

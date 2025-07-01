@@ -13,6 +13,7 @@ go_library(
 
 go_test(
     name = "whitespace_token_test",
+    size = "small",
     srcs = ["whitespace_token_test.go"],
     embed = [":whitespace_token"],
     deps = [

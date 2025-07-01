@@ -16,6 +16,7 @@ go_library(
 
 go_test(
     name = "string_token_test",
+    size = "small",
     srcs = ["string_token_test.go"],
     embed = [":string_token"],
     deps = [
