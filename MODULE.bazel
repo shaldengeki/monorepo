@@ -3,7 +3,7 @@ module(
     repo_name = "com_github_shaldengeki_monorepo",
 )
 
-bazel_dep(name = "aspect_bazel_lib", version = "2.19.3")
+bazel_dep(name = "aspect_bazel_lib", version = "2.19.4")
 
 bazel_dep(name = "platforms", version = "1.0.0", dev_dependency = True)
 

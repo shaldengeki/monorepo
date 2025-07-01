@@ -19,6 +19,7 @@ go_library(
 
 go_test(
     name = "tokenizer_test",
+    size = "small",
     srcs = ["tokenizer_test.go"],
     embed = [":tokenizer"],
     deps = [

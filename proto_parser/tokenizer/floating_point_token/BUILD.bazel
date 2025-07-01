@@ -14,6 +14,7 @@ go_library(
 
 go_test(
     name = "floating_point_token_test",
+    size = "small",
     srcs = ["floating_point_token_test.go"],
     embed = [":floating_point_token"],
     deps = [

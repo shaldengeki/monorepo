@@ -13,6 +13,7 @@ go_library(
 
 go_test(
     name = "decimal_token_test",
+    size = "small",
     srcs = ["decimal_token_test.go"],
     embed = [":decimal_token"],
     deps = [
