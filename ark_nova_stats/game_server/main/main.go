@@ -11,12 +11,14 @@ import (
 )
 
 func main() {
-	lis, err := net.Listen("tcp", "localhost:5003")
+	lis, err := net.Listen("tcp", "0.0.0.0:5003")
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
 	grpcServer := grpc.NewServer()
 	server.RegisterGameServerServer(grpcServer, game_server.New(nil))
-	grpcServer.Serve(lis)
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("Fatal error when serving request: %v", err)
+	}
 }
