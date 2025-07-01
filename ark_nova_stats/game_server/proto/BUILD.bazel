@@ -1,4 +1,5 @@
 load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
+load("@rules_buf//buf:defs.bzl", "buf_lint_test")
 load("@rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
@@ -24,4 +25,10 @@ go_proto_library(
     deps = [
         "//ark_nova_stats/proto:game_state_go_proto",
     ],
+)
+
+buf_lint_test(
+    name = "server_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":server_proto"],
 )
