@@ -55,6 +55,8 @@ gazelle_python_manifest(
 
 # gazelle:prefix github.com/shaldengeki/monorepo
 # gazelle:proto file
+# gazelle:go_grpc_compilers @rules_go//proto:go_grpc
+
 # gazelle:python_generation_mode file
 
 # Resolve the bazel runfiles library.
