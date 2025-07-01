@@ -1,0 +1,23 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "schema",
+    srcs = ["schema.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":types",
+        "@py_deps//graphql_core",
+    ],
+)
+
+py_library(
+    name = "types",
+    srcs = ["types.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//mc_manager:config_py",
+        "//mc_manager/api:models",
+        "@py_deps//graphql_core",
+        "@py_deps//sqlalchemy",
+    ],
+)

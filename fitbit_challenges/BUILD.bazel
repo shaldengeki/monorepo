@@ -1,4 +1,3 @@
-load("@py_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_library")
 
 py_library(
@@ -6,7 +5,7 @@ py_library(
     srcs = ["fitbit_client.py"],
     visibility = ["//fitbit_challenges:__subpackages__"],
     deps = [
-        requirement("requests"),
+        "@py_deps//requests",
     ],
 )
 
@@ -24,8 +23,8 @@ py_library(
         ":bingo_card_pattern_py",
         ":config_py",
         ":fitbit_client_py",
-        requirement("pg8000"),
-        requirement("sqlalchemy"),
+        "@py_deps//requests",
+        "@py_deps//sqlalchemy",
     ],
 )
 

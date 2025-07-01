@@ -32,3 +32,15 @@ worker(
     },
     repo_tags = ["shaldengeki/fitbit-challenges-worker:latest"],
 )
+
+py_binary(
+    name = "app",
+    srcs = ["app.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//fitbit_challenges:config_py",
+        "//fitbit_challenges:fitbit_client_py",
+        "//fitbit_challenges:models_py",
+        "@py_deps//sqlalchemy",
+    ],
+)

@@ -55,8 +55,20 @@ gazelle_python_manifest(
 
 # gazelle:prefix github.com/shaldengeki/monorepo
 # gazelle:proto file
+# gazelle:go_grpc_compilers @rules_go//proto:go_grpc
+
 # gazelle:python_generation_mode file
+
+# Resolve the bazel runfiles library.
 # gazelle:resolve py python.runfiles @rules_python//python/runfiles
+
+# Manual resolves for python protobuf generation.
+# This is required because the Gazelle python extension lacks native protobuf support,
+# unlike the golang extension, which does this for you.
+# See https://github.com/bazel-contrib/rules_python/issues/2994.
+# gazelle:resolve py ark_nova_stats.bga_log_parser.proto.game_pb2 //ark_nova_stats/bga_log_parser/proto:game_proto_py_pb2
+# gazelle:resolve py ark_nova_stats.bga_log_parser.proto.stats_pb2 //ark_nova_stats/bga_log_parser/proto:stats_proto_py_pb2
+# gazelle:resolve py ark_nova_stats.bga_log_parser.proto.ratings_pb2 //ark_nova_stats/bga_log_parser/proto:ratings_proto_py_pb2
 
 gazelle_binary(
     name = "gazelle",

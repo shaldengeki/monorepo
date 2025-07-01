@@ -2,6 +2,7 @@
 # See https://pre-commit.com/hooks.html for more hooks
 ci:
     skip:
+        - bazel-gazelle
         - buildifier
         - buildifier-lint
 
@@ -50,3 +51,8 @@ repos:
                     -   eslint-plugin-promise@6.1.1
                     -   eslint-plugin-react@7.32.2
                     -   eslint-config-react-app
+    -   repo: https://github.com/kunyi731/pre-commit-gazelle
+        rev: 'a85dde186833334950f0000b3434b437acd898fb'
+        hooks:
+            - id: bazel-gazelle
+              files: '\.(go|py|java|cc|h|bazel|bzl|BUILD)$'

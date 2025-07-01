@@ -1,0 +1,51 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "bingo_card",
+    srcs = ["bingo_card.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":challenge_user",
+        "//fitbit_challenges:config_py",
+        "//fitbit_challenges:models_py",
+        "@py_deps//flask",
+        "@py_deps//graphql_core",
+    ],
+)
+
+py_library(
+    name = "fitbit_authorization",
+    srcs = ["fitbit_authorization.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//fitbit_challenges:fitbit_client_py",
+        "@py_deps//flask",
+        "@py_deps//graphql_core",
+    ],
+)
+
+py_library(
+    name = "user_activities",
+    srcs = ["user_activities.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//fitbit_challenges:config_py",
+        "//fitbit_challenges:models_py",
+        "@py_deps//graphql_core",
+        "@py_deps//sqlalchemy",
+    ],
+)
+
+py_library(
+    name = "challenge_user",
+    srcs = ["challenge_user.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":user_activities",
+        "//fitbit_challenges:config_py",
+        "//fitbit_challenges:models_py",
+        "@py_deps//flask",
+        "@py_deps//graphql_core",
+        "@py_deps//sqlalchemy",
+    ],
+)

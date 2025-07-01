@@ -5,9 +5,6 @@ load("//tools/build_rules/api:defs.bzl", "graphql_api_image")
 py_library(
     name = "api_lib",
     srcs = glob(["**/*.py"]),
-    data = [
-        requirement("pg8000"),
-    ],
     imports = [".."],
     visibility = ["//home_api/api:__subpackages__"],
     deps = [
@@ -17,7 +14,6 @@ py_library(
         requirement("flask_migrate"),
         requirement("flask_sqlalchemy"),
         requirement("graphql_server"),
-        requirement("pg8000"),
     ],
 )
 
@@ -27,4 +23,22 @@ graphql_api_image(
     docker_hub_repository = "docker.io/shaldengeki/home-api-api",
     repo_tags = ["shaldengeki/home-api-api:latest"],
     deps = [":api_lib"],
+)
+
+py_library(
+    name = "__init__",
+    srcs = ["__init__.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [":app"],
+)
+
+py_library(
+    name = "app",
+    srcs = ["app.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//home_api:config_py",
+        "//home_api/api/graphql:schema",
+        "@py_deps//graphql_server",
+    ],
 )

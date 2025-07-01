@@ -1,0 +1,11 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "schema",
+    srcs = ["schema.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//home_api/api/graphql/types:transaction",
+        "@py_deps//graphql_core",
+    ],
+)

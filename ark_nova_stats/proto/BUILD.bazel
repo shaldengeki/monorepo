@@ -1,4 +1,5 @@
 load("@rules_go//proto:def.bzl", "go_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@rules_python//python:proto.bzl", "py_proto_library")
 
 proto_library(
@@ -93,47 +94,48 @@ go_proto_library(
 )
 
 go_proto_library(
-    name = "build_proto_go_proto",
+    name = "build_go_proto",
+    importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/build",
     proto = ":build_proto",
     visibility = ["//visibility:public"],
 )
 
 go_proto_library(
-    name = "cards_proto_go_proto",
+    name = "cards_go_proto",
     importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/cards",
     proto = ":cards_proto",
     visibility = ["//visibility:public"],
 )
 
 go_proto_library(
-    name = "display_state_proto_go_proto",
+    name = "display_state_go_proto",
     importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/display_state",
     proto = ":display_state_proto",
     visibility = ["//visibility:public"],
     deps = [
-        ":cards_proto_go_proto",
+        ":cards_go_proto",
     ],
 )
 
 go_proto_library(
-    name = "player_game_state_proto_go_proto",
+    name = "player_game_state_go_proto",
     importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/player_game_state",
     proto = ":player_game_state_proto",
     visibility = ["//visibility:public"],
     deps = [
         ":associate_proto_go_proto",
-        ":build_proto_go_proto",
-        ":cards_proto_go_proto",
+        ":build_go_proto",
+        ":cards_go_proto",
     ],
 )
 
 go_proto_library(
-    name = "game_state_proto_go_proto",
+    name = "game_state_go_proto",
     importpath = "github.com/shaldengeki/monorepo/ark_nova_stats/proto/game_state",
     proto = ":game_state_proto",
     visibility = ["//visibility:public"],
     deps = [
-        ":display_state_proto_go_proto",
-        ":player_game_state_proto_go_proto",
+        ":display_state_go_proto",
+        ":player_game_state_go_proto",
     ],
 )
