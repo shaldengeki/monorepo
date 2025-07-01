@@ -32,8 +32,8 @@ def cross_platform_image(
         name = name,
         srcs = [image],
         target_platform = select({
-            "@platforms//cpu:arm64": "//tools/build_rules:aarch64_linux",
-            "@platforms//cpu:x86_64": "//tools/build_rules:x86_64_linux",
+            "@platforms//cpu:arm64": "//tools/build_rules:linux_arm64",
+            "@platforms//cpu:x86_64": "//tools/build_rules:linux_amd64",
         }),
         tags = ["manual"],
         visibility = visibility,

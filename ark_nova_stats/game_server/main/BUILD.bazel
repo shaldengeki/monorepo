@@ -1,4 +1,5 @@
 load("@rules_go//go:def.bzl", "go_binary", "go_library")
+load("//tools/build_rules/api:defs.bzl", "grpc_api_image")
 
 go_library(
     name = "main_lib",
@@ -16,4 +17,11 @@ go_binary(
     name = "main",
     embed = [":main_lib"],
     visibility = ["//visibility:public"],
+)
+
+grpc_api_image(
+    name = "image",
+    binary = "//ark_nova_stats/game_server/main:main",
+    repo_tags = ["shaldengeki/ark-nova-stats-game-server:latest"],
+    repository = "docker.io/shaldengeki/ark-nova-stats-game-server",
 )
