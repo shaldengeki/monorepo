@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package games.tictactoe.proto;
+package games.tictactoe.proto.server;
 
 import "games/tictactoe/proto/game_state.proto";
 

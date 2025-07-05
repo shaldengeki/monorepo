@@ -6,7 +6,7 @@ go_library(
     importpath = "github.com/shaldengeki/monorepo/games/tictactoe/server/main",
     visibility = ["//visibility:private"],
     deps = [
-        "//games/tictactoe/proto:server_go_proto",
+        "//games/tictactoe/proto/server:server_go_proto",
         "//games/tictactoe/server",
         "@org_golang_google_grpc//:go_default_library",
     ],
