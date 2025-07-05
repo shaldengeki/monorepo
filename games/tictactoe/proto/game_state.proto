@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package games.tictactoe.proto;
+
+option go_package = "github.com/shaldengeki/monorepo/games/tictactoe/proto";
+
+import "games/tictactoe/proto/board.proto";
+import "games/tictactoe/proto/player.proto";
+import "games/tictactoe/proto/score.proto";
+
+message GameState {
+    // Reflects the state of a game at a given moment in time.
+    // Players change this state by taking valid actions.
+
+    int32 turn = 1;
+    int32 round = 2;
+    bool finished = 3;
+    repeated Score scores = 4;
+    Board board = 5;
+}

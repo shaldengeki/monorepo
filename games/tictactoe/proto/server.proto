@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package games.tictactoe.proto;
+
+import "games/tictactoe/proto/game_state.proto";
+
+option go_package = "github.com/shaldengeki/monorepo/games/tictactoe/proto/server";
+
+message CreateGameRequest {
+}
+
+message CreateGameResponse {
+    int64 game_id = 1;
+}
+
+message GetStateRequest {
+    int64 game_id = 1;
+}
+
+message GetStateResponse {
+    tictactoe.proto.GameState game_state = 1;
+}
+
+message ValidateStateRequest {
+    tictactoe.proto.GameState game_state = 1;
+}
+
+message ValidateStateResponse {
+    repeated string validation_errors = 1;
+}
+
+service GameServer {
+    rpc CreateGame(CreateGameRequest) returns (CreateGameResponse);
+    rpc GetState(GetStateRequest) returns (GetStateResponse);
+    rpc ValidateState(ValidateStateRequest) returns (ValidateStateResponse);
+}

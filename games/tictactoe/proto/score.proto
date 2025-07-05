@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package games.tictactoe.proto;
+
+option go_package = "github.com/shaldengeki/monorepo/games/tictactoe/proto";
+
+import "games/tictactoe/proto/player.proto";
+
+message Score {
+    // A player's score in tic-tac-toe.
+    Player player = 1;
+    int32 score = 2;
+}

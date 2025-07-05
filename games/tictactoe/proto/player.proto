@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package games.tictactoe.proto;
+
+option go_package = "github.com/shaldengeki/monorepo/games/tictactoe/proto";
+
+message Player {
+    // A player in a game of tic-tac-toe.
+    int32 id = 1;
+    string symbol = 2;
+}

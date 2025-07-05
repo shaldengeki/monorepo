@@ -1,0 +1,19 @@
+load("@rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "main_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/shaldengeki/monorepo/games/tictactoe/server/main",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//games/tictactoe/proto:server_go_proto",
+        "//games/tictactoe/server",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "main",
+    embed = [":main_lib"],
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,9 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "game_state_provider",
+    srcs = ["game_state_provider.go"],
+    importpath = "github.com/shaldengeki/monorepo/games/tictactoe/server/game_state_provider",
+    visibility = ["//visibility:public"],
+    deps = ["//games/tictactoe/proto:proto_go_proto"],
+)
