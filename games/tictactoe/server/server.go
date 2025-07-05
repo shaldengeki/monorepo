@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/shaldengeki/monorepo/games/tictactoe/server/game_state_provider"
+	"github.com/shaldengeki/monorepo/games/tictactoe/game_state_provider"
 
 	"github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
 )
