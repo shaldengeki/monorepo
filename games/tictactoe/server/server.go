@@ -35,6 +35,10 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		return &server.ValidateStateResponse{}, nil
 	}
 
+	if request.GameState.Turn < 1 {
+		return &server.ValidateStateResponse{ValidationErrors: []string{"Turn count should be >= 1"}}, nil
+	}
+
 	if request.GameState.Round < 1 {
 		return &server.ValidateStateResponse{ValidationErrors: []string{"Round count should be >= 1"}}, nil
 	}
