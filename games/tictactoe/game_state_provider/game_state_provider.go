@@ -7,14 +7,14 @@ import (
 )
 
 type GameStateProvider interface {
-	GetState(context context.Context, gameId int64) (*proto.GameState, error)
+	GetState(context context.Context, gameId string) (*proto.GameState, error)
 }
 
 type EmptyGameStateProvider struct {
 	GameStateProvider
 }
 
-func (s EmptyGameStateProvider) GetState(ctx context.Context, gameId int64) (*proto.GameState, error) {
+func (s EmptyGameStateProvider) GetState(ctx context.Context, gameId string) (*proto.GameState, error) {
 	gs := proto.GameState{}
 	return &gs, nil
 }
@@ -29,7 +29,7 @@ type StaticGameStateProvider struct {
 	staticState *proto.GameState
 }
 
-func (s StaticGameStateProvider) GetState(ctx context.Context, gameId int64) (*proto.GameState, error) {
+func (s StaticGameStateProvider) GetState(ctx context.Context, gameId string) (*proto.GameState, error) {
 	return s.staticState, nil
 }
 

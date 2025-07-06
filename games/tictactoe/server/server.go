@@ -17,7 +17,7 @@ type gameServer struct {
 }
 
 func (s *gameServer) GetState(ctx context.Context, request *server.GetStateRequest) (*server.GetStateResponse, error) {
-	if request.GameId == 0 {
+	if request.GameId == "" {
 		return nil, errors.New("Game ID not provided")
 	}
 
