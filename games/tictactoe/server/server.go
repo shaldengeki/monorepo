@@ -120,6 +120,13 @@ func (s *gameServer) ValidateBoard(ctx context.Context, board *proto.Board) ([]s
 		}
 
 		coord := fmt.Sprintf("%d,%d", marker.Row, marker.Column)
+		if marker.Row >= board.Rows {
+			violations = append(violations, "Marker at %s is past board edge with %d rows", coord, board.Rows)
+		}
+		if marker.Column >= board.Columns {
+			violations = append(violations, "Marker at %s is past board edge with %d columns", coord, board.Columns)
+		}
+
 		if before, ok := positions[coord]; ok {
 			violations = append(violations, fmt.Sprintf("More than one marker found at %s, pre-existing marker %s, conflicts with %s", coord, before, marker.Symbol))
 		} else {
@@ -132,6 +139,21 @@ func (s *gameServer) ValidateBoard(ctx context.Context, board *proto.Board) ([]s
 
 func (s *gameServer) ValidateMarker(ctx context.Context, marker *proto.BoardMarker) ([]string, error) {
 	violations := []string{}
+
+	if marker.Row < 0 {
+		violations = append(violations, "Marker row must be >= 0")
+	}
+
+	if marker.Column < 0 {
+		violations = append(violations, "Marker column must be >= 0")
+	}
+
+	if marker.symbol == "" {
+		violations = append(violations, "Marker symbol must be set")
+	} else if len(marker.symbol) > 1 {
+		violations = append(violations, "Marker symbol must only be a single character")
+	}
+
 	return violations, nil
 }
 
