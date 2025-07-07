@@ -36,44 +36,52 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		return &server.ValidateStateResponse{}, nil
 	}
 
-	validationErrors := []string{}
+	violations := []string{}
 
 	if request.GameState.Turn < 1 {
-		validationErrors = append(validationErrors, "Turn count should be >= 1")
+		violations = append(violations, "Turn count should be >= 1")
 	}
 
 	if request.GameState.Round < 1 {
-		validationErrors = append(validationErrors, "Round count should be >= 1")
+		violations = append(violations, "Round count should be >= 1")
 	}
 
-	scoreErrors, err := s.ValidateStateScores(ctx, request.GameState.Scores)
+	scoreViolations, err := s.ValidateStateScores(ctx, request.GameState.Scores)
 	if err != nil {
 		return nil, fmt.Errorf("Could not validate scores in state: %w", err)
 	}
-	for _, scoreError := range scoreErrors {
-		validationErrors = append(validationErrors, scoreError)
+	for _, v := range scoreViolations {
+		violations = append(violations, v)
 	}
 
-	return &server.ValidateStateResponse{ValidationErrors: validationErrors}, nil
+	boardViolations, err := s.ValidateStateBoard(ctx, request.GameState.Board)
+	if err != nil {
+		return nil, fmt.Errorf("Could not validate board in state: %w", err)
+	}
+	for _, v := range boardViolations {
+		violations = append(violations, v)
+	}
+
+	return &server.ValidateStateResponse{ValidationErrors: violations}, nil
 }
 
 func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Score) ([]string, error) {
-	validationErrors := []string{}
+	violations := []string{}
 
 	hasPoints := false
 	for _, score := range scores {
 		if score.Score < 0 {
-			validationErrors = append(validationErrors, fmt.Sprintf("Player %s score must be >= 0", score.Player))
+			violations = append(violations, fmt.Sprintf("Player %s score must be >= 0", score.Player))
 		} else if score.Score > 0 {
 			if hasPoints {
-				validationErrors = append(validationErrors, "Only one player may have points")
+				violations = append(violations, "Only one player may have points")
 				break
 			}
 			hasPoints = true
 		}
 	}
 
-	return validationErrors, nil
+	return violations, nil
 }
 
 func New(gameStateProvider game_state_provider.GameStateProvider) *gameServer {
