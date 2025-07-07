@@ -54,7 +54,7 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		violations = append(violations, v)
 	}
 
-	boardViolations, err := s.ValidateStateBoard(ctx, request.GameState.Board)
+	boardViolations, err := s.ValidateStateBoard(ctx, request.GameState.Board, request.GameState.Finished)
 	if err != nil {
 		return nil, fmt.Errorf("Could not validate board in state: %w", err)
 	}
@@ -80,6 +80,12 @@ func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Sc
 			hasPoints = true
 		}
 	}
+
+	return violations, nil
+}
+
+func (s *gameServer) ValidateStateBoard(ctx context.Context, board *proto.Board, finished bool) ([]string, error) {
+	violations := []string{}
 
 	return violations, nil
 }
