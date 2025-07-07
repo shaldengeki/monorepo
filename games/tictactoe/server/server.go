@@ -87,6 +87,51 @@ func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Sc
 func (s *gameServer) ValidateStateBoard(ctx context.Context, board *proto.Board, finished bool) ([]string, error) {
 	violations := []string{}
 
+	boardViolations, err := s.ValidateBoard(ctx, board)
+	if err != nil {
+		return nil, fmt.Errorf("Could not validate board: %w", err)
+	}
+	for _, v := range boardViolations {
+		violations = append(violations, v)
+	}
+
+	return violations, nil
+}
+
+func (s *gameServer) ValidateBoard(ctx context.Context, board *proto.Board) ([]string, error) {
+	violations := []string{}
+
+	if board.Rows < 1 {
+		violations = append(violations, "Board must have >= 1 row")
+	}
+
+	if board.Columns < 1 {
+		violations = append(violations, "Board must have >= 1 column")
+	}
+
+	positions := map[string]string{}
+	for _, marker := range board.Markers {
+		markerViolations, err := s.ValidateMarker(ctx, marker)
+		if err != nil {
+			return nil, fmt.Errorf("Could not validate marker: %w", err)
+		}
+		for _, v := range markerViolations {
+			violations = append(violations, v)
+		}
+
+		coord := fmt.Sprintf("%d,%d", marker.Row, marker.Column)
+		if before, ok := positions[coord]; ok {
+			violations = append(violations, fmt.Sprintf("More than one marker found at %s, pre-existing marker %s, conflicts with %s", coord, before, marker.Symbol))
+		} else {
+			positions[coord] = marker.Symbol
+		}
+	}
+
+	return violations, nil
+}
+
+func (s *gameServer) ValidateMarker(ctx context.Context, marker *proto.BoardMarker) ([]string, error) {
+	violations := []string{}
 	return violations, nil
 }
 
