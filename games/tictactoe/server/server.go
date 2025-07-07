@@ -7,6 +7,7 @@ import (
 
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state_provider"
 
+	"github.com/shaldengeki/monorepo/games/tictactoe/proto"
 	"github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
 )
 
@@ -35,15 +36,44 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		return &server.ValidateStateResponse{}, nil
 	}
 
+	validationErrors := []string{}
+
 	if request.GameState.Turn < 1 {
-		return &server.ValidateStateResponse{ValidationErrors: []string{"Turn count should be >= 1"}}, nil
+		validationErrors = append(validationErrors, "Turn count should be >= 1")
 	}
 
 	if request.GameState.Round < 1 {
-		return &server.ValidateStateResponse{ValidationErrors: []string{"Round count should be >= 1"}}, nil
+		validationErrors = append(validationErrors, "Round count should be >= 1")
 	}
 
-	return &server.ValidateStateResponse{}, nil
+	scoreErrors, err := s.ValidateStateScores(ctx, request.GameState.Scores)
+	if err != nil {
+		return nil, fmt.Errorf("Could not validate scores in state: %w", err)
+	}
+	for _, scoreError := range scoreErrors {
+		validationErrors = append(validationErrors, scoreError)
+	}
+
+	return &server.ValidateStateResponse{ValidationErrors: validationErrors}, nil
+}
+
+func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Score) ([]string, error) {
+	validationErrors := []string{}
+
+	hasPoints := false
+	for _, score := range scores {
+		if score.Score < 0 {
+			validationErrors = append(validationErrors, fmt.Sprintf("Player %s score must be >= 0", score.Player))
+		} else if score.Score > 0 {
+			if hasPoints {
+				validationErrors = append(validationErrors, "Only one player may have points")
+				break
+			}
+			hasPoints = true
+		}
+	}
+
+	return validationErrors, nil
 }
 
 func New(gameStateProvider game_state_provider.GameStateProvider) *gameServer {
