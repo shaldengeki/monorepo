@@ -1,12 +1,12 @@
-load("@rules_hugo//hugo:rules.bzl", "hugo_site", "hugo_theme", "hugo_serve")
+load("@rules_hugo//hugo:rules.bzl", "hugo_serve", "hugo_site", "hugo_theme")
 load("@rules_pkg//pkg:pkg.bzl", "pkg_tar")
 
 hugo_theme(
     name = "theme",
-    theme_name = "seinmastudios.com",
     srcs = [
         "//themes/seinmastudios.com:files",
     ],
+    theme_name = "seinmastudios.com",
 )
 
 hugo_site(
@@ -14,8 +14,8 @@ hugo_site(
     config = "config.toml",
     content = glob(["content/**"]),
     layouts = glob(["layouts/**"]),
-    static = glob(["static/**"]),
     quiet = False,
+    static = glob(["static/**"]),
     theme = ":theme",
 )
 
@@ -23,8 +23,8 @@ hugo_site(
 hugo_serve(
     name = "serve",
     dep = [":site"],
-    verbose = True,
     quiet = False,
+    verbose = True,
 )
 
 # Tar it up
