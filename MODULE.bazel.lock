@@ -338,6 +338,62 @@
   },
   "selectedYankedVersions": {},
   "moduleExtensions": {
+    "//tools/build_rules/hugo:defs.bzl%hugo_extension": {
+      "general": {
+        "bzlTransitiveDigest": "SADrfFfZ/X+C2K++uaN3myIRxXSS9enlY7wWv/b6rdg=",
+        "usagesDigest": "1DJYFz9vwaSGP7PoZ3JR0IftKi9bZ/hZqR3+lTtyi/Y=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "hugo": {
+            "repoRuleId": "@@+rules_hugo_extension+rules_hugo//hugo:internal/hugo_repository.bzl%hugo_repository",
+            "attributes": {
+              "version": "0.127.0",
+              "sha256": "3cf961de9831c0f2ac0e67eabc83251916ae8729292fa85ffa140e59bcbea8c0"
+            }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "",
+            "rules_hugo",
+            "+rules_hugo_extension+rules_hugo"
+          ],
+          [
+            "+rules_hugo_extension+rules_hugo",
+            "bazel_tools",
+            "bazel_tools"
+          ]
+        ]
+      }
+    },
+    "//tools/build_rules/rules_hugo:defs.bzl%rules_hugo_extension": {
+      "general": {
+        "bzlTransitiveDigest": "BopUzEl1ie/XU3ooZLOrkB7gzlnDSj/ykd+5vtugUSE=",
+        "usagesDigest": "meAXMPQgjiXOftaH3lBFX/rjfO4nf1M3tDI4zdXitX4=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "rules_hugo": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+            "attributes": {
+              "url": "https://github.com/shaldengeki/rules_hugo/archive/7c3e323e4c5519d056d76bb4495434d23bd1241a.zip",
+              "sha256": "2c014fd73be6a74e64c42e294d32593ad4ceec5089d383e27f03b3f488b42892",
+              "strip_prefix": "rules_hugo-7c3e323e4c5519d056d76bb4495434d23bd1241a"
+            }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "",
+            "bazel_tools",
+            "bazel_tools"
+          ]
+        ]
+      }
+    },
     "@@apple_support+//crosstool:setup.bzl%apple_cc_configure_extension": {
       "general": {
         "bzlTransitiveDigest": "E970FlMbwpgJPdPUQzatKh6BMfeE0ZpWABvwshh7Tmg=",

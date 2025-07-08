@@ -4,7 +4,7 @@ load("@rules_pkg//pkg:pkg.bzl", "pkg_tar")
 hugo_theme(
     name = "theme",
     srcs = [
-        "//themes/seinmastudios.com:files",
+        "//seinmastudios.com/themes/seinmastudios.com:files",
     ],
     theme_name = "seinmastudios.com",
 )
