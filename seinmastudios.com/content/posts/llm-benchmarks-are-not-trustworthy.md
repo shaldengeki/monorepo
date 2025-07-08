@@ -10,9 +10,9 @@ draft = false
 If you believe OpenAI's marketing, their LLM products are automating an increasingly large fraction of software engineering jobs. They substantiate this, in part, by citing how their products perform against various LLM benchmarks. [Here's an example](https://openai.com/index/introducing-swe-bench-verified/) where OpenAI touts GPT-4o's performance on a benchmark called [SWE-bench](https://www.swebench.com/index.html):
 
 > Each sample in the SWE-bench test set is created from a resolved GitHub issue in one of 12 open-source Python repositories on GitHub. Each sample has an associated pull request (PR), which includes both the solution code and unit tests to verify code correctness.
-> 
+>
 > [...]
-> 
+>
 > We found that GPT-4o’s performance on the best-performing scaffold reaches 33.2% on SWE-bench Verified, more than doubling its score of 16% on the original SWE-bench.
 
 These benchmarks differ a bit, but most of them are structurally equivalent:
@@ -32,9 +32,9 @@ And this is the shape of what's happened with SWE-bench; some folks at York Univ
 
 > In addition, over 94% of the issues were created before LLM’s knowl-
 edge cutoff dates, posing potential data leakage issues.
-> 
+>
 > [...]
-> 
+>
 > After carefully analyzing the passed instances from the SWE-Agent + GPT-4 model with the new dataset, SWE-Bench+, we observed a decline in the pass rate, dropping from 3.97% (as seen on the refined SWE-Bench) to a resolution rate of 0.55%. We further evaluated SWE-RAG + GPT-4, SWE-RAG + GPT-3.5, and AutoCodeRover + GPT-4o models on the new dataset to verify our findings, where the resolution rates of the models drop significantly, which are 0.73%, 0.55%, and 3.83%, respectively.
 
 With FrontierMath, [OpenAI's o1 scored less than 2%](https://arxiv.org/abs/2411.04872) when the benchmark was released in November 2024. At the end of December, [OpenAI announced that o3 solved 25% of the problems.](https://techcrunch.com/2024/12/20/openai-announces-new-o3-model/) (Interestingly, the public hasn't been given access to the model.)

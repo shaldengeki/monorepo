@@ -111,7 +111,7 @@ The syntax for protobufs is _really_ lightweight, and a lot of it is pretty intu
 
 ## They work cross-language
 
-As you saw in the example above, protobufs let you take data from a program written in one language, and pass it to a program written in a totally different language. 
+As you saw in the example above, protobufs let you take data from a program written in one language, and pass it to a program written in a totally different language.
 
 What's even better is that often, the clients in each language quite often feel "normal" for that language. What I mean by that is, the protobuf client in e.g. Python will adhere closely to Python language norms, like class and method names will be capitalized / scoped like you'd expect in Python, or the types of values that end up getting output by those classes are just normal Python types. You end up feeling like you're just writing normal Python code, instead of (as happens often in some frameworks) needing to write alien-looking code in some parts of your codebase. That might sound trivial, but I've found that in practice, minimizing programmer surprise like this avoids a major source of bugs.
 

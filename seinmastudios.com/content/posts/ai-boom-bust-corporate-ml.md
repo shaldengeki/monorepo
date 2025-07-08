@@ -13,4 +13,3 @@ draft = true
 - Flaws common to both
 - Boom/bust in ML and business
 - How good science is supposed to work
-

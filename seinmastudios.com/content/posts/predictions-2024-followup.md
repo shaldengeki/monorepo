@@ -65,7 +65,7 @@ We put the decision off a year, since we can afford to do that.
   - Admitted to NATO: 20% (did not happen)
   - Cedes territory to Russia: 20% (did not happen)
 - Labour wins UK elections: 90% (happened)
-- China 
+- China
   - Enters a recognized recession: 40% (did not happen)
   - Formally revokes Hong Kong SAR status: 10% (did not happen)
   - Xi Jinping leaves power: 10% (did not happen)

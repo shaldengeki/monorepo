@@ -100,7 +100,7 @@ googleAnalytics = "" #Google Analytics ID
     twitter = ""        #Twitter username
     instagram = ""      #Instagram username
     stackoverflow = ""  #StackOverflow username
-    devto = ""          #Dev.to username 
+    devto = ""          #Dev.to username
 
 [params]
     tagline = "the tagline for this website"
@@ -149,7 +149,7 @@ weight : "10"
 Following menus are available:
 
 * `main`, displayed in the navigation bar at the top of the page
-* `footer`, displayed on the lower right, in the footer 
+* `footer`, displayed on the lower right, in the footer
 
 ### Categories & Tags
 
