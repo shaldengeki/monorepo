@@ -4,18 +4,17 @@ workspace(
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-# Update these to latest
-RULES_HUGO_COMMIT = "294a8ec626a394011d35397108c930be631ab9fa"
-RULES_HUGO_SHA256 = "8df370f374dc72701b65b7c8a8add8ccb8423a845e973993fa9c68f8b516c9be"
+RULES_HUGO_COMMIT = "9bed8b236438900331c3aae2d9fdbff43c8c9da0"
+RULES_HUGO_SHA256 = "f94438eb1d193c0b5592bab3051ee5b01445baafd20a80ab113b636e80342ffb"
 
 http_archive(
-    name = "build_stack_rules_hugo",
-    url = "https://github.com/stackb/rules_hugo/archive/%s.zip" % RULES_HUGO_COMMIT,
+    name = "rules_hugo",
+    url = "https://github.com/shaldengeki/rules_hugo/archive/%s.zip" % RULES_HUGO_COMMIT,
     sha256 = RULES_HUGO_SHA256,
     strip_prefix = "rules_hugo-%s" % RULES_HUGO_COMMIT
 )
 
-load("@build_stack_rules_hugo//hugo:rules.bzl", "hugo_repository", "github_hugo_theme")
+load("@rules_hugo//hugo:rules.bzl", "hugo_repository")
 
 #
 # Load hugo binary itself
