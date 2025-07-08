@@ -21,14 +21,14 @@ Following up on [my predictions for 2024]({{< ref "predictions-2024-followup" >}
 ## NYC
 
 ### Housing
-- 2024 estimated annual population change is <=0%: 80%
-- 2024 new housing starts down from 2023 (27,980): 70%
+- ❌ 2024 estimated annual population change is <=0%: 80%
+- ❌ 2024 new housing starts down from 2023 (27,980): 70%
 - 2025 new housing permits issued up from 2024: 50%
 - [Median listing $/sqft in the NY/Newark/Jersey City MSA](https://fred.stlouisfed.org/series/MEDLISPRIPERSQUFEE35620) <$500: 20%
 
 ### Congestion pricing
 - Remains in place, without significant rollbacks, by the end of the year: 70%
-- I notice reduced traffic volumes in my neighborhood: 10%
+- ✅ I notice reduced traffic volumes in my neighborhood: 10%
 
 ### Second Avenue Subway
 - Phase 2 construction starts before end of year: 90%
@@ -38,7 +38,7 @@ Following up on [my predictions for 2024]({{< ref "predictions-2024-followup" >}
 ## California
 
 ### Housing
-- 2024 estimated population change is >=0%: 70%
+- ✅ 2024 estimated population change is >=0%: 70%
 - 2025 new housing permits issued up from 2024: 50%
 - [Median listing $/sqft in the SF/Oakland/Hayward MSA](https://fred.stlouisfed.org/series/MEDLISPRIPERSQUFEE41860) <$640: 20%
 
@@ -56,10 +56,10 @@ I'll assess these only if the CAHSR releases a new project update report, with n
 
 ## Canada
 - We decide this year to move to Canada: 25%
-- Trudeau resigns PM before the election: 40%
-- A motion of no confidence in Trudeau is introduced: 50%
-  - ... and he survives it: 20%
-- Conservatives win a plurality of the legislature: 60%
+- ✅ Trudeau resigns PM before the election: 40%
+- ❌ A motion of no confidence in Trudeau is introduced: 50%
+  - ❌ ... and he survives it: 20%
+- ❌ Conservatives win a plurality of the legislature: 60%
 
 ## Ukraine
 - Admitted to NATO: 20%
@@ -74,7 +74,7 @@ I'll assess these only if the CAHSR releases a new project update report, with n
   - Any of Brazil, Russia, India, China, South Africa, Egypt, Ethiopia, Iran, and the UAE, or any member that joins during 2025.
 
 ## Argentina
-- YoY inflation hits <100% at any point during the year: 50%
+- ✅ YoY inflation hits <100% at any point during the year: 50%
 - La Libertad Avanza wins a plurality of the seats up for election in the Chamber of Deputies: 70%
 
 # Tech
@@ -99,10 +99,10 @@ I'll assess these only if the CAHSR releases a new project update report, with n
 - Marvel films will average greater than 650 million in international box office: 40%
 - There are >5 movies with domestic box office >250 million: 25%
 - There are >10 movies with domestic box office >250 million: 10%
-- An A24 movie will win the Best Picture Oscar: 40%
-- Kieran Culkin will win the Best Supporting Actor Oscar: 75%
-- Challengers will win an Oscar: 60%
-- The live action Snow White will make more than 200 million dollars in domestic box office: 60%
+- ❌ An A24 movie will win the Best Picture Oscar: 40%
+- ✅ Kieran Culkin will win the Best Supporting Actor Oscar: 75%
+- ❌ Challengers will win an Oscar: 60%
+- ❌ The live action Snow White will make more than 200 million dollars in domestic box office: 60%
 - A streaming service will close down / be merged into another: 30%
   - Max, Peacock, Paramount, Hulu, Disney+, Amazon Prime Video, Netflix, Apple TV+, Mubi
 - The book that spends the longest at the top of the NYT bestseller list is a romance: 60%
@@ -110,7 +110,7 @@ I'll assess these only if the CAHSR releases a new project update report, with n
 
 # Sports
 
-- The NFC champion will win the Super Bowl: 40%
-- The Mets will make the playoffs: 50%
-- The Knicks will have a winning season: 70%
-- The Eastern Conference champion will win the NBA finals: 50%
+- ✅ The NFC champion will win the Super Bowl: 40%
+- ✅ The Mets will make the playoffs: 50%
+- ✅ The Knicks will have a winning season: 70%
+- ❌ The Eastern Conference champion will win the NBA finals: 50%
