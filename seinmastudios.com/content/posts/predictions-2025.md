@@ -65,7 +65,7 @@ I'll assess these only if the CAHSR releases a new project update report, with n
 - Admitted to NATO: 20%
 - Cedes territory to Russia: 30%
 
-## China 
+## China
 - Enters a recognized recession: 10%
 - Formally revokes Hong Kong SAR status: 10%
 - Xi Jinping still in power at end of year: 90%

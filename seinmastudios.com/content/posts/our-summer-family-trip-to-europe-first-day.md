@@ -13,4 +13,3 @@ The most striking thing on the flight was the quantity and quality of the meals 
 So that was a nice start to the trip, and in a small way we all looked forward a little more to eating in a foreign country and seeing what it had to offer.
 
 We landed at Charles de Gaulle early in the morning, Paris time. None of us had slept very much, so we were all pretty bleary-eyed and tired at this point, and we had a whole day ahead of us! The airport was sort of a blur; we somehow managed to get our bags and find the guy who'd been sent out to drive us to our hotel. When we got near Paris, I was struck by how much the roadways reminded me of China: all the signage, how the highways were structured and marked, all of it was pretty much identical to what we'd seen in major Chinese cities. It was neat to find out that Chinese urban planners pretty obviously copied a lot of things directly from Europe.
-

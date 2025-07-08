@@ -40,7 +40,7 @@ Here's a bunch of predictions for next year, along with rough probabilities. All
   - Admitted to NATO: 20%
   - Cedes territory to Russia: 20%
 - Labour wins UK elections: 90%
-- China 
+- China
   - Enters a recognized recession: 40%
   - Formally revokes Hong Kong SAR status: 10%
   - Xi Jinping leaves power: 10%

@@ -84,9 +84,8 @@ You'd be surprised! I've personally found that the overwhelming majority of the 
 
 As an example, a team I was working on was talking about ways we could better support engineers at the company who were new to Python, but needed to use it in their day-to-day work. One person brought up the idea of running classes on a quarterly basis. The manager of our team intervened to say that this idea had been rejected before because it "wasn't worth the time". It turns out that nobody knew whether any data or evidence had been used to assess that classes "weren't worth the time"! [wasnt-worth-time]
 
-As another example, 
+As another example,
 
 ***
 
 1. [wasnt-worth-time] I found this particularly notable because not only was a past decision based on (presumably) zero evidence being used to pre-empt future decisions, at this particular company, leadership had recently decided to roll out fixed data retention policies across emails and chats, which deleted all of our email / chat / groups history earlier than X months ago and made it _literally impossible_ to figure out how the decision had actually been made. Data retention is bad, y'all, but that's a topic for another day.
-
