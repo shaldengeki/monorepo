@@ -1,0 +1,27 @@
+{{ define "main" }}
+
+<section id="home">
+  <ul>
+    {{ $pages := where site.RegularPages "Type" "posts" }}
+    {{ $paginator := .Paginate $pages }}
+    {{ range $index, $page := $paginator.Pages }}
+
+    <li {{if eq $index 0}}class="first" {{end}}>
+      <div class="post-title">
+        <h1><a href="{{ $page.Permalink }}" title="{{ $page.Title }}">{{ .Title }}</a></h1>
+        <span class="reading-time">{{ T "readingTime" .ReadingTime }}</span>
+      </div>
+      {{ partial "featured_image" .}}
+      <p>{{ .Summary }}</p>
+      {{ if .Truncated }}
+      <a href="{{ .RelPermalink }}">{{ T "readMore" }}</a>
+      {{ end }}
+      {{ partial "article-meta" . }}
+    </li>
+    {{ end }}
+  </ul>
+</section>
+
+{{ template "_internal/pagination.html" . }}
+
+{{ end }}

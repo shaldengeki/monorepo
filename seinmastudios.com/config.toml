@@ -1,0 +1,61 @@
+baseurl = "https://seinmastudios.com"
+title = "and some change"
+copyright = "Copyright &copy; 2025 - Charles OuGuo"
+languageCode = "en-us"
+canonifyurls = true
+theme = "seinmastudios.com"
+
+paginate = 10
+
+summaryLength = 20
+enableEmoji = true
+pygmentsCodeFences = true
+
+#disqusShortname = "myShortName"
+
+# Note: to disable a social network icon delete or comment out the corresponding line
+[author]
+    name = "Charles OuGuo"
+    github = "shaldengeki"
+    mastodon = "mastodon.online/@ouguoc"
+    bga = "91572304"
+    goodreads = "71154541-charles-guo"
+    pinboard = "shaldengeki"
+
+[params]
+    tagline = ""
+    description = "Charles OuGuo's personal blog"
+    #images = [""] #This is used for opengraph/twitter cards.
+    customCSS = []  #Optional Customised CSS
+    favicon = "/favicon.ico"
+    #utterancesRepo = "username/repository"
+    #utterancesIssueTerm = "pathname"
+    #homepageLength = 10
+    #commentAutoload = true  #This mean reader don't need click, disqus comment autoload
+    mathjax = true #Enable display of mathematics using mathjax (LaTeX syntax)
+    #katex = true #Enable display of mathematics using katex (Faster LaTeX rendering)
+    #google_fonts = ["Staatliches"] # Adds additional google fonts
+    #disableDarkModeCSS = false # disables css style for users using dark-mode
+
+[[ menu.main ]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 1
+
+# uncomment to enable the Tags link on the main toolbar
+#  [[menu.main]]
+#    identifier = "tags"
+#    name = "Tags"
+#    url = "/tags"
+#    weight = 1
+
+# uncomment to enable the Categories link on the main toolbar
+#  [[menu.main]]
+#    identifier = "categories"
+#    name = "Categories"
+#    url = "/categories"
+#    weight = 1
+
+[taxonomies]
+    tag = 'tags'

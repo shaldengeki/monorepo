@@ -1,0 +1,32 @@
+<aside>
+    <span>
+        <time class="post-date" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" | safeHTML }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+    </span>
+    {{ if ne .Date .Lastmod }}
+    <span>
+        {{ T "modifiedOn" }} <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" | safeHTML }}">{{ .Lastmod.Format "Jan 2, 2006" }}</time>
+    </span>
+    {{ end }}
+    {{ if .Params.categories }}
+    <span>
+        {{ T "categories" }}
+        <em>
+            {{ range $i, $c := .Params.categories }}
+                {{ if $i }}, {{ end }}
+                <a href="{{ relLangURL ( printf "categories/%s" ( $c | urlize ) ) }}">{{ $c }}</a>
+            {{ end }}
+        </em>
+    </span>
+    {{ end }}
+
+    {{ if .Params.tags }}
+    <span>
+        <em>
+            {{ range $i, $t := .Params.tags }}
+                {{ if $i }}, {{ end }}
+                <a href="{{ relLangURL ( printf "tags/%s" ( $t | urlize ) ) }}">#{{ $t }}</a>
+            {{ end }}
+        </em>
+    </span>
+    {{ end }}
+</aside>
