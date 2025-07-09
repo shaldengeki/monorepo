@@ -1,0 +1,34 @@
+load("@rules_hugo//hugo:rules.bzl", "hugo_serve", "hugo_site", "hugo_theme")
+load("@rules_pkg//pkg:pkg.bzl", "pkg_tar")
+
+hugo_theme(
+    name = "theme",
+    srcs = [
+        "//blog/themes/seinmastudios.com:files",
+    ],
+    theme_name = "seinmastudios.com",
+)
+
+hugo_site(
+    name = "site",
+    config = "config.toml",
+    content = glob(["content/**"]),
+    layouts = glob(["layouts/**"]),
+    quiet = False,
+    static = glob(["static/**"]),
+    theme = ":theme",
+)
+
+# Run local development server
+hugo_serve(
+    name = "serve",
+    dep = [":site"],
+    quiet = False,
+    verbose = True,
+)
+
+# Tar it up
+pkg_tar(
+    name = "tar",
+    srcs = [":site"],
+)

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+POST_NAME=$1
+
+hugo new posts/$POST_NAME.md
+nano content/posts/$POST_NAME.md
+git add content/posts/$POST_NAME.md
