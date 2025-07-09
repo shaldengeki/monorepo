@@ -40,11 +40,11 @@ jobs:
         id: pages
         uses: actions/configure-pages@v4
       - name: Build site
-        run: bazel build //seinmastudios.com:site
+        run: bazel build //blog:site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./bazel-bin/seinmastudios.com/site
+          path: ./bazel-bin/blog/site
   # Deployment job
   deploy:
     environment:
