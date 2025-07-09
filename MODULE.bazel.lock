@@ -370,7 +370,7 @@
     },
     "//tools/build_rules/rules_hugo:defs.bzl%rules_hugo_extension": {
       "general": {
-        "bzlTransitiveDigest": "2vDd/f3hE9Q9ZOCiljZc5rP1PnEBQdeA6/rl79m3+Ug=",
+        "bzlTransitiveDigest": "vB2HxtzWPvmvDBeWW12zEAMpC/5kXG/+Mb68LqkK+IQ=",
         "usagesDigest": "meAXMPQgjiXOftaH3lBFX/rjfO4nf1M3tDI4zdXitX4=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
