@@ -340,7 +340,7 @@
   "moduleExtensions": {
     "//tools/build_rules/hugo:defs.bzl%hugo_extension": {
       "general": {
-        "bzlTransitiveDigest": "SADrfFfZ/X+C2K++uaN3myIRxXSS9enlY7wWv/b6rdg=",
+        "bzlTransitiveDigest": "N9egIvT++H2vyX2nOn+nD4p0x+n7JnWI/Vf4lm/73mY=",
         "usagesDigest": "1DJYFz9vwaSGP7PoZ3JR0IftKi9bZ/hZqR3+lTtyi/Y=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -370,7 +370,7 @@
     },
     "//tools/build_rules/rules_hugo:defs.bzl%rules_hugo_extension": {
       "general": {
-        "bzlTransitiveDigest": "BopUzEl1ie/XU3ooZLOrkB7gzlnDSj/ykd+5vtugUSE=",
+        "bzlTransitiveDigest": "2vDd/f3hE9Q9ZOCiljZc5rP1PnEBQdeA6/rl79m3+Ug=",
         "usagesDigest": "meAXMPQgjiXOftaH3lBFX/rjfO4nf1M3tDI4zdXitX4=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -379,9 +379,9 @@
           "rules_hugo": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
             "attributes": {
-              "url": "https://github.com/shaldengeki/rules_hugo/archive/7c3e323e4c5519d056d76bb4495434d23bd1241a.zip",
-              "sha256": "2c014fd73be6a74e64c42e294d32593ad4ceec5089d383e27f03b3f488b42892",
-              "strip_prefix": "rules_hugo-7c3e323e4c5519d056d76bb4495434d23bd1241a"
+              "url": "https://github.com/shaldengeki/rules_hugo/archive/4648f26b5dbad4c107056b346f934d2a6d22b116.zip",
+              "sha256": "8d17baf94bc41d415b04d942388e5cda63700c793e5d424100daa522709fd00b",
+              "strip_prefix": "rules_hugo-4648f26b5dbad4c107056b346f934d2a6d22b116"
             }
           }
         },
