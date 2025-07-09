@@ -236,7 +236,7 @@ jobs:
         id: pages
         uses: actions/configure-pages@v4
       - name: Build site
-        run: bazel bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc build //blog:site
+        run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc build //blog:site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
