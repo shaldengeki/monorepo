@@ -1,0 +1,21 @@
+load("@rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "web_lib",
+    srcs = [
+        "handlers.go",
+        "main.go",
+    ],
+    data = [
+        "//games/tictactoe/web/ui",
+    ],
+    importpath = "github.com/shaldengeki/monorepo/games/tictactoe/web/cmd/web",
+    visibility = ["//visibility:private"],
+    deps = ["@rules_go//go/runfiles:go_default_library"],
+)
+
+go_binary(
+    name = "web",
+    embed = [":web_lib"],
+    visibility = ["//visibility:public"],
+)
