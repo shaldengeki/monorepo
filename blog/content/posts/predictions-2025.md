@@ -90,7 +90,7 @@ I'll assess these only if the CAHSR releases a new project update report, with n
 - At least one company offers widely-available self-driving cars: 30%
 - Twitter files for bankruptcy: 20%
 - Amazon, Google, Apple, or Steam accept Bitcoin: 5%
-- AGDQ 2025 raises at least $2.5M: 60%
+- ✅AGDQ 2025 raises at least $2.5M: 60%
 - Apple releases a foldable iPhone: 10%
 
 # Pop culture
