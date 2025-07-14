@@ -4,17 +4,17 @@
 #
 #    bazel run //:requirements.update
 #
-alembic==1.16.2 \
-    --hash=sha256:5f42e9bd0afdbd1d5e3ad856c01754530367debdebf21ed6894e34af52b3bb03 \
-    --hash=sha256:e53c38ff88dadb92eb22f8b150708367db731d58ad7e9d417c9168ab516cbed8
+alembic==1.16.4 \
+    --hash=sha256:b05e51e8e82efc1abd14ba2af6392897e145930c3e0a2faf2b0da2f7f7fd660d \
+    --hash=sha256:efab6ada0dd0fae2c92060800e0bf5c1dc26af15a10e02fb4babff164b4725e2
     # via flask-migrate
 asn1crypto==1.5.1 \
     --hash=sha256:13ae38502be632115abf8a24cbe5f4da52e3b5231990aff31123c805306ccb9c \
     --hash=sha256:db4e40728b728508912cbb3d44f19ce188f218e9eba635821bb4b68564f8fd67
     # via scramp
-astroid==3.3.10 \
-    --hash=sha256:104fb9cb9b27ea95e847a94c003be03a9e039334a8ebca5ee27dafaf5c5711eb \
-    --hash=sha256:c332157953060c6deb9caa57303ae0d20b0fbdb2e59b4a4f2a6ba49d0a7961ce
+astroid==3.3.11 \
+    --hash=sha256:1e5a5011af2920c7c67a53f65d536d65bfa7116feeaf2354d8b94f29573bb0ce \
+    --hash=sha256:54c760ae8322ece1abd213057c4b5bba7c49818853fc901ef09719a60dbf9dec
     # via
     #   -r requirements.txt
     #   pylint
@@ -46,17 +46,17 @@ blinker==1.9.0 \
     --hash=sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf \
     --hash=sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc
     # via flask
-boto3==1.39.3 \
-    --hash=sha256:056cfa2440fe1a157a7c2be897c749c83e1a322144aa4dad889f2fca66571019 \
-    --hash=sha256:0a367106497649ae3d8a7b571b8c3be01b7b935a0fe303d4cc2574ed03aecbb4
+boto3==1.39.4 \
+    --hash=sha256:6c955729a1d70181bc8368e02a7d3f350884290def63815ebca8408ee6d47571 \
+    --hash=sha256:f8e9534b429121aa5c5b7c685c6a94dd33edf14f87926e9a182d5b50220ba284
     # via -r requirements.txt
-boto3-stubs==1.39.3 \
-    --hash=sha256:4daddb19374efa6d1bef7aded9cede0075f380722a9e60ab129ebba14ae66b69 \
-    --hash=sha256:9aad443b1d690951fd9ccb6fa20ad387bd0b1054c704566ff65dd0043a63fc26
+boto3-stubs==1.39.4 \
+    --hash=sha256:29b2a35fdb01f82bd08c667771effcc75df13e0a673f1dbcd2538937005d3f30 \
+    --hash=sha256:fd0b22946dfbb992e51912fe8a7ce6b97f1855211d2b4de24f21af325f94e9c7
     # via -r requirements.txt
-botocore==1.39.3 \
-    --hash=sha256:66a81cfac18ad5e9f47696c73fdf44cdbd8f8ca51ab3fca1effca0aabf61f02f \
-    --hash=sha256:da8f477e119f9f8a3aaa8b3c99d9c6856ed0a243680aa3a3fbbfc15a8d4093fb
+botocore==1.39.4 \
+    --hash=sha256:c41e167ce01cfd1973c3fa9856ef5244a51ddf9c82cb131120d8617913b6812a \
+    --hash=sha256:e662ac35c681f7942a93f2ec7b4cde8f8b56dd399da47a79fa3e370338521a56
     # via
     #   boto3
     #   s3transfer
@@ -64,9 +64,9 @@ botocore-stubs==1.38.46 \
     --hash=sha256:a04e69766ab8bae338911c1897492f88d05cd489cd75f06e6eb4f135f9da8c7b \
     --hash=sha256:cc21d9a7dd994bdd90872db4664d817c4719b51cda8004fd507a4bf65b085a75
     # via boto3-stubs
-certifi==2025.6.15 \
-    --hash=sha256:2e0c7ce7cb5d8f8634ca55d2ba7e6ec2689a2fd6537d8dec1296a477a4910057 \
-    --hash=sha256:d747aa5a8b9bbbb1bb8c22bb13e22bd1f18e9796defa16bab421f7f7a317323b
+certifi==2025.7.9 \
+    --hash=sha256:c1d2ec05395148ee10cf672ffc28cd37ea0ab0d99f9cc74c43e588cbd111b079 \
+    --hash=sha256:d842783a14f8fdd646895ac26f719a061408834473cfc10203f6a575beb15d39
     # via requests
 cfgv==3.4.0 \
     --hash=sha256:b7265b1f29fd3316bfcd2b330d63d024f2bfd8bcb8b0272f8e19a504856c48f9 \
@@ -599,9 +599,9 @@ pyyaml==6.0.2 \
     # via
     #   -r requirements.txt
     #   pre-commit
-qbittorrent-api==2025.5.0 \
-    --hash=sha256:34a0f9c1e1ae7e16de50e94651752c8d97a3cf54c2a3e1a05c6a8377399a0e30 \
-    --hash=sha256:44d98791c98cf422fbd86bc19f7475ba4ca604a7d2729551867ec79be85cf4cd
+qbittorrent-api==2025.7.0 \
+    --hash=sha256:6cd79af4757ec71a64e5216cbaa50bf2c436efea0d32b9a79585e0ec21e85ea9 \
+    --hash=sha256:f462f2817559ccaa4c6cdc12694a3153efacd50fa3285a425401ab30abc0de76
     # via -r requirements.txt
 requests==2.32.4 \
     --hash=sha256:27babd3cda2a6d50b30443204ee89830707d396671944c998b5975b031ac2b2c \
