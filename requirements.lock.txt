@@ -46,17 +46,17 @@ blinker==1.9.0 \
     --hash=sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf \
     --hash=sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc
     # via flask
-boto3==1.39.9 \
-    --hash=sha256:5bc85e9fdec4e21ef5ca2c22b4d51a3e32b53f3da36ce51f5a3ea4dbde07b132 \
-    --hash=sha256:e3d3a6b617e1575e7ec854c820a882ab2e189a0421e74dc0dca2c9e13d4370a5
+boto3==1.39.14 \
+    --hash=sha256:82c6868cad18c3bd4170915e9525f9af5f83e9779c528417f8863629558fc2d0 \
+    --hash=sha256:fabb16360a93b449d5241006485bcc761c26694e75ac01009f4459f114acc06e
     # via -r requirements.txt
-boto3-stubs==1.39.9 \
-    --hash=sha256:9dea0d8c2db60244b2902ce2442b392fbe20ca69638251a02d475279c7de32da \
-    --hash=sha256:eb6541391a737a2c4c2f66c36a6bf7b4d69fe9669da21bd60855c30f514fab2d
+boto3-stubs==1.39.14 \
+    --hash=sha256:28270e752243742493295777f62afca7c7f18ae6ff71ad1feb3ff927e79c95ef \
+    --hash=sha256:34d89022be097442f02bd4e9a1fe75803cb6b5a3f6b4763bb6a5ebd7dd6d7dc9
     # via -r requirements.txt
-botocore==1.39.9 \
-    --hash=sha256:02f141c2849e4589a79feea245ce4ecc478d48b7865572445af8aae3b041772d \
-    --hash=sha256:a9691cbe03a3bc8b2720b3c36e5c5a2eecace6acd72bfb1107f00e75edaec4f3
+botocore==1.39.14 \
+    --hash=sha256:4ed551c77194167b7e8063f33059bc2f9b2ead0ed4ee33dc7857273648ed4349 \
+    --hash=sha256:7fc44d4ad13b524e5d8a6296785776ef5898ac026ff74df9b35313831d507926
     # via
     #   boto3
     #   s3transfer
@@ -771,9 +771,9 @@ urllib3==2.5.0 \
     #   qbittorrent-api
     #   requests
     #   types-requests
-virtualenv==20.31.2 \
-    --hash=sha256:36efd0d9650ee985f0cad72065001e66d49a6f24eb44d98980f630686243cf11 \
-    --hash=sha256:e10c0a9d02835e592521be48b332b6caee6887f332c111aa79a09b9e79efc2af
+virtualenv==20.32.0 \
+    --hash=sha256:2c310aecb62e5aa1b06103ed7c2977b81e042695de2697d01017ff0f1034af56 \
+    --hash=sha256:886bf75cadfdc964674e6e33eb74d787dff31ca314ceace03ca5810620f4ecf0
     # via
     #   -r requirements.txt
     #   pre-commit
