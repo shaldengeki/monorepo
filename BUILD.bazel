@@ -2,9 +2,12 @@ load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
 load("@gazelle//:def.bzl", "gazelle_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@py_deps//:requirements.bzl", "all_whl_requirements")
+load("@rules_buf//buf:defs.bzl", "buf_format")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@rules_python_gazelle_plugin//manifest:defs.bzl", "gazelle_python_manifest")
 load("@rules_python_gazelle_plugin//modules_mapping:def.bzl", "modules_mapping")
+
+exports_files(["buf.yaml"])
 
 compile_pip_requirements(
     name = "requirements",
@@ -80,5 +83,10 @@ gazelle_binary(
         "@gazelle//language/proto",
         "@rules_python_gazelle_plugin//python",
         "@gazelle//language/go",
+        "@rules_buf//gazelle/buf:buf",
     ],
+)
+
+buf_format(
+    name = "buf_format",
 )
