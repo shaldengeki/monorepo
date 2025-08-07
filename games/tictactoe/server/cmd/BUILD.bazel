@@ -14,6 +14,14 @@ go_library(
 
 go_binary(
     name = "main",
-    embed = [":main_lib"],
+    embed = [":cmd_lib"],
     visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "cmd_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/shaldengeki/monorepo/games/tictactoe/server/cmd",
+    visibility = ["//visibility:private"],
+    deps = ["//games/tictactoe/server"],
 )

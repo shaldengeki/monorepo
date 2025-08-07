@@ -5,7 +5,7 @@ package games.tictactoe.proto;
 option go_package = "github.com/shaldengeki/monorepo/games/tictactoe/proto";
 
 message BoardMarker {
-    int32 row = 1;
-    int32 column = 2;
+    uint32 row = 1;
+    uint32 column = 2;
     string symbol = 3;
 }

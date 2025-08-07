@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package games.tictactoe.proto;
+
+import "games/tictactoe/proto/board_marker.proto";
+
+option go_package = "github.com/shaldengeki/monorepo/games/tictactoe/proto";
+
+message ClientPing {}
+
+message ClientSubscribe {}
+
+message ClientMove {
+    BoardMarker marker = 1;
+    uint32 move_token = 2;
+}
+
+message ClientMessage {
+    oneof payload {
+        ClientPing ping = 1;
+        ClientSubscribe subscribe = 2;
+        ClientMove move = 3;
+    }
+}

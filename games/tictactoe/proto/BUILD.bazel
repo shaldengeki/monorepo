@@ -31,6 +31,7 @@ go_proto_library(
     protos = [
         ":board_marker_proto",
         ":board_proto",
+        ":client_proto",
         ":game_proto",
         ":game_state_proto",
         ":player_proto",
@@ -60,4 +61,11 @@ proto_library(
     srcs = ["score.proto"],
     visibility = ["//visibility:public"],
     deps = [":player_proto"],
+)
+
+proto_library(
+    name = "client_proto",
+    srcs = ["client.proto"],
+    visibility = ["//visibility:public"],
+    deps = [":board_marker_proto"],
 )
