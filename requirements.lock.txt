@@ -750,9 +750,9 @@ types-protobuf==6.30.2.20250703 \
     --hash=sha256:609a974754bbb71fa178fc641f51050395e8e1849f49d0420a6281ed8d1ddf46 \
     --hash=sha256:fa5aff9036e9ef432d703abbdd801b436a249b6802e4df5ef74513e272434e57
     # via -r requirements.txt
-types-requests==2.32.4.20250611 \
-    --hash=sha256:741c8777ed6425830bf51e54d6abe245f79b4dcb9019f1622b773463946bf826 \
-    --hash=sha256:ad2fe5d3b0cb3c2c902c8815a70e7fb2302c4b8c1f77bdcd738192cdb3878072
+types-requests==2.32.4.20250809 \
+    --hash=sha256:d8060de1c8ee599311f56ff58010fb4902f462a1470802cf9f6ed27bc46c4df3 \
+    --hash=sha256:f73d1832fb519ece02c85b1f09d5f0dd3108938e7d47e7f94bbfa18a6782b163
     # via -r requirements.txt
 types-s3transfer==0.13.0 \
     --hash=sha256:203dadcb9865c2f68fb44bc0440e1dc05b79197ba4a641c0976c26c9af75ef52 \
