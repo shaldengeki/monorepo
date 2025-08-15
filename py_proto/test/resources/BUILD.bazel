@@ -1,3 +1,4 @@
+load("@rules_buf//buf:defs.bzl", "buf_lint_test")
 load("@rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
@@ -36,4 +37,16 @@ go_proto_library(
         ":single_message_proto",
     ],
     visibility = ["//visibility:public"],
+)
+
+buf_lint_test(
+    name = "empty_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":empty_proto"],
+)
+
+buf_lint_test(
+    name = "single_message_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":single_message_proto"],
 )
