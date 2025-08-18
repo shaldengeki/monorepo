@@ -220,8 +220,9 @@ graphql-core==3.2.6 \
     # via
     #   -r requirements.txt
     #   graphql-server
-graphql-server[flask]==3.0.0b7 \
-    --hash=sha256:99adc23fb40c2e5d304215e2730b945f2883ee008c93f302438d849ab1d4e9e7
+graphql-server[flask]==3.0.0 \
+    --hash=sha256:98f2259003c404f972479df49b5e019497f44c7ba2f447170a1fb981b4f271d2 \
+    --hash=sha256:a21156ae32448ec46989fcc6f65f4eb966a2f23c15936029b5c56b487b786039
     # via -r requirements.txt
 greenlet==3.2.4 \
     --hash=sha256:00fadb3fedccc447f517ee0d3fd8fe49eae949e1cd0f6a611818f4f6fb7dc83b \
