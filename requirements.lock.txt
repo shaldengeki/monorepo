@@ -753,7 +753,6 @@ typing-extensions==4.14.1 \
     #   -r requirements.txt
     #   alembic
     #   exceptiongroup
-    #   graphql-server
     #   mypy
     #   sqlalchemy
 urllib3==2.5.0 \
