@@ -196,8 +196,8 @@
     "https://bcr.bazel.build/modules/rules_android/0.1.1/source.json": "e6986b41626ee10bdc864937ffb6d6bf275bb5b9c65120e6137d56e6331f089e",
     "https://bcr.bazel.build/modules/rules_apple/3.5.1/MODULE.bazel": "3d1bbf65ad3692003d36d8a29eff54d4e5c1c5f4bfb60f79e28646a924d9101c",
     "https://bcr.bazel.build/modules/rules_apple/3.5.1/source.json": "e7593cdf26437d35dbda64faeaf5b82cbdd9df72674b0f041fdde75c1d20dda7",
-    "https://bcr.bazel.build/modules/rules_buf/0.4.0/MODULE.bazel": "d2c438fddb9481f9d727533e8d199033cff10c65192a8a2b98ca858396782f90",
-    "https://bcr.bazel.build/modules/rules_buf/0.4.0/source.json": "d398b6b961ff72f8e383e9c56d1d716ed13be6c566b34a44271341c584bcf726",
+    "https://bcr.bazel.build/modules/rules_buf/0.5.1/MODULE.bazel": "1ef564666e39eb3e63e6b409556373c6b5fc2cf882cbb142ba51b7d32d3b749f",
+    "https://bcr.bazel.build/modules/rules_buf/0.5.1/source.json": "007af7414b29eccecee00f4e58f6af8dde9d54231fe71dcb1550ef1c13eae174",
     "https://bcr.bazel.build/modules/rules_cc/0.0.1/MODULE.bazel": "cb2aa0747f84c6c3a78dad4e2049c154f08ab9d166b1273835a8174940365647",
     "https://bcr.bazel.build/modules/rules_cc/0.0.10/MODULE.bazel": "ec1705118f7eaedd6e118508d3d26deba2a4e76476ada7e0e3965211be012002",
     "https://bcr.bazel.build/modules/rules_cc/0.0.13/MODULE.bazel": "0e8529ed7b323dad0775ff924d2ae5af7640b23553dfcd4d34344c7e7a867191",
@@ -593,8 +593,8 @@
     },
     "@@rules_buf+//buf:extensions.bzl%buf": {
       "general": {
-        "bzlTransitiveDigest": "qpr6mjGS7iS5aQX8E9ayhpeQMGbFrzGeauFkTcBOheQ=",
-        "usagesDigest": "mF4HM2DrR3fiwab1aMW42Ed5c/tO+YTjf++XJDO+j7w=",
+        "bzlTransitiveDigest": "3Rf7aYiXlcRiCHrBNbvD8VB8RQTlZObfhopxw2Dz64c=",
+        "usagesDigest": "3rRH5Aws58csW6rhbxxZnWzfNlI+TCq0Id40xSWbF1Y=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
