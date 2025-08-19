@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package games.tictactoe.proto;
+
+option go_package = "github.com/shaldengeki/monorepo/games/tictactoe/proto";
+
+import "games/tictactoe/proto/board_marker.proto";
+
+message Board {
+    // The game board.
+
+    int32 rows = 1;
+    int32 columns = 2;
+
+    repeated BoardMarker markers = 3;
+}

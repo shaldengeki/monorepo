@@ -156,3 +156,9 @@ use_repo(
     "org_golang_x_net",
     "org_golang_x_text",
 )
+
+rules_hugo_extension = use_extension("//tools/build_rules/rules_hugo:defs.bzl", "rules_hugo_extension")
+use_repo(rules_hugo_extension, "rules_hugo")
+
+hugo_extension = use_extension("//tools/build_rules/hugo:defs.bzl", "hugo_extension")
+use_repo(hugo_extension, "hugo")

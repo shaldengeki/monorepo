@@ -30,3 +30,6 @@ common --host_per_file_copt=external/.*grpc.*@--GRPC_WAS_NOT_SUPPOSED_TO_BE_BUIL
 
 # Some of our globs are empty.
 common --incompatible_disallow_empty_glob=false
+
+# rules_hugo violates this rule, which we should migrate off of.
+common --incompatible_disallow_struct_provider_syntax=false

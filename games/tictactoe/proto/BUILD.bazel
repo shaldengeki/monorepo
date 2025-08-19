@@ -1,0 +1,63 @@
+load("@rules_go//proto:def.bzl", "go_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "board_proto",
+    srcs = ["board.proto"],
+    visibility = ["//visibility:public"],
+    deps = [":board_marker_proto"],
+)
+
+proto_library(
+    name = "game_state_proto",
+    srcs = ["game_state.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":board_proto",
+        ":player_proto",
+        ":score_proto",
+    ],
+)
+
+proto_library(
+    name = "player_proto",
+    srcs = ["player.proto"],
+    visibility = ["//visibility:public"],
+)
+
+go_proto_library(
+    name = "proto_go_proto",
+    importpath = "github.com/shaldengeki/monorepo/games/tictactoe/proto",
+    protos = [
+        ":board_marker_proto",
+        ":board_proto",
+        ":game_proto",
+        ":game_state_proto",
+        ":player_proto",
+        ":score_proto",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+proto_library(
+    name = "board_marker_proto",
+    srcs = ["board_marker.proto"],
+    visibility = ["//visibility:public"],
+)
+
+proto_library(
+    name = "game_proto",
+    srcs = ["game.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":game_state_proto",
+        ":player_proto",
+    ],
+)
+
+proto_library(
+    name = "score_proto",
+    srcs = ["score.proto"],
+    visibility = ["//visibility:public"],
+    deps = [":player_proto"],
+)

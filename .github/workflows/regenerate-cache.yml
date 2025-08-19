@@ -50,7 +50,7 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-
             ${{ runner.os }}-${{ env.cache-name }}-refs/heads/${{ github.base_ref }}-
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Bazel clean
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc clean --expunge
       - name: bazel test //...
