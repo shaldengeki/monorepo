@@ -1,4 +1,5 @@
 load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
+load("@rules_buf//buf:defs.bzl", "buf_lint_test")
 load("@rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
@@ -138,4 +139,40 @@ go_proto_library(
         ":display_state_go_proto",
         ":player_game_state_go_proto",
     ],
+)
+
+buf_lint_test(
+    name = "associate_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":associate_proto"],
+)
+
+buf_lint_test(
+    name = "build_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":build_proto"],
+)
+
+buf_lint_test(
+    name = "cards_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":cards_proto"],
+)
+
+buf_lint_test(
+    name = "display_state_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":display_state_proto"],
+)
+
+buf_lint_test(
+    name = "game_state_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":game_state_proto"],
+)
+
+buf_lint_test(
+    name = "player_game_state_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":player_game_state_proto"],
 )

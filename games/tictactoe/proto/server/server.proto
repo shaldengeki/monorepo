@@ -29,7 +29,7 @@ message ValidateStateResponse {
     repeated string validation_errors = 1;
 }
 
-service GameServer {
+service GameService {
     rpc CreateGame(CreateGameRequest) returns (CreateGameResponse);
     rpc GetState(GetStateRequest) returns (GetStateResponse);
     rpc ValidateState(ValidateStateRequest) returns (ValidateStateResponse);

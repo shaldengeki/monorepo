@@ -12,7 +12,7 @@ import (
 )
 
 type gameServer struct {
-	server.UnimplementedGameServerServer
+	server.UnimplementedGameServiceServer
 
 	gameStateProvider game_state_provider.GameStateProvider
 }

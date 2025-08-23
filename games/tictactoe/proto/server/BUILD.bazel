@@ -1,3 +1,4 @@
+load("@rules_buf//buf:defs.bzl", "buf_lint_test")
 load("@rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
@@ -15,4 +16,10 @@ go_proto_library(
     proto = ":server_proto",
     visibility = ["//visibility:public"],
     deps = ["//games/tictactoe/proto:proto_go_proto"],
+)
+
+buf_lint_test(
+    name = "server_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":server_proto"],
 )

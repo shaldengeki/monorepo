@@ -1,3 +1,4 @@
+load("@rules_buf//buf:defs.bzl", "buf_lint_test")
 load("@rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
@@ -40,4 +41,22 @@ go_proto_library(
     importpath = "github.com/shaldengeki/monorepo/proto_parser/proto/node",
     proto = ":node_proto",
     visibility = ["//visibility:public"],
+)
+
+buf_lint_test(
+    name = "file_position_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":file_position_proto"],
+)
+
+buf_lint_test(
+    name = "node_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":node_proto"],
+)
+
+buf_lint_test(
+    name = "token_proto_lint",
+    config = "//:buf.yaml",
+    targets = [":token_proto"],
 )
