@@ -1,4 +1,4 @@
-from graphql_server.flask import GraphQLView  # type: ignore
+from graphql_server.flask.views import GraphQLView
 
 from skeleton.api.gql import schema
 from skeleton.config import app

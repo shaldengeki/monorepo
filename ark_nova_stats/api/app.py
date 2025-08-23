@@ -1,4 +1,4 @@
-from graphql_server.flask import GraphQLView  # type: ignore
+from graphql_server.flask.views import GraphQLView
 
 from ark_nova_stats.api.gql import schema
 from ark_nova_stats.config import app

@@ -1,4 +1,4 @@
-from graphql_server.flask import GraphQLView  # type: ignore
+from graphql_server.flask.views import GraphQLView
 
 from mc_manager.api import models
 from mc_manager.api.gql.schema import Schema
