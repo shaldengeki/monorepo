@@ -3,7 +3,7 @@ from datetime import timezone
 from typing import Optional
 
 from flask import abort, redirect, request, session
-from graphql_server.flask import GraphQLView  # type: ignore
+from graphql_server.flask.views import GraphQLView
 
 from fitbit_challenges import models
 from fitbit_challenges.api.gql import schema
