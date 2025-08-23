@@ -334,7 +334,7 @@ func TestValidatePlayerActionCard_WhenUnknownActionCard_ReturnsError(t *testing.
 	s := New(nil)
 	actionCards := []*player_game_state.PlayerActionCard{
 		{
-			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_UNKNOWN,
+			CardType: player_game_state.PlayerActionCardType_PLAYER_ACTION_CARD_TYPE_UNKNOWN,
 			Strength: 1,
 		},
 	}
@@ -349,11 +349,11 @@ func TestValidatePlayerActionCard_WhenDuplicateActionCard_ReturnsError(t *testin
 	s := New(nil)
 	actionCards := []*player_game_state.PlayerActionCard{
 		{
-			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			CardType: player_game_state.PlayerActionCardType_PLAYER_ACTION_CARD_TYPE_ANIMALS,
 			Strength: 1,
 		},
 		{
-			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			CardType: player_game_state.PlayerActionCardType_PLAYER_ACTION_CARD_TYPE_ANIMALS,
 			Strength: 2,
 		},
 	}
@@ -368,7 +368,7 @@ func TestValidatePlayerActionCard_WhenActionCardStrengthZero_ReturnsError(t *tes
 	s := New(nil)
 	actionCards := []*player_game_state.PlayerActionCard{
 		{
-			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			CardType: player_game_state.PlayerActionCardType_PLAYER_ACTION_CARD_TYPE_ANIMALS,
 			Strength: 0,
 		},
 	}
@@ -383,7 +383,7 @@ func TestValidatePlayerActionCard_WhenActionCardStrengthTooHigh_ReturnsError(t *
 	s := New(nil)
 	actionCards := []*player_game_state.PlayerActionCard{
 		{
-			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			CardType: player_game_state.PlayerActionCardType_PLAYER_ACTION_CARD_TYPE_ANIMALS,
 			Strength: 6,
 		},
 	}
@@ -398,11 +398,11 @@ func TestValidatePlayerActionCard_WhenActionCardStrengthDuplicated_ReturnsError(
 	s := New(nil)
 	actionCards := []*player_game_state.PlayerActionCard{
 		{
-			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_ANIMALS,
+			CardType: player_game_state.PlayerActionCardType_PLAYER_ACTION_CARD_TYPE_ANIMALS,
 			Strength: 6,
 		},
 		{
-			CardType: player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_SPONSORS,
+			CardType: player_game_state.PlayerActionCardType_PLAYER_ACTION_CARD_TYPE_SPONSORS,
 			Strength: 6,
 		},
 	}
@@ -416,7 +416,7 @@ func TestValidatePlayerActionCard_WhenActionCardStrengthDuplicated_ReturnsError(
 func TestValidatePlayerActionCardToken_WhenActionCardTokensUnknownType_ReturnsError(t *testing.T) {
 	s := New(nil)
 	token := player_game_state.PlayerActionCardToken{
-		TokenType: player_game_state.PlayerActionCardTokenType_PLAYERACTIONCARDTOKENTYPE_UNKNOWN,
+		TokenType: player_game_state.PlayerActionCardTokenType_PLAYER_ACTION_CARD_TOKEN_TYPE_UNKNOWN,
 		NumTokens: 1,
 	}
 	res := s.ValidatePlayerActionCardToken(nil, &token)
@@ -428,7 +428,7 @@ func TestValidatePlayerActionCardToken_WhenActionCardTokensUnknownType_ReturnsEr
 func TestValidatePlayerActionCardToken_WhenActionCardTokensLessThanOne_ReturnsError(t *testing.T) {
 	s := New(nil)
 	token := player_game_state.PlayerActionCardToken{
-		TokenType: player_game_state.PlayerActionCardTokenType_PLAYERACTIONCARDTOKENTYPE_MULTIPLIER,
+		TokenType: player_game_state.PlayerActionCardTokenType_PLAYER_ACTION_CARD_TOKEN_TYPE_MULTIPLIER,
 		NumTokens: 0,
 	}
 
@@ -443,7 +443,7 @@ func TestValidatePlayerConservationProjectReward_WhenRecurringTypeUnknown_Return
 	rewards := []*associate.ConservationProjectReward{
 		{
 			Reward: &associate.ConservationProjectReward_RecurringReward{
-				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_UNKNOWN,
+				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATION_PROJECT_RECURRING_REWARD_UNKNOWN,
 			},
 		},
 	}
@@ -459,7 +459,7 @@ func TestValidatePlayerConservationProjectReward_WhenOneTimeTypeUnknown_ReturnsE
 	rewards := []*associate.ConservationProjectReward{
 		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
-				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN,
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_UNKNOWN,
 			},
 		},
 	}
@@ -475,12 +475,12 @@ func TestValidatePlayerConservationProjectReward_WhenDuplicateRecurring_ReturnsE
 	rewards := []*associate.ConservationProjectReward{
 		{
 			Reward: &associate.ConservationProjectReward_RecurringReward{
-				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_SNAPPING,
+				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATION_PROJECT_RECURRING_REWARD_SNAPPING,
 			},
 		},
 		{
 			Reward: &associate.ConservationProjectReward_RecurringReward{
-				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_SNAPPING,
+				RecurringReward: associate.ConservationProjectRecurringReward_CONSERVATION_PROJECT_RECURRING_REWARD_SNAPPING,
 			},
 		},
 	}
@@ -496,12 +496,12 @@ func TestValidatePlayerConservationProjectReward_WhenDuplicateOneTime_ReturnsErr
 	rewards := []*associate.ConservationProjectReward{
 		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
-				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_AVIARY_REPTILE_HOUSE,
 			},
 		},
 		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
-				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_AVIARY_REPTILE_HOUSE,
 			},
 		},
 	}
@@ -517,42 +517,42 @@ func TestValidatePlayerConservationProjectReward_WhenTooManyRewards_ReturnsError
 	rewards := []*associate.ConservationProjectReward{
 		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
-				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_AVIARY_REPTILE_HOUSE,
 			},
 		},
 		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
-				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_ASSOCIATION_WORKER,
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_ASSOCIATION_WORKER,
 			},
 		},
 		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
-				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_TWELVE_MONEY,
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_TWELVE_MONEY,
 			},
 		},
 		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
-				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_THREE_X,
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_THREE_X,
 			},
 		},
 		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
-				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNIVERSITY,
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_UNIVERSITY,
 			},
 		},
 		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
-				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_AVIARY_REPTILE_HOUSE,
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_AVIARY_REPTILE_HOUSE,
 			},
 		},
 		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
-				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_DETERMINATION,
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_DETERMINATION,
 			},
 		},
 		{
 			Reward: &associate.ConservationProjectReward_OneTimeReward{
-				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_TWO_REPUTATION,
+				OneTimeReward: associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_TWO_REPUTATION,
 			},
 		},
 	}
@@ -564,7 +564,7 @@ func TestValidatePlayerConservationProjectReward_WhenTooManyRewards_ReturnsError
 
 func TestValidatePlayerPartnerZoos_WhenPartnerZooUnknownType_ReturnsError(t *testing.T) {
 	s := New(nil)
-	res := s.ValidatePlayerPartnerZoos(nil, []associate.PartnerZoo{associate.PartnerZoo_PARTNERZOO_UNKNOWN})
+	res := s.ValidatePlayerPartnerZoos(nil, []associate.PartnerZoo{associate.PartnerZoo_PARTNER_ZOO_UNKNOWN})
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
@@ -572,7 +572,7 @@ func TestValidatePlayerPartnerZoos_WhenPartnerZooUnknownType_ReturnsError(t *tes
 
 func TestValidatePlayerPartnerZoos_WhenDuplicatePartnerZoos_ReturnsError(t *testing.T) {
 	s := New(nil)
-	res := s.ValidatePlayerPartnerZoos(nil, []associate.PartnerZoo{associate.PartnerZoo_PARTNERZOO_ASIA, associate.PartnerZoo_PARTNERZOO_EUROPE, associate.PartnerZoo_PARTNERZOO_ASIA})
+	res := s.ValidatePlayerPartnerZoos(nil, []associate.PartnerZoo{associate.PartnerZoo_PARTNER_ZOO_ASIA, associate.PartnerZoo_PARTNER_ZOO_EUROPE, associate.PartnerZoo_PARTNER_ZOO_ASIA})
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}
@@ -580,7 +580,7 @@ func TestValidatePlayerPartnerZoos_WhenDuplicatePartnerZoos_ReturnsError(t *test
 
 func TestValidatePlayerPartnerZoos_WhenTooManyPartnerZoos_ReturnsError(t *testing.T) {
 	s := New(nil)
-	res := s.ValidatePlayerPartnerZoos(nil, []associate.PartnerZoo{associate.PartnerZoo_PARTNERZOO_ASIA, associate.PartnerZoo_PARTNERZOO_EUROPE, associate.PartnerZoo_PARTNERZOO_AFRICA, associate.PartnerZoo_PARTNERZOO_AMERICAS, associate.PartnerZoo_PARTNERZOO_AUSTRALIA})
+	res := s.ValidatePlayerPartnerZoos(nil, []associate.PartnerZoo{associate.PartnerZoo_PARTNER_ZOO_ASIA, associate.PartnerZoo_PARTNER_ZOO_EUROPE, associate.PartnerZoo_PARTNER_ZOO_AFRICA, associate.PartnerZoo_PARTNER_ZOO_AMERICAS, associate.PartnerZoo_PARTNER_ZOO_AUSTRALIA})
 	if len(res) < 1 {
 		t.Fatalf("Should result in a validation error, but got %v", res)
 	}

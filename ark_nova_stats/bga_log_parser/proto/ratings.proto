@@ -70,8 +70,8 @@ message GameRatingsData {
 }
 
 enum GameStatus {
-    GAMESTATUS_UNKNOWN = 0;
-    GAMESTATUS_FINISHED = 1;
+    GAME_STATUS_UNKNOWN = 0;
+    GAME_STATUS_FINISHED = 1;
 }
 
 message GameRatings {

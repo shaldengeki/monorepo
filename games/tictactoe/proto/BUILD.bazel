@@ -15,7 +15,6 @@ proto_library(
     visibility = ["//visibility:public"],
     deps = [
         ":board_proto",
-        ":player_proto",
         ":score_proto",
     ],
 )

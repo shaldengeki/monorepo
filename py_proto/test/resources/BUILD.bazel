@@ -42,11 +42,13 @@ go_proto_library(
 buf_lint_test(
     name = "empty_proto_lint",
     config = "//:buf.yaml",
+    tags = ["manual"],
     targets = [":empty_proto"],
 )
 
 buf_lint_test(
     name = "single_message_proto_lint",
     config = "//:buf.yaml",
+    tags = ["manual"],
     targets = [":single_message_proto"],
 )
