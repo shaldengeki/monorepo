@@ -15,7 +15,7 @@ import (
 )
 
 type gameServer struct {
-	server.UnimplementedGameServerServer
+	server.UnimplementedGameServiceServer
 
 	gameStateProvider game_state_provider.GameStateProvider
 }
@@ -69,7 +69,7 @@ func (s *gameServer) ValidateDisplay(ctx context.Context, gameState *game_state.
 }
 
 func (s *gameServer) ValidatePlayerActionCardToken(ctx context.Context, token *player_game_state.PlayerActionCardToken) []string {
-	if token.TokenType == player_game_state.PlayerActionCardTokenType_PLAYERACTIONCARDTOKENTYPE_UNKNOWN {
+	if token.TokenType == player_game_state.PlayerActionCardTokenType_PLAYER_ACTION_CARD_TOKEN_TYPE_UNKNOWN {
 		return []string{"Player action card token type must be set to a known value"}
 	}
 
@@ -81,7 +81,7 @@ func (s *gameServer) ValidatePlayerActionCardToken(ctx context.Context, token *p
 }
 
 func (s *gameServer) ValidatePlayerActionCard(ctx context.Context, actionCard *player_game_state.PlayerActionCard, seenCardTypes map[player_game_state.PlayerActionCardType]int, seenStrengths map[int32]int) []string {
-	if actionCard.CardType == player_game_state.PlayerActionCardType_PLAYERACTIONCARDTYPE_UNKNOWN {
+	if actionCard.CardType == player_game_state.PlayerActionCardType_PLAYER_ACTION_CARD_TYPE_UNKNOWN {
 		return []string{"Player action card type must be set to a known value"}
 	}
 	if _, ok := seenCardTypes[actionCard.CardType]; ok {
@@ -127,14 +127,14 @@ func (s *gameServer) ValidatePlayerActionCards(ctx context.Context, actionCards 
 }
 
 func (s *gameServer) ValidatePlayerConservationProjectReward(ctx context.Context, conservationReward *associate.ConservationProjectReward, seenRecurringRewards map[associate.ConservationProjectRecurringReward]int, seenOneTimeRewards map[associate.ConservationProjectOneTimeReward]int) []string {
-	if conservationReward.GetRecurringReward() != associate.ConservationProjectRecurringReward_CONSERVATIONPROJECTRECURRINGREWARD_UNKNOWN {
+	if conservationReward.GetRecurringReward() != associate.ConservationProjectRecurringReward_CONSERVATION_PROJECT_RECURRING_REWARD_UNKNOWN {
 		recurringReward := conservationReward.GetRecurringReward()
 		if _, found := seenRecurringRewards[recurringReward]; found {
 			return []string{"Player has duplicate recurring conservation rewards"}
 		} else {
 			seenRecurringRewards[recurringReward] = 1
 		}
-	} else if conservationReward.GetOneTimeReward() != associate.ConservationProjectOneTimeReward_CONSERVATIONPROJECTONETIMEREWARD_UNKNOWN {
+	} else if conservationReward.GetOneTimeReward() != associate.ConservationProjectOneTimeReward_CONSERVATION_PROJECT_ONE_TIME_REWARD_UNKNOWN {
 		oneTimeReward := conservationReward.GetOneTimeReward()
 		if _, found := seenOneTimeRewards[oneTimeReward]; found {
 			return []string{"Player has duplicate one-time conservation rewards"}
@@ -166,7 +166,7 @@ func (s *gameServer) ValidatePlayerConservationProjectRewards(ctx context.Contex
 }
 
 func (s *gameServer) ValidatePlayerPartnerZoo(ctx context.Context, partnerZoo associate.PartnerZoo, seenPartnerZoos map[associate.PartnerZoo]int) []string {
-	if partnerZoo == associate.PartnerZoo_PARTNERZOO_UNKNOWN {
+	if partnerZoo == associate.PartnerZoo_PARTNER_ZOO_UNKNOWN {
 		return []string{"Partner zoo cannot be unknown type"}
 	}
 

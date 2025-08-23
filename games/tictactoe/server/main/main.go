@@ -17,7 +17,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	pbserver.RegisterGameServerServer(grpcServer, server.New(nil))
+	pbserver.RegisterGameServiceServer(grpcServer, server.New(nil))
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Fatal error when serving request: %v", err)
 	}
