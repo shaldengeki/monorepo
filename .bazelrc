@@ -33,3 +33,8 @@ common --incompatible_disallow_empty_glob=false
 
 # rules_hugo violates this rule, which we should migrate off of.
 common --incompatible_disallow_struct_provider_syntax=false
+
+# rules_buf requires this; otherwise the linting rules fail with:
+#  - file_descriptors[0].file_descriptor_proto: source_code_info must be present [source_code_info_present]
+# See https://github.com/bufbuild/rules_buf/issues/84
+common --experimental_proto_descriptor_sets_include_source_info
