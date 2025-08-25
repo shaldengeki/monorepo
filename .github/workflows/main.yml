@@ -233,7 +233,7 @@ jobs:
       - name: Build site
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc build //blog:site
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./bazel-bin/blog/site
   deploy_blog:
