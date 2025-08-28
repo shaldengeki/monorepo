@@ -1,0 +1,18 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+ts_project(
+    name = "NavBar",
+    srcs = ["index.tsx"],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    extends = "//skeleton/frontend:tsconfig-base",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+    ],
+)
