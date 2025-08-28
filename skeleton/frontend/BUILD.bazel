@@ -1,30 +1,33 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("//tools/build_rules:frontend_image.bzl", "frontend_image")
+
+copy_file(
+    name = "tailwindconfig",
+    src = "//react_library:tailwindconfig",
+    out = "tailwind.config.js",
+    visibility = ["//skeleton/frontend:__subpackages__"],
+)
+
+copy_file(
+    name = "tsconfig",
+    src = "//react_library:tsconfig",
+    out = "tsconfig.json",
+    visibility = ["//skeleton/frontend:__subpackages__"],
+)
 
 copy_to_bin(
     name = "testfixtures",
     srcs = [
-        "mocks/fileMock.js",
         "package.json",
+        "//react_library:testfixtures",
     ],
     visibility = ["//visibility:public"],
 )
 
 copy_to_bin(
-    name = "tsconfig",
-    srcs = ["tsconfig.json"],
-    visibility = ["//visibility:public"],
-)
-
-copy_to_bin(
-    name = "tailwindconfig",
-    srcs = ["tailwind.config.js"],
-    visibility = ["//visibility:public"],
-)
-
-copy_to_bin(
-    name = "jestconfig",
-    srcs = ["jest.config.json"],
+    name = "packagejson",
+    srcs = ["package.json"],
     visibility = ["//visibility:public"],
 )
 

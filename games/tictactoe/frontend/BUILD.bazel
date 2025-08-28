@@ -1,31 +1,34 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("//tools/build_rules:frontend_image.bzl", "frontend_image")
 
 copy_to_bin(
+    name = "packagejson",
+    srcs = ["package.json"],
+    visibility = ["//games/tictactoe/frontend:__subpackages__"],
+)
+
+copy_to_bin(
     name = "testfixtures",
     srcs = [
-        "mocks/fileMock.js",
         "package.json",
+        "//react_library:testfixtures",
     ],
-    visibility = ["//visibility:public"],
+    visibility = ["//games/tictactoe/frontend:__subpackages__"],
 )
 
-copy_to_bin(
+copy_file(
     name = "tsconfig",
-    srcs = ["tsconfig.json"],
-    visibility = ["//visibility:public"],
+    src = "//react_library:tsconfig",
+    out = "tsconfig.json",
+    visibility = ["//games/tictactoe/frontend:__subpackages__"],
 )
 
-copy_to_bin(
+copy_file(
     name = "tailwindconfig",
-    srcs = ["tailwind.config.js"],
-    visibility = ["//visibility:public"],
-)
-
-copy_to_bin(
-    name = "jestconfig",
-    srcs = ["jest.config.json"],
-    visibility = ["//visibility:public"],
+    src = "//react_library:tailwindconfig",
+    out = "tailwind.config.js",
+    visibility = ["//games/tictactoe/frontend:__subpackages__"],
 )
 
 frontend_image(

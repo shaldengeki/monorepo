@@ -30,7 +30,7 @@ tailwindcss_bin.tailwindcss(
         "src/App.src.css",
         ":ts",
         "//:node_modules/tailwindcss",
-        "//skeleton/frontend:tailwindconfig",
+        "//react_library:tailwindconfig",
     ],
     outs = [
         "src/App.css",
@@ -45,13 +45,13 @@ tailwindcss_bin.tailwindcss(
 
 copy_file(
     name = "tsconfig",
-    src = "//skeleton/frontend:tsconfig",
+    src = "//react_library:tsconfig",
     out = "tsconfig.json",
 )
 
 copy_file(
     name = "globalsdts",
-    src = "//skeleton/frontend/src:globalsdts",
+    src = "//react_library:globalsdts",
     out = "globals.d.ts",
 )
 
@@ -81,8 +81,8 @@ ts_project(
     transpiler = "tsc",
     tsconfig = ":tsconfig",
     deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS + [
-        "//skeleton/frontend/src:DateUtils",
-        "//skeleton/frontend/src/components:NavBar",
+        "//react_library/DateUtils",
+        "//react_library/NavBar",
     ],
 )
 
@@ -124,18 +124,18 @@ frontend_image(
 
 copy_file(
     name = "setupTests",
-    src = "//skeleton/frontend/src:setupTests.js",
+    src = "//react_library:setupTests.js",
     out = "setupTests.js",
 )
 
 # Runs frontend Jest tests.
 jest_test(
     name = "test",
-    config = "//skeleton/frontend:jestconfig",
+    config = "//react_library:jestconfig",
     data = [
         "package.json",
         ":setupTests",
-        "//skeleton/frontend:testfixtures",
+        "//react_library:testfixtures",
     ] + BUILD_DEPS + TEST_DEPS + [
         "src/EmuCupTableIds.js",
         "src/components/CardInfoBox.js",
@@ -165,7 +165,7 @@ jest_test(
         "src/views/HomeView.test.js",
         "src/views/UserView.js",
         "src/views/UserView.test.js",
-        "//skeleton/frontend/src:DateUtils",
+        "//react_library/DateUtils",
     ],
     node_modules = "//:node_modules",
     node_options = [

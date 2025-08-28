@@ -1,5 +1,4 @@
-load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
-load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@npm//:@tailwindcss/cli/package_json.bzl", tailwindcss_bin = "bin")
 
@@ -7,10 +6,11 @@ exports_files([
     "logo192.png",
 ])
 
-copy_to_bin(
+copy_file(
     name = "globalsdts",
-    srcs = ["globals.d.ts"],
-    visibility = ["//visibility:public"],
+    src = "//react_library:globalsdts",
+    out = "globals.d.ts",
+    visibility = ["//skeleton/frontend/src:__subpackages__"],
 )
 
 ts_project(
@@ -62,48 +62,6 @@ tailwindcss_bin.tailwindcss(
 )
 
 ts_project(
-    name = "DateUtils",
-    srcs = [
-        "DateUtils.test.tsx",
-        "DateUtils.tsx",
-    ],
-    allow_js = True,
-    composite = True,
-    declaration = True,
-    out_dir = ".",
-    resolve_json_module = True,
-    transpiler = "tsc",
-    tsconfig = "//skeleton/frontend:tsconfig",
-    visibility = ["//visibility:public"],
-    deps = [
-        "//:node_modules/@apollo/react-testing",
-        "//:node_modules/@testing-library/jest-dom",
-        "//:node_modules/@testing-library/react",
-        "//:node_modules/@types/jest",
-        "//:node_modules/@types/react",
-        "//:node_modules/jest-environment-jsdom",
-        "//:node_modules/jsdom",
-        "//:node_modules/react",
-        "//skeleton/frontend/src/components:ExampleComponent",
-        "//skeleton/frontend/src/components:PageContainer",
-    ],
-)
-
-jest_test(
-    name = "DateUtilsTest",
-    config = "//skeleton/frontend:jestconfig",
-    data = [
-        "setupTests.js",
-        ":DateUtils",
-        "//skeleton/frontend:testfixtures",
-    ],
-    node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
-)
-
-ts_project(
     name = "index",
     srcs = ["index.tsx"],
     allow_js = True,
@@ -125,26 +83,5 @@ ts_project(
         "//:node_modules/@types/react-dom",
         "//:node_modules/react",
         "//:node_modules/react-dom",
-    ],
-)
-
-ts_project(
-    name = "setupTests",
-    srcs = [
-        "setupTests.jsx",
-    ],
-    allow_js = True,
-    composite = True,
-    declaration = True,
-    out_dir = ".",
-    resolve_json_module = True,
-    transpiler = "tsc",
-    tsconfig = "//skeleton/frontend:tsconfig",
-    visibility = ["//visibility:public"],
-    deps = [
-        "//:node_modules/@testing-library/jest-dom",
-        "//:node_modules/@types/jest",
-        "//:node_modules/jest-environment-jsdom",
-        "//:node_modules/jsdom",
     ],
 )

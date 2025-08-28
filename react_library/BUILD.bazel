@@ -1,0 +1,56 @@
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+copy_to_bin(
+    name = "testfixtures",
+    srcs = [
+        "mocks/fileMock.js",
+        "package.json",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+copy_to_bin(
+    name = "tsconfig",
+    srcs = ["tsconfig.json"],
+    visibility = ["//visibility:public"],
+)
+
+copy_to_bin(
+    name = "tailwindconfig",
+    srcs = ["tailwind.config.js"],
+    visibility = ["//visibility:public"],
+)
+
+copy_to_bin(
+    name = "jestconfig",
+    srcs = ["jest.config.json"],
+    visibility = ["//visibility:public"],
+)
+
+copy_to_bin(
+    name = "globalsdts",
+    srcs = ["globals.d.ts"],
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "setupTests",
+    srcs = [
+        "setupTests.jsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = ":tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@types/jest",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+    ],
+)
