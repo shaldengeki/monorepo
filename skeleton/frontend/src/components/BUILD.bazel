@@ -48,7 +48,7 @@ ts_project(
 
 copy_file(
     name = "setupTests",
-    src = "//skeleton/frontend:src/setupTests.js",
+    src = "//skeleton/frontend/src:setupTests.js",
     out = "setupTests.js",
 )
 
@@ -70,7 +70,7 @@ ts_project(
     name = "PageContainer",
     srcs = [
         "PageContainer.tsx",
-        "//skeleton/frontend:globalsdts",
+        "//skeleton/frontend/src:globalsdts",
     ],
     allow_js = True,
     composite = True,
