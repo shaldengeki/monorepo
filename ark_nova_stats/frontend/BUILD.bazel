@@ -28,9 +28,9 @@ tailwindcss_bin.tailwindcss(
     name = "tailwindcss",
     srcs = [
         "src/App.src.css",
-        ":tailwind.config.js",
         ":ts",
         "//:node_modules/tailwindcss",
+        "//skeleton/frontend:tailwindconfig",
     ],
     outs = [
         "src/App.css",
