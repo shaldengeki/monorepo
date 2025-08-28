@@ -165,7 +165,7 @@ jest_test(
         "src/views/HomeView.test.js",
         "src/views/UserView.js",
         "src/views/UserView.test.js",
-        "//react_library/DateUtils:index.js",
+        "//react_library/DateUtils",
     ],
     node_modules = "//:node_modules",
     node_options = [
