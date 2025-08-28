@@ -39,7 +39,7 @@ const UserInfoBox = ({user, commonlyPlayedCards}: UserInfoBoxParams) => {
             <h2 className={"text-xl"}>Most played:</h2>
             <Table<UserPlayedTableRow>
                 rows={rows}
-                key="user-played-cards"
+                keyName="user-played-cards"
                 showFilters={false}
             />
         </div>

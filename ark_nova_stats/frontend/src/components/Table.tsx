@@ -47,17 +47,17 @@ interface TableRow {
 }
 
 interface TableProps<T extends TableRow> {
-  key: string;
+  keyName: string;
   rows: Array<T>;
   showFilters?: Boolean;
 }
 
-function Table<T extends TableRow>({ key, rows, showFilters }: TableProps<T>) {
-  const tablePrefix = `Table-${key}`
+function Table<T extends TableRow>({ keyName, rows, showFilters }: TableProps<T>) {
+  const tablePrefix = `Table-${keyName}`
   const cols: string[] = rows.length < 1 ? [] : Object.keys(rows[0]);
   const [filters, setFilter] = useColumnFilters(cols)
 
-  let tableHead = <p>No data to show!</p>;
+  let tableHead = <thead><tr>No data to show!</tr></thead>
   let tableBody = <></>;
 
   if (rows.length > 0) {

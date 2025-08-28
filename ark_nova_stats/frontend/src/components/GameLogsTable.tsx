@@ -67,7 +67,7 @@ const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
         innerContent = (
         <Table<GameLogsTableRow>
             rows={rows}
-            key="game-logs"
+            keyName="game-logs"
             showFilters={false}
         />
        );

@@ -54,7 +54,7 @@ const CardsView = () => {
             <div className={"py-2"}>
                 <Table<CardsTableRow>
                     rows={cardRows}
-                    key="cards"
+                    keyName="cards"
                     showFilters={true}
                 />
             </div>
