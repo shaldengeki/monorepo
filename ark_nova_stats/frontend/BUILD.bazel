@@ -49,6 +49,12 @@ copy_file(
     out = "tsconfig.json",
 )
 
+copy_file(
+    name = "globalsdts",
+    src = "//skeleton/frontend/src:globalsdts",
+    out = "globals.d.ts",
+)
+
 # Compiles Typescript to regular old Javascript.
 ts_project(
     name = "ts",
@@ -59,7 +65,9 @@ ts_project(
             "src/**/*.jsx",
             "src/**/*.js",
         ],
-    ),
+    ) + [
+        ":globalsdts",
+    ],
     allow_js = True,
     assets = [
         "src/App.src.css",
@@ -145,7 +153,6 @@ jest_test(
         "src/components/TournamentResultsTable.js",
         "src/components/TournamentResultsTable.test.js",
         "src/components/UserInfoBox.js",
-        "src/globals.d.ts",
         "src/types/Card.js",
         "src/types/GameLog.js",
         "src/types/GameLogArchive.js",
