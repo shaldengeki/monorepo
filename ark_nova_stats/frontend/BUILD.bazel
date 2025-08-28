@@ -28,9 +28,9 @@ tailwindcss_bin.tailwindcss(
     name = "tailwindcss",
     srcs = [
         "src/App.src.css",
-        ":tailwind.config.js",
         ":ts",
         "//:node_modules/tailwindcss",
+        "//skeleton/frontend:tailwindconfig",
     ],
     outs = [
         "src/App.css",
@@ -41,6 +41,18 @@ tailwindcss_bin.tailwindcss(
         "-o ark_nova_stats/frontend/src/App.css",
     ],
     log_level = "debug",
+)
+
+copy_file(
+    name = "tsconfig",
+    src = "//skeleton/frontend:tsconfig",
+    out = "tsconfig.json",
+)
+
+copy_file(
+    name = "globalsdts",
+    src = "//skeleton/frontend/src:globalsdts",
+    out = "globals.d.ts",
 )
 
 # Compiles Typescript to regular old Javascript.
@@ -54,17 +66,20 @@ ts_project(
             "src/**/*.js",
         ],
     ) + [
-        "tsconfig.json",
+        ":globalsdts",
     ],
     allow_js = True,
     assets = [
         "src/App.src.css",
         "src/logo.svg",
-        "src/components/logo192.png",
+        "src/logo192.png",
     ],
+    composite = True,
+    declaration = True,
     out_dir = ".",
     resolve_json_module = True,
     transpiler = "tsc",
+    tsconfig = ":tsconfig",
     deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS + [
         "//skeleton/frontend/src:DateUtils",
         "//skeleton/frontend/src/components:NavBar",
@@ -122,7 +137,6 @@ jest_test(
         ":setupTests",
         "//skeleton/frontend:testfixtures",
     ] + BUILD_DEPS + TEST_DEPS + [
-        "mocks/fileMock.js",
         "src/EmuCupTableIds.js",
         "src/components/CardInfoBox.js",
         "src/components/DatabaseStatistics.js",
@@ -138,7 +152,6 @@ jest_test(
         "src/components/TournamentResultsTable.js",
         "src/components/TournamentResultsTable.test.js",
         "src/components/UserInfoBox.js",
-        "src/globals.d.ts",
         "src/types/Card.js",
         "src/types/GameLog.js",
         "src/types/GameLogArchive.js",
