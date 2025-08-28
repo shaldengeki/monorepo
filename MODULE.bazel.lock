@@ -433,8 +433,8 @@
     },
     "@@aspect_rules_js+//npm:extensions.bzl%pnpm": {
       "general": {
-        "bzlTransitiveDigest": "tckV+X8S6HiYK1Dwp1Vkuo9sDWM8+ywC4TzSdLGCOAs=",
-        "usagesDigest": "DsYGwiP9vRoYpWh/bRcwizmkSFpg1vs5moru+TUGD4c=",
+        "bzlTransitiveDigest": "la9mhIcVsJvpDbLrQOhfsDfD7irQP6wYgciAOiUNjrk=",
+        "usagesDigest": "LLcACEAr3oIKJdMk3PAy6XQx0aaVPwYyKgae/WWGm5k=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -517,6 +517,11 @@
             "aspect_rules_js+",
             "aspect_rules_js",
             "aspect_rules_js+"
+          ],
+          [
+            "aspect_rules_js+",
+            "aspect_tools_telemetry_report",
+            "aspect_tools_telemetry++telemetry+aspect_tools_telemetry_report"
           ],
           [
             "aspect_rules_js+",
