@@ -2,6 +2,12 @@ load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("//tools/build_rules:frontend_image.bzl", "frontend_image")
 
 copy_to_bin(
+    name = "packagejson",
+    srcs = ["package.json"],
+    visibility = ["//visibility:public"],
+)
+
+copy_to_bin(
     name = "testfixtures",
     srcs = [
         "mocks/fileMock.js",
