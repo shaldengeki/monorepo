@@ -65,7 +65,7 @@ ts_project(
     resolve_json_module = True,
     transpiler = "tsc",
     deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS + [
-        "//skeleton/frontend/src/components/NavBar",
+        "//skeleton/frontend/src/components:NavBar",
     ],
 )
 

@@ -35,10 +35,11 @@ type NavBarProps = {
 }
 
 const NavBar = (props: PropsWithChildren<NavBarProps>) => {
+    const titleElt = props.title ? <span>{props.title}</span> : <span></span>;
     const logoElt = props.logo ? (<NavBarElement link={'/'} className={"font-bold"}>
                             <img className="flex-none h-6 inline" src={props.logo} alt="App icon" />
-                            {props.title ? <span>Ark Nova Games Database</span> : <></>}
-                        </NavBarElement>) : <></>
+                            {titleElt}
+                        </NavBarElement>) : <></>;
     return (
         <div className="sticky top-0 z-40 w-full backdrop-blur flex-none lg:border-b lg:border-slate-900/10 lg:dark:border-slate-50/[0.06] bg-white/95 supports-backdrop-blur:bg-white/60 dark:bg-transparent">
             <div className="max-w-screen-2xl mx-auto">
