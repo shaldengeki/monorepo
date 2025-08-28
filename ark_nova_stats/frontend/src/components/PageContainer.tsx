@@ -1,11 +1,11 @@
 import React, {PropsWithChildren} from 'react';
 import NavBar, {NavBarElement} from '../../../../skeleton/frontend/src/components/NavBar';
-import logo192 from './logo192.png';
 
 type PageContainerProps = {
     outerClassName?: string;
     innerClassName?: string;
     titleComponent?: React.JSX.Element;
+    logo?: any;
 }
 
 const PageContainer = (props: PropsWithChildren<PageContainerProps>) => {
@@ -19,7 +19,7 @@ const PageContainer = (props: PropsWithChildren<PageContainerProps>) => {
 
     return (
         <div className={actualOuterClasses}>
-            <NavBar logo={logo192} title={"Ark Nova Games Database"}>
+            <NavBar logo={props.logo} title={"Ark Nova Games Database"}>
                 <NavBarElement link={'/emu_cup'} text={"Emu Cup"} />
                 <NavBarElement link={'/cards'} text={"Cards"} />
             </NavBar>
