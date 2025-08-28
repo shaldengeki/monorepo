@@ -68,6 +68,7 @@ tailwindcss_bin.tailwindcss(
         "-o skeleton/frontend/src/App.css",
     ],
     log_level = "debug",
+    visibility = ["//skeleton/frontend:__subpackages__"],
 )
 
 ts_project(
