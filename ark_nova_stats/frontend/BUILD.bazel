@@ -137,7 +137,6 @@ jest_test(
         ":setupTests",
         "//skeleton/frontend:testfixtures",
     ] + BUILD_DEPS + TEST_DEPS + [
-        "mocks/fileMock.js",
         "src/EmuCupTableIds.js",
         "src/components/CardInfoBox.js",
         "src/components/DatabaseStatistics.js",
