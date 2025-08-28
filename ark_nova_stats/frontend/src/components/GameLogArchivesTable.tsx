@@ -42,7 +42,7 @@ const GameLogArchivesTable = ({gameLogArchives}: GameLogArchivesTableParams) => 
         innerContent = (
         <Table<GameLogArchivesTableRow>
             rows={rows}
-            key="game-log-archives"
+            keyName="game-log-archives"
             showFilters={false}
         />
        );
