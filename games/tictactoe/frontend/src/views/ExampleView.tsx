@@ -3,11 +3,12 @@ import PageContainer from '../components/PageContainer';
 import ExampleComponent from '../components/ExampleComponent';
 
 type ExampleViewParams = {
+    logo?: any,
 }
 
-const ExampleView = () => {
+const ExampleView = (props: ExampleViewParams) => {
     return (
-        <PageContainer>
+        <PageContainer logo={props.logo}>
             <p>Page Container</p>
             <ExampleComponent />
         </PageContainer>

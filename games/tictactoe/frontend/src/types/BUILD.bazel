@@ -1,0 +1,14 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+ts_project(
+    name = "ExampleType",
+    srcs = ["ExampleType.tsx"],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//games/tictactoe/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+)

@@ -1,5 +1,5 @@
 {
-  "name": "@monorepo/games/tictactoe/frontend",
+  "name": "@monorepo/tictactoe/frontend",
   "version": "0.1.0",
   "private": true,
   "type": "module",
