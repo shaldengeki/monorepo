@@ -36,7 +36,7 @@ copy_file(
 
 jest_test(
     name = "ExampleComponentTest",
-    config = "//games/tictactoe/frontend:jestconfig",
+    config = "//react_library:jestconfig",
     data = [
         ":setupTests",
         "//games/tictactoe/frontend:testfixtures",
