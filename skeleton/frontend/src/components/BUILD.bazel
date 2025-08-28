@@ -3,24 +3,6 @@ load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 
 ts_project(
-    name = "NavBar",
-    srcs = ["NavBar.tsx"],
-    allow_js = True,
-    composite = True,
-    declaration = True,
-    out_dir = ".",
-    resolve_json_module = True,
-    transpiler = "tsc",
-    tsconfig = "//skeleton/frontend:tsconfig",
-    visibility = ["//visibility:public"],
-    deps = [
-        "//:node_modules/@types/react",
-        "//:node_modules/react",
-        "//:node_modules/react-router-dom",
-    ],
-)
-
-ts_project(
     name = "ExampleComponent",
     srcs = [
         "ExampleComponent.test.tsx",
@@ -48,7 +30,7 @@ ts_project(
 
 copy_file(
     name = "setupTests",
-    src = "//skeleton/frontend/src:setupTests.js",
+    src = "//react_library:setupTests.js",
     out = "setupTests.js",
 )
 
@@ -81,8 +63,8 @@ ts_project(
     tsconfig = "//skeleton/frontend:tsconfig",
     visibility = ["//visibility:public"],
     deps = [
-        ":NavBar",
         "//:node_modules/@types/react",
         "//:node_modules/react",
+        "//react_library/NavBar",
     ],
 )

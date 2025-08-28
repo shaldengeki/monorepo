@@ -1,5 +1,13 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("//tools/build_rules:frontend_image.bzl", "frontend_image")
+
+copy_file(
+    name = "tsconfig",
+    src = "//react_library:tsconfig",
+    out = "tsconfig.json",
+    visibility = ["//skeleton/frontend:__subpackages__"],
+)
 
 copy_to_bin(
     name = "testfixtures",
@@ -11,8 +19,8 @@ copy_to_bin(
 )
 
 copy_to_bin(
-    name = "tsconfig",
-    srcs = ["tsconfig.json"],
+    name = "packagejson",
+    srcs = ["package.json"],
     visibility = ["//visibility:public"],
 )
 

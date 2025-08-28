@@ -82,7 +82,7 @@ ts_project(
     tsconfig = ":tsconfig",
     deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS + [
         "//react_library/DateUtils",
-        "//skeleton/frontend/src/components:NavBar",
+        "//react_library/NavBar",
     ],
 )
 

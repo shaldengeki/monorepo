@@ -1,4 +1,4 @@
-load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@npm//:@tailwindcss/cli/package_json.bzl", tailwindcss_bin = "bin")
 
@@ -6,10 +6,11 @@ exports_files([
     "logo192.png",
 ])
 
-copy_to_bin(
+copy_file(
     name = "globalsdts",
-    srcs = ["globals.d.ts"],
-    visibility = ["//visibility:public"],
+    src = "//react_library:globalsdts",
+    out = "globals.d.ts",
+    visibility = ["//skeleton/frontend/src:__subpackages__"],
 )
 
 ts_project(

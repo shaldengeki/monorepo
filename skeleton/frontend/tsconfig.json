@@ -1,5 +1,5 @@
 {
-    "include": ["**/*"],
+    "include": ["src", "../../react_library"],
     "exclude": ["node_modules", "**/*.spec.ts"],
     "compilerOptions": {
         "lib": ["dom", "dom.iterable", "esnext"],
