@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 
 import DatePicker from './DatePicker';
 import MultiSelect from './MultiSelect';
@@ -55,7 +55,7 @@ const TransactionFilters = ({
     accounts,
     onChangeAccounts
 }: TransactionFiltersProps) => {
-    const { data, loading, error } = useQuery(GET_FILTERS);
+    const { loading, error, data } = useQuery(GET_FILTERS);
 
     const loadingDisplay = <h1>Loading filters...</h1>;
     const errorDisplay = <h1>Error loading filters!</h1>;
@@ -99,6 +99,7 @@ const TransactionFilters = ({
                     name="types"
                     value={types}
                     onChange={onChangeTypes}
+                    // @ts-ignore
                     allValues={data.types}
                 />
             </div>
@@ -108,6 +109,7 @@ const TransactionFilters = ({
                     name="accounts"
                     value={accounts}
                     onChange={onChangeAccounts}
+                    // @ts-ignore
                     allValues={data.accounts}
                 />
             </div>
@@ -117,6 +119,7 @@ const TransactionFilters = ({
                     name="categories"
                     value={categories}
                     onChange={onChangeCategories}
+                    // @ts-ignore
                     allValues={data.categories}
                 />
             </div>

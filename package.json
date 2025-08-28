@@ -8,12 +8,10 @@
         "home_api/frontend/*"
     ],
     "dependencies": {
-        "@apollo/client": "^3.13.9",
-        "@apollo/react-testing": "^4.0.0",
+        "@apollo/client": "^4.0.0",
         "@headlessui/react": "^2.2.7",
         "@heroicons/react": "^2.2.0",
         "@testing-library/jest-dom": "^6.8.0",
-        "@testing-library/react": "^16.3.0",
         "@testing-library/user-event": "^14.6.1",
         "@types/node": "^24.3.0",
         "@types/react": "^19.1.11",
@@ -43,6 +41,8 @@
         "web-vitals": "^5.1.0"
     },
     "devDependencies": {
+       "@apollo/client": "^4.0.0",
+        "@testing-library/react": "^16.3.0",
         "@tsconfig/create-react-app": "^2.0.6",
         "@types/jest": "^30.0.0",
         "@types/lodash": "^4.17.20",

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { UserLeaderboardHeader, UserLeaderboardListingEntry } from './UserLeaderboard';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from "@apollo/client/testing/react";
 import React from 'react';
 import {ActivityTotal} from "../types/Activity";
 

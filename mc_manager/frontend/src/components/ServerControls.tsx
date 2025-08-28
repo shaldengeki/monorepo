@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { gql } from '@apollo/client/core';
-import { useQuery, useMutation } from '@apollo/client/react/hooks';
+import { useQuery, useMutation } from '@apollo/client/react';
 
 import type Server from '../types/Server'
 
@@ -50,6 +50,7 @@ const ServerStopButton = ({ server }: ServerControlsProps) => {
     }}>Stop</button>
   )
 
+  // @ts-ignore
   const stopEnqueued = data && data.server && data.server.latestLog && (data.server.latestLog.state === 'stop_queued')
   if (serverLatestStateIsStopping || stopEnqueued) return (<p>✅Stop enqueued!</p>)
   if (server.latestLog && server.latestLog.state === 'started') return stopButton
@@ -79,6 +80,7 @@ const ServerStartButton = ({ server }: ServerControlsProps) => {
     }}>Start</button>
   )
 
+  // @ts-ignore
   const startEnqueued = data && data.server && data.server.latestLog && (data.server.latestLog.state === 'start_started')
   if (serverLatestStateIsStarting || startEnqueued) return (<p>✅Start enqueued!</p>)
   if (server.latestLog && server.latestLog.state === 'stopped') return startButton

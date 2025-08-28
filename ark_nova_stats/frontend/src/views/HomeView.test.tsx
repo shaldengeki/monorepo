@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import HomeView from './HomeView';
 import { HOME_VIEW_QUERY } from './HomeView';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from "@apollo/client/testing/react";
 import {BrowserRouter} from 'react-router-dom'
 import React from 'react';
 
