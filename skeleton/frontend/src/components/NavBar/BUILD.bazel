@@ -6,9 +6,9 @@ ts_project(
     allow_js = True,
     composite = True,
     declaration = True,
-    extends = "//skeleton/frontend:tsconfig-base",
     resolve_json_module = True,
     transpiler = "tsc",
+    tsconfig = "//skeleton/frontend:tsconfig",
     visibility = ["//visibility:public"],
     deps = [
         "//:node_modules/@types/react",
