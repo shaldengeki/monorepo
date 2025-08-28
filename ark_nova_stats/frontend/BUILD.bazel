@@ -64,7 +64,9 @@ ts_project(
     out_dir = ".",
     resolve_json_module = True,
     transpiler = "tsc",
-    deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS,
+    deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS + [
+        "//skeleton/frontend/src/components/NavBar",
+    ],
 )
 
 frontend_image(
@@ -120,7 +122,6 @@ jest_test(
         "src/components/GameLogArchivesTable.js",
         "src/components/GameLogsTable.js",
         "src/components/LoadingSpinner.js",
-        "src/components/NavBar.js",
         "src/components/PageContainer.js",
         "src/components/PageLink.js",
         "src/components/PageTitle.js",
