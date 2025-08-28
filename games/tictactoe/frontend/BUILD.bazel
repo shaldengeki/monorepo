@@ -1,84 +1,46 @@
-load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
-load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@npm//:@tailwindcss/cli/package_json.bzl", tailwindcss_bin = "bin")
-load("//tools/build_rules:frontend_image.bzl", "BUILD_DEPS", "frontend_image")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("//tools/build_rules:frontend_image.bzl", "frontend_image")
 
-# Dependencies required to do typechecks.
-TYPE_DEPS = [
-    "//:node_modules/@types/jest",
-    "//:node_modules/@types/lodash",
-    "//:node_modules/@types/node",
-    "//:node_modules/@types/react",
-    "//:node_modules/@types/react-dom",
-]
-
-# Dependencies required to run tests.
-TEST_DEPS = [
-    "//:node_modules/@apollo/react-testing",
-    "//:node_modules/@testing-library/jest-dom",
-    "//:node_modules/@testing-library/react",
-    "//:node_modules/jest-environment-jsdom",
-    "//:node_modules/jsdom",
-]
-
-# Compiles our CSS using Tailwind styles.
-# Uses the tailwindcss binary from npm.
-tailwindcss_bin.tailwindcss(
-    name = "tailwindcss",
+copy_to_bin(
+    name = "testfixtures",
     srcs = [
-        "src/App.src.css",
-        ":tailwind.config.js",
-        ":ts",
-        "//:node_modules/tailwindcss",
+        "mocks/fileMock.js",
+        "package.json",
     ],
-    outs = [
-        "src/App.css",
-    ],
-    args = [
-        "--config games/tictactoe/frontend/tailwind.config.js",
-        "-i games/tictactoe/frontend/src/App.src.css",
-        "-o games/tictactoe/frontend/src/App.css",
-    ],
-    log_level = "debug",
+    visibility = ["//visibility:public"],
 )
 
-# Compiles Typescript to regular old Javascript.
-ts_project(
-    name = "ts",
-    srcs = glob(
-        include = [
-            "src/**/*.tsx",
-            "src/**/*.ts",
-            "src/**/*.jsx",
-            "src/**/*.js",
-        ],
-    ) + [
-        "tsconfig.json",
-    ],
-    allow_js = True,
-    assets = [
-        "src/App.src.css",
-        "src/logo.svg",
-        "src/components/logo192.png",
-    ],
-    out_dir = ".",
-    resolve_json_module = True,
-    transpiler = "tsc",
-    deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS,
+copy_to_bin(
+    name = "tsconfig",
+    srcs = ["tsconfig.json"],
+    visibility = ["//visibility:public"],
+)
+
+copy_to_bin(
+    name = "tailwindconfig",
+    srcs = ["tailwind.config.js"],
+    visibility = ["//visibility:public"],
+)
+
+copy_to_bin(
+    name = "jestconfig",
+    srcs = ["jest.config.json"],
+    visibility = ["//visibility:public"],
 )
 
 frontend_image(
     name = "production",
     srcs = glob(["public/**/*"]) + [
-        ":tailwindcss",
-        ":ts",
+        "//games/tictactoe/frontend/src:index",
+        "//games/tictactoe/frontend/src:tailwindcss",
     ],
     build_env = {
-        "REACT_APP_API_HOST": "api.tictactoe.games.ouguo.us",
+        "REACT_APP_API_HOST": "api.tictactoe.ouguo.us",
         "REACT_APP_API_PORT": "443",
         "REACT_APP_API_PROTOCOL": "https",
     },
     docker_hub_repository = "docker.io/shaldengeki/tictactoe-frontend",
+    entry_point = "//games/tictactoe/frontend/src:index.js",
     node_modules = "//:node_modules",
     repo_tags = ["shaldengeki/tictactoe-frontend:latest"],
     server_name = "tictactoe.games.ouguo.us",
@@ -88,8 +50,8 @@ frontend_image(
 frontend_image(
     name = "development",
     srcs = glob(["public/**/*"]) + [
-        ":tailwindcss",
-        ":ts",
+        "//games/tictactoe/frontend/src:index",
+        "//games/tictactoe/frontend/src:tailwindcss",
     ],
     build_env = {
         "REACT_APP_API_HOST": "localhost",
@@ -97,34 +59,9 @@ frontend_image(
         "REACT_APP_API_PROTOCOL": "http",
     },
     docker_hub_repository = "docker.io/shaldengeki/tictactoe-frontend",
+    entry_point = "//games/tictactoe/frontend/src:index.js",
     node_modules = "//:node_modules",
     repo_tags = ["shaldengeki/tictactoe-frontend:latest"],
     server_name = "tictactoe.games.ouguo.us",
     webpack_conf = ":webpack.config.js",
-)
-
-# Runs frontend Jest tests.
-jest_test(
-    name = "test",
-    config = "jest.config.json",
-    data = [
-        "package.json",
-    ] + BUILD_DEPS + TEST_DEPS + [
-        "mocks/fileMock.js",
-        "src/DateUtils.js",
-        "src/DateUtils.test.js",
-        "src/components/ExampleComponent.js",
-        "src/components/ExampleComponent.test.js",
-        "src/components/NavBar.js",
-        "src/components/PageContainer.js",
-        "src/globals.d.ts",
-        "src/setupTests.js",
-        "src/types/ExampleType.js",
-        "src/views/ExampleView.js",
-        "src/views/ExampleView.test.js",
-    ],
-    node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
