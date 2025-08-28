@@ -5,21 +5,11 @@ load("@npm//:@tailwindcss/cli/package_json.bzl", tailwindcss_bin = "bin")
 
 exports_files([
     "logo192.png",
-    "setupTests.jsx",
-    "App.src.css",
 ])
 
 copy_to_bin(
     name = "globalsdts",
     srcs = ["globals.d.ts"],
-    visibility = ["//visibility:public"],
-)
-
-copy_to_bin(
-    name = "testfixtures",
-    srcs = [
-        "setupTests.js",
-    ],
     visibility = ["//visibility:public"],
 )
 
