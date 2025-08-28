@@ -1,3 +1,4 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@npm//:@tailwindcss/cli/package_json.bzl", tailwindcss_bin = "bin")
@@ -65,6 +66,7 @@ ts_project(
     resolve_json_module = True,
     transpiler = "tsc",
     deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS + [
+        "//skeleton/frontend/src:DateUtils",
         "//skeleton/frontend/src/components:NavBar",
     ],
 )
@@ -105,16 +107,22 @@ frontend_image(
     webpack_conf = ":webpack.config.js",
 )
 
+copy_file(
+    name = "setupTests",
+    src = "//skeleton/frontend/src:setupTests.js",
+    out = "setupTests.js",
+)
+
 # Runs frontend Jest tests.
 jest_test(
     name = "test",
-    config = "jest.config.json",
+    config = "//skeleton/frontend:jestconfig",
     data = [
         "package.json",
+        ":setupTests",
+        "//skeleton/frontend:testfixtures",
     ] + BUILD_DEPS + TEST_DEPS + [
         "mocks/fileMock.js",
-        "src/DateUtils.js",
-        "src/DateUtils.test.js",
         "src/EmuCupTableIds.js",
         "src/components/CardInfoBox.js",
         "src/components/DatabaseStatistics.js",
@@ -131,7 +139,6 @@ jest_test(
         "src/components/TournamentResultsTable.test.js",
         "src/components/UserInfoBox.js",
         "src/globals.d.ts",
-        "src/setupTests.js",
         "src/types/Card.js",
         "src/types/GameLog.js",
         "src/types/GameLogArchive.js",
@@ -145,6 +152,7 @@ jest_test(
         "src/views/HomeView.test.js",
         "src/views/UserView.js",
         "src/views/UserView.test.js",
+        "//skeleton/frontend/src:DateUtils",
     ],
     node_modules = "//:node_modules",
     node_options = [
