@@ -53,18 +53,19 @@ ts_project(
             "src/**/*.jsx",
             "src/**/*.js",
         ],
-    ) + [
-        "tsconfig.json",
-    ],
+    ),
     allow_js = True,
     assets = [
         "src/App.src.css",
         "src/logo.svg",
         "src/components/logo192.png",
     ],
+    composite = True,
+    declaration = True,
     out_dir = ".",
     resolve_json_module = True,
     transpiler = "tsc",
+    tsconfig = "//skeleton/frontend:tsconfig",
     deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS + [
         "//skeleton/frontend/src/components/NavBar",
     ],
@@ -134,7 +135,7 @@ jest_test(
 )
 
 copy_to_bin(
-    name = "tsconfig-base",
-    srcs = ["tsconfig-base.json"],
+    name = "tsconfig",
+    srcs = ["tsconfig.json"],
     visibility = ["//visibility:public"],
 )
