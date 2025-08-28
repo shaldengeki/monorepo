@@ -10,7 +10,7 @@ type TestTableRow = {
 
 it('should handle when no data was passed', async () => {
     render(
-        <Table<TestTableRow> key={'test-key'} rows={[]}/>
+        <Table<TestTableRow> keyName={'test-key'} rows={[]}/>
     );
     expect(await screen.findByText("No data to show!")).toBeInTheDocument();
 });
@@ -20,7 +20,7 @@ it('should handle a single entry', async () => {
         {"Some": <p>Some1</p>, "Column": <p>Column1</p>, "Names": <p>Name1</p>},
     ]
     render(
-        <Table<TestTableRow> key={'test-key'} rows={rows}/>
+        <Table<TestTableRow> keyName={'test-key'} rows={rows}/>
     );
     expect(await screen.findByText("Some1")).toBeInTheDocument();
     expect(await screen.findByText("Column1")).toBeInTheDocument();
@@ -33,7 +33,7 @@ it('should handle multiple entries', async () => {
         {"Some": <p>Some2</p>, "Column": <p>Column2</p>, "Names": <p>Name2</p>},
     ]
     render(
-        <Table<TestTableRow> key={'test-key'} rows={rows}/>
+        <Table<TestTableRow> keyName={'test-key'} rows={rows}/>
     );
     expect(await screen.findByText("Some2")).toBeInTheDocument();
     expect(await screen.findByText("Column2")).toBeInTheDocument();

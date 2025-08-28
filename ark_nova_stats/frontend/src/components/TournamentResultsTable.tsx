@@ -108,7 +108,7 @@ const TournamentResultsTable = ({statistics}: TournamentResultsTableParams) => {
         innerContent = (
             <Table<TournamentResultsTableRow>
                 rows={rows}
-                key="tournament-results"
+                keyName="tournament-results"
                 showFilters={true}
             />
         );
