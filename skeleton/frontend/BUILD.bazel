@@ -1,8 +1,15 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@npm//:@tailwindcss/cli/package_json.bzl", tailwindcss_bin = "bin")
 load("//tools/build_rules:frontend_image.bzl", "BUILD_DEPS", "frontend_image")
+
+exports_files([
+    "src/logo192.png",
+    "src/setupTests.jsx",
+    "globals.d.ts",
+])
 
 # Dependencies required to do typechecks.
 TYPE_DEPS = [
@@ -56,9 +63,9 @@ ts_project(
     ),
     allow_js = True,
     assets = [
+        "src/logo192.png",
         "src/App.src.css",
         "src/logo.svg",
-        "src/components/logo192.png",
     ],
     composite = True,
     declaration = True,
@@ -66,8 +73,12 @@ ts_project(
     resolve_json_module = True,
     transpiler = "tsc",
     tsconfig = "//skeleton/frontend:tsconfig",
+    visibility = ["//visibility:public"],
     deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS + [
-        "//skeleton/frontend/src/components/NavBar",
+        "//skeleton/frontend/src/components:ExampleComponent",
+        "//skeleton/frontend/src/components:NavBar",
+        "//skeleton/frontend/src/components:PageContainer",
+        "//skeleton/frontend/src/views:ExampleView",
     ],
 )
 
@@ -108,25 +119,19 @@ frontend_image(
 )
 
 # Runs frontend Jest tests.
+copy_file(
+    name = "setupTests",
+    src = "src/setupTests.js",
+    out = "setupTests.js",
+)
+
 jest_test(
     name = "test",
     config = "jest.config.json",
     data = [
-        "package.json",
-    ] + BUILD_DEPS + TEST_DEPS + [
-        "mocks/fileMock.js",
-        "src/DateUtils.js",
-        "src/DateUtils.test.js",
-        "src/components/ExampleComponent.js",
-        "src/components/ExampleComponent.test.js",
-        "src/components/PageContainer.js",
-        "src/globals.d.ts",
-        "src/setupTests.js",
-        "src/types/ExampleType.js",
-        "src/views/ExampleView.js",
-        "src/views/ExampleView.test.js",
-    ] + [
-        "//skeleton/frontend/src/components/NavBar",
+        ":setupTests",
+        ":testfixtures",
+        ":ts",
     ],
     node_modules = "//:node_modules",
     node_options = [
@@ -135,7 +140,29 @@ jest_test(
 )
 
 copy_to_bin(
+    name = "globalsdts",
+    srcs = ["src/globals.d.ts"],
+    visibility = ["//visibility:public"],
+)
+
+copy_to_bin(
+    name = "testfixtures",
+    srcs = [
+        "mocks/fileMock.js",
+        "package.json",
+        "src/setupTests.js",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+copy_to_bin(
     name = "tsconfig",
     srcs = ["tsconfig.json"],
+    visibility = ["//visibility:public"],
+)
+
+copy_to_bin(
+    name = "jestconfig",
+    srcs = ["jest.config.json"],
     visibility = ["//visibility:public"],
 )

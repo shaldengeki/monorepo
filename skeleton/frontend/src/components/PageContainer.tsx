@@ -1,10 +1,10 @@
 import React, {PropsWithChildren} from 'react';
 import NavBar from './NavBar';
-import logo192 from './logo192.png';
 
 type PageContainerProps = {
     outerClassName?: string;
     innerClassName?: string;
+    logo?: any;
 }
 
 const PageContainer = (props: PropsWithChildren<PageContainerProps>) => {
@@ -16,7 +16,7 @@ const PageContainer = (props: PropsWithChildren<PageContainerProps>) => {
 
     return (
         <div className={actualOuterClasses}>
-            <NavBar logo={logo192} />
+            <NavBar logo={props.logo} />
             <div className={actualInnerClasses}>
                 {props.children}
             </div>
