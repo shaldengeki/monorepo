@@ -32,7 +32,7 @@ ts_project(
 
 copy_file(
     name = "setupTests",
-    src = "//skeleton/frontend:src/setupTests.js",
+    src = "//skeleton/frontend/src:setupTests.js",
     out = "setupTests.js",
 )
 
