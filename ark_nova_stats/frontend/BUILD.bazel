@@ -43,6 +43,12 @@ tailwindcss_bin.tailwindcss(
     log_level = "debug",
 )
 
+copy_file(
+    name = "tsconfig",
+    src = "//skeleton/frontend:tsconfig",
+    out = "tsconfig.json",
+)
+
 # Compiles Typescript to regular old Javascript.
 ts_project(
     name = "ts",
@@ -53,18 +59,19 @@ ts_project(
             "src/**/*.jsx",
             "src/**/*.js",
         ],
-    ) + [
-        "tsconfig.json",
-    ],
+    ),
     allow_js = True,
     assets = [
         "src/App.src.css",
         "src/logo.svg",
         "src/components/logo192.png",
     ],
+    composite = True,
+    declaration = True,
     out_dir = ".",
     resolve_json_module = True,
     transpiler = "tsc",
+    tsconfig = ":tsconfig",
     deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS + [
         "//skeleton/frontend/src:DateUtils",
         "//skeleton/frontend/src/components:NavBar",
