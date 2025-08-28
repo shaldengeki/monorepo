@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {getDate} from '../DateUtils';
+import {getDate} from '../../../../skeleton/frontend/src/DateUtils';
 import GameLogArchive from '../types/GameLogArchive';
 import Table from './Table';
 import PageLink from './PageLink';
