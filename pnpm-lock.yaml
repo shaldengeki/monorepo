@@ -7,7 +7,7 @@ settings:
 dependencies:
   '@apollo/client':
     specifier: ^4.0.0
-    version: 4.0.0(graphql@16.11.0)(react-dom@19.1.1)(react@19.1.1)(rxjs@7.8.2)
+    version: 4.0.0(graphql@16.11.0)(react-dom@19.1.1)(react@19.1.1)(rxjs@6.6.7)
   '@headlessui/react':
     specifier: ^2.2.7
     version: 2.2.7(react-dom@19.1.1)(react@19.1.1)
@@ -86,6 +86,9 @@ dependencies:
   react-scripts:
     specifier: ^5.0.1
     version: 5.0.1(@babel/plugin-syntax-flow@7.27.1)(@babel/plugin-transform-react-jsx@7.27.1)(eslint@8.57.1)(react@19.1.1)(typescript@5.9.2)(webpack-cli@6.0.1)
+  rxjs:
+    specifier: ^6.6.7
+    version: 6.6.7
   typescript:
     specifier: ^5
     version: 5.9.2
@@ -197,7 +200,7 @@ packages:
       leven: 3.1.0
     dev: false
 
-  /@apollo/client@4.0.0(graphql@16.11.0)(react-dom@19.1.1)(react@19.1.1)(rxjs@7.8.2):
+  /@apollo/client@4.0.0(graphql@16.11.0)(react-dom@19.1.1)(react@19.1.1)(rxjs@6.6.7):
     resolution: {integrity: sha512-VMJXFLAro7ZF8ckEyeP8Wvtez7G+7LAq/SHfk3JpyZbuODtBujaqFwMFlFOdXKC8eejzuS6DfvoaiUquAFWUZw==}
     peerDependencies:
       graphql: ^16.0.0
@@ -225,7 +228,7 @@ packages:
       optimism: 0.18.1
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
-      rxjs: 7.8.2
+      rxjs: 6.6.7
       tslib: 2.8.1
     dev: false
 
@@ -12808,10 +12811,11 @@ packages:
     resolution: {integrity: sha512-PdhdWy89SiZogBLaw42zdeqtRJ//zFd2PgQavcICDUgJT5oW10QCRKbJ6bg4r0/UY2M6BWd5tkxuGFRvCkgfHQ==}
     dev: false
 
-  /rxjs@7.8.2:
-    resolution: {integrity: sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA==}
+  /rxjs@6.6.7:
+    resolution: {integrity: sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ==}
+    engines: {npm: '>=2.0.0'}
     dependencies:
-      tslib: 2.8.1
+      tslib: 1.14.1
     dev: false
 
   /safe-array-concat@1.1.3:
