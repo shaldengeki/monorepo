@@ -44,13 +44,15 @@ Following up on [my predictions for 2024]({{< ref "predictions-2024-followup" >}
 
 ### HSR
 
-I'll assess these only if the CAHSR releases a new project update report, with new figures. (I think the next one is scheduled for early this year.) If they don't by the end of the year, I'll annul these predictions.
+I'll assess these only if the CAHSR [releases a new project update report](https://hsr.ca.gov/wp-content/uploads/2025/08/2025-Project-Update-Report-SUP-FINAL-081925-A11Y.pdf), with new figures. (I think the next one is scheduled for early this year.) If they don't by the end of the year, I'll annul these predictions.
 
-- P50 estimate of Bakersfield-Merced opening delayed to at least 2034: 60%
+- (Annulled) P50 estimate of Bakersfield-Merced opening delayed to at least 2034: 60%
   - I consider the "P50 probability envelope" the official estimate, i.e. currently the official estimate is "end of 2033".
-- Base YOE cost of Bakersfield-Merced rises to or above $33B: 70%
-- Project officially cancelled: 20%
+  - The Authority changed how it does its reporting - it no longer reports percentiles for timelines - so I'm annulling this prediction. I think the change is a negative sign about the timeline, though.
+- ✅ Base YOE cost of Bakersfield-Merced [rises to or above $33B](https://hsr.ca.gov/wp-content/uploads/2025/08/2025-Project-Update-Report-SUP-FINAL-081925-A11Y.pdf#page=54): 70%
+- ✅ Project [officially cancelled](https://hsr.ca.gov/wp-content/uploads/2025/08/2025-Project-Update-Report-SUP-FINAL-081925-A11Y.pdf#page=18): 20%
   - I'd consider any change to the project that abandons its current goal of serving SF-LA in <3hrs as cancelling it.
+  - The plan abandons the idea of connecting directly to LA, instead ending at Palmdale, ~80 miles away.
 
 # Rest of world
 
