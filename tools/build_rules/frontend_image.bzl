@@ -44,7 +44,8 @@ def frontend_image(
         base_image = "@nginx_debian_slim",
         stamp_file = "//:stamped",
         webpack_deps = [],
-        visibility = None):
+        visibility = None,
+        entry_point = "src/index.js"):
     """
     Defines a set of frontend images for our application.
 
@@ -61,6 +62,7 @@ def frontend_image(
         stamp_file (file): File containing image tags that the image should be pushed under.
         webpack_deps (list[label]): Dependencies to inject into the webpack build.
         visibility (list[str]): Visibility to set on all the targets.
+        entry_point (file): JS entrypoint file for the image.
 
     You're probably interested in the oci_tarball & oci_push targets,
     which build a container image & push it to Docker Hub, respectively.
@@ -88,7 +90,7 @@ def frontend_image(
         name = name + "_webpack",
         node_modules = node_modules,
         srcs = srcs,
-        entry_point = "src/index.js",
+        entry_point = entry_point,
         deps = BUILD_DEPS + webpack_deps + [
             "//:node_modules/copy-webpack-plugin",
             "//:node_modules/css-loader",

@@ -1,0 +1,228 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+copy_file(
+    name = "globalsdts",
+    src = "//react_library:globalsdts",
+    out = "globals.d.ts",
+)
+
+copy_file(
+    name = "setupTests",
+    src = "//react_library:setupTests.js",
+    out = "setupTests.js",
+)
+
+ts_project(
+    name = "CardView",
+    srcs = [
+        "CardView.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+        "//ark_nova_stats/frontend/src/components:CardInfoBox",
+        "//ark_nova_stats/frontend/src/components:GameLogsTable",
+        "//ark_nova_stats/frontend/src/components:PageTitle",
+        "//ark_nova_stats/frontend/src/types",
+        "//react_library/LoadingSpinner",
+    ],
+)
+
+ts_project(
+    name = "CardsView",
+    srcs = [
+        "CardsView.test.tsx",
+        "CardsView.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+        "//ark_nova_stats/frontend/src/components:PageLink",
+        "//ark_nova_stats/frontend/src/components:PageTitle",
+        "//ark_nova_stats/frontend/src/components:Table",
+        "//ark_nova_stats/frontend/src/types",
+        "//react_library/LoadingSpinner",
+    ],
+)
+
+jest_test(
+    name = "CardsViewTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":CardsView",
+        ":setupTests",
+        "//ark_nova_stats/frontend:packagejson",
+        "//react_library:testfixtures",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "EmuCupView",
+    srcs = [
+        "EmuCupView.test.tsx",
+        "EmuCupView.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+        "//ark_nova_stats/frontend/src:EmuCupTableIds",
+        "//ark_nova_stats/frontend/src/components:GameLogsTable",
+        "//ark_nova_stats/frontend/src/components:PageLink",
+        "//ark_nova_stats/frontend/src/components:PageTitle",
+        "//ark_nova_stats/frontend/src/components:TournamentResultsTable",
+        "//ark_nova_stats/frontend/src/types",
+        "//react_library/LoadingSpinner",
+    ],
+)
+
+jest_test(
+    name = "EmuCupViewTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":EmuCupView",
+        ":setupTests",
+        "//ark_nova_stats/frontend:packagejson",
+        "//react_library:testfixtures",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "HomeView",
+    srcs = [
+        "HomeView.test.tsx",
+        "HomeView.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+        "//ark_nova_stats/frontend/src/components:DatabaseStatistics",
+        "//ark_nova_stats/frontend/src/components:GameLogArchivesTable",
+        "//ark_nova_stats/frontend/src/components:GameLogsTable",
+        "//ark_nova_stats/frontend/src/components:PageTitle",
+        "//ark_nova_stats/frontend/src/types",
+        "//react_library/LoadingSpinner",
+    ],
+)
+
+jest_test(
+    name = "HomeViewTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":HomeView",
+        ":setupTests",
+        "//ark_nova_stats/frontend:packagejson",
+        "//react_library:testfixtures",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "UserView",
+    srcs = [
+        "UserView.test.tsx",
+        "UserView.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+        "//ark_nova_stats/frontend/src/components:GameLogsTable",
+        "//ark_nova_stats/frontend/src/components:PageTitle",
+        "//ark_nova_stats/frontend/src/components:UserInfoBox",
+        "//ark_nova_stats/frontend/src/types",
+        "//react_library/LoadingSpinner",
+    ],
+)
+
+jest_test(
+    name = "UserViewTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":UserView",
+        ":setupTests",
+        "//ark_nova_stats/frontend:packagejson",
+        "//react_library:testfixtures",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)

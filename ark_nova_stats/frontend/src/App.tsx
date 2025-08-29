@@ -12,17 +12,18 @@ import HomeView from './views/HomeView';
 import UserView from './views/UserView';
 import EmuCupView from './views/EmuCupView';
 import PageContainer from './components/PageContainer';
+import logo192 from './logo192.png';
 
 function App() {
   return (
     <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/home" replace />} />
-          <Route path="home" element={<PageContainer><HomeView /></PageContainer>} />
-          <Route path="user/:name" element={<PageContainer><UserView /></PageContainer>} />
-          <Route path="cards" element={<PageContainer><CardsView /></PageContainer>} />
-          <Route path="card/:id" element={<PageContainer><CardView /></PageContainer>} />
-          <Route path="emu_cup" element={<PageContainer><EmuCupView /></PageContainer>} />
+          <Route path="home" element={<PageContainer logo={logo192}><HomeView /></PageContainer>} />
+          <Route path="user/:name" element={<PageContainer logo={logo192}><UserView /></PageContainer>} />
+          <Route path="cards" element={<PageContainer logo={logo192}><CardsView /></PageContainer>} />
+          <Route path="card/:id" element={<PageContainer logo={logo192}><CardView /></PageContainer>} />
+          <Route path="emu_cup" element={<PageContainer logo={logo192}><EmuCupView /></PageContainer>} />
         </Routes>
     </Router>
   );

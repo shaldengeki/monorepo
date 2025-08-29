@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {getDate} from '../DateUtils';
+import {getDate} from '../../../../react_library/DateUtils';
 import GameLogArchive from '../types/GameLogArchive';
 import Table from './Table';
 import PageLink from './PageLink';
@@ -21,9 +21,8 @@ type GameLogArchivesTableRow = {
 }
 
 const GameLogArchivesTable = ({gameLogArchives}: GameLogArchivesTableParams) => {
-    let innerContent = <p></p>;
     if (!gameLogArchives) {
-        innerContent = <p>Error: game log archives could not be retrieved!</p>;
+        return <p>Error: game log archives could not be retrieved!</p>;
     } else {
         const rows: GameLogArchivesTableRow[] = gameLogArchives.map((gameLogArchive: GameLogArchive) => {
             let latestTableDescription = <PageLink to={"https://boardgamearena.com/table?table=" + gameLogArchive.maxGameLog.bgaTableId}>
@@ -39,7 +38,7 @@ const GameLogArchivesTable = ({gameLogArchives}: GameLogArchivesTableParams) => 
                 "Size in MB": <p>{Math.round((gameLogArchive.sizeBytes) / (1024 * 1024))}</p>,
             }
         });
-        innerContent = (
+        return (
         <Table<GameLogArchivesTableRow>
             rows={rows}
             keyName="game-log-archives"
@@ -47,7 +46,6 @@ const GameLogArchivesTable = ({gameLogArchives}: GameLogArchivesTableParams) => 
         />
        );
     }
-    return innerContent
 }
 
 export default GameLogArchivesTable;

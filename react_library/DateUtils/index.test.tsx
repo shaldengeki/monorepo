@@ -1,4 +1,4 @@
-import { formatDateDifference } from './DateUtils';
+import { formatDateDifference } from './index';
 
 it ('should keep a singular second', async() => {
     expect(formatDateDifference(1)).toBe("1 second");

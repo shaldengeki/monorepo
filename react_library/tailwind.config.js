@@ -4,7 +4,7 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
   content: [
-    "ark_nova_stats/frontend/src/**/*.{js,jsx,ts,tsx}",
+    "./**/src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     extend: {

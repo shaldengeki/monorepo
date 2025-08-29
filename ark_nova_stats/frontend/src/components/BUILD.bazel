@@ -1,0 +1,349 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+copy_file(
+    name = "setupTests",
+    src = "//react_library:setupTests.js",
+    out = "setupTests.js",
+)
+
+ts_project(
+    name = "CardInfoBox",
+    srcs = [
+        "CardInfoBox.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//ark_nova_stats/frontend/src/components:PageLink",
+        "//ark_nova_stats/frontend/src/components:Table",
+        "//ark_nova_stats/frontend/src/types",
+    ],
+)
+
+ts_project(
+    name = "DatabaseStatistics",
+    srcs = [
+        "DatabaseStatistics.test.tsx",
+        "DatabaseStatistics.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+        "//ark_nova_stats/frontend/src/types",
+        "//react_library/DateUtils",
+    ],
+)
+
+jest_test(
+    name = "DatabaseStatisticsTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//ark_nova_stats/frontend:testfixtures",
+        "//ark_nova_stats/frontend/src/components:DatabaseStatistics",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "GameLogArchivesTable",
+    srcs = [
+        "GameLogArchivesTable.test.tsx",
+        "GameLogArchivesTable.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+        "//ark_nova_stats/frontend/src/components:PageLink",
+        "//ark_nova_stats/frontend/src/components:Table",
+        "//ark_nova_stats/frontend/src/types",
+        "//react_library/DateUtils",
+    ],
+)
+
+jest_test(
+    name = "GameLogArchivesTableTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//ark_nova_stats/frontend:testfixtures",
+        "//ark_nova_stats/frontend/src/components:GameLogArchivesTable",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "GameLogsTable",
+    srcs = [
+        "GameLogsTable.test.tsx",
+        "GameLogsTable.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+        "//ark_nova_stats/frontend/src/components:PageLink",
+        "//ark_nova_stats/frontend/src/components:Table",
+        "//ark_nova_stats/frontend/src/types",
+    ],
+)
+
+jest_test(
+    name = "GameLogsTableTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//ark_nova_stats/frontend:testfixtures",
+        "//ark_nova_stats/frontend/src/components:GameLogsTable",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "PageContainer",
+    srcs = [
+        "PageContainer.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//react_library/NavBar",
+    ],
+)
+
+ts_project(
+    name = "PageLink",
+    srcs = [
+        "PageLink.test.tsx",
+        "PageLink.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+    ],
+)
+
+jest_test(
+    name = "PageLinkTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//ark_nova_stats/frontend:testfixtures",
+        "//ark_nova_stats/frontend/src/components:PageLink",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "PageTitle",
+    srcs = [
+        "PageTitle.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+    ],
+)
+
+ts_project(
+    name = "Table",
+    srcs = [
+        "Table.test.tsx",
+        "Table.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/lodash",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/lodash",
+        "//:node_modules/react",
+    ],
+)
+
+jest_test(
+    name = "TableTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//ark_nova_stats/frontend:testfixtures",
+        "//ark_nova_stats/frontend/src/components:Table",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "TournamentResultsTable",
+    srcs = [
+        "TournamentResultsTable.test.tsx",
+        "TournamentResultsTable.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/lodash",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/lodash",
+        "//:node_modules/react",
+        "//ark_nova_stats/frontend/src/components:PageLink",
+        "//ark_nova_stats/frontend/src/components:Table",
+        "//ark_nova_stats/frontend/src/types",
+    ],
+)
+
+jest_test(
+    name = "TournamentResultsTableTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//ark_nova_stats/frontend:testfixtures",
+        "//ark_nova_stats/frontend/src/components:TournamentResultsTable",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "UserInfoBox",
+    srcs = [
+        "UserInfoBox.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//ark_nova_stats/frontend/src/components:PageLink",
+        "//ark_nova_stats/frontend/src/components:Table",
+        "//ark_nova_stats/frontend/src/types",
+    ],
+)

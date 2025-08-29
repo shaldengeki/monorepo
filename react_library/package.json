@@ -1,14 +1,14 @@
 {
-  "name": "@monorepo/tictactoe/frontend",
+  "name": "@monorepo/react_library",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "tailwind:css": "bazel build //games/tictactoe/frontend:tailwindcss",
+    "tailwind:css": "bazel build //react_library:tailwindcss",
     "start": "PORT=$REACT_APP_PORT react-scripts start",
-    "build": "bazel build //games/tictactoe/frontend/...",
+    "build": "bazel build //react_library/...",
     "build-and-start": "npm run tailwind:css && npm run start",
-    "test": "bazel test //games/tictactoe/frontend/..."
+    "test": "bazel test //react_library/..."
   },
   "eslintConfig": {
     "extends": [

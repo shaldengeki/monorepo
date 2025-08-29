@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Stats from '../types/Stats';
-import {getDate} from '../DateUtils';
+import {getDate} from '../../../../react_library/DateUtils';
 
 type DatabaseStatisticsParams = {
     stats: Stats | undefined,
