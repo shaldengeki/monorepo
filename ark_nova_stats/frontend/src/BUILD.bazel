@@ -14,10 +14,25 @@ copy_file(
 )
 
 ts_project(
+    name = "EmuCupTableIds",
+    srcs = [
+        "EmuCupTableIds.tsx",
+        ":globalsdts",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
     name = "App",
     srcs = [
         "App.tsx",
-        "EmuCupTableIds.tsx",
         ":globalsdts",
     ],
     allow_js = True,

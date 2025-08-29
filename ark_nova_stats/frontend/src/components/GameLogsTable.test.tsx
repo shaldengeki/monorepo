@@ -19,7 +19,7 @@ it('should handle when no data was retrieved', async () => {
     render(
         <GameLogsTable gameLogs={[]}/>
     );
-    expect(await screen.findByText("Error: game logs could not be retrieved!")).toBeInTheDocument();
+    expect(await screen.findByText("No data to show!")).toBeInTheDocument();
 });
 
 it('should handle a single game log', async () => {

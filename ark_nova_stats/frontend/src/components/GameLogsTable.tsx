@@ -17,7 +17,7 @@ type GameLogsTableRow = {
 }
 
 const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
-    if (gameLogs.length === 0) {
+    if (!gameLogs) {
         return <p>Error: game logs could not be retrieved!</p>;
     } else {
         const tableColumns = ["BGA table", "Players"];
