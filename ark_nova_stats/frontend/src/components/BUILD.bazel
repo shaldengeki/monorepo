@@ -160,26 +160,6 @@ jest_test(
 )
 
 ts_project(
-    name = "PageContainer",
-    srcs = [
-        "PageContainer.tsx",
-    ],
-    allow_js = True,
-    composite = True,
-    declaration = True,
-    out_dir = ".",
-    resolve_json_module = True,
-    transpiler = "tsc",
-    tsconfig = "//ark_nova_stats/frontend:tsconfig",
-    visibility = ["//visibility:public"],
-    deps = [
-        "//:node_modules/@types/react",
-        "//:node_modules/react",
-        "//react_library/NavBar",
-    ],
-)
-
-ts_project(
     name = "PageLink",
     srcs = [
         "PageLink.test.tsx",

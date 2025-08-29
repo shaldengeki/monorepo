@@ -1,5 +1,5 @@
 import React, {PropsWithChildren} from 'react';
-import NavBar, {NavBarElement} from '../../../../react_library/NavBar';
+import NavBar, {NavBarElement} from '../NavBar';
 
 type PageContainerProps = {
     outerClassName?: string;

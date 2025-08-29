@@ -11,8 +11,8 @@ import CardsView from './views/CardsView';
 import HomeView from './views/HomeView';
 import UserView from './views/UserView';
 import EmuCupView from './views/EmuCupView';
-import PageContainer from './components/PageContainer';
 import logo192 from './logo192.png';
+import PageContainer from '../../../react_library/PageContainer';
 
 function App() {
   return (
