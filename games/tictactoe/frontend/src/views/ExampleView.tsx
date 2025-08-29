@@ -1,6 +1,6 @@
 import React from 'react';
-import PageContainer from '../components/PageContainer';
 import ExampleComponent from '../components/ExampleComponent';
+import PageContainer from '../../../../../react_library/PageContainer';
 
 type ExampleViewParams = {
     logo?: any,
