@@ -7,7 +7,7 @@ import Card from '../types/Card';
 import User from '../types/User';
 import Table from '../components/Table';
 import PageLink from '../components/PageLink';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner from '../../../../react_library/LoadingSpinner';
 
 export const CARDS_VIEW_QUERY = gql`
     query FetchCards {

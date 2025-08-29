@@ -7,7 +7,7 @@ import EmuCupTableIds from '../EmuCupTableIds';
 import PageLink from '../components/PageLink';
 import TournamentResultsTable from '../components/TournamentResultsTable';
 import GameStatistics from '../types/GameStatistics';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner from '../../../../react_library/LoadingSpinner';
 
 export const EMU_CUP_VIEW_QUERY = gql`
     query EmuCupView($tableIds: [Int]!) {
