@@ -25,8 +25,8 @@ ts_project(
         "//:node_modules/@types/react",
         "//:node_modules/react",
         "//ark_nova_stats/frontend/src/components:PageLink",
-        "//ark_nova_stats/frontend/src/components:Table",
         "//ark_nova_stats/frontend/src/types",
+        "//react_library/Table",
     ],
 )
 
@@ -96,9 +96,9 @@ ts_project(
         "//:node_modules/jsdom",
         "//:node_modules/react",
         "//ark_nova_stats/frontend/src/components:PageLink",
-        "//ark_nova_stats/frontend/src/components:Table",
         "//ark_nova_stats/frontend/src/types",
         "//react_library/DateUtils",
+        "//react_library/Table",
     ],
 )
 
@@ -140,8 +140,8 @@ ts_project(
         "//:node_modules/jsdom",
         "//:node_modules/react",
         "//ark_nova_stats/frontend/src/components:PageLink",
-        "//ark_nova_stats/frontend/src/components:Table",
         "//ark_nova_stats/frontend/src/types",
+        "//react_library/Table",
     ],
 )
 
@@ -240,48 +240,6 @@ ts_project(
 )
 
 ts_project(
-    name = "Table",
-    srcs = [
-        "Table.test.tsx",
-        "Table.tsx",
-    ],
-    allow_js = True,
-    composite = True,
-    declaration = True,
-    out_dir = ".",
-    resolve_json_module = True,
-    transpiler = "tsc",
-    tsconfig = "//ark_nova_stats/frontend:tsconfig",
-    visibility = ["//visibility:public"],
-    deps = [
-        "//:node_modules/@apollo/react-testing",
-        "//:node_modules/@testing-library/jest-dom",
-        "//:node_modules/@testing-library/react",
-        "//:node_modules/@types/jest",
-        "//:node_modules/@types/lodash",
-        "//:node_modules/@types/react",
-        "//:node_modules/jest-environment-jsdom",
-        "//:node_modules/jsdom",
-        "//:node_modules/lodash",
-        "//:node_modules/react",
-    ],
-)
-
-jest_test(
-    name = "TableTest",
-    config = "//react_library:jestconfig",
-    data = [
-        ":setupTests",
-        "//ark_nova_stats/frontend:testfixtures",
-        "//ark_nova_stats/frontend/src/components:Table",
-    ],
-    node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
-)
-
-ts_project(
     name = "TournamentResultsTable",
     srcs = [
         "TournamentResultsTable.test.tsx",
@@ -307,8 +265,8 @@ ts_project(
         "//:node_modules/lodash",
         "//:node_modules/react",
         "//ark_nova_stats/frontend/src/components:PageLink",
-        "//ark_nova_stats/frontend/src/components:Table",
         "//ark_nova_stats/frontend/src/types",
+        "//react_library/Table",
     ],
 )
 
@@ -343,7 +301,7 @@ ts_project(
         "//:node_modules/@types/react",
         "//:node_modules/react",
         "//ark_nova_stats/frontend/src/components:PageLink",
-        "//ark_nova_stats/frontend/src/components:Table",
         "//ark_nova_stats/frontend/src/types",
+        "//react_library/Table",
     ],
 )

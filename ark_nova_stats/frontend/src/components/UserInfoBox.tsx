@@ -2,7 +2,7 @@ import React from 'react';
 
 import User from '../types/User';
 import UserPlayCount from '../types/UserPlayCount';
-import Table from './Table';
+import Table from '../../../../react_library/Table';
 import PageLink from './PageLink';
 
 type UserInfoBoxParams = {

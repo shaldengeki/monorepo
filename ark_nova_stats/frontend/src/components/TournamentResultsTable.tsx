@@ -1,7 +1,7 @@
 import React from 'react';
 
 import GameStatistics from '../types/GameStatistics';
-import Table from './Table';
+import Table from '../../../../react_library/Table';
 import PageLink from './PageLink';
 import _ from 'lodash';
 import GameLog from '../types/GameLog';

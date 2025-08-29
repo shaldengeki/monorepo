@@ -1,0 +1,132 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+ts_project(
+    name = "Header",
+    srcs = [
+        "Header.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//mc_manager/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+    ],
+)
+
+ts_project(
+    name = "ServerBackups",
+    srcs = [
+        "ServerBackups.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//mc_manager/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@types/lodash",
+        "//:node_modules/@types/react",
+        "//:node_modules/lodash",
+        "//:node_modules/react",
+        "//mc_manager/frontend/src:Utils",
+        "//mc_manager/frontend/src/types",
+        "//react_library/Table",
+    ],
+)
+
+ts_project(
+    name = "ServerControls",
+    srcs = [
+        "ServerControls.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//mc_manager/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//mc_manager/frontend/src/types",
+    ],
+)
+
+ts_project(
+    name = "ServerHeader",
+    srcs = [
+        "ServerHeader.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//mc_manager/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+    ],
+)
+
+ts_project(
+    name = "ServerInfo",
+    srcs = [
+        "ServerInfo.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//mc_manager/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//mc_manager/frontend/src:Utils",
+        "//mc_manager/frontend/src/types",
+    ],
+)
+
+ts_project(
+    name = "ServerListing",
+    srcs = [
+        "ServerListing.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//mc_manager/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@types/lodash",
+        "//:node_modules/@types/react",
+        "//:node_modules/lodash",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+        "//mc_manager/frontend/src:Utils",
+        "//react_library/Table",
+    ],
+)

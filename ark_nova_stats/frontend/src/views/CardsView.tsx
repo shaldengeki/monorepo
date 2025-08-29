@@ -5,9 +5,9 @@ import { useQuery } from '@apollo/client/react/hooks';
 import PageTitle from "../components/PageTitle";
 import Card from '../types/Card';
 import User from '../types/User';
-import Table from '../components/Table';
 import PageLink from '../components/PageLink';
 import LoadingSpinner from '../../../../react_library/LoadingSpinner';
+import Table from '../../../../react_library/Table';
 
 export const CARDS_VIEW_QUERY = gql`
     query FetchCards {
