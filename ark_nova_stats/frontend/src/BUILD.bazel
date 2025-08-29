@@ -37,8 +37,12 @@ ts_project(
         "//:node_modules/@types/react",
         "//:node_modules/react",
         "//:node_modules/react-router-dom",
-        "//ark_nova_stats/frontend/src/types:ExampleType",
-        "//ark_nova_stats/frontend/src/views:ExampleView",
+        "//ark_nova_stats/frontend/src/components:PageContainer",
+        "//ark_nova_stats/frontend/src/views:CardView",
+        "//ark_nova_stats/frontend/src/views:CardsView",
+        "//ark_nova_stats/frontend/src/views:EmuCupView",
+        "//ark_nova_stats/frontend/src/views:HomeView",
+        "//ark_nova_stats/frontend/src/views:UserView",
     ],
 )
 

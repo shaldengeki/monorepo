@@ -40,8 +40,8 @@ copy_file(
 frontend_image(
     name = "production",
     srcs = glob(["public/**/*"]) + [
-        ":tailwindcss",
-        ":ts",
+        "//ark_nova_stats/frontend/src:index",
+        "//ark_nova_stats/frontend/src:tailwindcss",
     ],
     build_env = {
         "REACT_APP_API_HOST": "api.arknova.ouguo.us",
@@ -59,8 +59,8 @@ frontend_image(
 frontend_image(
     name = "development",
     srcs = glob(["public/**/*"]) + [
-        ":tailwindcss",
-        ":ts",
+        "//ark_nova_stats/frontend/src:index",
+        "//ark_nova_stats/frontend/src:tailwindcss",
     ],
     build_env = {
         "REACT_APP_API_HOST": "localhost",

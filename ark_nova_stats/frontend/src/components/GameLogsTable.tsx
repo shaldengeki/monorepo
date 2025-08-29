@@ -17,9 +17,8 @@ type GameLogsTableRow = {
 }
 
 const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
-    let innerContent = <p></p>;
-    if (!gameLogs) {
-        innerContent = <p>Error: game logs could not be retrieved!</p>;
+    if (gameLogs.length === 0) {
+        return <p>Error: game logs could not be retrieved!</p>;
     } else {
         const tableColumns = ["BGA table", "Players"];
         if (currentPlayer !== undefined) {
@@ -64,15 +63,12 @@ const GameLogsTable = ({gameLogs, currentPlayer}: GameLogsTableParams) => {
 
             return rowAttrs;
         });
-        innerContent = (
-        <Table<GameLogsTableRow>
+        return <Table<GameLogsTableRow>
             rows={rows}
             keyName="game-logs"
             showFilters={false}
-        />
-       );
+        />;
     }
-    return innerContent
 }
 
 export default GameLogsTable;
