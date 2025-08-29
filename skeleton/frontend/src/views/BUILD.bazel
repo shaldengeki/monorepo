@@ -31,6 +31,7 @@ ts_project(
         "//:node_modules/jest-environment-jsdom",
         "//:node_modules/jsdom",
         "//:node_modules/react",
+        "//react_library/NavBar",
         "//react_library/PageContainer",
         "//skeleton/frontend/src/components:ExampleComponent",
     ],

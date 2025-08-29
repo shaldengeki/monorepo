@@ -1,5 +1,6 @@
 import React from 'react';
 import ExampleComponent from '../components/ExampleComponent';
+import NavBar from '../../../../../react_library/NavBar';
 import PageContainer from '../../../../../react_library/PageContainer';
 
 type ExampleViewParams = {
@@ -8,7 +9,7 @@ type ExampleViewParams = {
 
 const ExampleView = (props: ExampleViewParams) => {
     return (
-        <PageContainer logo={props.logo}>
+        <PageContainer navbar={<NavBar logo={props.logo} title="Tic-Tac-Toe"/>}>
             <p>Page Container</p>
             <ExampleComponent />
         </PageContainer>

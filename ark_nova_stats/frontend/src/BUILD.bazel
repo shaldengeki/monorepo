@@ -57,6 +57,7 @@ ts_project(
         "//ark_nova_stats/frontend/src/views:EmuCupView",
         "//ark_nova_stats/frontend/src/views:HomeView",
         "//ark_nova_stats/frontend/src/views:UserView",
+        "//react_library/NavBar",
         "//react_library/PageContainer",
     ],
 )
