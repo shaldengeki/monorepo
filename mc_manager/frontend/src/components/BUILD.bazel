@@ -34,7 +34,6 @@ ts_project(
     tsconfig = "//mc_manager/frontend:tsconfig",
     visibility = ["//visibility:public"],
     deps = [
-        ":Table",
         "//:node_modules/@apollo/client",
         "//:node_modules/@types/lodash",
         "//:node_modules/@types/react",
@@ -42,6 +41,7 @@ ts_project(
         "//:node_modules/react",
         "//mc_manager/frontend/src:Utils",
         "//mc_manager/frontend/src/types",
+        "//react_library/Table",
     ],
 )
 
@@ -120,7 +120,6 @@ ts_project(
     tsconfig = "//mc_manager/frontend:tsconfig",
     visibility = ["//visibility:public"],
     deps = [
-        ":Table",
         "//:node_modules/@apollo/client",
         "//:node_modules/@types/lodash",
         "//:node_modules/@types/react",
@@ -128,26 +127,6 @@ ts_project(
         "//:node_modules/react",
         "//:node_modules/react-router-dom",
         "//mc_manager/frontend/src:Utils",
-    ],
-)
-
-ts_project(
-    name = "Table",
-    srcs = [
-        "Table.tsx",
-    ],
-    allow_js = True,
-    composite = True,
-    declaration = True,
-    out_dir = ".",
-    resolve_json_module = True,
-    transpiler = "tsc",
-    tsconfig = "//mc_manager/frontend:tsconfig",
-    visibility = ["//visibility:public"],
-    deps = [
-        "//:node_modules/@types/lodash",
-        "//:node_modules/@types/react",
-        "//:node_modules/lodash",
-        "//:node_modules/react",
+        "//react_library/Table",
     ],
 )

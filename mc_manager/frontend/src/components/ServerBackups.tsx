@@ -4,8 +4,8 @@ import { gql } from '@apollo/client/core';
 import { useQuery, useMutation } from '@apollo/client/react/hooks';
 
 import { serverBackupStatusSymbol } from '../Utils'
-import Table from './Table'
 import type Backup from '../types/Backup'
+import Table from '../../../../react_library/Table';
 
 const GET_SERVER_BACKUPS = gql`
     query ServerBackups($name: String, $limit: Int) {
@@ -39,12 +39,13 @@ const ENQUEUE_SERVER_BACKUP = gql`
     }
 `
 
-type ServerBackup = {
-  created: string,
-  state: string,
-  error?: string,
-  restore: any
-};
+type ServerBackupsTableRow = {
+    "Created": React.JSX.Element,
+    "State": React.JSX.Element,
+    "Error?": React.JSX.Element,
+    "Restore": React.JSX.Element,
+
+}
 
 type ServerBackupsProps = {
   name?: string
@@ -67,7 +68,7 @@ const ServerBackupsListing = ({ name }: ServerBackupsProps) => {
   const server = data.servers[0]
   const serverLatestStateIsRestoring = (server.latestLog && (server.latestLog.state === 'restore_queued' || server.latestLog.state === 'restore_started'))
 
-  const formattedBackups : Array<ServerBackup> = _.map(server.backups || [], (backup) => {
+  const formattedBackups : Array<ServerBackupsTableRow> = _.map(server.backups || [], (backup) => {
     const createdFormatted = new Date(backup.created * 1000).toLocaleDateString('en-US')
     const restoreLink = (serverId: number, backup: Backup) => {
       if (enqueueLoading) return '🕜Enqueueing restoration...'
@@ -90,21 +91,15 @@ const ServerBackupsListing = ({ name }: ServerBackupsProps) => {
     }
 
     return {
-      created: createdFormatted,
-      state: `${serverBackupStatusSymbol(backup.state)} ${backup.state}`,
-      error: backup.error,
-      restore: restoreLink(server.id, backup)
+      "Created": <p>{createdFormatted}</p>,
+      "State": <p>{serverBackupStatusSymbol(backup.state)} {backup.state}`</p>,
+      "Error?": <p>{backup.error}</p>,
+      "Restore": <p>{restoreLink(server.id, backup)}</p>
     }
   })
 
-  const cols = [
-    'created',
-    'state',
-    'error',
-    'restore'
-  ]
   return (
-        <Table showFilters={false} cols={cols} rows={formattedBackups} key='backups' />
+        <Table<ServerBackupsTableRow> showFilters={false} rows={formattedBackups} keyName='backups' />
   )
 }
 
