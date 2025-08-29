@@ -1,6 +1,6 @@
 import React from 'react';
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 
 import PageTitle from "../components/PageTitle";
 import Card from '../types/Card';
@@ -39,8 +39,10 @@ const CardsView = () => {
     if (loading) innerContent = <LoadingSpinner />;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
+        // @ts-ignore
         const cards: Card[] = data.cards;
         const cardRows: CardsTableRow[] = cards.map((card: Card) => {
+        // @ts-ignore
             const mostPlayed = data.cards.find((c: any) => {return c.bgaId === card.bgaId}).mostPlayedBy[0];
             const mostPlayedUser: User = mostPlayed.user;
             return {

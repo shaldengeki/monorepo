@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 
 import ServerBackups from '../components/ServerBackups'
 import ServerHeader from '../components/ServerHeader'
@@ -50,7 +50,7 @@ const GET_SERVER_INFO = gql`
 function Server () {
   const { name } = useParams<{ name: string }>()
 
-  const { data, loading, error } = useQuery(GET_SERVER_INFO, {
+  const { loading, error, data } = useQuery(GET_SERVER_INFO, {
     variables: { name },
     pollInterval: 60_000
   })
@@ -61,6 +61,7 @@ function Server () {
   if (loading) return loadingDisplay
   if (error) return errorDisplay
 
+  // @ts-ignore
   const server = data.servers[0]
 
   return (

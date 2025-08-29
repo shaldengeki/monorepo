@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import WorkweekHustle from './WorkweekHustle';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from "@apollo/client/testing/react";
 import React from 'react';
 import { FETCH_CURRENT_USER_QUERY } from './UserActivityForm';
 
