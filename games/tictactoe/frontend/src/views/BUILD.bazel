@@ -32,7 +32,8 @@ ts_project(
         "//:node_modules/jsdom",
         "//:node_modules/react",
         "//games/tictactoe/frontend/src/components:ExampleComponent",
-        "//games/tictactoe/frontend/src/components:PageContainer",
+        "//react_library/NavBar",
+        "//react_library/PageContainer",
     ],
 )
 
