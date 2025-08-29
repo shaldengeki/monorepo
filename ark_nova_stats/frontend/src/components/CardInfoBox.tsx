@@ -2,7 +2,7 @@ import React from 'react';
 
 import Card from '../types/Card';
 import UserPlayCount from '../types/UserPlayCount';
-import Table from './Table';
+import Table from '../../../../react_library/Table';
 import PageLink from './PageLink';
 
 type CardInfoBoxParams = {
