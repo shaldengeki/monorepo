@@ -8,6 +8,12 @@ copy_file(
     out = "globals.d.ts",
 )
 
+copy_file(
+    name = "setupTests",
+    src = "//react_library:setupTests.js",
+    out = "setupTests.js",
+)
+
 ts_project(
     name = "UserView",
     srcs = [
@@ -38,12 +44,6 @@ ts_project(
         "//ark_nova_stats/frontend/src/types",
         "//react_library/LoadingSpinner",
     ],
-)
-
-copy_file(
-    name = "setupTests",
-    src = "//react_library:setupTests.js",
-    out = "setupTests.js",
 )
 
 jest_test(

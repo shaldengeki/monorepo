@@ -31,6 +31,8 @@ ts_project(
         "//:node_modules/jest-environment-jsdom",
         "//:node_modules/jsdom",
         "//:node_modules/react",
+        "//ark_nova_stats/frontend/src/types",
+        "//react_library/DateUtils",
     ],
 )
 
@@ -152,6 +154,26 @@ jest_test(
 )
 
 ts_project(
+    name = "PageTitle",
+    srcs = [
+        "PageTitle.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+    ],
+)
+
+ts_project(
     name = "Table",
     srcs = [
         "Table.test.tsx",
@@ -190,5 +212,27 @@ jest_test(
     node_modules = "//:node_modules",
     node_options = [
         "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "UserInfoBox",
+    srcs = [
+        "UserInfoBox.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//ark_nova_stats/frontend/src/components:PageLink",
+        "//ark_nova_stats/frontend/src/components:Table",
+        "//ark_nova_stats/frontend/src/types",
     ],
 )
