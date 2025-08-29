@@ -9,7 +9,7 @@ import GameLogsTable from '../components/GameLogsTable';
 import GameLog from '../types/GameLog';
 import User from '../types/User';
 import UserPlayCount from '../types/UserPlayCount';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner from '../../../../react_library/LoadingSpinner';
 
 export const USER_VIEW_QUERY = gql`
     query FetchUser($name: String!) {

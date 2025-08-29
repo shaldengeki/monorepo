@@ -11,7 +11,7 @@ it('should render the name of the view', async () => {
     },
     result: {
       data: {
-        cards: null,
+        cards: [],
       }
     }
   }
@@ -71,5 +71,5 @@ it('should render most-commonly played user when provided', async () => {
         </MockedProvider>,
         {wrapper: BrowserRouter},
     );
-    expect(await screen.findByText("test user")).toBeInTheDocument();
+    expect(await screen.findByText("test user (100)")).toBeInTheDocument();
   });

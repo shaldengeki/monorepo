@@ -9,7 +9,7 @@ import GameLogArchivesTable from '../components/GameLogArchivesTable';
 import Stats from '../types/Stats';
 import GameLog from '../types/GameLog';
 import GameLogArchive from '../types/GameLogArchive';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner from '../../../../react_library/LoadingSpinner';
 
 export const HOME_VIEW_QUERY = gql`
     query FetchHome {
