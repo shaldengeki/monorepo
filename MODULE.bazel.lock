@@ -652,7 +652,7 @@
     "@@rules_buf+//buf:extensions.bzl%buf": {
       "general": {
         "bzlTransitiveDigest": "nziVPz62Pjv2JecWM9NXmhpU/OjKhPz1MT9++4ObLUw=",
-        "usagesDigest": "MHBP0Mq4Y8U0g8tGU7zSpdCmM56pTPsJIL/ZyRTRnLs=",
+        "usagesDigest": "ifjoWqeyQ83vl8kjkG08EfvBxKMXNutdMNVg/61FLds=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -660,7 +660,7 @@
           "rules_buf_toolchains": {
             "repoRuleId": "@@rules_buf+//buf/internal:toolchain.bzl%buf_download_releases",
             "attributes": {
-              "version": "v1.50.0",
+              "version": "v1.57.0",
               "sha256": ""
             }
           }

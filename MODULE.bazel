@@ -42,7 +42,7 @@ register_toolchains("@toolchains_protoc_hub//:all")
 register_toolchains("//tools/protoc:all")
 
 buf = use_extension("@rules_buf//buf:extensions.bzl", "buf")
-buf.toolchains(version = "v1.50.0")
+buf.toolchains(version = "v1.57.0")
 use_repo(buf, "rules_buf_toolchains")
 
 #### Python
