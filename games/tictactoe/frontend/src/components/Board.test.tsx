@@ -10,5 +10,5 @@ it('should render', async () => {
             <Board xIsNext={false} squares={[]} onPlay={() => {}} />
         </MockedProvider>,
     );
-    expect(await screen.findByText("Hello World!")).toBeInTheDocument();
+    expect(await screen.findByText("Next player: O")).toBeInTheDocument();
 });

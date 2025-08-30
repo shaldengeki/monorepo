@@ -8,9 +8,9 @@ import * as React from 'react';
 test('should render', async () => {
     render(
       <MockedProvider mocks={[]}>
-        <GameView />
+        <GameView logo={"test"} />
       </MockedProvider>,
       {wrapper: BrowserRouter},
     );
-    expect(await screen.findByText("Page Container")).toBeInTheDocument();
+    expect(await screen.findByText("Tic-Tac-Toe")).toBeInTheDocument();
 });
