@@ -48,14 +48,14 @@ use_repo(buf, "rules_buf_toolchains")
 #### Python
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
-    python_version = "3.12",
+    python_version = "3.13.4",
 )
-use_repo(python, "python_3_12")
+use_repo(python, "python_3_13_4")
 
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(
     hub_name = "py_deps",
-    python_version = "3.12",
+    python_version = "3.13.4",
     requirements_lock = "//:requirements.lock.txt",
 )
 use_repo(pip, "py_deps")
