@@ -85,8 +85,6 @@ oci.pull(
         "linux/s390x",
     ],
 )
-use_repo(oci, "python3_image")
-
 oci.pull(
     name = "nginx_debian_slim",
     digest = "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
@@ -133,6 +131,7 @@ use_repo(
     "nginx_mainline_alpine_linux_arm_v7",
     "nginx_mainline_alpine_linux_ppc64le",
     "nginx_mainline_alpine_linux_s390x",
+    "python3_image",
     "python3_image_linux_386",
     "python3_image_linux_amd64",
     "python3_image_linux_arm64_v8",
