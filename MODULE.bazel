@@ -71,8 +71,6 @@ oci.pull(
         "linux/amd64",
     ],
 )
-use_repo(oci, "ubuntu_image")
-
 oci.pull(
     name = "python3_image",
     digest = "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
@@ -142,6 +140,7 @@ use_repo(
     "python3_image_linux_arm_v7",
     "python3_image_linux_ppc64le",
     "python3_image_linux_s390x",
+    "ubuntu_image",
     "ubuntu_image_linux_amd64",
     "ubuntu_image_linux_arm64_v8",
 )
