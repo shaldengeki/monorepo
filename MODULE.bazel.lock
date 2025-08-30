@@ -1176,7 +1176,7 @@
     "@@rules_oci+//oci:extensions.bzl%oci": {
       "general": {
         "bzlTransitiveDigest": "wpnwi989JUEReiBka08jrHl/G2W0T5K62RMgH2FZ4c4=",
-        "usagesDigest": "bJtJAKAeEq6yRYcb+E76CnLh9AEzY0q9EBBGMI/hRHg=",
+        "usagesDigest": "cGuIeVlsOlqO/aO88IzSqj+3Bkh0iS7L5OyjDFcMD7I=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -1448,6 +1448,118 @@
               "reproducible": true
             }
           },
+          "nginx_mainline_alpine_linux_386": {
+            "repoRuleId": "@@rules_oci+//oci/private:pull.bzl%oci_pull",
+            "attributes": {
+              "www_authenticate_challenges": {},
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/nginx",
+              "identifier": "sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8",
+              "platform": "linux/386",
+              "target_name": "nginx_mainline_alpine_linux_386",
+              "bazel_tags": []
+            }
+          },
+          "nginx_mainline_alpine_linux_amd64": {
+            "repoRuleId": "@@rules_oci+//oci/private:pull.bzl%oci_pull",
+            "attributes": {
+              "www_authenticate_challenges": {},
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/nginx",
+              "identifier": "sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8",
+              "platform": "linux/amd64",
+              "target_name": "nginx_mainline_alpine_linux_amd64",
+              "bazel_tags": []
+            }
+          },
+          "nginx_mainline_alpine_linux_arm_v5": {
+            "repoRuleId": "@@rules_oci+//oci/private:pull.bzl%oci_pull",
+            "attributes": {
+              "www_authenticate_challenges": {},
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/nginx",
+              "identifier": "sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8",
+              "platform": "linux/arm/v5",
+              "target_name": "nginx_mainline_alpine_linux_arm_v5",
+              "bazel_tags": []
+            }
+          },
+          "nginx_mainline_alpine_linux_arm_v7": {
+            "repoRuleId": "@@rules_oci+//oci/private:pull.bzl%oci_pull",
+            "attributes": {
+              "www_authenticate_challenges": {},
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/nginx",
+              "identifier": "sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8",
+              "platform": "linux/arm/v7",
+              "target_name": "nginx_mainline_alpine_linux_arm_v7",
+              "bazel_tags": []
+            }
+          },
+          "nginx_mainline_alpine_linux_arm64_v8": {
+            "repoRuleId": "@@rules_oci+//oci/private:pull.bzl%oci_pull",
+            "attributes": {
+              "www_authenticate_challenges": {},
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/nginx",
+              "identifier": "sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8",
+              "platform": "linux/arm64/v8",
+              "target_name": "nginx_mainline_alpine_linux_arm64_v8",
+              "bazel_tags": []
+            }
+          },
+          "nginx_mainline_alpine_linux_ppc64le": {
+            "repoRuleId": "@@rules_oci+//oci/private:pull.bzl%oci_pull",
+            "attributes": {
+              "www_authenticate_challenges": {},
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/nginx",
+              "identifier": "sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8",
+              "platform": "linux/ppc64le",
+              "target_name": "nginx_mainline_alpine_linux_ppc64le",
+              "bazel_tags": []
+            }
+          },
+          "nginx_mainline_alpine_linux_s390x": {
+            "repoRuleId": "@@rules_oci+//oci/private:pull.bzl%oci_pull",
+            "attributes": {
+              "www_authenticate_challenges": {},
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/nginx",
+              "identifier": "sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8",
+              "platform": "linux/s390x",
+              "target_name": "nginx_mainline_alpine_linux_s390x",
+              "bazel_tags": []
+            }
+          },
+          "nginx_mainline_alpine": {
+            "repoRuleId": "@@rules_oci+//oci/private:pull.bzl%oci_alias",
+            "attributes": {
+              "target_name": "nginx_mainline_alpine",
+              "www_authenticate_challenges": {},
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/nginx",
+              "identifier": "sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8",
+              "platforms": {
+                "@@platforms//cpu:i386": "@nginx_mainline_alpine_linux_386",
+                "@@platforms//cpu:x86_64": "@nginx_mainline_alpine_linux_amd64",
+                "@@platforms//cpu:armv7": "@nginx_mainline_alpine_linux_arm_v7",
+                "@@platforms//cpu:arm64": "@nginx_mainline_alpine_linux_arm64_v8",
+                "@@platforms//cpu:ppc": "@nginx_mainline_alpine_linux_ppc64le",
+                "@@platforms//cpu:s390x": "@nginx_mainline_alpine_linux_s390x"
+              },
+              "bzlmod_repository": "nginx_mainline_alpine",
+              "reproducible": true
+            }
+          },
           "oci_crane_darwin_amd64": {
             "repoRuleId": "@@rules_oci+//oci:repositories.bzl%crane_repositories",
             "attributes": {
@@ -1582,7 +1694,15 @@
             "nginx_debian_slim_linux_arm_v7",
             "nginx_debian_slim_linux_arm64_v8",
             "nginx_debian_slim_linux_ppc64le",
-            "nginx_debian_slim_linux_s390x"
+            "nginx_debian_slim_linux_s390x",
+            "nginx_mainline_alpine",
+            "nginx_mainline_alpine_linux_386",
+            "nginx_mainline_alpine_linux_amd64",
+            "nginx_mainline_alpine_linux_arm_v5",
+            "nginx_mainline_alpine_linux_arm_v7",
+            "nginx_mainline_alpine_linux_arm64_v8",
+            "nginx_mainline_alpine_linux_ppc64le",
+            "nginx_mainline_alpine_linux_s390x"
           ],
           "explicitRootModuleDirectDevDeps": [],
           "useAllRepos": "NO",

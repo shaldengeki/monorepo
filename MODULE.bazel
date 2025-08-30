@@ -71,8 +71,6 @@ oci.pull(
         "linux/amd64",
     ],
 )
-use_repo(oci, "ubuntu_image")
-
 oci.pull(
     name = "python3_image",
     digest = "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
@@ -87,8 +85,6 @@ oci.pull(
         "linux/s390x",
     ],
 )
-use_repo(oci, "python3_image")
-
 oci.pull(
     name = "nginx_debian_slim",
     digest = "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
@@ -103,7 +99,50 @@ oci.pull(
         "linux/s390x",
     ],
 )
-use_repo(oci, "nginx_debian_slim", "nginx_debian_slim_linux_386", "nginx_debian_slim_linux_amd64", "nginx_debian_slim_linux_arm64_v8", "nginx_debian_slim_linux_arm_v5", "nginx_debian_slim_linux_arm_v7", "nginx_debian_slim_linux_ppc64le", "nginx_debian_slim_linux_s390x", "python3_image_linux_386", "python3_image_linux_amd64", "python3_image_linux_arm64_v8", "python3_image_linux_arm_v5", "python3_image_linux_arm_v7", "python3_image_linux_ppc64le", "python3_image_linux_s390x", "ubuntu_image_linux_amd64", "ubuntu_image_linux_arm64_v8")
+oci.pull(
+    name = "nginx_mainline_alpine",
+    digest = "sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8",
+    image = "docker.io/library/nginx",
+    platforms = [
+        "linux/386",
+        "linux/amd64",
+        "linux/arm/v5",
+        "linux/arm/v7",
+        "linux/arm64/v8",
+        "linux/ppc64le",
+        "linux/s390x",
+    ],
+)
+use_repo(
+    oci,
+    "nginx_debian_slim",
+    "nginx_debian_slim_linux_386",
+    "nginx_debian_slim_linux_amd64",
+    "nginx_debian_slim_linux_arm64_v8",
+    "nginx_debian_slim_linux_arm_v5",
+    "nginx_debian_slim_linux_arm_v7",
+    "nginx_debian_slim_linux_ppc64le",
+    "nginx_debian_slim_linux_s390x",
+    "nginx_mainline_alpine",
+    "nginx_mainline_alpine_linux_386",
+    "nginx_mainline_alpine_linux_amd64",
+    "nginx_mainline_alpine_linux_arm64_v8",
+    "nginx_mainline_alpine_linux_arm_v5",
+    "nginx_mainline_alpine_linux_arm_v7",
+    "nginx_mainline_alpine_linux_ppc64le",
+    "nginx_mainline_alpine_linux_s390x",
+    "python3_image",
+    "python3_image_linux_386",
+    "python3_image_linux_amd64",
+    "python3_image_linux_arm64_v8",
+    "python3_image_linux_arm_v5",
+    "python3_image_linux_arm_v7",
+    "python3_image_linux_ppc64le",
+    "python3_image_linux_s390x",
+    "ubuntu_image",
+    "ubuntu_image_linux_amd64",
+    "ubuntu_image_linux_arm64_v8",
+)
 
 #### Javascript
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)

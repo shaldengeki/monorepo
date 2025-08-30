@@ -41,7 +41,7 @@ def frontend_image(
         repo_tags,
         docker_hub_repository,
         build_env = {},
-        base_image = "@nginx_debian_slim",
+        base_image = "@nginx_mainline_alpine",
         stamp_file = "//:stamped",
         webpack_deps = [],
         visibility = None,
