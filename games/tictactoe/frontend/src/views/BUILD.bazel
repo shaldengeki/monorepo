@@ -9,10 +9,10 @@ copy_file(
 )
 
 ts_project(
-    name = "ExampleView",
+    name = "GameView",
     srcs = [
-        "ExampleView.test.tsx",
-        "ExampleView.tsx",
+        "GameView.test.tsx",
+        "GameView.tsx",
     ],
     allow_js = True,
     composite = True,
@@ -31,7 +31,7 @@ ts_project(
         "//:node_modules/jest-environment-jsdom",
         "//:node_modules/jsdom",
         "//:node_modules/react",
-        "//games/tictactoe/frontend/src/components:ExampleComponent",
+        "//games/tictactoe/frontend/src/components:Board",
         "//react_library/NavBar",
         "//react_library/PageContainer",
     ],
@@ -44,10 +44,10 @@ copy_file(
 )
 
 jest_test(
-    name = "ExampleViewTest",
+    name = "GameViewTest",
     config = "//react_library:jestconfig",
     data = [
-        ":ExampleView",
+        ":GameView",
         ":setupTests",
         "//games/tictactoe/frontend:packagejson",
         "//react_library:testfixtures",

@@ -7,14 +7,14 @@ import {
 } from "react-router-dom";
 
 import logo192 from './logo192.png';
-import ExampleView from './views/ExampleView';
+import GameView from './views/GameView';
 
 function App() {
   return (
     <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/example" replace />} />
-          <Route path="example" element={<ExampleView logo={logo192} />} />
+          <Route path="example" element={<GameView logo={logo192} />} />
         </Routes>
     </Router>
   );

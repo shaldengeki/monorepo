@@ -2,11 +2,17 @@ load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 
+copy_file(
+    name = "setupTests",
+    src = "//react_library:setupTests.js",
+    out = "setupTests.js",
+)
+
 ts_project(
-    name = "ExampleComponent",
+    name = "Square",
     srcs = [
-        "ExampleComponent.test.tsx",
-        "ExampleComponent.tsx",
+        "Square.test.tsx",
+        "Square.tsx",
     ],
     allow_js = True,
     composite = True,
@@ -28,19 +34,54 @@ ts_project(
     ],
 )
 
-copy_file(
-    name = "setupTests",
-    src = "//react_library:setupTests.js",
-    out = "setupTests.js",
-)
-
 jest_test(
-    name = "ExampleComponentTest",
+    name = "SquareTest",
     config = "//react_library:jestconfig",
     data = [
         ":setupTests",
         "//games/tictactoe/frontend:testfixtures",
-        "//games/tictactoe/frontend/src/components:ExampleComponent",
+        "//games/tictactoe/frontend/src/components:Square",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "Board",
+    srcs = [
+        "Board.test.tsx",
+        "Board.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//games/tictactoe/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":Square",
+        "//:node_modules/@apollo/react-testing",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+    ],
+)
+
+jest_test(
+    name = "BoardTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//games/tictactoe/frontend:testfixtures",
+        "//games/tictactoe/frontend/src/components:Board",
     ],
     node_modules = "//:node_modules",
     node_options = [
