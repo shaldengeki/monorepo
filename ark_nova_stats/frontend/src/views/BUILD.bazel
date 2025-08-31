@@ -65,9 +65,9 @@ ts_project(
         "//:node_modules/react-router-dom",
         "//ark_nova_stats/frontend/src/components:PageLink",
         "//ark_nova_stats/frontend/src/components:PageTitle",
-        "//ark_nova_stats/frontend/src/components:Table",
         "//ark_nova_stats/frontend/src/types",
         "//react_library/LoadingSpinner",
+        "//react_library/Table",
     ],
 )
 

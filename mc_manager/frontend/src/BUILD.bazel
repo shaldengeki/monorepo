@@ -10,7 +10,26 @@ copy_file(
     name = "globalsdts",
     src = "//react_library:globalsdts",
     out = "globals.d.ts",
-    visibility = ["//games/tictactoe/frontend/src:__subpackages__"],
+    visibility = ["//ark_nova_stats/frontend/src:__subpackages__"],
+)
+
+ts_project(
+    name = "Utils",
+    srcs = [
+        "Utils.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//mc_manager/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/node",
+        "//mc_manager/frontend/src/types",
+    ],
 )
 
 ts_project(
@@ -21,7 +40,6 @@ ts_project(
     ],
     allow_js = True,
     assets = [
-        "logo192.png",
         "App.src.css",
         "logo.svg",
     ],
@@ -30,14 +48,14 @@ ts_project(
     out_dir = ".",
     resolve_json_module = True,
     transpiler = "tsc",
-    tsconfig = "//games/tictactoe/frontend:tsconfig",
+    tsconfig = "//mc_manager/frontend:tsconfig",
     visibility = ["//visibility:public"],
     deps = [
         "//:node_modules/@types/react",
         "//:node_modules/react",
         "//:node_modules/react-router-dom",
-        "//games/tictactoe/frontend/src/types:ExampleType",
-        "//games/tictactoe/frontend/src/views:GameView",
+        "//mc_manager/frontend/src/components:Header",
+        "//mc_manager/frontend/src/pages:Servers",
     ],
 )
 
@@ -47,18 +65,18 @@ tailwindcss_bin.tailwindcss(
         "App.src.css",
         ":App",
         "//:node_modules/tailwindcss",
-        "//games/tictactoe/frontend:tailwindconfig",
+        "//mc_manager/frontend:tailwindconfig",
     ],
     outs = [
         "App.css",
     ],
     args = [
-        "--config games/tictactoe/frontend/tailwind.config.js",
-        "-i games/tictactoe/frontend/src/App.src.css",
-        "-o games/tictactoe/frontend/src/App.css",
+        "--config mc_manager/frontend/tailwind.config.js",
+        "-i mc_manager/frontend/src/App.src.css",
+        "-o mc_manager/frontend/src/App.css",
     ],
     log_level = "debug",
-    visibility = ["//games/tictactoe/frontend:__subpackages__"],
+    visibility = ["//mc_manager/frontend:__subpackages__"],
 )
 
 ts_project(
@@ -73,7 +91,7 @@ ts_project(
     out_dir = ".",
     resolve_json_module = True,
     transpiler = "tsc",
-    tsconfig = "//games/tictactoe/frontend:tsconfig",
+    tsconfig = "//mc_manager/frontend:tsconfig",
     visibility = ["//visibility:public"],
     deps = [
         ":App",

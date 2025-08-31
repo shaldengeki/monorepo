@@ -2,7 +2,7 @@ import React from 'react';
 
 import GameLog from '../types/GameLog';
 import User from '../types/User';
-import Table from './Table';
+import Table from '../../../../react_library/Table';
 import PageLink from './PageLink';
 
 type GameLogsTableParams = {

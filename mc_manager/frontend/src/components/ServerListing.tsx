@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client/react';
 import { Link } from 'react-router-dom'
 
 import { displayLog, displayServerUrl } from '../Utils'
-import Table from './Table'
+import Table from '../../../../react_library/Table';
 
 const GET_SERVERS = gql`
     query Servers(
@@ -40,15 +40,16 @@ const GET_SERVERS = gql`
     }
 `
 
-type ServerRow = {
-  id: string,
-  created: string,
-  createdBy: string,
-  name: any,
-  url: string,
-  mod: string,
-  status: string
-};
+type ServerListingTableRow = {
+    "ID": React.JSX.Element,
+    "Created": React.JSX.Element,
+    "Created by": React.JSX.Element,
+    "Name": React.JSX.Element,
+    "URL": React.JSX.Element,
+    "Mod": React.JSX.Element,
+    "Status": React.JSX.Element,
+
+}
 
 type ServerListingProps = {
   earliestDate?: bigint,
@@ -89,7 +90,7 @@ const ServerListing = ({
   if (error) return errorDisplay
 
   // @ts-ignore
-  const formattedServers : Array<ServerRow> = _.map(data.servers || [], (server) => {
+  const formattedServers : Array<ServerListingTableRow> = _.map(data.servers || [], (server) => {
     const createdFormatted = new Date(server.created * 1000).toLocaleDateString('en-US')
     const serverLink = (
       <Link to={`/servers/${server.name}`} className="text-blue-400">
@@ -98,26 +99,17 @@ const ServerListing = ({
     )
 
     return {
-      id: `${server.id}`,
-      created: createdFormatted,
-      createdBy: server.createdBy,
-      name: serverLink,
-      url: displayServerUrl(server.port),
-      mod: server.zipfile,
-      status: `${displayLog(server.latestLog)}`
+      "ID": <p>{server.id}</p>,
+      "Created": <p>{createdFormatted}</p>,
+      "Created by": <p>{server.createdBy}</p>,
+      "Name": serverLink,
+      "URL": <p>{displayServerUrl(server.port)}</p>,
+      "Mod": <p>{server.zipfile}</p>,
+      "Status": <p>{displayLog(server.latestLog)}</p>
     }
   })
-
-  const cols = [
-    'name',
-    'status',
-    'mod',
-    'url',
-    'createdBy',
-    'created'
-  ]
   return (
-        <Table cols={cols} rows={formattedServers} key='servers' />
+        <Table<ServerListingTableRow> rows={formattedServers} keyName='servers' />
   )
 }
 

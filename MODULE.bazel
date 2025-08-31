@@ -3,28 +3,28 @@ module(
     repo_name = "com_github_shaldengeki_monorepo",
 )
 
-bazel_dep(name = "aspect_bazel_lib", version = "2.19.4")
+bazel_dep(name = "aspect_bazel_lib", version = "2.21.1")
 
 bazel_dep(name = "platforms", version = "1.0.0", dev_dependency = True)
 
-bazel_dep(name = "toolchains_protoc", version = "0.4.2")
-bazel_dep(name = "protobuf", version = "29.3")
+bazel_dep(name = "toolchains_protoc", version = "0.5.0")
+bazel_dep(name = "protobuf", version = "31.1")
 bazel_dep(name = "rules_proto", version = "7.1.0")
-bazel_dep(name = "rules_python", version = "1.4.1")
+bazel_dep(name = "rules_python", version = "1.5.4")
 bazel_dep(name = "rules_oci", version = "2.2.6")
 bazel_dep(name = "aspect_rules_js", version = "2.5.0")
 bazel_dep(name = "aspect_rules_ts", version = "3.7.0")
 bazel_dep(name = "aspect_rules_jest", version = "0.23.3")
-bazel_dep(name = "aspect_rules_webpack", version = "0.17.0")
+bazel_dep(name = "aspect_rules_webpack", version = "0.17.1")
 bazel_dep(name = "rules_pkg", version = "1.1.0")
-bazel_dep(name = "rules_go", version = "0.55.1")
-bazel_dep(name = "gazelle", version = "0.44.0")
-bazel_dep(name = "rules_python_gazelle_plugin", version = "1.4.1")
-bazel_dep(name = "rules_java", version = "8.12.0")
+bazel_dep(name = "rules_go", version = "0.57.0")
+bazel_dep(name = "gazelle", version = "0.45.0")
+bazel_dep(name = "rules_python_gazelle_plugin", version = "1.5.4")
+bazel_dep(name = "rules_java", version = "8.15.1")
 bazel_dep(name = "contrib_rules_jvm", version = "0.29.0")
-bazel_dep(name = "rules_cc", version = "0.1.1")
+bazel_dep(name = "rules_cc", version = "0.2.2")
 bazel_dep(name = "googletest", version = "1.17.0")
-bazel_dep(name = "rules_buf", version = "0.5.1")
+bazel_dep(name = "rules_buf", version = "0.5.2")
 
 #### Protoc
 protoc = use_extension("@toolchains_protoc//protoc:extensions.bzl", "protoc")
@@ -33,7 +33,7 @@ protoc.toolchain(
     # deps=["@com_google_protobuf//:any_proto"]
     google_protobuf = "com_google_protobuf",
     # Pin to any version of protoc
-    version = "v29.3",
+    version = "v31.1",
 )
 use_repo(protoc, "com_google_protobuf", "toolchains_protoc_hub")
 
@@ -42,20 +42,20 @@ register_toolchains("@toolchains_protoc_hub//:all")
 register_toolchains("//tools/protoc:all")
 
 buf = use_extension("@rules_buf//buf:extensions.bzl", "buf")
-buf.toolchains(version = "v1.50.0")
+buf.toolchains(version = "v1.57.0")
 use_repo(buf, "rules_buf_toolchains")
 
 #### Python
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
-    python_version = "3.12",
+    python_version = "3.13.4",
 )
-use_repo(python, "python_3_12")
+use_repo(python, "python_3_13_4")
 
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(
     hub_name = "py_deps",
-    python_version = "3.12",
+    python_version = "3.13.4",
     requirements_lock = "//:requirements.lock.txt",
 )
 use_repo(pip, "py_deps")
@@ -71,8 +71,6 @@ oci.pull(
         "linux/amd64",
     ],
 )
-use_repo(oci, "ubuntu_image")
-
 oci.pull(
     name = "python3_image",
     digest = "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
@@ -87,8 +85,6 @@ oci.pull(
         "linux/s390x",
     ],
 )
-use_repo(oci, "python3_image")
-
 oci.pull(
     name = "nginx_debian_slim",
     digest = "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
@@ -103,7 +99,50 @@ oci.pull(
         "linux/s390x",
     ],
 )
-use_repo(oci, "nginx_debian_slim", "nginx_debian_slim_linux_386", "nginx_debian_slim_linux_amd64", "nginx_debian_slim_linux_arm64_v8", "nginx_debian_slim_linux_arm_v5", "nginx_debian_slim_linux_arm_v7", "nginx_debian_slim_linux_ppc64le", "nginx_debian_slim_linux_s390x", "python3_image_linux_386", "python3_image_linux_amd64", "python3_image_linux_arm64_v8", "python3_image_linux_arm_v5", "python3_image_linux_arm_v7", "python3_image_linux_ppc64le", "python3_image_linux_s390x", "ubuntu_image_linux_amd64", "ubuntu_image_linux_arm64_v8")
+oci.pull(
+    name = "nginx_mainline_alpine",
+    digest = "sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8",
+    image = "docker.io/library/nginx",
+    platforms = [
+        "linux/386",
+        "linux/amd64",
+        "linux/arm/v5",
+        "linux/arm/v7",
+        "linux/arm64/v8",
+        "linux/ppc64le",
+        "linux/s390x",
+    ],
+)
+use_repo(
+    oci,
+    "nginx_debian_slim",
+    "nginx_debian_slim_linux_386",
+    "nginx_debian_slim_linux_amd64",
+    "nginx_debian_slim_linux_arm64_v8",
+    "nginx_debian_slim_linux_arm_v5",
+    "nginx_debian_slim_linux_arm_v7",
+    "nginx_debian_slim_linux_ppc64le",
+    "nginx_debian_slim_linux_s390x",
+    "nginx_mainline_alpine",
+    "nginx_mainline_alpine_linux_386",
+    "nginx_mainline_alpine_linux_amd64",
+    "nginx_mainline_alpine_linux_arm64_v8",
+    "nginx_mainline_alpine_linux_arm_v5",
+    "nginx_mainline_alpine_linux_arm_v7",
+    "nginx_mainline_alpine_linux_ppc64le",
+    "nginx_mainline_alpine_linux_s390x",
+    "python3_image",
+    "python3_image_linux_386",
+    "python3_image_linux_amd64",
+    "python3_image_linux_arm64_v8",
+    "python3_image_linux_arm_v5",
+    "python3_image_linux_arm_v7",
+    "python3_image_linux_ppc64le",
+    "python3_image_linux_s390x",
+    "ubuntu_image",
+    "ubuntu_image_linux_amd64",
+    "ubuntu_image_linux_arm64_v8",
+)
 
 #### Javascript
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
@@ -131,23 +170,23 @@ go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.module(
     # build_file_proto_mode = "disable",
     path = "google.golang.org/grpc",
-    sum = "h1:kF77BGdPTQ4/JZWMlb9VpJ5pa25aqvVqogsxNHHdeBg=",
-    version = "v1.71.0",
+    sum = "h1:+TW+dqTd2Biwe6KKfhE5JpiYIBWq865PhKGSXiivqt4=",
+    version = "v1.75.0",
 )
 go_deps.module(
     path = "golang.org/x/net",
-    sum = "h1:T5GQRQb2y08kTAByq9L4/bz8cipCdA8FbRTXewonqY8=",
-    version = "v0.35.0",
+    sum = "h1:lat02VYK2j4aLzMzecihNvTlJNQUq316m2Mr9rnM6YE=",
+    version = "v0.43.0",
 )
 go_deps.module(
     path = "golang.org/x/text",
-    sum = "h1:bofq7m3/HAFvbF51jz3Q9wLg3jkvSPuiZu/pD1XwgtM=",
-    version = "v0.22.0",
+    sum = "h1:rhazDwis8INMIwQ4tpjLDzUhx6RlXqZNPEM0huQojng=",
+    version = "v0.28.0",
 )
 go_deps.module(
     path = "github.com/stretchr/testify",
-    sum = "h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=",
-    version = "v1.10.0",
+    sum = "h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=",
+    version = "v1.11.1",
 )
 use_repo(
     go_deps,

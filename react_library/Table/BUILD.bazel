@@ -3,16 +3,16 @@ load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 
 copy_file(
-    name = "globalsdts",
-    src = "//react_library:globalsdts",
-    out = "globals.d.ts",
+    name = "setupTests",
+    src = "//react_library:setupTests.js",
+    out = "setupTests.js",
 )
 
 ts_project(
-    name = "GameView",
+    name = "Table",
     srcs = [
-        "GameView.test.tsx",
-        "GameView.tsx",
+        "index.test.tsx",
+        "index.tsx",
     ],
     allow_js = True,
     composite = True,
@@ -20,37 +20,27 @@ ts_project(
     out_dir = ".",
     resolve_json_module = True,
     transpiler = "tsc",
-    tsconfig = "//games/tictactoe/frontend:tsconfig",
+    tsconfig = "//react_library:tsconfig",
     visibility = ["//visibility:public"],
     deps = [
-        "//:node_modules/@apollo/client",
         "//:node_modules/@testing-library/jest-dom",
         "//:node_modules/@testing-library/react",
         "//:node_modules/@types/jest",
+        "//:node_modules/@types/lodash",
         "//:node_modules/@types/react",
         "//:node_modules/jest-environment-jsdom",
         "//:node_modules/jsdom",
+        "//:node_modules/lodash",
         "//:node_modules/react",
-        "//games/tictactoe/frontend/src/components:Board",
-        "//react_library/NavBar",
-        "//react_library/PageContainer",
     ],
 )
 
-copy_file(
-    name = "setupTests",
-    src = "//react_library:setupTests.js",
-    out = "setupTests.js",
-)
-
 jest_test(
-    name = "GameViewTest",
+    name = "TableTest",
     config = "//react_library:jestconfig",
     data = [
-        ":GameView",
-        ":setupTests",
-        "//:node_modules/@apollo/client",
-        "//games/tictactoe/frontend:packagejson",
+        ":Table",
+        ":setupTests.js",
         "//react_library:testfixtures",
     ],
     node_modules = "//:node_modules",
