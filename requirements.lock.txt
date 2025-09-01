@@ -4,9 +4,9 @@
 #
 #    bazel run //:requirements.update
 #
-alembic==1.16.4 \
-    --hash=sha256:b05e51e8e82efc1abd14ba2af6392897e145930c3e0a2faf2b0da2f7f7fd660d \
-    --hash=sha256:efab6ada0dd0fae2c92060800e0bf5c1dc26af15a10e02fb4babff164b4725e2
+alembic==1.16.5 \
+    --hash=sha256:a88bb7f6e513bd4301ecf4c7f2206fe93f9913f9b48dac3b78babde2d6fe765e \
+    --hash=sha256:e845dfe090c5ffa7b92593ae6687c5cb1a101e91fa53868497dbd79847f9dbe3
     # via flask-migrate
 asn1crypto==1.5.1 \
     --hash=sha256:13ae38502be632115abf8a24cbe5f4da52e3b5231990aff31123c805306ccb9c \
@@ -46,23 +46,23 @@ blinker==1.9.0 \
     --hash=sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf \
     --hash=sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc
     # via flask
-boto3==1.40.16 \
-    --hash=sha256:4b7fbd2b469d5fa6325f0e90310b2d430c9a35e8a984a9919103e6d248422537 \
-    --hash=sha256:667bc3a9bd1f26579957d95a2612359103c343dd74d44f202d09a155ed4189c6
+boto3==1.40.21 \
+    --hash=sha256:3772fb828864d3b7046c8bdf2f4860aaca4a79f25b7b060206c6a5f4944ea7f9 \
+    --hash=sha256:876ccc0b25517b992bd27976282510773a11ebc771aa5b836a238ea426c82187
     # via -r requirements.txt
-boto3-stubs==1.40.16 \
-    --hash=sha256:30960a4a46a4c49aac440deb1281356fe8907facff100e76ce4587738dc77d01 \
-    --hash=sha256:6b4e555fdd183c0615cda7d4048f4f8ebcd78428374f307ae5f56c4dacd00871
+boto3-stubs==1.40.21 \
+    --hash=sha256:e396a0b9978d384d7fe22ba1e15eb0109d7e2d7572e746db979d25bf07877fd9 \
+    --hash=sha256:ef36f65c7fe86ffbc93c1418fa8904803ce3bcffc3c932c3d1ae33a9d02fa1cd
     # via -r requirements.txt
-botocore==1.40.16 \
-    --hash=sha256:0296a245cb349431279d825522ae70270edf8d8be7b91108fdcc086ea347c0b6 \
-    --hash=sha256:522a8b7e3837667aca978b5b2dd2d12c3834f58f13df3c8d3369070d883d608d
+botocore==1.40.21 \
+    --hash=sha256:574ecf9b68c1721650024a27e00e0080b6f141c281ebfce49e0d302969270ef4 \
+    --hash=sha256:f77e9c199df0252b14ea739a9ac99723940f6bde90f4c2e7802701553a62827b
     # via
     #   boto3
     #   s3transfer
-botocore-stubs==1.38.46 \
-    --hash=sha256:a04e69766ab8bae338911c1897492f88d05cd489cd75f06e6eb4f135f9da8c7b \
-    --hash=sha256:cc21d9a7dd994bdd90872db4664d817c4719b51cda8004fd507a4bf65b085a75
+botocore-stubs==1.40.21 \
+    --hash=sha256:10aa6e3c4818d978047fb9ff87f1686ab597899db29e08eb824081fea7d4cbba \
+    --hash=sha256:1a5777e4e4f0335ed7d3185b0f2a55c1fc5ea1e60fe264cdea51a171c3b0b011
     # via boto3-stubs
 certifi==2025.8.3 \
     --hash=sha256:e564105f78ded564e3ae7c923924435e1daa7463faeab5bb932bc53ffae63407 \
@@ -516,9 +516,9 @@ pg8000==1.31.4 \
     --hash=sha256:d14fb2054642ee80f9a216721892e99e19db60a005358460ffa48872351423d4 \
     --hash=sha256:e7ecce4339891f27b0b22e2f79eb9efe44118bd384207359fc18350f788ace00
     # via -r requirements.txt
-platformdirs==4.3.8 \
-    --hash=sha256:3d512d96e16bcb959a814c9f348431070822a6496326a4be0911c40b5a74c2bc \
-    --hash=sha256:ff7059bb7eb1179e2685604f4aaf157cfd9535242bd23742eadc3c13542139b4
+platformdirs==4.4.0 \
+    --hash=sha256:abd01743f24e5287cd7a5db3752faf1a2d65353f38ec26d98e25a6db65958c85 \
+    --hash=sha256:ca753cf4d81dc309bc67b0ea38fd15dc97bc30ce419a7f58d13eb3bf14c4febf
     # via
     #   -r requirements.txt
     #   black
@@ -772,13 +772,13 @@ types-requests==2.32.4.20250809 \
     --hash=sha256:d8060de1c8ee599311f56ff58010fb4902f462a1470802cf9f6ed27bc46c4df3 \
     --hash=sha256:f73d1832fb519ece02c85b1f09d5f0dd3108938e7d47e7f94bbfa18a6782b163
     # via -r requirements.txt
-types-s3transfer==0.13.0 \
-    --hash=sha256:203dadcb9865c2f68fb44bc0440e1dc05b79197ba4a641c0976c26c9af75ef52 \
-    --hash=sha256:79c8375cbf48a64bff7654c02df1ec4b20d74f8c5672fc13e382f593ca5565b3
+types-s3transfer==0.13.1 \
+    --hash=sha256:4ff730e464a3fd3785b5541f0f555c1bd02ad408cf82b6b7a95429f6b0d26b4a \
+    --hash=sha256:ce488d79fdd7d3b9d39071939121eca814ec65de3aa36bdce1f9189c0a61cc80
     # via boto3-stubs
-typing-extensions==4.14.1 \
-    --hash=sha256:38b39f4aeeab64884ce9f74c94263ef78f3c22467c8724005483154c26648d36 \
-    --hash=sha256:d1e1e3b58374dc93031d6eda2420a48ea44a36c2b4766a4fdeb3710755731d76
+typing-extensions==4.15.0 \
+    --hash=sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466 \
+    --hash=sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548
     # via
     #   -r requirements.txt
     #   alembic
