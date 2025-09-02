@@ -14,7 +14,6 @@ TYPE_DEPS = [
 
 # Dependencies required to run tests.
 TEST_DEPS = [
-    "//:node_modules/@apollo/react-testing",
     "//:node_modules/@testing-library/jest-dom",
     "//:node_modules/@testing-library/react",
     "//:node_modules/jest-environment-jsdom",
@@ -51,9 +50,10 @@ ts_project(
             "src/**/*.ts",
             "src/**/*.jsx",
             "src/**/*.js",
-            "tsconfig.json",
         ],
-    ),
+    ) + [
+        "tsconfig.json",
+    ],
     allow_js = True,
     assets = [
         "src/App.src.css",

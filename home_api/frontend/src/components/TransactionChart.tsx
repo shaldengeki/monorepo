@@ -1,6 +1,6 @@
 import React from 'react';
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 import _ from 'lodash';
 import Plot from 'react-plotly.js';
 
@@ -78,7 +78,9 @@ const TransactionChart = ({
             className="whatever"
             data={[
                 {
+                    // @ts-ignore
                     x: _.map(data.amountByMonth, (a) => { return a.formattedMonth; }),
+                    // @ts-ignore
                     y: _.map(data.amountByMonth, (a) => { return a.amount / 100.0; }),
                     type: 'bar',
                     mode: 'lines',

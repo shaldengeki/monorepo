@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { gql } from '@apollo/client/core';
-import { useQuery, useMutation } from '@apollo/client/react/hooks';
+import { useMutation, useQuery } from '@apollo/client/react';
 
 import Table from './Table';
 
@@ -76,6 +76,7 @@ const TransactionList = ({earliestDate, latestDate, minAmount, maxAmount, types,
     if (loading) return loadingDisplay;
     if (error) return errorDisplay;
 
+    // @ts-ignore
     const formattedTransactions = _.map(data.transactions || [], (txn): FormattedTransaction => {
         return {
             formattedDate: txn.formattedDate,

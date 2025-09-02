@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import UserView from './UserView';
 import { USER_VIEW_QUERY } from './UserView';
 import { emptyUser } from '../types/User';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import {BrowserRouter} from 'react-router-dom'
 import React from 'react';
 

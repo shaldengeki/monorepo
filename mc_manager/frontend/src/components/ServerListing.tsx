@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 import { Link } from 'react-router-dom'
 
 import { displayLog, displayServerUrl } from '../Utils'
@@ -89,6 +89,7 @@ const ServerListing = ({
   if (loading) return loadingDisplay
   if (error) return errorDisplay
 
+  // @ts-ignore
   const formattedServers : Array<ServerListingTableRow> = _.map(data.servers || [], (server) => {
     const createdFormatted = new Date(server.created * 1000).toLocaleDateString('en-US')
     const serverLink = (

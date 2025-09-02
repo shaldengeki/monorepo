@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import EmuCupView, { EMU_CUP_VIEW_QUERY } from './EmuCupView';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import {BrowserRouter} from 'react-router-dom'
 import React from 'react';
 import EmuCupTableIds from '../EmuCupTableIds';

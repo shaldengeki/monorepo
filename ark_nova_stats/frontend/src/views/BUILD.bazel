@@ -56,7 +56,6 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         "//:node_modules/@apollo/client",
-        "//:node_modules/@apollo/react-testing",
         "//:node_modules/@testing-library/react",
         "//:node_modules/@types/jest",
         "//:node_modules/@types/react",
@@ -103,7 +102,6 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         "//:node_modules/@apollo/client",
-        "//:node_modules/@apollo/react-testing",
         "//:node_modules/@testing-library/react",
         "//:node_modules/@types/jest",
         "//:node_modules/@types/react",
@@ -152,7 +150,6 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         "//:node_modules/@apollo/client",
-        "//:node_modules/@apollo/react-testing",
         "//:node_modules/@testing-library/react",
         "//:node_modules/@types/jest",
         "//:node_modules/@types/react",
@@ -200,7 +197,6 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         "//:node_modules/@apollo/client",
-        "//:node_modules/@apollo/react-testing",
         "//:node_modules/@testing-library/react",
         "//:node_modules/@types/jest",
         "//:node_modules/@types/react",
