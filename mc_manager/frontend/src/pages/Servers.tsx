@@ -61,6 +61,7 @@ function Server () {
   if (loading) return loadingDisplay
   if (error) return errorDisplay
 
+  // @ts-ignore
   const server = data.servers[0]
 
   return (

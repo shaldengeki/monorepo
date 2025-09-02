@@ -23,14 +23,18 @@ const ChallengeView = () => {
 
     if (loading) return <p>Loading...</p>;
     else if (error) return <p>Error: {error.message}</p>;
+    // @ts-ignore
     else if (data.challenges.length < 1) {
         return <p>Error: challenge could not be found!</p>;
+    // @ts-ignore
     } else if (data.challenges.length > 1) {
         return <p>Error: multiple challenges with that ID were found!</p>
     } else {
+        // @ts-ignore
         const challenges: Challenge[] = data.challenges;
         const challenge = challenges[0];
         const activities: Activity[] = challenge.activities;
+        // @ts-ignore
         const currentUser: User = data.currentUser;
 
         if (challenge.challengeType === ChallengeType.WeekendWarrior) {

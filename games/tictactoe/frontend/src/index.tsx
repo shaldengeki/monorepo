@@ -2,7 +2,8 @@ import {createRoot} from 'react-dom/client';
 import './App.css';
 import App from './App';
 
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloClient, InMemoryCache} from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 import { HttpLink } from '@apollo/client/link/http';
 const cache = new InMemoryCache();
 const link = new HttpLink({
