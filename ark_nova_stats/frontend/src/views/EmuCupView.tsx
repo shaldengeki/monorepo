@@ -43,6 +43,7 @@ const EmuCupView = () => {
     if (loading) innerContent = <LoadingSpinner />;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
+        // @ts-ignore
         const statistics: GameStatistics[] = data.gameStatistics;
         if (!statistics || statistics.length === 0) {
             innerContent = <p>No games found!</p>

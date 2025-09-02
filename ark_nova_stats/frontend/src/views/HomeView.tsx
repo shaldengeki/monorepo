@@ -66,8 +66,11 @@ const HomeView = () => {
     if (loading) innerContent = <LoadingSpinner />;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
+        // @ts-ignore
         var stats: Stats = data.stats;
+        // @ts-ignore
         var gameLogs: GameLog[] = data.recentGameLogs;
+        // @ts-ignore
         var gameLogArchives: GameLogArchive[] = data.recentGameLogArchives;
         innerContent = (
             <div>

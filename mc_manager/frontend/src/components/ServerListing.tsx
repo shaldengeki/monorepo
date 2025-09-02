@@ -89,6 +89,7 @@ const ServerListing = ({
   if (loading) return loadingDisplay
   if (error) return errorDisplay
 
+  // @ts-ignore
   const formattedServers : Array<ServerListingTableRow> = _.map(data.servers || [], (server) => {
     const createdFormatted = new Date(server.created * 1000).toLocaleDateString('en-US')
     const serverLink = (

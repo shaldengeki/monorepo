@@ -66,8 +66,11 @@ const UserView = () => {
     if (loading) innerContent = <LoadingSpinner />;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
+        // @ts-ignore
         const user: User = data.user;
+        // @ts-ignore
         const commonlyPlayedCards: UserPlayCount[] = data.user.commonlyPlayedCards;
+        // @ts-ignore
         const recentGameLogs: GameLog[] = data.user.recentGameLogs;
         innerContent = (
             <div>

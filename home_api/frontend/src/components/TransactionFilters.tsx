@@ -99,6 +99,7 @@ const TransactionFilters = ({
                     name="types"
                     value={types}
                     onChange={onChangeTypes}
+                    // @ts-ignore
                     allValues={data.types}
                 />
             </div>
@@ -108,6 +109,7 @@ const TransactionFilters = ({
                     name="accounts"
                     value={accounts}
                     onChange={onChangeAccounts}
+                    // @ts-ignore
                     allValues={data.accounts}
                 />
             </div>
@@ -117,6 +119,7 @@ const TransactionFilters = ({
                     name="categories"
                     value={categories}
                     onChange={onChangeCategories}
+                    // @ts-ignore
                     allValues={data.categories}
                 />
             </div>

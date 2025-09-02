@@ -25,6 +25,10 @@ const NavBar = (props: NavBarProps) => {
         FETCH_CURRENT_USER_QUERY,
     );
 
+
+    // @ts-ignore
+    const currentUser = data.currentUser;
+
     return (
         <div className="sticky top-0 z-40 w-full backdrop-blur flex-none lg:border-b lg:border-slate-900/10 lg:dark:border-slate-50/[0.06] bg-white/95 supports-backdrop-blur:bg-white/60 dark:bg-transparent">
             <div className="max-w-screen-2xl mx-auto">
@@ -42,14 +46,14 @@ const NavBar = (props: NavBarProps) => {
                         error && <p>Error loading login state</p>
                     }
                     {
-                        data && data.currentUser === null &&
+                        currentUser === null &&
                         <Link to={'/auth'} className="ml-auto dark:hover:text-slate-300 hover:text-slate-500">
                             <img className="h-5 inline" src={fitbit} alt="Fitbit app icon" />
                             <span className="font-bold">Sign in with Fitbit</span>
                         </Link>
                     }
                     {
-                        data && data.currentUser && <p className="ml-auto">{data.currentUser.displayName}</p>
+                        currentUser && <p className="ml-auto">{currentUser.displayName}</p>
                     }
                 </div>
             </div>

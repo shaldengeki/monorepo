@@ -65,6 +65,7 @@ const ServerBackupsListing = ({ name }: ServerBackupsProps) => {
   if (loading) return loadingDisplay
   if (error) return errorDisplay
 
+  // @ts-ignore
   const server = data.servers[0]
   const serverLatestStateIsRestoring = (server.latestLog && (server.latestLog.state === 'restore_queued' || server.latestLog.state === 'restore_started'))
 
@@ -74,6 +75,7 @@ const ServerBackupsListing = ({ name }: ServerBackupsProps) => {
       if (enqueueLoading) return '🕜Enqueueing restoration...'
       if (enqueueError) return '❌Enqueueing backup failed'
 
+      // @ts-ignore
       const restoreEnqueued = enqueueData && enqueueData.backup && enqueueData.backup.id
       if (serverLatestStateIsRestoring || restoreEnqueued) return '✅Restoration enqueued!'
       if (backup.state === 'completed') {

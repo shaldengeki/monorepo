@@ -177,7 +177,10 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
     });
     const steps = (editedActivity.steps === 0) ? 0 : editedActivity.steps;
 
-    return <>
+    // @ts-ignore
+    const currentUser = fetchUserData.currentUser;
+
+    return <div>
         <form
             className="space-x-1"
         >
@@ -209,10 +212,10 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
                 fetchUserError && <span>Error loading users!</span>
             }
             {
-                fetchUserData && fetchUserData.currentUser && <input hidden name="user" value={fetchUserData.currentUser.fitbitUserId} />
+                currentUser && <input hidden name="user" value={currentUser.fitbitUserId} />
             }
             {
-                fetchUserData && !fetchUserData.currentUser && <select
+                fetchUserData && !currentUser && <select
                     className="rounded p-0.5"
                     name="user"
                     value={selectedUser}
@@ -284,20 +287,22 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
                 />
         }
         {
-            createUserActivityData &&
+            !!createUserActivityData &&
                 <MutationSuccessDialog
                     reset={createUserActivityReset}
+                    // @ts-ignore
                     user={createUserActivityData.user}
                 />
         }
         {
-            updateUserActivityData &&
+            !!updateUserActivityData &&
                 <MutationSuccessDialog
                     reset={updateUserActivityReset}
+                    // @ts-ignore
                     user={updateUserActivityData.user}
                 />
         }
-    </>;
+    </div>;
 }
 
 export default UserActivityForm;

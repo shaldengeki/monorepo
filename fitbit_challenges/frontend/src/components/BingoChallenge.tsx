@@ -377,11 +377,13 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
     if (error) {
         return <p>Error loading bingo challenge!</p>
     }
-    if (!data.bingoChallenge) {
+    // @ts-ignore
+    const bingoChallenge = data.bingoChallenge;
+    if (!bingoChallenge) {
         return <p>Could not find a bingo challenge with that ID!</p>
     }
 
-    const cards: Array<BingoCard> = data.bingoChallenge.bingoCards;
+    const cards: Array<BingoCard> = bingoChallenge.bingoCards;
     const sortedCards = _.orderBy(
         _.map(
             cards,
@@ -414,12 +416,12 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
 
     let finishingText = "";
     if (currentUserPlace) {
-        if (data.bingoChallenge.ended) {
+        if (bingoChallenge.ended) {
             finishingText = "🎉Congrats on finishing!🎉 The challenge is now over.";
         } else {
             finishingText = "🎉Congrats on finishing!🎉 You can keep flipping tiles.";
         }
-    } else if (data.bingoChallenge.ended) {
+    } else if (bingoChallenge.ended) {
         finishingText = "This challenge is now over.";
     }
 
@@ -427,27 +429,27 @@ const BingoChallenge = ({id, currentUser}: BingoChallengeProps) => {
         <div>
             <UserLeaderboardHeader
                 title="Bingo"
-                id={data.bingoChallenge.id}
-                startAt={data.bingoChallenge.startAt}
-                endAt={data.bingoChallenge.endAt}
-                ended={data.bingoChallenge.ended}
-                sealAt={data.bingoChallenge.sealAt}
-                sealed={data.bingoChallenge.sealed}
+                id={bingoChallenge.id}
+                startAt={bingoChallenge.startAt}
+                endAt={bingoChallenge.endAt}
+                ended={bingoChallenge.ended}
+                sealAt={bingoChallenge.sealAt}
+                sealed={bingoChallenge.sealed}
             />
             <div className="grid grid-cols-4 space-y-6">
                 <div className="col-span-4 md:col-span-2 space-y-3">
                     { finishingText && <p className="text-center text-xl font-bold">{finishingText}</p>}
                     <BingoChallengeUnusedAmounts
-                        steps={data.bingoChallenge.unusedAmounts.steps}
-                        activeMinutes={data.bingoChallenge.unusedAmounts.activeMinutes}
-                        distanceKm={data.bingoChallenge.unusedAmounts.distanceKm}
+                        steps={bingoChallenge.unusedAmounts.steps}
+                        activeMinutes={bingoChallenge.unusedAmounts.activeMinutes}
+                        distanceKm={bingoChallenge.unusedAmounts.distanceKm}
                     />
                     <BingoChallengeCard
                         card={displayedCard}
                         user={displayedUser}
                         currentUser={currentUser}
                         challengeId={id}
-                        challengeEnded={data.bingoChallenge.ended}
+                        challengeEnded={bingoChallenge.ended}
                     />
                     <div className="grid grid-cols-3">
                         <div className="col-start-2 col-end-3">

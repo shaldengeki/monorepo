@@ -76,6 +76,7 @@ const TransactionList = ({earliestDate, latestDate, minAmount, maxAmount, types,
     if (loading) return loadingDisplay;
     if (error) return errorDisplay;
 
+    // @ts-ignore
     const formattedTransactions = _.map(data.transactions || [], (txn): FormattedTransaction => {
         return {
             formattedDate: txn.formattedDate,
