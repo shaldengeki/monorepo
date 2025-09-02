@@ -8,8 +8,7 @@
         "home_api/frontend/*"
     ],
     "dependencies": {
-        "@apollo/client": "^3.13.9",
-        "@apollo/react-testing": "^4.0.0",
+        "@apollo/client": "^4.0.0",
         "@headlessui/react": "^2.2.7",
         "@heroicons/react": "^2.2.0",
         "@testing-library/jest-dom": "^6.8.0",

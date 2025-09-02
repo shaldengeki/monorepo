@@ -3,7 +3,7 @@ import fitbit from './fitbit.png';
 import logo192 from './logo192.png';
 import { Link } from 'react-router-dom';
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 
 export const FETCH_CURRENT_USER_QUERY = gql`
     query FetchCurrentUser {

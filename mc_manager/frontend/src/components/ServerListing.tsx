@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 import { Link } from 'react-router-dom'
 
 import { displayLog, displayServerUrl } from '../Utils'

@@ -17,7 +17,7 @@ ts_project(
     tsconfig = "//skeleton/frontend:tsconfig",
     visibility = ["//visibility:public"],
     deps = [
-        "//:node_modules/@apollo/react-testing",
+        "//:node_modules/@apollo/client",
         "//:node_modules/@testing-library/jest-dom",
         "//:node_modules/@testing-library/react",
         "//:node_modules/@types/jest",

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { gql } from '@apollo/client/core';
-import { useQuery, useMutation } from '@apollo/client/react/hooks';
+import { useQuery, useMutation } from '@apollo/client/react';
 
 import type Server from '../types/Server'
 

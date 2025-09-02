@@ -1,7 +1,7 @@
 import * as React from 'react'
 import _ from 'lodash'
 import { gql } from '@apollo/client/core';
-import { useQuery, useMutation } from '@apollo/client/react/hooks';
+import { useMutation, useQuery } from '@apollo/client/react';
 
 import { serverBackupStatusSymbol } from '../Utils'
 import type Backup from '../types/Backup'

@@ -1,6 +1,6 @@
 import React from 'react';
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 
 import PageTitle from "../components/PageTitle";
 import DatabaseStatistics from '../components/DatabaseStatistics';

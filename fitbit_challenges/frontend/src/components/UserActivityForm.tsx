@@ -1,7 +1,7 @@
 import React from 'react';
 import Confetti from './Confetti';
 import { gql } from '@apollo/client/core';
-import { useQuery, useMutation } from '@apollo/client/react/hooks';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {FETCH_WORKWEEK_HUSTLE_QUERY} from '../views/ChallengeView';
 import {getCurrentUnixTime, getDate, convertDateStringToEpochTime} from '../DateUtils';
 import Activity, {emptyActivity} from '../types/Activity';

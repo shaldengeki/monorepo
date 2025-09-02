@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import ExampleView from './ExampleView';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import {BrowserRouter} from 'react-router-dom'
 import * as React from 'react';
 
