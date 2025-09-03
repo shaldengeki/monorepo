@@ -1,4 +1,4 @@
-import React, {useState, ReactElement} from 'react';
+import {useState, ReactElement} from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery, useMutation } from '@apollo/client/react/hooks';
 import PageContainer from '../components/PageContainer';

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import Board from '../components/Board';
 import NavBar from '../../../../../react_library/NavBar';
 import PageContainer from '../../../../../react_library/PageContainer';

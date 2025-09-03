@@ -1,4 +1,4 @@
-import React, {PropsWithChildren} from 'react';
+import {PropsWithChildren} from 'react';
 import { Link } from 'react-router-dom';
 
 type PageLinkProps = {

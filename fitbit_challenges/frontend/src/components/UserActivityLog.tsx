@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import Activity, {ActivityDelta, emptyActivity, ActivityTotal, formatActivityDate} from '../types/Activity';
 import {formatDateDifference, getCurrentUnixTime} from '../DateUtils';
 import UserActivityForm from './UserActivityForm';
