@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useState} from 'react';
+import {PropsWithChildren} from 'react';
 import Square from './Square';
 
 type BoardProps = {

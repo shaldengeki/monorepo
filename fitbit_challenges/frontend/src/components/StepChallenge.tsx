@@ -1,4 +1,3 @@
-import * as React from 'react';
 import _ from 'lodash'
 
 import Activity, {ActivityDelta} from '../types/Activity';

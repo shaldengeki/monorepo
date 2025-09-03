@@ -1,4 +1,3 @@
-import * as React from 'react';
 
 import Activity from '../types/Activity';
 import User from '../types/User';
