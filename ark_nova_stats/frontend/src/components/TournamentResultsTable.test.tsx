@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import React from 'react';
 import { emptyUser } from '../types/User';
 import GameStatistics, { emptyGameStatistics } from '../types/GameStatistics';
 import {BrowserRouter} from 'react-router-dom'

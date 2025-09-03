@@ -1,4 +1,3 @@
-import React from 'react';
 import ProgressBar from './ProgressBar';
 import {ActivityTotal} from '../types/Activity';
 import {getCurrentUnixTime, formatDateDifference} from '../DateUtils';

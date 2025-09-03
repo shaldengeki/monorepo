@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import GameLogArchivesTable from './GameLogArchivesTable';
-import React from 'react';
 import { emptyGameLog } from '../types/GameLog';
 import GameLogArchive from '../types/GameLogArchive';
 import { BrowserRouter } from 'react-router-dom';

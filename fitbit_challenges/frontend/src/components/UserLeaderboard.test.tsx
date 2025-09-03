@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { UserLeaderboardHeader, UserLeaderboardListingEntry } from './UserLeaderboard';
 import { MockedProvider } from '@apollo/react-testing';
-import React from 'react';
 import {ActivityTotal} from "../types/Activity";
 
 it('should have the username and steps in the entry', async () => {

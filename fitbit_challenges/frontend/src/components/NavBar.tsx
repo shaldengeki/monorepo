@@ -1,4 +1,3 @@
-import React from 'react';
 import fitbit from './fitbit.png';
 import logo192 from './logo192.png';
 import { Link } from 'react-router-dom';

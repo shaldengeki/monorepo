@@ -4,7 +4,6 @@ import { USER_VIEW_QUERY } from './UserView';
 import { emptyUser } from '../types/User';
 import { MockedProvider } from '@apollo/react-testing';
 import {BrowserRouter} from 'react-router-dom'
-import React from 'react';
 
 it('should render view when empty data is returned', async () => {
   const testFetchStatsMock = {
