@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react';
 import DatabaseStatistics from './DatabaseStatistics';
-import React from 'react';
 import { emptyStats, exampleStats } from '../types/Stats';
 
 it('should handle when no data was retrieved', async () => {

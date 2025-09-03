@@ -1,5 +1,4 @@
 import { getActivityLogs, groupActivityLogs } from './StepChallenge';
-import React from 'react';
 
 const users = [
     {'fitbitUserId': 'foo', 'displayName': 'foo', 'createdAt': 0, 'activities': []},

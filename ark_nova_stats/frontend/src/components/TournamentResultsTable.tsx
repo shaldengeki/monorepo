@@ -1,4 +1,3 @@
-import React from 'react';
 
 import GameStatistics from '../types/GameStatistics';
 import Table from '../../../../react_library/Table';

@@ -1,4 +1,3 @@
-import React from 'react';
 import ExampleComponent from '../components/ExampleComponent';
 import NavBar from '../../../../react_library/NavBar';
 import PageContainer from '../../../../react_library/PageContainer';

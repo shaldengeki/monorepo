@@ -3,7 +3,6 @@ import HomeView from './HomeView';
 import { HOME_VIEW_QUERY } from './HomeView';
 import { MockedProvider } from '@apollo/react-testing';
 import {BrowserRouter} from 'react-router-dom'
-import React from 'react';
 
 it('should render the name of the view', async () => {
   const testFetchStatsMock = {

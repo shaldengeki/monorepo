@@ -1,4 +1,3 @@
-import React from 'react';
 
 import Stats from '../types/Stats';
 import {getDate} from '../../../../react_library/DateUtils';

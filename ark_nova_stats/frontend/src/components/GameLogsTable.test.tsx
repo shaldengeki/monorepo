@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react';
 import GameLogsTable from './GameLogsTable';
-import React from 'react';
 import GameLog, { emptyGameLog } from '../types/GameLog';
 import { emptyUserRatingChange } from '../types/UserRatingChange';
 import User, { emptyUser } from '../types/User';

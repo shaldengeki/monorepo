@@ -1,4 +1,3 @@
-import React from 'react';
 import { gql } from '@apollo/client/core';
 import { useMutation } from '@apollo/client/react/hooks';
 import PageContainer from '../components/PageContainer';

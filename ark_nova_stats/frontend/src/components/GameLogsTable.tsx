@@ -1,4 +1,3 @@
-import React from 'react';
 
 import GameLog from '../types/GameLog';
 import User from '../types/User';

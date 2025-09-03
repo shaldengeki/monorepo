@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import BingoChallenge, { FETCH_BINGO_QUERY } from './BingoChallenge';
-import React from 'react';
 
 import { emptyUser } from '../types/User';
 import { emptyBingoCard, emptyBingoTile } from '../types/Bingo';

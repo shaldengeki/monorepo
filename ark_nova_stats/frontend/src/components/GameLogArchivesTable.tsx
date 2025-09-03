@@ -1,4 +1,3 @@
-import React from 'react';
 
 import {getDate} from '../../../../react_library/DateUtils';
 import GameLogArchive from '../types/GameLogArchive';
