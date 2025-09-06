@@ -1,77 +1,47 @@
-load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
-load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@npm//:@tailwindcss/cli/package_json.bzl", tailwindcss_bin = "bin")
-load("//tools/build_rules:frontend_image.bzl", "BUILD_DEPS", "frontend_image")
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("//tools/build_rules:frontend_image.bzl", "frontend_image")
 
-# Dependencies required to do typechecks.
-TYPE_DEPS = [
-    "//:node_modules/@types/jest",
-    "//:node_modules/@types/lodash",
-    "//:node_modules/@types/node",
-    "//:node_modules/@types/react",
-    "//:node_modules/@types/react-dom",
-    "//:node_modules/@types/plotly.js",
-    "//:node_modules/@types/react-plotly.js",
-]
-
-# Dependencies required to run tests.
-TEST_DEPS = [
-    "//:node_modules/@apollo/react-testing",
-    "//:node_modules/@testing-library/jest-dom",
-    "//:node_modules/@testing-library/react",
-    "//:node_modules/jest-environment-jsdom",
-    "//:node_modules/jsdom",
-]
-
-# Compiles our CSS using Tailwind styles.
-# Uses the tailwindcss binary from npm.
-tailwindcss_bin.tailwindcss(
-    name = "tailwindcss",
-    srcs = [
-        "src/App.src.css",
-        ":tailwind.config.js",
-        ":ts",
-        "//:node_modules/tailwindcss",
-    ],
-    outs = [
-        "src/App.css",
-    ],
-    args = [
-        "--config home_api/frontend/tailwind.config.js",
-        "-i home_api/frontend/src/App.src.css",
-        "-o home_api/frontend/src/App.css",
-    ],
-    log_level = "debug",
+copy_file(
+    name = "tailwindconfig",
+    src = "//react_library:tailwindconfig",
+    out = "tailwind.config.js",
+    visibility = ["//home_api/frontend:__subpackages__"],
 )
 
-# Compiles Typescript to regular old Javascript.
-ts_project(
-    name = "ts",
-    srcs = glob(
-        include = [
-            "src/**/*.tsx",
-            "src/**/*.ts",
-            "src/**/*.jsx",
-            "src/**/*.js",
-        ],
-    ) + [
-        "tsconfig.json",
+copy_file(
+    name = "tsconfig",
+    src = "//react_library:tsconfig",
+    out = "tsconfig.json",
+    visibility = ["//home_api/frontend:__subpackages__"],
+)
+
+copy_to_bin(
+    name = "testfixtures",
+    srcs = [
+        "package.json",
+        "//react_library:testfixtures",
     ],
-    allow_js = True,
-    assets = [
-        "src/App.src.css",
-    ],
-    out_dir = ".",
-    resolve_json_module = True,
-    transpiler = "tsc",
-    deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS,
+    visibility = ["//home_api/frontend:__subpackages__"],
+)
+
+copy_to_bin(
+    name = "packagejson",
+    srcs = ["package.json"],
+    visibility = ["//home_api/frontend:__subpackages__"],
+)
+
+copy_file(
+    name = "globalsdts",
+    src = "//react_library:globalsdts",
+    out = "globals.d.ts",
 )
 
 frontend_image(
     name = "production",
     srcs = glob(["public/**/*"]) + [
-        ":tailwindcss",
-        ":ts",
+        "//home_api/frontend/src:index",
+        "//home_api/frontend/src:tailwindcss",
     ],
     build_env = {
         "REACT_APP_API_HOST": "api.home.ouguo.us",
@@ -79,6 +49,7 @@ frontend_image(
         "REACT_APP_API_PROTOCOL": "https",
     },
     docker_hub_repository = "docker.io/shaldengeki/home-api-frontend",
+    entry_point = "//home_api/frontend/src:index.js",
     node_modules = "//:node_modules",
     repo_tags = ["shaldengeki/home-api-frontend:latest"],
     server_name = "home.ouguo.us",
@@ -88,8 +59,8 @@ frontend_image(
 frontend_image(
     name = "development",
     srcs = glob(["public/**/*"]) + [
-        ":tailwindcss",
-        ":ts",
+        "//home_api/frontend/src:index",
+        "//home_api/frontend/src:tailwindcss",
     ],
     build_env = {
         "REACT_APP_API_HOST": "localhost",
@@ -97,25 +68,9 @@ frontend_image(
         "REACT_APP_API_PROTOCOL": "http",
     },
     docker_hub_repository = "docker.io/shaldengeki/home-api-frontend",
+    entry_point = "//home_api/frontend/src:index.js",
     node_modules = "//:node_modules",
     repo_tags = ["shaldengeki/home-api-frontend:latest"],
     server_name = "home.ouguo.us",
     webpack_conf = ":webpack.config.js",
-)
-
-# Runs frontend Jest tests.
-jest_test(
-    name = "test",
-    config = "jest.config.json",
-    data = [
-        "package.json",
-    ] + BUILD_DEPS + TEST_DEPS + [
-        "src/components/DatePicker.js",
-        "src/components/DatePicker.test.js",
-        "src/setupTests.js",
-    ],
-    node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
