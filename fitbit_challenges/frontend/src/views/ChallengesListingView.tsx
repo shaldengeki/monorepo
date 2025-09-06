@@ -180,7 +180,7 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
         } else if (challenge.challengeType === ChallengeType.Bingo) {
             startAt = challenge.startAt;
         }
-        let endAt = null;
+        let endAt: number | null = null;
         console.log("challenge", challenge);
         if (challenge.challengeType === ChallengeType.Bingo) {
             endAt = challenge.endAt;
@@ -228,7 +228,7 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
                         name="users"
                         multiple
                         onChange={(e) => {
-                            let users = [];
+                            let users: string[] = [];
                             for (let i = 0; i < e.target.selectedOptions.length; i++) {
                                 users.push(e.target.selectedOptions[i].value);
                             }
