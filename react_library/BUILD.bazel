@@ -35,6 +35,39 @@ copy_to_bin(
 )
 
 ts_project(
+    name = "fileMock",
+    srcs = [
+        "mocks/fileMock.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = ":tsconfig",
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "tailwindconfigtsx",
+    srcs = [
+        "tailwind.config.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = ":tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/node",
+    ],
+)
+
+ts_project(
     name = "setupTests",
     srcs = [
         "setupTests.jsx",
