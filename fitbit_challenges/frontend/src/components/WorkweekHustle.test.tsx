@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import WorkweekHustle from './WorkweekHustle';
 import { MockedProvider } from '@apollo/react-testing';
-import { FETCH_CURRENT_USER_QUERY } from './UserActivityForm';
+import { FETCH_CURRENT_USER_QUERY } from '../queries';
 
 const testFetchCurrentUserMock = {
     request: {

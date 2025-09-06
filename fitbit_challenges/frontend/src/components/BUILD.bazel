@@ -1,0 +1,386 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+copy_file(
+    name = "setupTests",
+    src = "//react_library:setupTests.js",
+    out = "setupTests.js",
+)
+
+ts_project(
+    name = "BingoChallenge",
+    srcs = [
+        "BingoChallenge.test.tsx",
+        "BingoChallenge.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":UserLeaderboard",
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@apollo/react-testing",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/lodash",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/lodash",
+        "//:node_modules/react",
+        "//fitbit_challenges/frontend/src/queries",
+        "//fitbit_challenges/frontend/src/types",
+    ],
+)
+
+jest_test(
+    name = "BingoChallengeTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//fitbit_challenges/frontend:testfixtures",
+        "//fitbit_challenges/frontend/src/components:BingoChallenge",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "PageTitle",
+    srcs = [
+        "PageTitle.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+    ],
+)
+
+ts_project(
+    name = "Confetti",
+    srcs = [
+        "Confetti.jsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//:node_modules/react-canvas-confetti",
+    ],
+)
+
+ts_project(
+    name = "FormButton",
+    srcs = [
+        "FormButton.test.tsx",
+        "FormButton.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+    ],
+)
+
+jest_test(
+    name = "FormButtonTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//fitbit_challenges/frontend:testfixtures",
+        "//fitbit_challenges/frontend/src/components:FormButton",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "ProgressBar",
+    srcs = [
+        "ProgressBar.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+    ],
+)
+
+ts_project(
+    name = "StepChallenge",
+    srcs = [
+        "StepChallenge.test.tsx",
+        "StepChallenge.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":UserActivityLog",
+        ":UserLeaderboard",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/lodash",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/lodash",
+        "//:node_modules/react",
+        "//fitbit_challenges/frontend/src/types",
+    ],
+)
+
+jest_test(
+    name = "StepChallengeTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//fitbit_challenges/frontend:testfixtures",
+        "//fitbit_challenges/frontend/src/components:StepChallenge",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "UserActivityForm",
+    srcs = [
+        "UserActivityForm.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":Confetti",
+        ":FormButton",
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/lodash",
+        "//:node_modules/@types/react",
+        "//:node_modules/lodash",
+        "//:node_modules/react",
+        "//fitbit_challenges/frontend/src/queries",
+        "//fitbit_challenges/frontend/src/types",
+        "//react_library/DateUtils",
+    ],
+)
+
+ts_project(
+    name = "UserActivityLog",
+    srcs = [
+        "UserActivityLog.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":UserActivityForm",
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/lodash",
+        "//:node_modules/@types/react",
+        "//:node_modules/lodash",
+        "//:node_modules/react",
+        "//fitbit_challenges/frontend/src/types",
+        "//react_library/DateUtils",
+    ],
+)
+
+ts_project(
+    name = "UserLeaderboard",
+    srcs = [
+        "UserLeaderboard.test.tsx",
+        "UserLeaderboard.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":PageTitle",
+        ":ProgressBar",
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@apollo/react-testing",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/lodash",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/lodash",
+        "//:node_modules/react",
+        "//fitbit_challenges/frontend/src/types",
+        "//react_library/DateUtils",
+    ],
+)
+
+jest_test(
+    name = "UserLeaderboardTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//fitbit_challenges/frontend:testfixtures",
+        "//fitbit_challenges/frontend/src/components:UserLeaderboard",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "WeekendWarrior",
+    srcs = [
+        "WeekendWarrior.test.tsx",
+        "WeekendWarrior.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":StepChallenge",
+        ":UserActivityForm",
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@apollo/react-testing",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+        "//fitbit_challenges/frontend/src/types",
+        "//react_library/DateUtils",
+    ],
+)
+
+jest_test(
+    name = "WeekendWarriorTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//fitbit_challenges/frontend:testfixtures",
+        "//fitbit_challenges/frontend/src/components:WeekendWarrior",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)
+
+ts_project(
+    name = "WorkweekHustle",
+    srcs = [
+        "WorkweekHustle.test.tsx",
+        "WorkweekHustle.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":StepChallenge",
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@apollo/react-testing",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+        "//fitbit_challenges/frontend/src/queries",
+        "//fitbit_challenges/frontend/src/types",
+    ],
+)
+
+jest_test(
+    name = "WorkweekHustleTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":setupTests",
+        "//fitbit_challenges/frontend:testfixtures",
+        "//fitbit_challenges/frontend/src/components:WorkweekHustle",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)

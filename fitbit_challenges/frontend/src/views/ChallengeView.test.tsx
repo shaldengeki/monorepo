@@ -1,10 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import ChallengeView from './ChallengeView';
-import { FETCH_WORKWEEK_HUSTLE_QUERY } from './ChallengeView';
 import { MockedProvider } from '@apollo/react-testing';
 import {BrowserRouter} from 'react-router-dom'
-import { FETCH_CURRENT_USER_QUERY } from '../components/NavBar';
 import { emptyUser } from '../types/User';
+import { FETCH_CURRENT_USER_QUERY, FETCH_WORKWEEK_HUSTLE_QUERY } from '../queries';
 
 const testFetchCurrentUserMock = {
   request: {

@@ -1,74 +1,11 @@
 import {useState} from 'react';
 import _ from 'lodash'
-import { gql } from '@apollo/client/core';
 import { useQuery, useMutation } from '@apollo/client/react/hooks';
 
 import User from '../types/User';
 import BingoCard, {BingoTile, emptyBingoTile} from '../types/Bingo';
 import {UserLeaderboardHeader} from './UserLeaderboard';
-
-export const FETCH_BINGO_QUERY = gql`
-    query FetchBingo($id: Int!) {
-          bingoChallenge(id: $id) {
-              id
-              users {
-                fitbitUserId
-                displayName
-              }
-              createdAt
-              startAt
-              endAt
-              ended
-              sealed
-              sealAt
-              bingoCards {
-                id
-                user {
-                    fitbitUserId
-                    displayName
-                }
-                rows
-                columns
-                tiles {
-                    id
-                    steps
-                    activeMinutes
-                    distanceKm
-                    coordinateX
-                    coordinateY
-                    flipped
-                    flippedAt
-                    requiredForWin
-                }
-                finished
-                finishedAt
-              }
-              unusedAmounts {
-                steps
-                activeMinutes
-                distanceKm
-              }
-          }
-      }
-`;
-
-export const FLIP_BINGO_TILE_MUTATION = gql`
-    mutation FlipBingoTile($id: Int!) {
-        flipBingoTile(id: $id) {
-            id
-            flipped
-            bingoCard {
-                challenge {
-                    unusedAmounts {
-                        steps
-                        activeMinutes
-                        distanceKm
-                    }
-                }
-            }
-        }
-    }
-`
+import { FETCH_BINGO_QUERY, FLIP_BINGO_TILE_MUTATION } from '../queries';
 
 type IconProps = {
     paths: string[]

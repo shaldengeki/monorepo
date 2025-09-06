@@ -1,7 +1,7 @@
 import ProgressBar from './ProgressBar';
 import {ActivityTotal} from '../types/Activity';
-import {getCurrentUnixTime, formatDateDifference} from '../DateUtils';
 import PageTitle from "../components/PageTitle";
+import {getCurrentUnixTime, formatDateDifference} from '../../../../react_library/DateUtils';
 
 export type UserData = {
     name: string;

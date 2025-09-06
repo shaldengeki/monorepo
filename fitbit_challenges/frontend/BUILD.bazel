@@ -1,77 +1,47 @@
-load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
-load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@npm//:@tailwindcss/cli/package_json.bzl", tailwindcss_bin = "bin")
-load("//tools/build_rules:frontend_image.bzl", "BUILD_DEPS", "frontend_image")
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("//tools/build_rules:frontend_image.bzl", "frontend_image")
 
-# Dependencies required to do typechecks.
-TYPE_DEPS = [
-    "//:node_modules/@types/jest",
-    "//:node_modules/@types/lodash",
-    "//:node_modules/@types/node",
-    "//:node_modules/@types/react",
-    "//:node_modules/@types/react-dom",
-]
-
-# Dependencies required to run tests.
-TEST_DEPS = [
-    "//:node_modules/@apollo/react-testing",
-    "//:node_modules/@testing-library/jest-dom",
-    "//:node_modules/@testing-library/react",
-    "//:node_modules/jest-environment-jsdom",
-    "//:node_modules/jsdom",
-]
-
-# Compiles our CSS using Tailwind styles.
-# Uses the tailwindcss binary from npm.
-tailwindcss_bin.tailwindcss(
-    name = "tailwindcss",
-    srcs = [
-        "src/App.src.css",
-        ":tailwind.config.js",
-        ":ts",
-        "//:node_modules/tailwindcss",
-    ],
-    outs = [
-        "src/App.css",
-    ],
-    args = [
-        "--config fitbit_challenges/frontend/tailwind.config.js",
-        "-i fitbit_challenges/frontend/src/App.src.css",
-        "-o fitbit_challenges/frontend/src/App.css",
-    ],
-    log_level = "debug",
+copy_file(
+    name = "tailwindconfig",
+    src = "//react_library:tailwindconfig",
+    out = "tailwind.config.js",
+    visibility = ["//fitbit_challenges/frontend:__subpackages__"],
 )
 
-# Compiles Typescript to regular old Javascript.
-ts_project(
-    name = "ts",
-    srcs = glob(
-        include = [
-            "src/**/*.tsx",
-            "src/**/*.ts",
-            "src/**/*.jsx",
-            "src/**/*.js",
-            "tsconfig.json",
-        ],
-    ),
-    allow_js = True,
-    assets = [
-        "src/App.src.css",
-        "src/logo.svg",
-        "src/components/fitbit.png",
-        "src/components/logo192.png",
+copy_file(
+    name = "tsconfig",
+    src = "//react_library:tsconfig",
+    out = "tsconfig.json",
+    visibility = ["//fitbit_challenges/frontend:__subpackages__"],
+)
+
+copy_to_bin(
+    name = "testfixtures",
+    srcs = [
+        "package.json",
+        "//react_library:testfixtures",
     ],
-    out_dir = ".",
-    resolve_json_module = True,
-    transpiler = "tsc",
-    deps = BUILD_DEPS + TEST_DEPS + TYPE_DEPS,
+    visibility = ["//fitbit_challenges/frontend:__subpackages__"],
+)
+
+copy_to_bin(
+    name = "packagejson",
+    srcs = ["package.json"],
+    visibility = ["//fitbit_challenges/frontend:__subpackages__"],
+)
+
+copy_file(
+    name = "globalsdts",
+    src = "//react_library:globalsdts",
+    out = "globals.d.ts",
 )
 
 frontend_image(
     name = "production",
     srcs = glob(["public/**/*"]) + [
-        ":tailwindcss",
-        ":ts",
+        "//fitbit_challenges/frontend/src:index",
+        "//fitbit_challenges/frontend/src:tailwindcss",
     ],
     build_env = {
         "REACT_APP_API_HOST": "api.fitbit.ouguo.us",
@@ -79,6 +49,7 @@ frontend_image(
         "REACT_APP_API_PROTOCOL": "https",
     },
     docker_hub_repository = "docker.io/shaldengeki/fitbit-challenges-frontend",
+    entry_point = "//fitbit_challenges/frontend/src:index.js",
     node_modules = "//:node_modules",
     repo_tags = ["shaldengeki/fitbit-challenges-frontend:latest"],
     server_name = "fitbit.ouguo.us",
@@ -88,8 +59,8 @@ frontend_image(
 frontend_image(
     name = "development",
     srcs = glob(["public/**/*"]) + [
-        ":tailwindcss",
-        ":ts",
+        "//fitbit_challenges/frontend/src:index",
+        "//fitbit_challenges/frontend/src:tailwindcss",
     ],
     build_env = {
         "REACT_APP_API_HOST": "localhost",
@@ -97,49 +68,9 @@ frontend_image(
         "REACT_APP_API_PROTOCOL": "http",
     },
     docker_hub_repository = "docker.io/shaldengeki/fitbit-challenges-frontend",
+    entry_point = "//fitbit_challenges/frontend/src:index.js",
     node_modules = "//:node_modules",
     repo_tags = ["shaldengeki/fitbit-challenges-frontend:latest"],
     server_name = "fitbit.ouguo.us",
     webpack_conf = ":webpack.config.js",
-)
-
-# Runs frontend Jest tests.
-jest_test(
-    name = "test",
-    config = "jest.config.json",
-    data = [
-        "package.json",
-    ] + BUILD_DEPS + TEST_DEPS + [
-        "mocks/fileMock.js",
-        "src/DateUtils.js",
-        "src/DateUtils.test.js",
-        "src/components/BingoChallenge.js",
-        "src/components/BingoChallenge.test.js",
-        "src/components/Confetti.js",
-        "src/components/FormButton.js",
-        "src/components/FormButton.test.js",
-        "src/components/NavBar.js",
-        "src/components/PageContainer.js",
-        "src/components/PageTitle.js",
-        "src/components/ProgressBar.js",
-        "src/components/StepChallenge.js",
-        "src/components/StepChallenge.test.js",
-        "src/components/UserActivityForm.js",
-        "src/components/UserActivityLog.js",
-        "src/components/UserLeaderboard.js",
-        "src/components/WeekendWarrior.js",
-        "src/components/WorkweekHustle.js",
-        "src/globals.d.ts",
-        "src/setupTests.js",
-        "src/types/Activity.js",
-        "src/types/Bingo.js",
-        "src/types/Challenge.js",
-        "src/types/User.js",
-        "src/views/ChallengeView.js",
-        "src/views/ChallengeView.test.js",
-    ],
-    node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
