@@ -1,14 +1,12 @@
 import {useState, ReactElement} from 'react';
 import { gql } from '@apollo/client/core';
 import { useQuery, useMutation } from '@apollo/client/react/hooks';
-import PageContainer from '../components/PageContainer';
 import PageTitle from "../components/PageTitle";
 import Challenge, {ChallengeType, emptyChallenge} from "../types/Challenge";
-import {formatDateDifference, getCurrentUnixTime, getDate, nextMonday, nextSaturday, today} from '../DateUtils';
 import { Link } from 'react-router-dom';
 import {CancelButton, SubmitButton} from '../components/FormButton';
 import User from '../types/User';
-import { convertDateStringToEpochTime } from '../DateUtils';
+import {convertDateStringToEpochTime, formatDateDifference, getCurrentUnixTime, getDate, nextMonday, nextSaturday, today} from '../../../../react_library/DateUtils';
 
 export const FETCH_CHALLENGES_QUERY = gql`
     query FetchChallenges {
@@ -314,7 +312,7 @@ const ChallengesListingView = () => {
     }
 
     return (
-        <PageContainer>
+        <>
             <PageTitle><Link to={'/challenges'}>Challenges</Link></PageTitle>
             <div className="py-2">
                 <h1 className="text-2xl py-2">Start a challenge</h1>
@@ -340,7 +338,7 @@ const ChallengesListingView = () => {
 
                 </div>
             </div>
-        </PageContainer>
+        </>
     )
 }
 

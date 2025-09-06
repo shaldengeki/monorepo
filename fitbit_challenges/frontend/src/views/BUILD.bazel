@@ -1,0 +1,111 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+copy_file(
+    name = "globalsdts",
+    src = "//react_library:globalsdts",
+    out = "globals.d.ts",
+)
+
+copy_file(
+    name = "setupTests",
+    src = "//react_library:setupTests.js",
+    out = "setupTests.js",
+)
+
+ts_project(
+    name = "AuthView",
+    srcs = [
+        "AuthView.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+        "//react_library/PageContainer",
+    ],
+)
+
+ts_project(
+    name = "ChallengesListingView",
+    srcs = [
+        "ChallengesListingView.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@types/react",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+        "//fitbit_challenges/frontend/src/components:FormButton",
+        "//fitbit_challenges/frontend/src/components:PageTitle",
+        "//fitbit_challenges/frontend/src/types",
+        "//react_library/DateUtils",
+        "//react_library/PageContainer",
+    ],
+)
+
+ts_project(
+    name = "ChallengeView",
+    srcs = [
+        "ChallengeView.test.tsx",
+        "ChallengeView.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//fitbit_challenges/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@apollo/react-testing",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+        "//:node_modules/react-router-dom",
+        "//fitbit_challenges/frontend/src/components:BingoChallenge",
+        "//fitbit_challenges/frontend/src/components:WeekendWarrior",
+        "//fitbit_challenges/frontend/src/components:WorkweekHustle",
+        "//fitbit_challenges/frontend/src/queries",
+        "//fitbit_challenges/frontend/src/types",
+        "//react_library/PageContainer",
+    ],
+)
+
+jest_test(
+    name = "ChallengeViewTest",
+    config = "//react_library:jestconfig",
+    data = [
+        ":ChallengeView",
+        ":setupTests",
+        "//fitbit_challenges/frontend:packagejson",
+        "//react_library:testfixtures",
+    ],
+    node_modules = "//:node_modules",
+    node_options = [
+        "--experimental-vm-modules",
+    ],
+)

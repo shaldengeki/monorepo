@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react';
 import { UserLeaderboardHeader, UserLeaderboardListingEntry } from './UserLeaderboard';
 import { MockedProvider } from '@apollo/react-testing';

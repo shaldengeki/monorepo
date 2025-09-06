@@ -1,8 +1,8 @@
 import {useState} from 'react';
 import Activity, {ActivityDelta, emptyActivity, ActivityTotal, formatActivityDate} from '../types/Activity';
-import {formatDateDifference, getCurrentUnixTime} from '../DateUtils';
 import UserActivityForm from './UserActivityForm';
 import User from '../types/User';
+import {formatDateDifference, getCurrentUnixTime} from '../../../../react_library/DateUtils';
 
 type PlacementResultEntryProps = {
     totals: ActivityTotal[]

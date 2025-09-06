@@ -1,9 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
-import BingoChallenge, { FETCH_BINGO_QUERY } from './BingoChallenge';
+import BingoChallenge from './BingoChallenge';
 
 import { emptyUser } from '../types/User';
 import { emptyBingoCard, emptyBingoTile } from '../types/Bingo';
+import { FETCH_BINGO_QUERY } from '../queries';
 
 function mockFetchBingoQuery(result: object) {
     return {

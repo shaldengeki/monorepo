@@ -1,65 +1,10 @@
 import Confetti from './Confetti';
-import { gql } from '@apollo/client/core';
 import { useQuery, useMutation } from '@apollo/client/react/hooks';
-import {FETCH_WORKWEEK_HUSTLE_QUERY} from '../views/ChallengeView';
-import {getCurrentUnixTime, getDate, convertDateStringToEpochTime} from '../DateUtils';
 import Activity, {emptyActivity} from '../types/Activity';
 import {CancelButton, SubmitButton} from '../components/FormButton';
 import User from '../types/User';
-
-export const FETCH_CURRENT_USER_QUERY = gql`
-    query FetchCurrentUser {
-          currentUser {
-            fitbitUserId
-            displayName
-            createdAt
-          }
-      }
-`;
-
-const CREATE_USER_ACTIVITY_MUTATION = gql`
-    mutation CreateUserActivity(
-        $user:String!,
-        $recordDate:Int!,
-        $steps:Int!,
-    ) {
-        createUserActivity(
-            recordDate:$recordDate,
-            user:$user,
-            steps:$steps,
-            activeMinutes:0,
-            distanceKm:0
-        ) {
-            id
-            recordDate
-            user
-            steps
-        }
-    }
-`
-
-const UPDATE_USER_ACTIVITY_MUTATION = gql`
-    mutation UpdateUserActivity(
-        $id:Int!,
-        $user:String!,
-        $recordDate:Int!,
-        $steps:Int!,
-    ) {
-        updateUserActivity(
-            id:$id,
-            recordDate:$recordDate,
-            user:$user,
-            steps:$steps,
-            activeMinutes:0,
-            distanceKm:0
-        ) {
-            id
-            recordDate
-            user
-            steps
-        }
-    }
-`
+import {FETCH_CURRENT_USER_QUERY, CREATE_USER_ACTIVITY_MUTATION, UPDATE_USER_ACTIVITY_MUTATION, FETCH_WORKWEEK_HUSTLE_QUERY} from '../queries';
+import {getCurrentUnixTime, getDate, convertDateStringToEpochTime} from '../../../../react_library/DateUtils';
 
 
 type MutationErrorDialogProps = {
