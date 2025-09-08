@@ -4,8 +4,13 @@
     "description": "shaldengeki monorepo",
     "private": true,
     "workspaces": [
+        "ark_nova_stats/frontend/*",
         "fitbit_challenges/frontend/*",
-        "home_api/frontend/*"
+        "games/tictactoe/frontend/*",
+        "home_api/frontend/*",
+        "mc_manager/frontend/*",
+        "react_library/*",
+        "skeleton/frontend/*"
     ],
     "dependencies": {
         "@apollo/client": "^3.13.9",
