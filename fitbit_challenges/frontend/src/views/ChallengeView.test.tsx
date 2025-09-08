@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import ChallengeView from './ChallengeView';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from '@apollo/client/testing';
 import {BrowserRouter} from 'react-router-dom'
 import { emptyUser } from '../types/User';
 import { FETCH_CURRENT_USER_QUERY, FETCH_WORKWEEK_HUSTLE_QUERY } from '../queries';

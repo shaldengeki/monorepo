@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import WeekendWarrior from './WeekendWarrior';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from '@apollo/client/testing';
 import { FETCH_CURRENT_USER_QUERY } from '../queries';
 
 const testFetchCurrentUserMock = {
