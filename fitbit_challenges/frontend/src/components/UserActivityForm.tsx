@@ -1,5 +1,5 @@
 import Confetti from './Confetti';
-import { useQuery, useMutation } from '@apollo/client/react/hooks';
+import { useQuery, useMutation } from '@apollo/client/react';
 import Activity, {emptyActivity} from '../types/Activity';
 import {CancelButton, SubmitButton} from '../components/FormButton';
 import User from '../types/User';

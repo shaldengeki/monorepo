@@ -3,8 +3,8 @@ import './App.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import { ApolloClient, HttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
-
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { HttpLink } from '@apollo/client/link/http';
 const cache = new InMemoryCache();
 const link = new HttpLink({
   uri: `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/graphql`

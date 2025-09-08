@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client/core';
-import { useMutation } from '@apollo/client/react/hooks';
+import { useMutation } from '@apollo/client/react';
 
 export const FITBIT_AUTH_MUTATION = gql`
     mutation AuthWithFitbit {

@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 import { useParams } from 'react-router-dom';
 import WorkweekHustle from '../components/WorkweekHustle';
 import WeekendWarrior from '../components/WeekendWarrior';

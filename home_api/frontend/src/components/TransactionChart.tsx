@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 import _ from 'lodash';
 import Plot from 'react-plotly.js';
 

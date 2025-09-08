@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 
 import Table from './Table';
 

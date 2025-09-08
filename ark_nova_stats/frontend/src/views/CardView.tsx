@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 import { useParams } from 'react-router-dom';
 
 import PageTitle from "../components/PageTitle";

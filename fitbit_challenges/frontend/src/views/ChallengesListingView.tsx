@@ -1,6 +1,6 @@
 import {useState, ReactElement} from 'react';
 import { gql } from '@apollo/client/core';
-import { useQuery, useMutation } from '@apollo/client/react/hooks';
+import { useQuery, useMutation } from '@apollo/client/react';
 import PageTitle from "../components/PageTitle";
 import Challenge, {ChallengeType, emptyChallenge} from "../types/Challenge";
 import { Link } from 'react-router-dom';
