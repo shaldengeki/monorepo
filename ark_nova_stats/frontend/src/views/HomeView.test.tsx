@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import HomeView from './HomeView';
 import { HOME_VIEW_QUERY } from './HomeView';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from '@apollo/client/testing';
 import {BrowserRouter} from 'react-router-dom'
 
 it('should render the name of the view', async () => {

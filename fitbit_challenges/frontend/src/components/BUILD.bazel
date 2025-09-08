@@ -25,7 +25,6 @@ ts_project(
     deps = [
         ":UserLeaderboard",
         "//:node_modules/@apollo/client",
-        "//:node_modules/@apollo/react-testing",
         "//:node_modules/@testing-library/jest-dom",
         "//:node_modules/@testing-library/react",
         "//:node_modules/@types/jest",
@@ -267,7 +266,6 @@ ts_project(
         ":PageTitle",
         ":ProgressBar",
         "//:node_modules/@apollo/client",
-        "//:node_modules/@apollo/react-testing",
         "//:node_modules/@testing-library/jest-dom",
         "//:node_modules/@testing-library/react",
         "//:node_modules/@types/jest",
@@ -314,7 +312,6 @@ ts_project(
         ":StepChallenge",
         ":UserActivityForm",
         "//:node_modules/@apollo/client",
-        "//:node_modules/@apollo/react-testing",
         "//:node_modules/@testing-library/jest-dom",
         "//:node_modules/@testing-library/react",
         "//:node_modules/@types/jest",
@@ -358,7 +355,6 @@ ts_project(
     deps = [
         ":StepChallenge",
         "//:node_modules/@apollo/client",
-        "//:node_modules/@apollo/react-testing",
         "//:node_modules/@testing-library/jest-dom",
         "//:node_modules/@testing-library/react",
         "//:node_modules/@types/jest",
