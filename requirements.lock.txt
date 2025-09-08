@@ -46,23 +46,23 @@ blinker==1.9.0 \
     --hash=sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf \
     --hash=sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc
     # via flask
-boto3==1.40.21 \
-    --hash=sha256:3772fb828864d3b7046c8bdf2f4860aaca4a79f25b7b060206c6a5f4944ea7f9 \
-    --hash=sha256:876ccc0b25517b992bd27976282510773a11ebc771aa5b836a238ea426c82187
+boto3==1.40.25 \
+    --hash=sha256:d39bc3deb6780d910f00580837b720132055b0604769fd978780865ed3c019ea \
+    --hash=sha256:debfa4b2c67492d53629a52c999d71cddc31041a8b62ca1a8b1fb60fb0712ee1
     # via -r requirements.txt
-boto3-stubs==1.40.21 \
-    --hash=sha256:e396a0b9978d384d7fe22ba1e15eb0109d7e2d7572e746db979d25bf07877fd9 \
-    --hash=sha256:ef36f65c7fe86ffbc93c1418fa8904803ce3bcffc3c932c3d1ae33a9d02fa1cd
+boto3-stubs==1.40.25 \
+    --hash=sha256:420aedc1dc5ae653977af711c7b925f95645bcfdff294c6d0fabaac994182e09 \
+    --hash=sha256:6fbc7f4775b03cd4856d408fa7bd5d3b0bb0326f0aa561ffdcd33cca564eb729
     # via -r requirements.txt
-botocore==1.40.21 \
-    --hash=sha256:574ecf9b68c1721650024a27e00e0080b6f141c281ebfce49e0d302969270ef4 \
-    --hash=sha256:f77e9c199df0252b14ea739a9ac99723940f6bde90f4c2e7802701553a62827b
+botocore==1.40.25 \
+    --hash=sha256:41fd186018a48dc517a4312a8d3085d548cb3fb1f463972134140bf7ee55a397 \
+    --hash=sha256:5603ea9955cd31974446f0b5688911a5dad71fbdfbf7457944cda8a83fcf2a9e
     # via
     #   boto3
     #   s3transfer
-botocore-stubs==1.40.21 \
-    --hash=sha256:10aa6e3c4818d978047fb9ff87f1686ab597899db29e08eb824081fea7d4cbba \
-    --hash=sha256:1a5777e4e4f0335ed7d3185b0f2a55c1fc5ea1e60fe264cdea51a171c3b0b011
+botocore-stubs==1.40.25 \
+    --hash=sha256:47e5308a2bc566ff69c0506830370af99fd29504b5077c2dbe31da0ff32cc32d \
+    --hash=sha256:ddd3f7d8e50ad227ca9337c2ac2049c4269908766a4a5d1273a5b5d727c38fc3
     # via boto3-stubs
 certifi==2025.8.3 \
     --hash=sha256:e564105f78ded564e3ae7c923924435e1daa7463faeab5bb932bc53ffae63407 \
@@ -280,9 +280,9 @@ greenlet==3.2.4 \
     --hash=sha256:f10fd42b5ee276335863712fa3da6608e93f70629c631bf77145021600abc23c \
     --hash=sha256:f28588772bb5fb869a8eb331374ec06f24a83a9c25bfa1f38b6993afe9c1e968
     # via sqlalchemy
-identify==2.6.13 \
-    --hash=sha256:60381139b3ae39447482ecc406944190f690d4a2997f2584062089848361b33b \
-    --hash=sha256:da8d6c828e773620e13bfa86ea601c5a5310ba4bcd65edf378198b56a1f9fb32
+identify==2.6.14 \
+    --hash=sha256:11a073da82212c6646b1f39bb20d4483bfb9543bd5566fec60053c4bb309bf2e \
+    --hash=sha256:663494103b4f717cb26921c52f8751363dc89db64364cd836a9bf1535f53cd6a
     # via
     #   -r requirements.txt
     #   pre-commit
@@ -556,9 +556,9 @@ pysocks==1.7.1 \
     --hash=sha256:2725bd0a9925919b9b51739eea5f9e2bae91e83288108a9ad338b2e3a4435ee5 \
     --hash=sha256:3f8804571ebe159c380ac6de37643bb4685970655d3bba243530d6558b799aa0
     # via -r requirements.txt
-pytest==8.4.1 \
-    --hash=sha256:539c70ba6fcead8e78eebbf1115e8b589e7565830d7d006a8723f19ac8a0afb7 \
-    --hash=sha256:7c67fd69174877359ed9371ec3af8a3d2b04741818c51e5e99cc1742251fa93c
+pytest==8.4.2 \
+    --hash=sha256:86c0d0b93306b961d58d62a4db4879f27fe25513d4b969df351abdddb3c30e01 \
+    --hash=sha256:872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79
     # via -r requirements.txt
 python-dateutil==2.9.0.post0 \
     --hash=sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3 \
