@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react';
 import { UserLeaderboardHeader, UserLeaderboardListingEntry } from './UserLeaderboard';
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import {ActivityTotal} from "../types/Activity";
 
 it('should have the username and steps in the entry', async () => {

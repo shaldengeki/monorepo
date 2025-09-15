@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import GameView from './GameView';
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import {BrowserRouter} from 'react-router-dom'
 
 

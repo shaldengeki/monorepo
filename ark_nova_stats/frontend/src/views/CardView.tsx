@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 import { useParams } from 'react-router-dom';
 
 import PageTitle from "../components/PageTitle";
@@ -65,8 +65,11 @@ const CardView = () => {
     if (loading) innerContent = <LoadingSpinner />;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
+        // @ts-ignore
         const card: Card = data.card;
+        // @ts-ignore
         const mostPlayedBy: UserPlayCount[] = data.card.mostPlayedBy;
+        // @ts-ignore
         const recentGameLogs: GameLog[] = data.card.recentGameLogs;
         innerContent = (
             <div>
