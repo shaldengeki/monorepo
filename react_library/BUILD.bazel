@@ -29,6 +29,12 @@ copy_to_bin(
 )
 
 copy_to_bin(
+    name = "vitestconfig",
+    srcs = ["vitest.config.js"],
+    visibility = ["//visibility:public"],
+)
+
+copy_to_bin(
     name = "globalsdts",
     srcs = ["globals.d.ts"],
     visibility = ["//visibility:public"],
@@ -85,5 +91,23 @@ ts_project(
         "//:node_modules/@types/jest",
         "//:node_modules/jest-environment-jsdom",
         "//:node_modules/jsdom",
+    ],
+)
+
+ts_project(
+    name = "vitestconfigts",
+    srcs = [
+        "vitest.config.ts",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = ":tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/vitest",
     ],
 )
