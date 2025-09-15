@@ -5,7 +5,7 @@ import {
   Navigate
 } from "react-router-dom";
 
-import { useQuery } from "@apollo/client/react/hooks";
+import { useQuery } from "@apollo/client/react";
 import ChallengesListingView from './views/ChallengesListingView';
 import ChallengeView from './views/ChallengeView';
 import AuthView from './views/AuthView';
