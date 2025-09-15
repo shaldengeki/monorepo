@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@apollo/client':
-    specifier: ^4.0.4
-    version: 4.0.4(graphql@16.11.0)(react-dom@19.1.1)(react@19.1.1)(rxjs@7.8.2)
+    specifier: ^4.0.5
+    version: 4.0.5(graphql@16.11.0)(react-dom@19.1.1)(react@19.1.1)(rxjs@7.8.2)
   '@headlessui/react':
     specifier: ^2.2.8
     version: 2.2.8(react-dom@19.1.1)(react@19.1.1)
@@ -198,8 +198,8 @@ packages:
       leven: 3.1.0
     dev: false
 
-  /@apollo/client@4.0.4(graphql@16.11.0)(react-dom@19.1.1)(react@19.1.1)(rxjs@7.8.2):
-    resolution: {integrity: sha512-3+fTQUA3AdC08urPF7si0ptLiAaVOH5R/3drwXzic8yqzTL4W3ME6klLj/EpgMND0FbWD7sM8TCkEDoe4OckMw==}
+  /@apollo/client@4.0.5(graphql@16.11.0)(react-dom@19.1.1)(react@19.1.1)(rxjs@7.8.2):
+    resolution: {integrity: sha512-H0FQXa6MRWQS0/jNv4VO6NfUWueZ4L7QYjkbSztADpugb4yTzRBVVwFq5mL3FJVJWewxWVrzJof/yzCTVTsXaw==}
     peerDependencies:
       graphql: ^16.0.0
       graphql-ws: ^5.5.5 || ^6.0.3
@@ -815,16 +815,6 @@ packages:
       '@babel/helper-plugin-utils': 7.27.1
     dev: false
 
-  /@babel/plugin-syntax-flow@7.27.1(@babel/core@7.27.4):
-    resolution: {integrity: sha512-p9OkPbZ5G7UT1MofwYFigGebnrzGJacoBSQM0/6bi/PUMVE+qlWDD/OalvQKbwgQzU6dl0xAv6r4X7Jme0RYxA==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.27.4
-      '@babel/helper-plugin-utils': 7.27.1
-    dev: false
-
   /@babel/plugin-syntax-flow@7.27.1(@babel/core@7.28.4):
     resolution: {integrity: sha512-p9OkPbZ5G7UT1MofwYFigGebnrzGJacoBSQM0/6bi/PUMVE+qlWDD/OalvQKbwgQzU6dl0xAv6r4X7Jme0RYxA==}
     engines: {node: '>=6.9.0'}
@@ -897,16 +887,6 @@ packages:
     dependencies:
       '@babel/core': 7.28.4
       '@babel/helper-plugin-utils': 7.27.1
-
-  /@babel/plugin-syntax-jsx@7.27.1(@babel/core@7.27.4):
-    resolution: {integrity: sha512-y8YTNIeKoyhGd9O0Jiyzyyqk8gdjnumGTQPsz0xOZOQ2RmkVJeZ1vmmfIvFEKqucBG6axJGBZDE/7iI5suUI/w==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.27.4
-      '@babel/helper-plugin-utils': 7.27.1
-    dev: false
 
   /@babel/plugin-syntax-jsx@7.27.1(@babel/core@7.28.4):
     resolution: {integrity: sha512-y8YTNIeKoyhGd9O0Jiyzyyqk8gdjnumGTQPsz0xOZOQ2RmkVJeZ1vmmfIvFEKqucBG6axJGBZDE/7iI5suUI/w==}
@@ -1558,22 +1538,6 @@ packages:
     dependencies:
       '@babel/core': 7.28.4
       '@babel/plugin-transform-react-jsx': 7.27.1(@babel/core@7.28.4)
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /@babel/plugin-transform-react-jsx@7.27.1(@babel/core@7.27.4):
-    resolution: {integrity: sha512-2KH4LWGSrJIkVf5tSiBFYuXDAoWRq2MMwgivCf+93dd0GQi8RXLjKA/0EvRnVV5G0hrHczsquXuD01L8s6dmBw==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.27.4
-      '@babel/helper-annotate-as-pure': 7.27.3
-      '@babel/helper-module-imports': 7.27.1
-      '@babel/helper-plugin-utils': 7.27.1
-      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.4)
-      '@babel/types': 7.28.4
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -7311,8 +7275,8 @@ packages:
       '@babel/plugin-transform-react-jsx': ^7.14.9
       eslint: ^8.1.0
     dependencies:
-      '@babel/plugin-syntax-flow': 7.27.1(@babel/core@7.27.4)
-      '@babel/plugin-transform-react-jsx': 7.27.1(@babel/core@7.27.4)
+      '@babel/plugin-syntax-flow': 7.27.1(@babel/core@7.28.4)
+      '@babel/plugin-transform-react-jsx': 7.27.1(@babel/core@7.28.4)
       eslint: 8.57.1
       lodash: 4.17.21
       string-natural-compare: 3.0.1
