@@ -8,6 +8,7 @@ manifest:
   modules_mapping:
     30fcd23745efe32ce681__mypyc: black
     5bae8a57b5ef85818b48__mypyc: tomli
+    7ae574991b77ef47acad__mypyc: mypy
     alembic: alembic
     asn1crypto: asn1crypto
     astroid: astroid
@@ -25,7 +26,6 @@ manifest:
     dill: dill
     distlib: distlib
     docker: docker
-    edfc647aaf02b20aa651__mypyc: mypy
     exceptiongroup: exceptiongroup
     filelock: filelock
     flask: flask
@@ -52,6 +52,7 @@ manifest:
     mypy: mypy
     mypy_extensions: mypy_extensions
     mypyc: mypy
+    native_internal: mypy
     nodeenv: nodeenv
     packaging: packaging
     pathspec: pathspec
@@ -83,4 +84,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 61d577fe3ba635cec2641e5ed14a9736f4cb20bede9570914957422c9cb1d0bd
+integrity: 11e982fe7070e2d6067e380e06af11eb06394be99d7ba797c6d8de32cfc418f9
