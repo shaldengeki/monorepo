@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client/core';
-import { useMutation } from '@apollo/client/react/hooks';
+import { useMutation } from '@apollo/client/react';
 
 export const FITBIT_AUTH_MUTATION = gql`
     mutation AuthWithFitbit {
@@ -14,9 +14,10 @@ const AuthView = () => {
 
     if (loading) return <p>Loading...</p>;
     else if (error) return <p>Error: {error.message}</p>;
-    else if (data === undefined) {
+    else if (!data) {
         startFitbitAuth();
     } else {
+        // @ts-ignore
         window.location.replace(data.authWithFitbit.url);
     }
 }
