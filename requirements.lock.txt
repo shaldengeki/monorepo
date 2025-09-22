@@ -566,6 +566,10 @@ python-dateutil==2.9.0.post0 \
     # via
     #   botocore
     #   pg8000
+pytokens==0.1.10 \
+    --hash=sha256:c9a4bfa0be1d26aebce03e6884ba454e842f186a59ea43a6d3b25af58223c044 \
+    --hash=sha256:db7b72284e480e69fb085d9f251f66b3d2df8b7166059261258ff35f50fb711b
+    # via black
 pyyaml==6.0.2 \
     --hash=sha256:01179a4a8559ab5de078078f37e5c1a30d76bb88519906844fd7bdea1b7729ff \
     --hash=sha256:0833f8694549e586547b576dcfaba4a6b55b9e96098b36cdc7ebefe667dfed48 \
