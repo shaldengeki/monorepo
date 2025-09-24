@@ -61,6 +61,9 @@ gazelle_python_manifest(
 # gazelle:proto file
 # gazelle:go_grpc_compilers @rules_go//proto:go_grpc
 
+# Don't generate BUILD.bazel files in migration directories.
+# gazelle:exclude **/migrations/versions
+
 # gazelle:python_generation_mode file
 # gazelle:map_kind py_proto_library py_proto_library @protobuf//bazel:py_proto_library.bzl
 
