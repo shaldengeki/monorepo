@@ -9,4 +9,5 @@ py_binary(
 filegroup(
     name = "data",
     srcs = glob(["*.json"]),
+    visibility = ["//ark_nova_stats/emu_cup:__subpackages__"],
 )
