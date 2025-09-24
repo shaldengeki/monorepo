@@ -17,7 +17,7 @@ repos:
             -   id: no-commit-to-branch
                 args: [--branch, staging, --branch, main]
     -   repo: https://github.com/psf/black
-        rev: 25.1.0
+        rev: 25.9.0
         hooks:
             -   id: black
     -   repo: https://github.com/pycqa/isort
@@ -31,14 +31,14 @@ repos:
         -   id: buildifier
         -   id: buildifier-lint
     -   repo: https://github.com/pre-commit/mirrors-mypy
-        rev: v1.18.1
+        rev: v1.18.2
         hooks:
             -   id: mypy
                 additional_dependencies:
                     - types-requests==2.31.0.20240218
                     - types-protobuf==5.27.0.20240626
     -   repo: https://github.com/pre-commit/mirrors-eslint
-        rev: 'v9.35.0'
+        rev: 'v9.36.0'
         hooks:
             -   id: eslint
                 files: \.[jt]sx?$  # *.js, *.jsx, *.ts and *.tsx
