@@ -1,14 +1,9 @@
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 
-filegroup(
-    name = "game_data",
-    srcs = glob(["data/*.json"]),
-)
-
 py_binary(
     name = "analyze_games",
     srcs = ["analyze_games.py"],
-    data = [":game_data"],
+    data = ["//ark_nova_stats/emu_cup/data"],
     visibility = ["//:__subpackages__"],
     deps = [
         ":player_elos",

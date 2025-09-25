@@ -1,0 +1,13 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+
+py_binary(
+    name = "fix_spaces",
+    srcs = ["fix_spaces.py"],
+    visibility = ["//:__subpackages__"],
+)
+
+filegroup(
+    name = "data",
+    srcs = glob(["*.json"]),
+    visibility = ["//ark_nova_stats/emu_cup:__subpackages__"],
+)

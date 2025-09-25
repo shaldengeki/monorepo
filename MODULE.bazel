@@ -10,19 +10,19 @@ bazel_dep(name = "platforms", version = "1.0.0", dev_dependency = True)
 bazel_dep(name = "toolchains_protoc", version = "0.5.0")
 bazel_dep(name = "protobuf", version = "31.1")
 bazel_dep(name = "rules_proto", version = "7.1.0")
-bazel_dep(name = "rules_python", version = "1.5.4")
+bazel_dep(name = "rules_python", version = "1.6.3")
 bazel_dep(name = "rules_oci", version = "2.2.6")
-bazel_dep(name = "aspect_rules_js", version = "2.5.0")
+bazel_dep(name = "aspect_rules_js", version = "2.6.0")
 bazel_dep(name = "aspect_rules_ts", version = "3.7.0")
 bazel_dep(name = "aspect_rules_jest", version = "0.23.3")
 bazel_dep(name = "aspect_rules_webpack", version = "0.17.1")
 bazel_dep(name = "rules_pkg", version = "1.1.0")
 bazel_dep(name = "rules_go", version = "0.57.0")
 bazel_dep(name = "gazelle", version = "0.45.0")
-bazel_dep(name = "rules_python_gazelle_plugin", version = "1.5.4")
-bazel_dep(name = "rules_java", version = "8.15.1")
-bazel_dep(name = "contrib_rules_jvm", version = "0.29.0")
-bazel_dep(name = "rules_cc", version = "0.2.2")
+bazel_dep(name = "rules_python_gazelle_plugin", version = "1.6.3")
+bazel_dep(name = "rules_java", version = "8.15.2")
+bazel_dep(name = "contrib_rules_jvm", version = "0.30.0")
+bazel_dep(name = "rules_cc", version = "0.2.8")
 bazel_dep(name = "googletest", version = "1.17.0")
 bazel_dep(name = "rules_buf", version = "0.5.2")
 
@@ -178,18 +178,18 @@ go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.module(
     # build_file_proto_mode = "disable",
     path = "google.golang.org/grpc",
-    sum = "h1:+TW+dqTd2Biwe6KKfhE5JpiYIBWq865PhKGSXiivqt4=",
-    version = "v1.75.0",
+    sum = "h1:/ODCNEuf9VghjgO3rqLcfg8fiOP0nSluljWFlDxELLI=",
+    version = "v1.75.1",
 )
 go_deps.module(
     path = "golang.org/x/net",
-    sum = "h1:lat02VYK2j4aLzMzecihNvTlJNQUq316m2Mr9rnM6YE=",
-    version = "v0.43.0",
+    sum = "h1:evd8IRDyfNBMBTTY5XRF1vaZlD+EmWx6x8PkhR04H/I=",
+    version = "v0.44.0",
 )
 go_deps.module(
     path = "golang.org/x/text",
-    sum = "h1:rhazDwis8INMIwQ4tpjLDzUhx6RlXqZNPEM0huQojng=",
-    version = "v0.28.0",
+    sum = "h1:1neNs90w9YzJ9BocxfsQNHKuAT4pkghyXc4nhZ6sJvk=",
+    version = "v0.29.0",
 )
 go_deps.module(
     path = "github.com/stretchr/testify",
