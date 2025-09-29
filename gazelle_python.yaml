@@ -47,7 +47,7 @@ manifest:
     jmespath: jmespath
     lazy_object_proxy: lazy_object_proxy
     mako: mako
-    markupsafe: MarkupSafe
+    markupsafe: markupsafe
     mccabe: mccabe
     mypy: mypy
     mypy_extensions: mypy_extensions
@@ -81,8 +81,8 @@ manifest:
     virtualenv: virtualenv
     werkzeug: werkzeug
     wrapt: wrapt
-    yaml: PyYAML
+    yaml: pyyaml
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: e0ce061cc18883eef414e17c66208d0f481dfe4716d3b0f7eeb0f40a32589da2
+integrity: bcb1490ca9a5b2584353cc3a63eb63a3f83f081e6520b9a06fb4d0f14bbaf71a
