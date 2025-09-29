@@ -1,0 +1,11 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+
+py_binary(
+    name = "import_data",
+    srcs = ["import_data.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//home_api:config_py",
+        "//home_api/api/models:transaction",
+    ],
+)

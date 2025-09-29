@@ -64,6 +64,7 @@ manifest:
     pygments: pygments
     pylint: pylint
     pytest: pytest
+    pytokens: pytokens
     qbittorrentapi: qbittorrent_api
     requests: requests
     s3transfer: s3transfer
@@ -84,4 +85,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 638b512f821dc3b3476bbfa7b86965ffb958cd8db7a3d4cc62a5eacd9503dfab
+integrity: e0ce061cc18883eef414e17c66208d0f481dfe4716d3b0f7eeb0f40a32589da2
