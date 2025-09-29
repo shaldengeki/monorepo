@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 
 import ServerBackups from '../components/ServerBackups'
 import ServerHeader from '../components/ServerHeader'
@@ -61,6 +61,7 @@ function Server () {
   if (loading) return loadingDisplay
   if (error) return errorDisplay
 
+  // @ts-ignore
   const server = data.servers[0]
 
   return (
