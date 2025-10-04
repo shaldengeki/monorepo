@@ -3,7 +3,7 @@ module(
     repo_name = "com_github_shaldengeki_monorepo",
 )
 
-bazel_dep(name = "aspect_bazel_lib", version = "2.21.1")
+bazel_dep(name = "aspect_bazel_lib", version = "2.21.2")
 
 bazel_dep(name = "platforms", version = "1.0.0", dev_dependency = True)
 
@@ -22,7 +22,7 @@ bazel_dep(name = "gazelle", version = "0.45.0")
 bazel_dep(name = "rules_python_gazelle_plugin", version = "1.6.3")
 bazel_dep(name = "rules_java", version = "8.15.2")
 bazel_dep(name = "contrib_rules_jvm", version = "0.30.0")
-bazel_dep(name = "rules_cc", version = "0.2.8")
+bazel_dep(name = "rules_cc", version = "0.2.9")
 bazel_dep(name = "googletest", version = "1.17.0")
 bazel_dep(name = "rules_buf", version = "0.5.2")
 
