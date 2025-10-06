@@ -16,12 +16,12 @@ repos:
             -   id: check-yaml
             -   id: no-commit-to-branch
                 args: [--branch, staging, --branch, main]
-    -   repo: https://github.com/psf/black
+    -   repo: https://github.com/psf/black-pre-commit-mirror
         rev: 25.9.0
         hooks:
             -   id: black
     -   repo: https://github.com/pycqa/isort
-        rev: 6.0.1
+        rev: 6.1.0
         hooks:
             -   id: isort
                 name: isort (python)
@@ -38,7 +38,7 @@ repos:
                     - types-requests==2.31.0.20240218
                     - types-protobuf==5.27.0.20240626
     -   repo: https://github.com/pre-commit/mirrors-eslint
-        rev: 'v9.36.0'
+        rev: 'v9.37.0'
         hooks:
             -   id: eslint
                 files: \.[jt]sx?$  # *.js, *.jsx, *.ts and *.tsx
