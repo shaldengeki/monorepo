@@ -7,8 +7,8 @@
 manifest:
   modules_mapping:
     30fcd23745efe32ce681__mypyc: black
-    5bae8a57b5ef85818b48__mypyc: tomli
     7ae574991b77ef47acad__mypyc: mypy
+    7bce59c0a152c0e01f70__mypyc: tomli
     alembic: alembic
     asn1crypto: asn1crypto
     astroid: astroid
@@ -85,4 +85,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 141c3ff60cbe87b68b415aa4a1ffdb1c65e2c1f98e4707e10bffbd371127e031
+integrity: 505e5de81939754169a9f39ca0bf088f130c3c800c9d4fcdc3289f12a0f6b19c
