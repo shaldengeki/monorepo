@@ -7,8 +7,8 @@
 manifest:
   modules_mapping:
     30fcd23745efe32ce681__mypyc: black
-    5bae8a57b5ef85818b48__mypyc: tomli
     7ae574991b77ef47acad__mypyc: mypy
+    7bce59c0a152c0e01f70__mypyc: tomli
     alembic: alembic
     asn1crypto: asn1crypto
     astroid: astroid
@@ -47,7 +47,7 @@ manifest:
     jmespath: jmespath
     lazy_object_proxy: lazy_object_proxy
     mako: mako
-    markupsafe: MarkupSafe
+    markupsafe: markupsafe
     mccabe: mccabe
     mypy: mypy
     mypy_extensions: mypy_extensions
@@ -81,8 +81,8 @@ manifest:
     virtualenv: virtualenv
     werkzeug: werkzeug
     wrapt: wrapt
-    yaml: PyYAML
+    yaml: pyyaml
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: e0ce061cc18883eef414e17c66208d0f481dfe4716d3b0f7eeb0f40a32589da2
+integrity: 505e5de81939754169a9f39ca0bf088f130c3c800c9d4fcdc3289f12a0f6b19c
