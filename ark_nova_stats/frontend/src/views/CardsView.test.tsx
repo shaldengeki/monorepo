@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import CardsView, { CARDS_VIEW_QUERY } from './CardsView';
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import {BrowserRouter} from 'react-router-dom'
 
 it('should render the name of the view', async () => {
