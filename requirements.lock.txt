@@ -12,9 +12,9 @@ asn1crypto==1.5.1 \
     --hash=sha256:13ae38502be632115abf8a24cbe5f4da52e3b5231990aff31123c805306ccb9c \
     --hash=sha256:db4e40728b728508912cbb3d44f19ce188f218e9eba635821bb4b68564f8fd67
     # via scramp
-astroid==3.3.11 \
-    --hash=sha256:1e5a5011af2920c7c67a53f65d536d65bfa7116feeaf2354d8b94f29573bb0ce \
-    --hash=sha256:54c760ae8322ece1abd213057c4b5bba7c49818853fc901ef09719a60dbf9dec
+astroid==4.0.1 \
+    --hash=sha256:0d778ec0def05b935e198412e62f9bcca8b3b5c39fdbe50b0ba074005e477aab \
+    --hash=sha256:37ab2f107d14dc173412327febf6c78d39590fdafcb44868f03b6c03452e3db0
     # via
     #   -r requirements.txt
     #   pylint
