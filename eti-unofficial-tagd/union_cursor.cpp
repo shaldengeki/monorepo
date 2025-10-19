@@ -7,11 +7,11 @@
 
 UnionCursor::UnionCursor(std::vector<Cursor*>& cursors) : MetaCursor::MetaCursor(cursors) {
 }
-const Topic& UnionCursor::position() const { 
+const Topic& UnionCursor::position() const {
   return MetaCursor::position();
 }
 const Topic& UnionCursor::position(Topic& out) const {
-  /* 
+  /*
     Iterate through each cursor in this metacursor and return the lowest topic that any of the cursors is pointing to.
   */
   for (std::vector<Cursor*>::const_iterator current_cursor = _cursors.cbegin(); current_cursor != _cursors.cend(); ++current_cursor) {
@@ -23,7 +23,7 @@ const Topic& UnionCursor::position(Topic& out) const {
   return out;
 }
 const Topic& UnionCursor::next() {
-  /* 
+  /*
     Iterate through each cursor in this metacursor, incrementing those cursors that are pointing to the current cursor's position.
     Return the cursor's position after having incremented said cursors.
   */

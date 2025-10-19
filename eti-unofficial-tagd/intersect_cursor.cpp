@@ -8,11 +8,11 @@
 
 IntersectCursor::IntersectCursor(std::vector<Cursor*>& cursors) : MetaCursor::MetaCursor(cursors) {
 }
-const Topic& IntersectCursor::position() const { 
+const Topic& IntersectCursor::position() const {
   return MetaCursor::position();
 }
 const Topic& IntersectCursor::position(Topic& out) const {
-  /* 
+  /*
     Given an input lower-bound "reference topic" at out:
     For each of the cursors in this metacursor, seek_to out and see if the resultant topic is out.
     If any of the cursors seek past out, set this sought-to topic as the new "reference topic" and repeat.
@@ -36,7 +36,7 @@ const Topic& IntersectCursor::position(Topic& out) const {
   return out;
 }
 const Topic& IntersectCursor::next() {
-  /* 
+  /*
     Iterate through each cursor in this cursor, incrementing those cursors that are pointing to the current cursor's position.
     Return the cursor's position after having incremented said cursors.
   */
