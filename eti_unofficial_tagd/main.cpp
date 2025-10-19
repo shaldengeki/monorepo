@@ -15,10 +15,7 @@
 #include <utility>
 #include <vector>
 
-#include <boost/mysql/any_connection.hpp>
-#include <boost/mysql/connect_params.hpp>
-#include <boost/mysql/error_with_diagnostics.hpp>
-#include <boost/mysql/results.hpp>
+#include <boost/mysql.hpp>
 namespace mysql = boost::mysql;
 #include <boost/asio/io_context.hpp>
 namespace asio = boost::asio;

@@ -41,6 +41,7 @@ cc_binary(
         "@boost.algorithm//:boost.algorithm",
         "@boost.asio//:boost.asio",
         "@boost.lexical_cast//:boost.lexical_cast",
+        "@boost.mysql//:boost.mysql",
         "@boost.program_options//:boost.program_options",
     ],
 )
