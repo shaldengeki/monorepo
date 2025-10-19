@@ -1,0 +1,46 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+cc_library(
+    name = "eti_unofficial_tagd",
+    srcs = [
+        "cursor.cpp",
+        "difference_cursor.cpp",
+        "intersect_cursor.cpp",
+        "meta_cursor.cpp",
+        "tag.cpp",
+        "tag_cursor.cpp",
+        "tagd.cpp",
+        "topic.cpp",
+        "union_cursor.cpp",
+    ],
+    hdrs = [
+        "cursor.hpp",
+        "difference_cursor.hpp",
+        "intersect_cursor.hpp",
+        "meta_cursor.hpp",
+        "tag.hpp",
+        "tag_cursor.hpp",
+        "tagd.hpp",
+        "topic.hpp",
+        "union_cursor.hpp",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_binary(
+    name = "client",
+    srcs = ["client.cpp"],
+    deps = ["@boost.program_options//:boost.program_options"],
+)
+
+cc_binary(
+    name = "main",
+    srcs = ["main.cpp"],
+    deps = [
+        ":eti_unofficial_tagd",
+        "@boost.algorithm//:boost.algorithm",
+        "@boost.asio//:boost.asio",
+        "@boost.lexical_cast//:boost.lexical_cast",
+        "@boost.program_options//:boost.program_options",
+    ],
+)

@@ -15,7 +15,13 @@
 #include <utility>
 #include <vector>
 
-#include <mysql++.h>
+#include <boost/mysql/any_connection.hpp>
+#include <boost/mysql/connect_params.hpp>
+#include <boost/mysql/error_with_diagnostics.hpp>
+#include <boost/mysql/results.hpp>
+namespace mysql = boost::mysql;
+#include <boost/asio/io_context.hpp>
+namespace asio = boost::asio;
 #include <boost/program_options.hpp>
 namespace options = boost::program_options;
 #include <boost/algorithm/string/join.hpp>
@@ -76,29 +82,29 @@ int main(int argc, char* argv[]) {
 
   // load tag, topic data from the database.
   std::cout << "Connecting to database and loading tag-topic data..." << std::endl;
-  mysqlpp::Connection database;
-  mysqlpp::UseQueryResult tag_iter;
-  try {
-    database = mysqlpp::Connection(vm["database"].as<std::string>().c_str(), vm["host"].as<std::string>().c_str(), vm["username"].as<std::string>().c_str(), vm["password"].as<std::string>().c_str());
-  } catch (mysqlpp::ConnectionFailed er) {
-    std::cerr << "Could not connect to MySQL database." << std::endl;
-    throw er;
-  }
+  asio::io_context ctx;
+  mysql::any_connection conn(ctx);
+  mysql::connect_params params;
+  params.server_address.emplace_host_and_port(vm["host"].as<std::string>().c_str());
+  params.username = vm["username"].as<std::string>().c_str();
+  params.password = vm["password"].as<std::string>().c_str();
+  params.database = vm["database"].as<std::string>().c_str();
+  conn.connect(params);
 
-  mysqlpp::Query tag_query = database.query();
-  tag_query << "LOCK TABLES tags_topics READ, topics READ;";
-  tag_query.exec();
+  const char* lock_query = "LOCK TABLES tags_topics READ, topics READ;";
+  mysql::results lock_result;
+  conn.execute(lock_query, lock_result);
 
-  tag_query.reset();
-  tag_query << "SELECT tag_id, topic_id, topics.lastPostTime AS last_post_time FROM tags_topics INNER JOIN topics ON topics.ll_topicid = tags_topics.topic_id ORDER BY tag_id ASC, last_post_time DESC, topic_id DESC";
-  tag_iter = tag_query.use();
+  const char* tag_query = "SELECT tag_id, topic_id, topics.lastPostTime AS last_post_time FROM tags_topics INNER JOIN topics ON topics.ll_topicid = tags_topics.topic_id ORDER BY tag_id ASC, last_post_time DESC, topic_id DESC;";
+  mysql::results tag_result;
+  conn.execute(tag_query, tag_result);
 
   // insert tag, topic data into TagD.
   TagD* tagd = new TagD();
   unsigned long curr_tag_id = 1;
   TopicList tag_topics = TopicList();
-  while (mysqlpp::Row row = tag_iter.fetch_row()) {
-    unsigned long tag_id = std::strtoul(row["tag_id"].c_str(), NULL, 0);
+  for (mysql::row_view tag : tag_result.rows()) {
+    unsigned long tag_id = tag->at(0).as_uint64();
     if (tag_id != curr_tag_id) {
       // new tag. create tag with all prior topics and reset topic list.
       Tag* curr_tag = new Tag(curr_tag_id, tag_topics);
@@ -107,8 +113,8 @@ int main(int argc, char* argv[]) {
       tag_topics = TopicList();
     }
 
-    unsigned int last_post_time = (unsigned int) std::strtoul(row["last_post_time"].c_str(), NULL, 0);
-    unsigned int topic_id = (unsigned int) std::strtoul(row["topic_id"].c_str(), NULL, 0);
+    unsigned int last_post_time = (unsigned int) tag->at(2).as_uint64();
+    unsigned int topic_id = (unsigned int) tag->at(1).as_uint64();
 
     Topic curr_topic = Topic(last_post_time, topic_id);
     tag_topics.insert(curr_topic);
@@ -116,9 +122,9 @@ int main(int argc, char* argv[]) {
   Tag* curr_tag = new Tag(curr_tag_id, tag_topics);
   tagd->set(*curr_tag);
 
-  tag_query.reset();
-  tag_query << "UNLOCK TABLES;";
-  tag_query.exec();
+  const char* unlock_query = "UNLOCK TABLES;";
+  mysql::results unlock_result;
+  conn.execute(unlock_query, lock_result);
 
   // All done!
   std::cout << "Loaded " << tagd->size() << " tags." << std::endl;

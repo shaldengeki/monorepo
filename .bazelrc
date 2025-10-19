@@ -38,3 +38,8 @@ common --incompatible_disallow_struct_provider_syntax=false
 #  - file_descriptors[0].file_descriptor_proto: source_code_info must be present [source_code_info_present]
 # See https://github.com/bufbuild/rules_buf/issues/84
 common --experimental_proto_descriptor_sets_include_source_info
+
+# boost.asio & mysql have a dependency on an SSL implementation.
+# we have to explicitly tell them to use boringssl.
+build --@boost.asio//:ssl=boringssl
+build --@boost.mysql//:ssl=boringssl

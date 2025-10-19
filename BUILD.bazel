@@ -86,6 +86,7 @@ gazelle_binary(
         "@gazelle//language/proto",
         "@rules_python_gazelle_plugin//python",
         "@gazelle//language/go",
+        "@gazelle_cc//language/cc",
         "@rules_buf//gazelle/buf:buf",
     ],
 )
