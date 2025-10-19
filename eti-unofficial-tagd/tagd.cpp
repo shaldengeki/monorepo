@@ -73,7 +73,7 @@ unsigned int TagD::size() {
 }
 
 void TagD::parse_insert(std::string& insert_query) {
-  
+
 }
 
 Cursor& TagD::parse_query(std::string& tag_query) {
@@ -95,7 +95,7 @@ Cursor& TagD::parse_query(std::string& tag_query) {
       first_op = tag_query.length();
     }
     std::string first_tag = tag_query.substr(0, first_op);
-    
+
     union_tags.push_back(new TagCursor(get(std::stoul(first_tag))));
     operator_it += first_op;
   }

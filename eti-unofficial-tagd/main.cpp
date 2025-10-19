@@ -5,7 +5,7 @@
   For up-to-date help: tagd --help
 */
 
-#include <algorithm> 
+#include <algorithm>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -128,7 +128,7 @@ int main(int argc, char* argv[]) {
   if ((local_sock = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
     perror("socket");
     exit(1);
-  }  
+  }
 
   local.sun_family = AF_UNIX;  /* local is declared before socket() ^ */
   strcpy(local.sun_path, vm["socket"].as<std::string>().c_str());

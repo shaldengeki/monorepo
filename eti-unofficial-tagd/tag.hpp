@@ -1,4 +1,4 @@
-/* 
+/*
   tag.h
   Provides datastructure for tags.
 */

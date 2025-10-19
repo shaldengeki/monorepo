@@ -7,11 +7,11 @@
 
 DifferenceCursor::DifferenceCursor(std::vector<Cursor*>& cursors) : MetaCursor::MetaCursor(cursors) {
 }
-const Topic& DifferenceCursor::position() const { 
+const Topic& DifferenceCursor::position() const {
   return MetaCursor::position();
 }
 const Topic& DifferenceCursor::position(Topic& out) const {
-  /* 
+  /*
     Given an input lower-bound "reference topic" at out:
     For each of the cursors in this metacursor, seek_to out and see if the resultant topic is out.
     If any of the cursors seek to out, find the next-highest topic.
@@ -40,7 +40,7 @@ const Topic& DifferenceCursor::position(Topic& out) const {
   return out;
 }
 const Topic& DifferenceCursor::next() {
-  /* 
+  /*
     Increments the first cursor (from which all topics are selected) until the current position differs from the previous position (or the current position is zero)
   */
   Topic prev_position = position();
