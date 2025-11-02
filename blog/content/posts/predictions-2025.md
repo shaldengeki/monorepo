@@ -31,7 +31,7 @@ Following up on [my predictions for 2024]({{< ref "predictions-2024-followup" >}
 - ✅ I notice reduced traffic volumes in my neighborhood: 10%
 
 ### Second Avenue Subway
-- Phase 2 construction starts before end of year: 90%
+- ✅ Phase 2 construction [starts](https://web.archive.org/web/20250821154822/https://www.governor.ny.gov/sites/default/files/2025-08/Presentation_2025-08-15_SAS2_NOTES_SCRUBBED.pdf#page=18) before end of year: 90%
 - Phase 2 budget exceeds $9 billion at some point: 20%
 - Future phases officially cancelled: 10%
 
@@ -77,7 +77,7 @@ I'll assess these only if the CAHSR [releases a new project update report](https
 
 ## Argentina
 - ✅ YoY inflation hits <100% at any point during the year: 50%
-- La Libertad Avanza wins a plurality of the seats up for election in the Chamber of Deputies: 70%
+- ✅ La Libertad Avanza [wins a plurality of the seats](https://en.wikipedia.org/wiki/2025_Argentine_legislative_election) up for election in the Chamber of Deputies: 70%
 
 # Tech
 
@@ -98,8 +98,8 @@ I'll assess these only if the CAHSR [releases a new project update report](https
 # Pop culture
 
 - Marvel films will have total revenue over 1.5 billion dollars (international box office): 60%
-- Marvel films will average greater than 650 million in international box office: 40%
-- There are >5 movies with domestic box office >250 million: 25%
+- ❌ Marvel films will [average greater than 650 million](https://web.archive.org/web/20251004030031/https://www.the-numbers.com/movies/franchise/Marvel-Cinematic-Universe#tab=summary) in international box office: 40%
+- ✅ There are [>5 movies](https://web.archive.org/web/20251002074401/https://www.the-numbers.com/market/2025/summary) with domestic box office >250 million: 25%
 - There are >10 movies with domestic box office >250 million: 10%
 - ❌ An A24 movie will win the Best Picture Oscar: 40%
 - ✅ Kieran Culkin will win the Best Supporting Actor Oscar: 75%
@@ -108,7 +108,8 @@ I'll assess these only if the CAHSR [releases a new project update report](https
 - A streaming service will close down / be merged into another: 30%
   - Max, Peacock, Paramount, Hulu, Disney+, Amazon Prime Video, Netflix, Apple TV+, Mubi
 - The book that spends the longest at the top of the NYT bestseller list is a romance: 60%
-- The highest grossing movie of the year domestically is a sequel or part of an ongoing franchise (like Marvel, with previous entries): 80%
+- ✅ The [highest grossing movie of the year domestically](https://web.archive.org/web/20251002074401/https://www.the-numbers.com/market/2025/summary) is a sequel or part of an ongoing franchise (like Marvel, with previous entries): 80%
+  - This one is deaateable. Minecraft has had previous movie-like video games (Story Mode, a Telltale adaptation), and a documentary film (The Story of Mojang). Think the latter is close enough to just barely count.
 
 # Sports
 
