@@ -1,10 +1,5 @@
 version: 2
-enable-beta-ecosystems: true # Required to use the Bazel ecosystems
 updates:
-  - package-ecosystem: "bazel"
-    directory: "/" # Location of package manifests
-    schedule:
-      interval: "weekly"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
