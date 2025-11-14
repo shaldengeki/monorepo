@@ -107,7 +107,7 @@ I'll assess these only if the CAHSR [releases a new project update report](https
 - ❌ The live action Snow White will make more than 200 million dollars in domestic box office: 60%
 - A streaming service will close down / be merged into another: 30%
   - Max, Peacock, Paramount, Hulu, Disney+, Amazon Prime Video, Netflix, Apple TV+, Mubi
-- The book that spends the longest at the top of the NYT bestseller list is a romance: 60%
+- ✅ The book that spends the [longest at the top of the NYT bestseller list](https://en.wikipedia.org/wiki/List_of_The_New_York_Times_number-one_books_of_2025) is a romance: 60%
 - ✅ The [highest grossing movie of the year domestically](https://web.archive.org/web/20251002074401/https://www.the-numbers.com/market/2025/summary) is a sequel or part of an ongoing franchise (like Marvel, with previous entries): 80%
   - This one is deaateable. Minecraft has had previous movie-like video games (Story Mode, a Telltale adaptation), and a documentary film (The Story of Mojang). Think the latter is close enough to just barely count.
 
