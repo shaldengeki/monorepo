@@ -57,7 +57,7 @@ I'll assess these only if the CAHSR [releases a new project update report](https
 # Rest of world
 
 ## Canada
-- We decide this year to move to Canada: 25%
+- ✅ We decide this year to move to Canada: 25%
 - ✅ Trudeau resigns PM before the election: 40%
 - ❌ A motion of no confidence in Trudeau is introduced: 50%
   - ❌ ... and he survives it: 20%
