@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "tailwind:css": "bazel build //games/tictactoe/frontend:tailwindcss",
-    "start": "PORT=$REACT_APP_PORT react-scripts start",
+    "start": "bazel run //games/tictactoe/frontend:development_cross_platform_image_tarball && docker run shaldengeki/ark-nova-stats-frontend:latest",
     "build": "bazel build //games/tictactoe/frontend/...",
     "build-and-start": "npm run tailwind:css && npm run start",
     "test": "bazel test //games/tictactoe/frontend/..."
