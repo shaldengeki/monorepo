@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "tailwind:css": "bazel build //ark_nova_stats/frontend:tailwindcss",
-    "start": "PORT=$REACT_APP_PORT react-scripts start",
+    "start": "bazel run //ark_nova_stats/frontend:development_cross_platform_image_tarball && docker run shaldengeki/ark-nova-stats-frontend:latest",
     "build": "bazel build //ark_nova_stats/frontend/...",
     "build-and-start": "npm run tailwind:css && npm run start",
     "test": "bazel test //ark_nova_stats/frontend/..."
