@@ -28,6 +28,7 @@ jobs:
           path: |
             ~/.cache/bazelisk
             ~/.cache/bazel
+            ~/.cache/bazel-disk
             ~/.cache/bazel-repo
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-${{ github.sha }}
           # Pull caches from:
