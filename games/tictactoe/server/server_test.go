@@ -73,3 +73,7 @@ func TestValidateState_Round(t *testing.T) {
 // bool finished = 3;
 // repeated Score scores = 4;
 // Board board = 5;
+
+func TestMakeMove(t *testing.T) {
+	assert.NotNil(t, nil)
+}
