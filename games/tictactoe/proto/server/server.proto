@@ -29,8 +29,18 @@ message ValidateStateResponse {
     repeated string validation_errors = 1;
 }
 
+message MakeMoveRequest {
+    tictactoe.proto.BoardMarker move = 1;
+}
+
+message MakeMoveResponse {
+    tictactoe.proto.GameState game_state = 1;
+    repeated string validation_errors = 2;
+}
+
 service GameService {
     rpc CreateGame(CreateGameRequest) returns (CreateGameResponse);
     rpc GetState(GetStateRequest) returns (GetStateResponse);
     rpc ValidateState(ValidateStateRequest) returns (ValidateStateResponse);
+    rpc MakeMove(MakeMoveRequest) returns (MakeMoveReponse);
 }
