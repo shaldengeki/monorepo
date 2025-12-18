@@ -182,6 +182,8 @@ func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveReque
 		return &server.MakeMoveResponse{ValidationErrors: validationErrors}, nil
 	}
 
+	// TODO: this won't work with any sort of concurrency; we'll need some sort of locking.
+
 	// Next, fetch this game's state.
 	priorState, err := s.gameStateProvider.GetState(ctx, request.GameId)
 	if err != nil || priorState == nil {
