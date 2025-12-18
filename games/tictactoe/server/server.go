@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/shaldengeki/monorepo/games/tictactoe/game_state_provider"
+	"github.com/shaldengeki/monorepo/games/tictactoe/game_state"
 
 	"github.com/shaldengeki/monorepo/games/tictactoe/proto"
 	"github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
@@ -14,7 +14,7 @@ import (
 type gameServer struct {
 	server.UnimplementedGameServiceServer
 
-	gameStateProvider game_state_provider.GameStateProvider
+	gameStateProvider game_state.GameState
 }
 
 func (s *gameServer) GetState(ctx context.Context, request *server.GetStateRequest) (*server.GetStateResponse, error) {
@@ -165,6 +165,6 @@ func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveReque
 	return nil, nil
 }
 
-func New(gameStateProvider game_state_provider.GameStateProvider) *gameServer {
+func New(gameStateProvider game_state.GameState) *gameServer {
 	return &gameServer{gameStateProvider: gameStateProvider}
 }

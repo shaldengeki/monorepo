@@ -5,7 +5,7 @@ import (
 	"testing"
 	pb "github.com/shaldengeki/monorepo/games/tictactoe/proto"
 	pbserver "github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
-	"github.com/shaldengeki/monorepo/games/tictactoe/game_state_provider"
+	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/empty_game_state"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -13,7 +13,7 @@ import (
 func TestValidateState_WithEmptyState_ReturnsValid(t *testing.T) {
 	ctx := context.Background()
 
-	emptyProvider := game_state_provider.NewEmptyGameStateProvider()
+	emptyProvider := empty_game_state.NewEmptyGameState()
 	server := New(emptyProvider)
 	request := pbserver.ValidateStateRequest{}
 	
@@ -25,7 +25,7 @@ func TestValidateState_WithEmptyState_ReturnsValid(t *testing.T) {
 func TestValidateState_Turn(t *testing.T) {
 	ctx := context.Background()
 
-	emptyProvider := game_state_provider.NewEmptyGameStateProvider()
+	emptyProvider := empty_game_state.NewEmptyGameState()
 	server := New(emptyProvider)
 
 	// Turn = 1
@@ -50,7 +50,7 @@ func TestValidateState_Turn(t *testing.T) {
 func TestValidateState_Round(t *testing.T) {
 	ctx := context.Background()
 
-	emptyProvider := game_state_provider.NewEmptyGameStateProvider()
+	emptyProvider := empty_game_state.NewEmptyGameState()
 	server := New(emptyProvider)
 
 	// Round = 1
