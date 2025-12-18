@@ -31,12 +31,14 @@ message ValidateStateResponse {
 }
 
 message MakeMoveRequest {
-    tictactoe.proto.BoardMarker move = 1;
+    string game_id = 1;
+    tictactoe.proto.BoardMarker move = 2;
 }
 
 message MakeMoveResponse {
-    tictactoe.proto.GameState game_state = 1;
-    repeated string validation_errors = 2;
+    string game_id = 1;
+    tictactoe.proto.GameState game_state = 2;
+    repeated string validation_errors = 3;
 }
 
 service GameService {
