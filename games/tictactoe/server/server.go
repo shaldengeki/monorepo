@@ -184,12 +184,12 @@ func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveReque
 
 	// Next, fetch this game's state.
 	priorState, err := s.gameStateProvider.GetState(ctx, request.GameId)
-	if err != nil {
-		return nil, fmt.Errorf("could not get game state to make move for game %s: %w", request.GameId, err)
+	if err != nil || priorState == nil {
+		return nil, fmt.Errorf("could not get game state to make move for game %s: prior state %v, err %w", request.GameId, priorState, err)
 	}
 
 	// Next, apply the move.
-	updatedGameState, err := s.ApplyMove(ctx, priorState, request.Move)
+	updatedGameState, err := s.ApplyMove(ctx, *priorState, request.Move)
 	if err != nil {
 		return nil, fmt.Errorf("could not apply move to prior state for game %s: %w", request.GameId, err)
 	}
@@ -212,9 +212,25 @@ func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveReque
 	return &server.MakeMoveResponse{GameState: updatedGameState}, nil
 }
 
-func (s *gameServer) ApplyMove(ctx context.Context, priorState *proto.GameState, move *proto.BoardMarker) (*proto.GameState, error) {
+func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, move *proto.BoardMarker) (*proto.GameState, error) {
+	for _, otherMarker := range priorState.Board.Markers {
+		if move.Row == otherMarker.Row && move.Column == otherMarker.Column {
+			return nil, fmt.Errorf("another player (%s) has already claimed row %d, col %d", otherMarker.Symbol, otherMarker.Row, otherMarker.Column)
+		}
+	}
+	newState := priorState
+	newState.Board.Markers = append(newState.Board.Markers, move)
+	newState.Turn += 1
+	if s.AssessGameFinished(ctx, &newState) {
+		newState.Finished = true
+	}
+
+	return &newState, nil
+}
+
+func (s *gameServer) AssessGameFinished(ctx context.Context, currentState *proto.GameState) bool {
 	// TODO
-	return priorState, nil
+	return false
 }
 
 func New(gameStateProvider game_state.GameState) *gameServer {
