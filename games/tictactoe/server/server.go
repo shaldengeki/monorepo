@@ -87,6 +87,10 @@ func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Sc
 func (s *gameServer) ValidateStateBoard(ctx context.Context, board *proto.Board, finished bool) ([]string, error) {
 	violations := []string{}
 
+	if board == nil {
+		return violations, nil
+	}
+
 	boardViolations, err := s.ValidateBoard(ctx, board)
 	if err != nil {
 		return nil, fmt.Errorf("Could not validate board: %w", err)

@@ -22,7 +22,6 @@ func TestValidateState_WithEmptyState_ReturnsValid(t *testing.T) {
 	assert.Empty(t, res.ValidationErrors)
 }
 
-// int32 turn = 1;
 func TestValidateState_Turn(t *testing.T) {
 	ctx := context.Background()
 
@@ -30,24 +29,47 @@ func TestValidateState_Turn(t *testing.T) {
 	server := New(emptyProvider)
 
 	// Turn = 1
-	request := pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 1, Round: 1, Board: &pb.Board{Rows: 1, Columns: 1}}}
+	request := pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 1, Round: 1}}
 	res, err := server.ValidateState(ctx, &request)
 	require.NoError(t, err)
 	assert.Empty(t, res.ValidationErrors)
 
 
 	// Turn = <= 0
-	request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 0, Round: 1, Board: &pb.Board{Rows: 1, Columns: 1}}}
+	request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 0, Round: 1}}
 	res, err = server.ValidateState(ctx, &request)
 	require.NoError(t, err)
 	assert.NotEmpty(t, res.ValidationErrors)
-	request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: -1, Round: 1, Board: &pb.Board{Rows: 1, Columns: 1}}}
+	request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: -1, Round: 1}}
 	res, err = server.ValidateState(ctx, &request)
 	require.NoError(t, err)
 	assert.NotEmpty(t, res.ValidationErrors)
 }
 
 // int32 round = 2;
+func TestValidateState_Round(t *testing.T) {
+	ctx := context.Background()
+
+	emptyProvider := game_state_provider.NewEmptyGameStateProvider()
+	server := New(emptyProvider)
+
+	// Round = 1
+	request := pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 1, Round: 1}}
+	res, err := server.ValidateState(ctx, &request)
+	require.NoError(t, err)
+	assert.Empty(t, res.ValidationErrors)
+
+
+	// Round = <= 0
+	request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 1, Round: 0}}
+	res, err = server.ValidateState(ctx, &request)
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.ValidationErrors)
+	request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 1, Round: -1}}
+	res, err = server.ValidateState(ctx, &request)
+	require.NoError(t, err)
+	assert.NotEmpty(t, res.ValidationErrors)
+}
 // bool finished = 3;
 // repeated Score scores = 4;
 // Board board = 5;
