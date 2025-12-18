@@ -224,6 +224,7 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 	if s.AssessGameFinished(ctx, &newState) {
 		newState.Finished = true
 	}
+	// TODO: scores, round
 
 	return &newState, nil
 }
