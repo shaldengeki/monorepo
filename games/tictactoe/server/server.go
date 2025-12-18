@@ -162,6 +162,18 @@ func (s *gameServer) ValidateMarker(ctx context.Context, marker *proto.BoardMark
 }
 
 func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveRequest) (*server.MakeMoveResponse, error) {
+	// First, validate the move prospectively.
+	// TODO
+
+	// Next, update the state.
+	// TODO
+
+	// Next, validate the resulting state.
+	// TODO
+
+	// Finally, commit the result.
+	// TODO
+
 	return nil, nil
 }
 
