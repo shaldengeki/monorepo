@@ -7,5 +7,6 @@ import (
 )
 
 type GameState interface {
-	GetState(context context.Context, gameId string) (*proto.GameState, error)
+	GetState(ctx context.Context, gameId string) (*proto.GameState, error)
+	SetState(ctx context.Context, gameId string, newState proto.GameState) error
 }

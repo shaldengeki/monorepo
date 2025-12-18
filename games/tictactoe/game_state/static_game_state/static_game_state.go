@@ -17,6 +17,10 @@ func (s StaticGameState) GetState(ctx context.Context, gameId string) (*proto.Ga
 	return s.staticState, nil
 }
 
+func (s StaticGameState) SetState(ctx context.Context, gameId string, newState proto.GameState) error {
+	return nil
+}
+
 func NewStaticGameState(state *proto.GameState) game_state.GameState {
 	return StaticGameState{staticState: state}
 }

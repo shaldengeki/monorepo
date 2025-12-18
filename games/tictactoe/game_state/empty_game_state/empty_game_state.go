@@ -16,6 +16,10 @@ func (s EmptyGameState) GetState(ctx context.Context, gameId string) (*proto.Gam
 	return &gs, nil
 }
 
+func (s EmptyGameState) SetState(ctx context.Context, gameId string, newState proto.GameState) error {
+	return nil
+}
+
 func NewEmptyGameState() game_state.GameState {
 	return EmptyGameState{}
 }

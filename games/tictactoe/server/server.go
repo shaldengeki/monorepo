@@ -174,7 +174,7 @@ func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveReque
 	}
 
 	// First, validate the move prospectively.
-	validationErrors, err := s.ValidateMoveRequest(request.Move)
+	validationErrors, err := s.ValidateMarker(ctx, request.Move)
 	if err != nil {
 		return nil, fmt.Errorf("could not validate move request: %w", err)
 	}
@@ -182,21 +182,39 @@ func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveReque
 		return &server.MakeMoveResponse{ValidationErrors: validationErrors}, nil
 	}
 
-	// Next, update the state.
-	// TODO
+	// Next, fetch this game's state.
+	priorState, err := s.gameStateProvider.GetState(ctx, request.GameId)
+	if err != nil {
+		return nil, fmt.Errorf("could not get game state to make move for game %s: %w", request.GameId, err)
+	}
+
+	// Next, apply the move.
+	updatedGameState, err := s.ApplyMove(ctx, priorState, request.Move)
+	if err != nil {
+		return nil, fmt.Errorf("could not apply move to prior state for game %s: %w", request.GameId, err)
+	}
 
 	// Next, validate the resulting state.
-	// TODO
+	updatedValidationErrors, err := s.ValidateGameState(ctx, *updatedGameState)
+	if err != nil {
+		return nil, fmt.Errorf("could not validate updated game state: %w", err)
+	}
+	if len(updatedValidationErrors) > 0 {
+		return &server.MakeMoveResponse{ValidationErrors: updatedValidationErrors}, nil
+	}
 
 	// Finally, commit the result.
-	// TODO
+	err = s.gameStateProvider.SetState(ctx, request.GameId, *updatedGameState)
+	if err != nil {
+		return nil, fmt.Errorf("could not set updated state for game %s: %w", request.GameId, err)
+	}
 
-	return nil, nil
+	return &server.MakeMoveResponse{GameState: updatedGameState}, nil
 }
 
-func (s *gameServer) ValidateMoveRequest(move *proto.BoardMarker) ([]string, error) {
+func (s *gameServer) ApplyMove(ctx context.Context, priorState *proto.GameState, move *proto.BoardMarker) (*proto.GameState, error) {
 	// TODO
-	return nil, nil
+	return priorState, nil
 }
 
 func New(gameStateProvider game_state.GameState) *gameServer {
