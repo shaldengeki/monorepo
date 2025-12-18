@@ -36,17 +36,24 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		return &server.ValidateStateResponse{}, nil
 	}
 
-	violations := []string{}
+	violations, err := s.ValidateGameState(ctx, *request.GameState)
+	if err != nil {
+		return nil, fmt.Errorf("could not validate state: %w", err)
+	}
 
-	if request.GameState.Turn < 1 {
+	return &server.ValidateStateResponse{ValidationErrors: violations}, nil
+}
+
+func (s *gameServer) ValidateGameState(ctx context.Context, gameState proto.GameState) (violations []string, err error) {
+	if gameState.Turn < 1 {
 		violations = append(violations, "Turn count should be >= 1")
 	}
 
-	if request.GameState.Round < 1 {
+	if gameState.Round < 1 {
 		violations = append(violations, "Round count should be >= 1")
 	}
 
-	scoreViolations, err := s.ValidateStateScores(ctx, request.GameState.Scores)
+	scoreViolations, err := s.ValidateStateScores(ctx, gameState.Scores)
 	if err != nil {
 		return nil, fmt.Errorf("Could not validate scores in state: %w", err)
 	}
@@ -54,7 +61,7 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		violations = append(violations, v)
 	}
 
-	boardViolations, err := s.ValidateStateBoard(ctx, request.GameState.Board, request.GameState.Finished)
+	boardViolations, err := s.ValidateStateBoard(ctx, gameState.Board, gameState.Finished)
 	if err != nil {
 		return nil, fmt.Errorf("Could not validate board in state: %w", err)
 	}
@@ -62,7 +69,7 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		violations = append(violations, v)
 	}
 
-	return &server.ValidateStateResponse{ValidationErrors: violations}, nil
+	return violations, nil
 }
 
 func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Score) ([]string, error) {
