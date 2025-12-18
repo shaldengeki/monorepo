@@ -161,6 +161,10 @@ func (s *gameServer) ValidateMarker(ctx context.Context, marker *proto.BoardMark
 	return violations, nil
 }
 
+func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveRequest) (*server.MakeMoveResponse, error) {
+	return nil, nil
+}
+
 func New(gameStateProvider game_state_provider.GameStateProvider) *gameServer {
 	return &gameServer{gameStateProvider: gameStateProvider}
 }

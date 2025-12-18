@@ -6,7 +6,10 @@ proto_library(
     name = "server_proto",
     srcs = ["server.proto"],
     visibility = ["//visibility:public"],
-    deps = ["//games/tictactoe/proto:game_state_proto"],
+    deps = [
+        "//games/tictactoe/proto:board_marker_proto",
+        "//games/tictactoe/proto:game_state_proto",
+    ],
 )
 
 go_proto_library(
