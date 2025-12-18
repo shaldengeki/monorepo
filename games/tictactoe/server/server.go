@@ -162,8 +162,18 @@ func (s *gameServer) ValidateMarker(ctx context.Context, marker *proto.BoardMark
 }
 
 func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveRequest) (*server.MakeMoveResponse, error) {
+	if request == nil {
+		return &server.MakeMoveResponse{ValidationErrors: []string{"move must be non-empty"}}, nil
+	}
+
 	// First, validate the move prospectively.
-	// TODO
+	validationErrors, err := s.ValidateMoveRequest(request.Move)
+	if err != nil {
+		return nil, fmt.Errorf("could not validate move request: %w", err)
+	}
+	if len(validationErrors) > 0 {
+		return &server.MakeMoveResponse{ValidationErrors: validationErrors}, nil
+	}
 
 	// Next, update the state.
 	// TODO
@@ -174,6 +184,11 @@ func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveReque
 	// Finally, commit the result.
 	// TODO
 
+	return nil, nil
+}
+
+func (s *gameServer) ValidateMoveRequest(move *proto.BoardMarker) ([]string, error) {
+	// TODO
 	return nil, nil
 }
 

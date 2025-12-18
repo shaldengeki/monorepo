@@ -36,9 +36,8 @@ message MakeMoveRequest {
 }
 
 message MakeMoveResponse {
-    string game_id = 1;
-    tictactoe.proto.GameState game_state = 2;
-    repeated string validation_errors = 3;
+    tictactoe.proto.GameState game_state = 1;
+    repeated string validation_errors = 2;
 }
 
 service GameService {
