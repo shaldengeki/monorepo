@@ -61,7 +61,7 @@
         "@tsconfig/create-react-app": "^2.0.10",
         "@types/jest": "^30.0.0",
         "@types/lodash": "^4.17.21",
-        "@types/node": "^24.10.1",
+        "@types/node": "^25.0.2",
         "@types/plotly.js": "^3.0.8",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",
