@@ -46,7 +46,9 @@ manifest:
     jinja2: jinja2
     jmespath: jmespath
     lazy_object_proxy: lazy_object_proxy
+    librt.base64: librt
     librt.internal: librt
+    librt.strings: librt
     mako: mako
     markupsafe: markupsafe
     mccabe: mccabe
@@ -85,4 +87,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 1f90a06d6b3d50dd6149913cd62f1f8cedcc818baa57f626d39318b694a3754d
+integrity: 814b770778a93a394e2eb469441f8d32d663ab7d51d44b4af4060b745b55562b
