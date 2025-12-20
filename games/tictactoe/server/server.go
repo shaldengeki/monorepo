@@ -215,6 +215,10 @@ func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveReque
 }
 
 func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, move *proto.BoardMarker) (*proto.GameState, error) {
+	if priorState.Finished {
+		return nil, fmt.Errorf("game is already finished, can't make more moves")
+	}
+
 	for _, otherMarker := range priorState.Board.Markers {
 		if move.Row == otherMarker.Row && move.Column == otherMarker.Column {
 			return nil, fmt.Errorf("another player (%s) has already claimed row %d, col %d", otherMarker.Symbol, otherMarker.Row, otherMarker.Column)
@@ -223,7 +227,7 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 	newState := priorState
 	newState.Board.Markers = append(newState.Board.Markers, move)
 	newState.Turn += 1
-	if s.AssessGameFinished(ctx, &newState) {
+	if s.MoveFinishesGame(ctx, move, &newState) {
 		newState.Finished = true
 	}
 	// TODO: scores, round
@@ -231,7 +235,7 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 	return &newState, nil
 }
 
-func (s *gameServer) AssessGameFinished(ctx context.Context, currentState *proto.GameState) bool {
+func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, currentState *proto.GameState) bool {
 	// TODO
 	return false
 }
