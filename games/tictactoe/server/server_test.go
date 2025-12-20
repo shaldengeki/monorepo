@@ -16,7 +16,7 @@ func TestValidateState_WithEmptyState_ReturnsValid(t *testing.T) {
 	emptyProvider := empty_game_state.NewEmptyGameState()
 	server := New(emptyProvider)
 	request := pbserver.ValidateStateRequest{}
-	
+
 	res, err := server.ValidateState(ctx, &request)
 	require.NoError(t, err)
 	assert.Empty(t, res.ValidationErrors)

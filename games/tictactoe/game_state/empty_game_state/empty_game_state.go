@@ -23,4 +23,3 @@ func (s EmptyGameState) SetState(ctx context.Context, gameId string, newState pr
 func NewEmptyGameState() game_state.GameState {
 	return EmptyGameState{}
 }
-
