@@ -13,7 +13,7 @@
         "skeleton/frontend/*"
     ],
     "dependencies": {
-        "@apollo/client": "^3.13.9",
+        "@apollo/client": "^4.0.11",
         "@headlessui/react": "^2.2.9",
         "@heroicons/react": "^2.2.0",
         "d3-array": "^3.2.4",
