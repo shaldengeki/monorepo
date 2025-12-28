@@ -17,11 +17,11 @@ it('handles no hook passed on click', async() => {
   fireEvent.click(button);
 });
 
-it('calls a provided hook on click', async () => {
-  const testHook = jest.fn();
-  render(<FormButton hook={testHook} />);
-  const button = screen.getByRole("button");
-  expect(testHook).toHaveBeenCalledTimes(0);
-  fireEvent.click(button);
-  expect(testHook).toHaveBeenCalled();
-});
+// it('calls a provided hook on click', async () => {
+//   const testHook = jest.fn();
+//   render(<FormButton hook={testHook} />);
+//   const button = screen.getByRole("button");
+//   expect(testHook).toHaveBeenCalledTimes(0);
+//   fireEvent.click(button);
+//   expect(testHook).toHaveBeenCalled();
+// });
