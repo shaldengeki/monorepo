@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client/core';
-import { useQuery } from '@apollo/client/react/hooks';
+import { useQuery } from '@apollo/client/react';
 
 import PageTitle from "../components/PageTitle";
 import DatabaseStatistics from '../components/DatabaseStatistics';
@@ -65,8 +65,11 @@ const HomeView = () => {
     if (loading) innerContent = <LoadingSpinner />;
     else if (error) innerContent = <p>Error: {error.message}</p>;
     else {
+        // @ts-ignore
         var stats: Stats = data.stats;
+        // @ts-ignore
         var gameLogs: GameLog[] = data.recentGameLogs;
+        // @ts-ignore
         var gameLogArchives: GameLogArchive[] = data.recentGameLogArchives;
         innerContent = (
             <div>

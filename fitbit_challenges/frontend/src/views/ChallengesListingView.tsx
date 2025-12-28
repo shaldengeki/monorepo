@@ -1,6 +1,6 @@
 import {useState, ReactElement} from 'react';
 import { gql } from '@apollo/client/core';
-import { useQuery, useMutation } from '@apollo/client/react/hooks';
+import { useQuery, useMutation } from '@apollo/client/react';
 import PageTitle from "../components/PageTitle";
 import Challenge, {ChallengeType, emptyChallenge} from "../types/Challenge";
 import { Link } from 'react-router-dom';
@@ -208,6 +208,7 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
     ]
     let userElements: ReactElement[] = [];
     if (fetchUsersData) {
+        // @ts-ignore
         userElements = fetchUsersData.users.map((user: User) => {
             return <option key={user.fitbitUserId} value={user.fitbitUserId}>{user.displayName}</option>
         })
@@ -222,7 +223,7 @@ const CreateChallengeForm = ({ challenge, editHook, formHook }: CreateChallengeF
             <form>
                 { fetchUsersLoading && <span>Loading users...</span>}
                 { fetchUsersError && <span>Error loading users!</span>}
-                { fetchUsersData &&
+                { !!fetchUsersData &&
                     <select
                         className="rounded p-0.5"
                         name="users"
@@ -304,10 +305,14 @@ const ChallengesListingView = () => {
 
     let activeChallenges: Challenge[] = [];
     let pastChallenges: Challenge[] = [];
+    // @ts-ignore
     if (data && data.currentUser && data.currentUser.activeChallenges) {
+        // @ts-ignore
         activeChallenges = data.currentUser.activeChallenges;
     }
+    // @ts-ignore
     if (data && data.currentUser && data.currentUser.pastChallenges) {
+        // @ts-ignore
         pastChallenges = data.currentUser.pastChallenges;
     }
 
