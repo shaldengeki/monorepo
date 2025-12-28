@@ -9,7 +9,7 @@ copy_file(
 )
 
 copy_file(
-    name = "vitest.setup.js",
+    name = "vitestsetupjs",
     src = "//react_library:vitest.setup.js",
     out = "vitest.setup.js",
 )
