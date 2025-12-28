@@ -80,7 +80,8 @@
     "https://bcr.bazel.build/modules/bazel_skylib/1.7.0/MODULE.bazel": "0db596f4563de7938de764cc8deeabec291f55e8ec15299718b93c4423e9796d",
     "https://bcr.bazel.build/modules/bazel_skylib/1.7.1/MODULE.bazel": "3120d80c5861aa616222ec015332e5f8d3171e062e3e804a2a0253e1be26e59b",
     "https://bcr.bazel.build/modules/bazel_skylib/1.8.1/MODULE.bazel": "88ade7293becda963e0e3ea33e7d54d3425127e0a326e0d17da085a5f1f03ff6",
-    "https://bcr.bazel.build/modules/bazel_skylib/1.8.1/source.json": "7ebaefba0b03efe59cac88ed5bbc67bcf59a3eff33af937345ede2a38b2d368a",
+    "https://bcr.bazel.build/modules/bazel_skylib/1.9.0/MODULE.bazel": "72997b29dfd95c3fa0d0c48322d05590418edef451f8db8db5509c57875fb4b7",
+    "https://bcr.bazel.build/modules/bazel_skylib/1.9.0/source.json": "7ad77c1e8c1b84222d9b3f3cae016a76639435744c19330b0b37c0a3c9da7dc0",
     "https://bcr.bazel.build/modules/boost.algorithm/1.87.0/MODULE.bazel": "d1c8f1466cc1a04a16eebeefe0f54a9508cc9f1a3c21d65d806acbc36593e204",
     "https://bcr.bazel.build/modules/boost.algorithm/1.87.0/source.json": "9280ee3bfa6b9427aad20a450c33d74fabb93a69d81e201955098035a514f287",
     "https://bcr.bazel.build/modules/boost.align/1.87.0/MODULE.bazel": "b9b08a94ac9db10fa17a58fc278a8c79fdb32c915de7a9133f6f01f6fe8887f7",
@@ -575,9 +576,35 @@
         ]
       }
     },
+    "//tools/build_rules/rules_vitest:defs.bzl%rules_vitest_extension": {
+      "general": {
+        "bzlTransitiveDigest": "7+riFTIAmy45HnSwnEsMt65c7pghMWZGFE140F11OLc=",
+        "usagesDigest": "QE+GxWWEpIjp0OkqwndVyOjPGoknkQXIifb65N0wJ+s=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "fremtind_rules_vitest": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+            "attributes": {
+              "url": "https://github.com/shaldengeki/rules_vitest/archive/b43de98fc06e33f33e0a1c54066bba51bce095a7.zip",
+              "sha256": "c30126e02b47aab51072e56ce2544cadb19641a57b1f87b619c8b58b232e44cb",
+              "strip_prefix": "rules_vitest-b43de98fc06e33f33e0a1c54066bba51bce095a7"
+            }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "",
+            "bazel_tools",
+            "bazel_tools"
+          ]
+        ]
+      }
+    },
     "@@aspect_rules_js+//npm:extensions.bzl%pnpm": {
       "general": {
-        "bzlTransitiveDigest": "Fo30zHMlwt6SAJ7jTD4YBfoaqS2XhpIy3utcCutCLT0=",
+        "bzlTransitiveDigest": "SV/y3e/O3H7XYDPIbMPTIZs82T4FVWrWpuHXLQbqd2c=",
         "usagesDigest": "J83qHSpG2NjMMUlPFKt76hw8qAUhI/I++cVH+0vW4zM=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},

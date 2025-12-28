@@ -1,6 +1,7 @@
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@fremtind_rules_vitest//vitest:defs.bzl", "vitest_test")
 
 copy_file(
     name = "setupTests",
@@ -36,7 +37,7 @@ ts_project(
 )
 
 jest_test(
-    name = "TableTest",
+    name = "TableTest_old",
     config = "//react_library:jestconfig",
     data = [
         ":Table",
@@ -47,4 +48,22 @@ jest_test(
     node_options = [
         "--experimental-vm-modules",
     ],
+)
+
+vitest_test(
+    name = "test",
+    # extra test attributes, regression test for #95
+    timeout = "moderate",
+    config = "vitest.config.mjs",
+    data = [
+        ":Table",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+    ],
+    flaky = False,
+    log_level = "info",
+    node_modules = "//:node_modules",
+    # To update snapshots run,
+    #    bazel run //example/snapshots:test_update_snapshots
+    # snapshots = True,
 )
