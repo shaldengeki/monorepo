@@ -124,6 +124,9 @@ devDependencies:
   '@types/react-plotly.js':
     specifier: ^2.6.4
     version: 2.6.4
+  '@vitest/browser-playwright':
+    specifier: ^4.0.0-beta.17
+    version: 4.0.0-beta.17(playwright@1.52.0)(vite@7.3.0)(vitest@4.0.16)
   '@vitest/coverage-istanbul':
     specifier: ^4.0.16
     version: 4.0.16(vitest@4.0.16)
@@ -157,6 +160,9 @@ devDependencies:
   mini-css-extract-plugin:
     specifier: ^2.9.4
     version: 2.9.4(webpack@5.104.1)
+  playwright:
+    specifier: ^1.52.0
+    version: 1.52.0
   process:
     specifier: ^0.11.10
     version: 0.11.10
@@ -168,7 +174,7 @@ devDependencies:
     version: 4.1.18
   vitest:
     specifier: ^4.0.16
-    version: 4.0.16(@types/node@25.0.3)(jsdom@27.3.0)
+    version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.0-beta.17)(jsdom@27.3.0)
   vitest-browser-react:
     specifier: ^2.0.2
     version: 2.0.2(@types/react-dom@19.2.3)(@types/react@19.2.7)(react-dom@19.2.3)(react@19.2.3)(vitest@4.0.16)
@@ -1700,6 +1706,10 @@ packages:
     resolution: {integrity: sha512-Mdk+vUACbQvjd0m/1JJjOOafmkp/EpmHjISsopEz5Av44CBq7rPC05HHNbYGKVyNUF2zmEoBS/TT0pd0SPFFyw==}
     dev: false
 
+  /@polka/url@1.0.0-next.29:
+    resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
+    dev: true
+
   /@react-aria/focus@3.21.1(react-dom@19.2.3)(react@19.2.3):
     resolution: {integrity: sha512-hmH1IhHlcQ2lSIxmki1biWzMbGgnhdxJUM0MFfzc71Rv6YAzhlx4kX3GYn4VNcjCeb6cdPv4RZ5vunV4kgMZYQ==}
     peerDependencies:
@@ -2616,6 +2626,45 @@ packages:
       - supports-color
     dev: false
 
+  /@vitest/browser-playwright@4.0.0-beta.17(playwright@1.52.0)(vite@7.3.0)(vitest@4.0.16):
+    resolution: {integrity: sha512-N5O/+8aMXwyhgXj3qHyRkw6PQDWoFBL/kruE6CGY7foNMe9sw/i9B4NI3Y390g6OTRNm7/3WYOQnInc3sJmjMQ==}
+    peerDependencies:
+      playwright: '*'
+      vitest: 4.0.0-beta.17
+    dependencies:
+      '@vitest/browser': 4.0.0-beta.17(vite@7.3.0)(vitest@4.0.16)
+      '@vitest/mocker': 4.0.0-beta.17(vite@7.3.0)
+      playwright: 1.52.0
+      tinyrainbow: 3.0.3
+      vitest: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.0-beta.17)(jsdom@27.3.0)
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+    dev: true
+
+  /@vitest/browser@4.0.0-beta.17(vite@7.3.0)(vitest@4.0.16):
+    resolution: {integrity: sha512-SBeBfCwQ2j/p6eat05QzAfwkZUGfmXTnC3Gk7qdbCU5IIFEVOEjsUZ0yYAVb+vNmNcVQQttMel8ZezCWxtiIOw==}
+    peerDependencies:
+      vitest: 4.0.0-beta.17
+    dependencies:
+      '@vitest/mocker': 4.0.0-beta.17(vite@7.3.0)
+      '@vitest/utils': 4.0.0-beta.17
+      magic-string: 0.30.21
+      pixelmatch: 7.1.0
+      pngjs: 7.0.0
+      sirv: 3.0.2
+      tinyrainbow: 3.0.3
+      vitest: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.0-beta.17)(jsdom@27.3.0)
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+    dev: true
+
   /@vitest/coverage-istanbul@4.0.16(vitest@4.0.16):
     resolution: {integrity: sha512-CLyueXIHewDzmov97rGW/RNtg++UBwdtY/F9PZbEDvHlX16JWVyolg7OeGXZS3xkuuoaZMheef7luDFCoC6vsQ==}
     peerDependencies:
@@ -2632,7 +2681,7 @@ packages:
       magicast: 0.5.1
       obug: 2.1.1
       tinyrainbow: 3.0.3
-      vitest: 4.0.16(@types/node@25.0.3)(jsdom@27.3.0)
+      vitest: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.0-beta.17)(jsdom@27.3.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2646,6 +2695,23 @@ packages:
       '@vitest/utils': 4.0.16
       chai: 6.2.2
       tinyrainbow: 3.0.3
+    dev: true
+
+  /@vitest/mocker@4.0.0-beta.17(vite@7.3.0):
+    resolution: {integrity: sha512-m56dc63UL10BiFHZ++XdFv58YEHAjRvgL4Mbb+Qlrkk5ul2cs7Q6LzuXDUE2TshVRnPWzwWXT3N+aAygrplIvw==}
+    peerDependencies:
+      msw: ^2.4.9
+      vite: ^6.0.0 || ^7.0.0-0
+    peerDependenciesMeta:
+      msw:
+        optional: true
+      vite:
+        optional: true
+    dependencies:
+      '@vitest/spy': 4.0.0-beta.17
+      estree-walker: 3.0.3
+      magic-string: 0.30.21
+      vite: 7.3.0(@types/node@25.0.3)
     dev: true
 
   /@vitest/mocker@4.0.16(vite@7.3.0):
@@ -2663,6 +2729,12 @@ packages:
       estree-walker: 3.0.3
       magic-string: 0.30.21
       vite: 7.3.0(@types/node@25.0.3)
+    dev: true
+
+  /@vitest/pretty-format@4.0.0-beta.17:
+    resolution: {integrity: sha512-CSlfXqUgCOem5bawWaWHyEapCiJbLkkpbQJMXbVZMjPXmS25rmTTvLR4R8pGW53GV0b6c1L4Bt2DoZiZtx1elA==}
+    dependencies:
+      tinyrainbow: 3.0.3
     dev: true
 
   /@vitest/pretty-format@4.0.16:
@@ -2686,8 +2758,19 @@ packages:
       pathe: 2.0.3
     dev: true
 
+  /@vitest/spy@4.0.0-beta.17:
+    resolution: {integrity: sha512-c6sIXHQSMx1yDBbDF1vHDaJ+2KQySOExYuQhFMj3lG1woTVdRmX1omtPsLypsa7uVwVLc466DtLVvgAsSQIi2g==}
+    dev: true
+
   /@vitest/spy@4.0.16:
     resolution: {integrity: sha512-4jIOWjKP0ZUaEmJm00E0cOBLU+5WE0BpeNr3XN6TEF05ltro6NJqHWxXD0kA8/Zc8Nh23AT8WQxwNG+WeROupw==}
+    dev: true
+
+  /@vitest/utils@4.0.0-beta.17:
+    resolution: {integrity: sha512-PdhF3Kk1QFQ0H6iQzILGXCNDuhFgdxJKGJwzpPr/Hk7KWKiymj2w/7gusB95Ckh0t/kJPW+O99afLzoRPGsrFw==}
+    dependencies:
+      '@vitest/pretty-format': 4.0.0-beta.17
+      tinyrainbow: 3.0.3
     dev: true
 
   /@vitest/utils@4.0.16:
@@ -4326,6 +4409,14 @@ packages:
   /fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
+
+  /fsevents@2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
 
   /fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -6066,6 +6157,11 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  /mrmime@2.0.1:
+    resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
+    engines: {node: '>=10'}
+    dev: true
+
   /ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
     dev: false
@@ -6450,11 +6546,34 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
+  /pixelmatch@7.1.0:
+    resolution: {integrity: sha512-1wrVzJ2STrpmONHKBy228LM1b84msXDUoAzVEl0R8Mz4Ce6EPr+IVtxm8+yvrqLYMHswREkjYFaMxnyGnaY3Ng==}
+    hasBin: true
+    dependencies:
+      pngjs: 7.0.0
+    dev: true
+
   /pkg-dir@4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
     dependencies:
       find-up: 4.1.0
+    dev: true
+
+  /playwright-core@1.52.0:
+    resolution: {integrity: sha512-l2osTgLXSMeuLZOML9qYODUQoPPnUsKsb5/P6LJ2e6uPKXUdPK5WYhN4z03G+YNbWmGDY4YENauNu4ZKczreHg==}
+    engines: {node: '>=18'}
+    hasBin: true
+    dev: true
+
+  /playwright@1.52.0:
+    resolution: {integrity: sha512-JAwMNMBlxJ2oD1kce4KPtMkDeKGHQstdpFPcPH3maElAXon/QZeTvtsfXmTMRyO9TslfoYOXkSsvao2nE1ilTw==}
+    engines: {node: '>=18'}
+    hasBin: true
+    dependencies:
+      playwright-core: 1.52.0
+    optionalDependencies:
+      fsevents: 2.3.2
     dev: true
 
   /plotly.js-basic-dist@3.3.1:
@@ -6519,6 +6638,11 @@ packages:
       - mapbox-gl
       - supports-color
     dev: false
+
+  /pngjs@7.0.0:
+    resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
+    engines: {node: '>=14.19.0'}
+    dev: true
 
   /point-in-polygon@1.1.0:
     resolution: {integrity: sha512-3ojrFwjnnw8Q9242TzgXuTD+eKiutbzyslcq1ydfu82Db2y+Ogbmyrkpv0Hgj31qwT3lbS9+QAAO/pIQM35XRw==}
@@ -7160,6 +7284,15 @@ packages:
     resolution: {integrity: sha512-yodFGwcyt59XRh7w5W3jPcIQb3Bwi21suEfT7MAWnBX3iCdklJpgDgvGT9o04UonglZN5SNMfJFkHIR/jO8GHw==}
     dev: false
 
+  /sirv@3.0.2:
+    resolution: {integrity: sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@polka/url': 1.0.0-next.29
+      mrmime: 2.0.1
+      totalist: 3.0.1
+    dev: true
+
   /slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
@@ -7602,6 +7735,11 @@ packages:
       commander: 2.20.3
     dev: false
 
+  /totalist@3.0.1:
+    resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
+    engines: {node: '>=6'}
+    dev: true
+
   /tough-cookie@5.1.2:
     resolution: {integrity: sha512-FVDYdxtnj0G6Qm/DhNPSb8Ju59ULcup3tuJxkFb5K8Bv2pUXILbf0xZWU8PX8Ov19OXljbUyveOFwRMwkXzO+A==}
     engines: {node: '>=16'}
@@ -7854,10 +7992,10 @@ packages:
       '@types/react-dom': 19.2.3(@types/react@19.2.7)
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
-      vitest: 4.0.16(@types/node@25.0.3)(jsdom@27.3.0)
+      vitest: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.0-beta.17)(jsdom@27.3.0)
     dev: true
 
-  /vitest@4.0.16(@types/node@25.0.3)(jsdom@27.3.0):
+  /vitest@4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.0-beta.17)(jsdom@27.3.0):
     resolution: {integrity: sha512-E4t7DJ9pESL6E3I8nFjPa4xGUd3PmiWDLsDztS2qXSJWfHtbQnwAWylaBvSNY48I3vr8PTqIZlyK8TE3V3CA4Q==}
     engines: {node: ^20.0.0 || ^22.0.0 || >=24.0.0}
     hasBin: true
@@ -7892,6 +8030,7 @@ packages:
         optional: true
     dependencies:
       '@types/node': 25.0.3
+      '@vitest/browser-playwright': 4.0.0-beta.17(playwright@1.52.0)(vite@7.3.0)(vitest@4.0.16)
       '@vitest/expect': 4.0.16
       '@vitest/mocker': 4.0.16(vite@7.3.0)
       '@vitest/pretty-format': 4.0.16
