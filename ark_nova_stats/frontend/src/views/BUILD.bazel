@@ -1,6 +1,7 @@
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@fremtind_rules_vitest//vitest:defs.bzl", "vitest_test")
 
 copy_file(
     name = "globalsdts",
@@ -9,9 +10,9 @@ copy_file(
 )
 
 copy_file(
-    name = "setupTests",
-    src = "//react_library:setupTests.js",
-    out = "setupTests.js",
+    name = "vitest.setup.js",
+    src = "//react_library:vitest.setup.js",
+    out = "vitest.setup.js",
 )
 
 ts_project(
@@ -63,6 +64,8 @@ ts_project(
         "//:node_modules/jsdom",
         "//:node_modules/react",
         "//:node_modules/react-router-dom",
+        "//:node_modules/vitest",
+        "//:node_modules/vitest-browser-react",
         "//ark_nova_stats/frontend/src/components:PageLink",
         "//ark_nova_stats/frontend/src/components:PageTitle",
         "//ark_nova_stats/frontend/src/types",
@@ -71,19 +74,23 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "CardsViewTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
         ":CardsView",
-        ":setupTests",
-        "//ark_nova_stats/frontend:packagejson",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
         "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(
