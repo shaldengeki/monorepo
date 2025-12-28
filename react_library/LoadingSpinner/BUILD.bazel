@@ -1,11 +1,4 @@
-load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-
-copy_file(
-    name = "setupTests",
-    src = "//react_library:setupTests.js",
-    out = "setupTests.js",
-)
 
 ts_project(
     name = "LoadingSpinner",

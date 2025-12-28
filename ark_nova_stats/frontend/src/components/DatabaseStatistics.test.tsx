@@ -1,16 +1,22 @@
-import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react';
+// TODO: figure out how to remove these.
+// These should be brought in via vitest.setup.ts, but are not.
+import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
+
 import DatabaseStatistics from './DatabaseStatistics';
 import { emptyStats, exampleStats } from '../types/Stats';
 
-it('should handle when no data was retrieved', async () => {
+import { test } from 'vitest'
+import { render, screen } from '@testing-library/react';
+
+test('should handle when no data was retrieved', async () => {
     render(
         <DatabaseStatistics stats={undefined}/>
     );
     expect(await screen.findByText("Error: stats could not be retrieved!")).toBeInTheDocument();
 });
 
-it('should handle when no game logs are present', async () => {
+test('should handle when no game logs are present', async () => {
     render(
         <DatabaseStatistics stats={emptyStats}/>
     );
@@ -19,7 +25,7 @@ it('should handle when no game logs are present', async () => {
 });
 
 
-it('should handle when game logs are present', async () => {
+test('should handle when game logs are present', async () => {
     render(
         <DatabaseStatistics stats={exampleStats} />
     );

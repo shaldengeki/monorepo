@@ -4,6 +4,7 @@ module(
 )
 
 bazel_dep(name = "aspect_bazel_lib", version = "2.21.2")
+bazel_dep(name = "bazel_skylib", version = "1.9.0")
 
 bazel_dep(name = "platforms", version = "1.0.0", dev_dependency = True)
 
@@ -15,7 +16,6 @@ bazel_dep(name = "rules_python", version = "1.6.3")
 bazel_dep(name = "rules_oci", version = "2.2.6")
 bazel_dep(name = "aspect_rules_js", version = "2.6.0")
 bazel_dep(name = "aspect_rules_ts", version = "3.7.0")
-bazel_dep(name = "aspect_rules_jest", version = "0.24.0")
 bazel_dep(name = "aspect_rules_webpack", version = "0.17.1")
 bazel_dep(name = "rules_nodejs", version = "6.6.2")
 bazel_dep(name = "rules_pkg", version = "1.1.0")
@@ -33,6 +33,7 @@ bazel_dep(name = "boost.asio", version = "1.87.0.bcr.1")
 bazel_dep(name = "boost.lexical_cast", version = "1.87.0")
 bazel_dep(name = "boost.mysql", version = "1.87.0")
 bazel_dep(name = "boost.program_options", version = "1.87.0")
+bazel_dep(name = "rules_shell", version = "0.6.1")
 
 #### Protoc
 protoc = use_extension("@toolchains_protoc//protoc:extensions.bzl", "protoc")
@@ -218,4 +219,5 @@ use_repo(rules_hugo_extension, "rules_hugo")
 hugo_extension = use_extension("//tools/build_rules/hugo:defs.bzl", "hugo_extension")
 use_repo(hugo_extension, "hugo")
 
-# C/C++
+rules_vitest_extension = use_extension("//tools/build_rules/rules_vitest:defs.bzl", "rules_vitest_extension")
+use_repo(rules_vitest_extension, "fremtind_rules_vitest")

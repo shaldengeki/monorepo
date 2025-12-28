@@ -1,17 +1,17 @@
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
-load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@fremtind_rules_vitest//vitest:defs.bzl", "vitest_test")
+
+copy_file(
+    name = "vitestsetupjs",
+    src = "//react_library:vitest.setup.js",
+    out = "vitest.setup.js",
+)
 
 copy_file(
     name = "globalsdts",
     src = "//react_library:globalsdts",
     out = "globals.d.ts",
-)
-
-copy_file(
-    name = "setupTests",
-    src = "//react_library:setupTests.js",
-    out = "setupTests.js",
 )
 
 ts_project(
@@ -94,17 +94,21 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "ChallengeViewTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
         ":ChallengeView",
-        ":setupTests",
-        "//fitbit_challenges/frontend:packagejson",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
         "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
