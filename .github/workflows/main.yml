@@ -21,13 +21,14 @@ jobs:
     steps:
       # Caches and restores the bazelisk download directory, the bazel build directory.
       - name: Cache bazel
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         env:
           cache-name: bazel-cache
         with:
           path: |
             ~/.cache/bazelisk
             ~/.cache/bazel
+            ~/.cache/bazel-disk
             ~/.cache/bazel-repo
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-${{ github.sha }}
           # Pull caches from:
@@ -39,7 +40,7 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}-
             ${{ runner.os }}-${{ env.cache-name }}-refs/heads/${{ github.base_ref }}-
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Ensure there are no gazelle diffs
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc run //:gazelle -- -mode=diff .
       - name: bazel test //...
@@ -52,7 +53,7 @@ jobs:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Install flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Validate fly configs
@@ -66,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -90,7 +91,7 @@ jobs:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: superfly/flyctl-actions/setup-flyctl@master
       # - name: Deploy API
       #   run: flyctl deploy
@@ -110,7 +111,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -133,7 +134,7 @@ jobs:
   #     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v5
+  #     - uses: actions/checkout@v6
   #     - uses: superfly/flyctl-actions/setup-flyctl@master
   #     - name: Deploy API
   #       run: flyctl deploy
@@ -156,7 +157,7 @@ jobs:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy
         run: flyctl deploy
@@ -173,7 +174,7 @@ jobs:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy
         run: flyctl deploy
@@ -187,7 +188,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -206,7 +207,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -223,7 +224,7 @@ jobs:
       HUGO_VERSION: 0.123.0
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           submodules: recursive
           fetch-depth: 0

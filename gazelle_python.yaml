@@ -7,7 +7,7 @@
 manifest:
   modules_mapping:
     30fcd23745efe32ce681__mypyc: black
-    7ae574991b77ef47acad__mypyc: mypy
+    4c842c94c09923bae9e4__mypyc: mypy
     7bce59c0a152c0e01f70__mypyc: tomli
     alembic: alembic
     asn1crypto: asn1crypto
@@ -46,13 +46,15 @@ manifest:
     jinja2: jinja2
     jmespath: jmespath
     lazy_object_proxy: lazy_object_proxy
+    librt.base64: librt
+    librt.internal: librt
+    librt.strings: librt
     mako: mako
     markupsafe: markupsafe
     mccabe: mccabe
     mypy: mypy
     mypy_extensions: mypy_extensions
     mypyc: mypy
-    native_internal: mypy
     nodeenv: nodeenv
     packaging: packaging
     pathspec: pathspec
@@ -85,4 +87,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 60f5726e7b01d36c95838f39370b94aae9a9f38e23aef4a5954abe2bab67df81
+integrity: e252f8d495ede7521add7c4098ecf12721c0e56425021bbf853a777628d9e931
