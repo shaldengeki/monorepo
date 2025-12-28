@@ -1,5 +1,4 @@
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
-load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@fremtind_rules_vitest//vitest:defs.bzl", "vitest_test")
 
@@ -126,19 +125,23 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "EmuCupViewTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
         ":EmuCupView",
-        ":setupTests",
-        "//ark_nova_stats/frontend:packagejson",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
         "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(
@@ -173,19 +176,23 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "HomeViewTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
         ":HomeView",
-        ":setupTests",
-        "//ark_nova_stats/frontend:packagejson",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
         "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(
@@ -219,17 +226,21 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "UserViewTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
-        ":UserView",
-        ":setupTests",
-        "//ark_nova_stats/frontend:packagejson",
+        ":HomeView",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
         "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
