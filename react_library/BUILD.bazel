@@ -106,7 +106,6 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         "//:node_modules/@vitejs/plugin-react",
-        "//:node_modules/@vitest/browser-playwright",
         "//:node_modules/vitest",
     ],
 )
