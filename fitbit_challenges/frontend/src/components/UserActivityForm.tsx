@@ -122,7 +122,7 @@ const UserActivityForm = ({ challengeId, users, startAt, endAt, editedActivity, 
     const steps = (editedActivity.steps === 0) ? 0 : editedActivity.steps;
 
     // @ts-ignore
-    const currentUser = fetchUserData.currentUser;
+    const currentUser = fetchUserData ? fetchUserData.currentUser : undefined;
 
     return <div>
         <form
