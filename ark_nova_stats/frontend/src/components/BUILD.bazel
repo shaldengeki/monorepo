@@ -1,5 +1,4 @@
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
-load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@fremtind_rules_vitest//vitest:defs.bzl", "vitest_test")
 
@@ -125,18 +124,23 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "GameLogArchivesTableTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
-        ":setupTests",
-        "//ark_nova_stats/frontend:testfixtures",
-        "//ark_nova_stats/frontend/src/components:GameLogArchivesTable",
+        ":GameLogArchivesTable",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
+        "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(
@@ -168,18 +172,23 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "GameLogsTableTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
-        ":setupTests",
-        "//ark_nova_stats/frontend:testfixtures",
-        "//ark_nova_stats/frontend/src/components:GameLogsTable",
+        ":GameLogsTable",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
+        "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(
@@ -208,18 +217,23 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "PageLinkTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
-        ":setupTests",
-        "//ark_nova_stats/frontend:testfixtures",
-        "//ark_nova_stats/frontend/src/components:PageLink",
+        ":PageLink",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
+        "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(
@@ -273,18 +287,23 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "TournamentResultsTableTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
-        ":setupTests",
-        "//ark_nova_stats/frontend:testfixtures",
-        "//ark_nova_stats/frontend/src/components:TournamentResultsTable",
+        ":TournamentResultsTable",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
+        "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(
