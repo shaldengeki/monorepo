@@ -1,8 +1,9 @@
 import {createRoot} from 'react-dom/client';
 import App from './App'
 
-import { ApolloClient, HttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
-
+import { ApolloClient, InMemoryCache} from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
+import { HttpLink } from '@apollo/client/link/http';
 const cache = new InMemoryCache()
 
 const { REACT_APP_API_PROTOCOL = 'http', REACT_APP_API_HOST = 'localhost', REACT_APP_API_PORT = '5000', REACT_APP_API_PATH = 'graphql' } = process.env

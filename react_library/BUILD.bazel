@@ -34,6 +34,12 @@ copy_to_bin(
     visibility = ["//visibility:public"],
 )
 
+copy_to_bin(
+    name = "vitestconfigts",
+    srcs = ["vitest.config.js"],
+    visibility = ["//visibility:public"],
+)
+
 ts_project(
     name = "fileMock",
     srcs = [
@@ -68,9 +74,9 @@ ts_project(
 )
 
 ts_project(
-    name = "setupTests",
+    name = "vitestsetupts",
     srcs = [
-        "setupTests.jsx",
+        "vitest.setup.ts",
     ],
     allow_js = True,
     composite = True,
@@ -82,8 +88,24 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         "//:node_modules/@testing-library/jest-dom",
-        "//:node_modules/@types/jest",
-        "//:node_modules/jest-environment-jsdom",
-        "//:node_modules/jsdom",
+    ],
+)
+
+ts_project(
+    name = "vitestconfigts_build",
+    srcs = [
+        "vitest.config.ts",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = ":tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/vitest",
     ],
 )

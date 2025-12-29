@@ -1,11 +1,11 @@
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
-load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@fremtind_rules_vitest//vitest:defs.bzl", "vitest_test")
 
 copy_file(
-    name = "setupTests",
-    src = "//react_library:setupTests.js",
-    out = "setupTests.js",
+    name = "vitestsetupjs",
+    src = "//react_library:vitest.setup.js",
+    out = "vitest.setup.js",
 )
 
 ts_project(
@@ -33,7 +33,6 @@ ts_project(
 ts_project(
     name = "DatabaseStatistics",
     srcs = [
-        "DatabaseStatistics.test.tsx",
         "DatabaseStatistics.tsx",
     ],
     allow_js = True,
@@ -46,30 +45,53 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         "//:node_modules/@apollo/client",
-        "//:node_modules/@testing-library/jest-dom",
-        "//:node_modules/@testing-library/react",
-        "//:node_modules/@types/jest",
         "//:node_modules/@types/react",
-        "//:node_modules/jest-environment-jsdom",
-        "//:node_modules/jsdom",
         "//:node_modules/react",
         "//ark_nova_stats/frontend/src/types",
         "//react_library/DateUtils",
     ],
 )
 
-jest_test(
-    name = "DatabaseStatisticsTest",
-    config = "//react_library:jestconfig",
+ts_project(
+    name = "DatabaseStatistics_test",
+    srcs = [
+        "DatabaseStatistics.test.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//ark_nova_stats/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":DatabaseStatistics",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/vitest",
+        "//:node_modules/vitest-browser-react",
+        "//ark_nova_stats/frontend/src/types",
+    ],
+)
+
+vitest_test(
+    name = "DatabaseStatistics_test_vitest",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
-        ":setupTests",
-        "//ark_nova_stats/frontend:testfixtures",
-        "//ark_nova_stats/frontend/src/components:DatabaseStatistics",
+        ":DatabaseStatistics_test",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
+        "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(
@@ -102,18 +124,23 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "GameLogArchivesTableTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
-        ":setupTests",
-        "//ark_nova_stats/frontend:testfixtures",
-        "//ark_nova_stats/frontend/src/components:GameLogArchivesTable",
+        ":GameLogArchivesTable",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
+        "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(
@@ -145,18 +172,23 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "GameLogsTableTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
-        ":setupTests",
-        "//ark_nova_stats/frontend:testfixtures",
-        "//ark_nova_stats/frontend/src/components:GameLogsTable",
+        ":GameLogsTable",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
+        "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(
@@ -185,18 +217,23 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "PageLinkTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
-        ":setupTests",
-        "//ark_nova_stats/frontend:testfixtures",
-        "//ark_nova_stats/frontend/src/components:PageLink",
+        ":PageLink",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
+        "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(
@@ -250,18 +287,23 @@ ts_project(
     ],
 )
 
-jest_test(
+vitest_test(
     name = "TournamentResultsTableTest",
-    config = "//react_library:jestconfig",
+    size = "small",
+    config = "//react_library:vitestconfigts",
     data = [
-        ":setupTests",
-        "//ark_nova_stats/frontend:testfixtures",
-        "//ark_nova_stats/frontend/src/components:TournamentResultsTable",
+        ":TournamentResultsTable",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
+        "//react_library:testfixtures",
     ],
+    flaky = False,
+    log_level = "info",
     node_modules = "//:node_modules",
-    node_options = [
-        "--experimental-vm-modules",
-    ],
 )
 
 ts_project(

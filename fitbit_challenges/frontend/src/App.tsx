@@ -5,7 +5,7 @@ import {
   Navigate
 } from "react-router-dom";
 
-import { useQuery } from "@apollo/client/react/hooks";
+import { useQuery } from "@apollo/client/react";
 import ChallengesListingView from './views/ChallengesListingView';
 import ChallengeView from './views/ChallengeView';
 import AuthView from './views/AuthView';
@@ -30,6 +30,7 @@ function App() {
           error && <p>Error loading login state</p>
       }
       {
+          // @ts-ignore
           data && data.currentUser === null &&
           <NavBarElement link={'/auth'}>
               <img className="h-5 inline" src={fitbit} alt="Fitbit app icon" />
@@ -37,6 +38,7 @@ function App() {
           </NavBarElement>
       }
       {
+          // @ts-ignore
           data && data.currentUser && <p className="ml-auto">{data.currentUser.displayName}</p>
       }
     </NavBar>
