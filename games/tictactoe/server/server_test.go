@@ -150,26 +150,28 @@ func TestMakeMove(t *testing.T) {
 			assert.Error(t, err)
 		})
 
-		readOnlyState := pb.GameState{
-			Round: 1,
-			Board: &pb.Board{
-				Rows: 3,
-				Columns: 3,
-				Markers: []*pb.BoardMarker{
-					{
-						Row: 1,
-						Column: 1,
-						Symbol: "O",
+		t.Run("InvalidSetStateReturnsInfraError", func(t *testing.T) {
+			// This test mutates game state, so we set up a separate set of structs.
+			readOnlyState := pb.GameState{
+				Round: 1,
+				Board: &pb.Board{
+					Rows: 3,
+					Columns: 3,
+					Markers: []*pb.BoardMarker{
+						{
+							Row: 1,
+							Column: 1,
+							Symbol: "O",
+						},
 					},
 				},
-			},
-		}
-		readOnlyStateMap := map[string]*pb.GameState{
-			"game_id_1": &readOnlyState,
-		}
-		readOnlyProvider := read_only_in_memory_game_state.NewReadOnlyInMemoryGameState(readOnlyStateMap)
-		readOnlyServer := New(readOnlyProvider)
-		t.Run("InvalidSetStateReturnsInfraError", func(t *testing.T) {
+			}
+			readOnlyStateMap := map[string]*pb.GameState{
+				"game_id_1": &readOnlyState,
+			}
+			readOnlyProvider := read_only_in_memory_game_state.NewReadOnlyInMemoryGameState(readOnlyStateMap)
+			readOnlyServer := New(readOnlyProvider)
+
 			request := pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
 				Move: &pb.BoardMarker{
@@ -182,26 +184,28 @@ func TestMakeMove(t *testing.T) {
 			assert.Error(t, err)
 		})
 
-		inMemoryState := pb.GameState{
-			Round: 1,
-			Board: &pb.Board{
-				Rows: 3,
-				Columns: 3,
-				Markers: []*pb.BoardMarker{
-					{
-						Row: 1,
-						Column: 1,
-						Symbol: "O",
+		t.Run("SuccessfulSetReturnsSuccess", func(t *testing.T) {
+			// This test mutates game state, so we set up a separate set of structs.
+			inMemoryState := pb.GameState{
+				Round: 1,
+				Board: &pb.Board{
+					Rows: 3,
+					Columns: 3,
+					Markers: []*pb.BoardMarker{
+						{
+							Row: 1,
+							Column: 1,
+							Symbol: "O",
+						},
 					},
 				},
-			},
-		}
-		inMemoryStateMap := map[string]*pb.GameState{
-			"game_id_1": &inMemoryState,
-		}
-		inMemoryProvider := in_memory_game_state.NewInMemoryGameState(inMemoryStateMap)
-		inMemoryServer := New(inMemoryProvider)
-		t.Run("SuccessfulSetReturnsSuccess", func(t *testing.T) {
+			}
+			inMemoryStateMap := map[string]*pb.GameState{
+				"game_id_1": &inMemoryState,
+			}
+			inMemoryProvider := in_memory_game_state.NewInMemoryGameState(inMemoryStateMap)
+			inMemoryServer := New(inMemoryProvider)
+
 			request := pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
 				Move: &pb.BoardMarker{
