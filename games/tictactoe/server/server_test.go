@@ -6,6 +6,7 @@ import (
 	pb "github.com/shaldengeki/monorepo/games/tictactoe/proto"
 	pbserver "github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/empty_game_state"
+	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/static_game_state"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -64,5 +65,64 @@ func TestValidateState(t *testing.T) {
 }
 
 func TestMakeMove(t *testing.T) {
-	assert.NotNil(t, nil)
+	ctx := context.Background()
+
+	t.Run("EmptyState", func(t *testing.T) {
+		emptyProvider := empty_game_state.NewEmptyGameState()
+		server := New(emptyProvider)
+
+		t.Run("NilRequestReturnsValidationError", func(t *testing.T) {
+			res, err := server.MakeMove(ctx, nil)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
+		})
+
+		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
+			// TODO
+			assert.NotNil(t, nil)
+		})
+
+		t.Run("ValidMoveReturnsInfraError", func(t *testing.T) {
+			// TODO
+			assert.NotNil(t, nil)
+		})
+	})
+
+	t.Run("WithState", func(t *testing.T) {
+		state := pb.GameState{}
+		staticProvider := static_game_state.NewStaticGameState(&state)
+		server := New(staticProvider)
+
+		t.Run("NilRequestReturnsValidationError", func(t *testing.T) {
+			res, err := server.MakeMove(ctx, nil)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
+		})
+
+		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
+			// TODO
+			assert.NotNil(t, nil)
+		})
+
+		t.Run("CollidingMoveReturnsInfraError", func(t *testing.T) {
+			// TODO
+			assert.NotNil(t, nil)
+		})
+
+		t.Run("InvalidFinalStateReturnsValidationError", func(t *testing.T) {
+			// TODO
+			assert.NotNil(t, nil)
+		})
+
+		t.Run("InvalidSetStateReturnsInfraError", func(t *testing.T) {
+			// TODO
+			assert.NotNil(t, nil)
+		})
+
+		t.Run("SuccessfulSetReturnsSuccess", func(t *testing.T) {
+			// TODO
+			assert.NotNil(t, nil)
+		})
+	})
+
 }
