@@ -234,6 +234,69 @@ func TestMakeMove(t *testing.T) {
 			assert.Equal(t, int(board.Markers[1].Column), 2)
 			assert.Equal(t, board.Markers[1].Symbol, "X")
 		})
-	})
 
+		t.Run("GameEnd", func(t *testing.T) {
+			// This test mutates game state, so we set up a separate set of structs.
+			inMemoryState := pb.GameState{
+				Round: 3,
+				Turn: 1,
+				Board: &pb.Board{
+					Rows: 3,
+					Columns: 3,
+					Markers: []*pb.BoardMarker{
+						{
+							Row: 0,
+							Column: 0,
+							Symbol: "O",
+						},
+						{
+							Row: 1,
+							Column: 0,
+							Symbol: "X",
+						},
+						{
+							Row: 0,
+							Column: 1,
+							Symbol: "O",
+						},
+						{
+							Row: 1,
+							Column: 1,
+							Symbol: "X",
+						},
+					},
+				},
+			}
+			inMemoryStateMap := map[string]*pb.GameState{
+				"game_id_1": &inMemoryState,
+			}
+			inMemoryProvider := in_memory_game_state.NewInMemoryGameState(inMemoryStateMap)
+			inMemoryServer := New(inMemoryProvider)
+
+			request := pbserver.MakeMoveRequest{
+				GameId: "game_id_1",
+				Move: &pb.BoardMarker{
+					Row: 0,
+					Column: 2,
+					Symbol: "O",
+				},
+			}
+			res, err := inMemoryServer.MakeMove(ctx, &request)
+			require.NoError(t, err)
+			require.NotNil(t, res)
+			assert.Empty(t, res.ValidationErrors)
+
+			require.NotNil(t, res.GameState)
+			finalState := res.GameState
+			assert.Equal(t, int(finalState.Turn), 2)
+			assert.Equal(t, int(finalState.Round), 3)
+			assert.True(t, finalState.Finished)
+
+			require.NotEmpty(t, finalState.Scores)
+			scores := finalState.Scores
+			require.Len(t, scores, 1)
+			assert.Equal(t, scores[0].Player.Symbol, "O")
+			assert.Equal(t, int(scores[0].Score), 1)
+		})
+	})
 }
