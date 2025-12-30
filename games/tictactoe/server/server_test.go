@@ -254,6 +254,8 @@ func TestMakeMove(t *testing.T) {
 			assert.Empty(t, finalState.Scores)
 		})
 
+		// TODO: test for wrong player attempting to make a move
+
 		t.Run("GameEnd", func(t *testing.T) {
 			// This test mutates game state, so we set up a separate set of structs.
 			inMemoryState := pb.GameState{
