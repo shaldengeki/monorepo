@@ -1,0 +1,13 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "read_only_in_memory_game_state",
+    srcs = ["read_only_in_memory_game_state.go"],
+    importpath = "github.com/shaldengeki/monorepo/games/tictactoe/game_state/read_only_in_memory_game_state",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//games/tictactoe/game_state",
+        "//games/tictactoe/game_state/in_memory_game_state",
+        "//games/tictactoe/proto:proto_go_proto",
+    ],
+)

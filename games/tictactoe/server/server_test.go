@@ -6,6 +6,7 @@ import (
 	pb "github.com/shaldengeki/monorepo/games/tictactoe/proto"
 	pbserver "github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/empty_game_state"
+	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/read_only_in_memory_game_state"
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/static_game_state"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -102,30 +103,69 @@ func TestMakeMove(t *testing.T) {
 	})
 
 	t.Run("WithState", func(t *testing.T) {
-		state := pb.GameState{}
+		state := pb.GameState{
+			Round: 1,
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{
+					{
+						Row: 1,
+						Column: 1,
+						Symbol: "O",
+					},
+				},
+			},
+		}
 		staticProvider := static_game_state.NewStaticGameState(&state)
-		server := New(staticProvider)
+		staticServer := New(staticProvider)
+
+		stateMap := map[string]*pb.GameState{
+			"game_id_1": &state,
+		}
+		readOnlyProvider := read_only_in_memory_game_state.NewReadOnlyInMemoryGameState(stateMap)
+		readOnlyServer := New(readOnlyProvider)
 
 		t.Run("NilRequestReturnsValidationError", func(t *testing.T) {
-			res, err := server.MakeMove(ctx, nil)
+			res, err := staticServer.MakeMove(ctx, nil)
 			require.NoError(t, err)
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
 		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
-			assert.Empty(t, "TODO")
+			request := pbserver.MakeMoveRequest{
+				Move: &pb.BoardMarker{
+					Row: -1,
+				},
+			}
+			res, err := staticServer.MakeMove(ctx, &request)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
 		t.Run("CollidingMoveReturnsInfraError", func(t *testing.T) {
-			assert.Empty(t, "TODO")
-		})
-
-		t.Run("InvalidFinalStateReturnsValidationError", func(t *testing.T) {
-			assert.Empty(t, "TODO")
+			request := pbserver.MakeMoveRequest{
+				Move: &pb.BoardMarker{
+					Row: 1,
+					Column: 1,
+					Symbol: "X",
+				},
+			}
+			_, err := staticServer.MakeMove(ctx, &request)
+			assert.Error(t, err)
 		})
 
 		t.Run("InvalidSetStateReturnsInfraError", func(t *testing.T) {
-			assert.Empty(t, "TODO")
+			request := pbserver.MakeMoveRequest{
+				GameId: "game_id_1",
+				Move: &pb.BoardMarker{
+					Row: 2,
+					Column: 2,
+					Symbol: "X",
+				},
+			}
+			_, err := readOnlyServer.MakeMove(ctx, &request)
+			assert.Error(t, err)
 		})
 
 		t.Run("SuccessfulSetReturnsSuccess", func(t *testing.T) {
