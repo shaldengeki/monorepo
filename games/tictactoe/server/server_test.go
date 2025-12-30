@@ -6,6 +6,7 @@ import (
 	pb "github.com/shaldengeki/monorepo/games/tictactoe/proto"
 	pbserver "github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/empty_game_state"
+	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/in_memory_game_state"
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/read_only_in_memory_game_state"
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/static_game_state"
 	"github.com/stretchr/testify/assert"
@@ -120,12 +121,6 @@ func TestMakeMove(t *testing.T) {
 		staticProvider := static_game_state.NewStaticGameState(&state)
 		staticServer := New(staticProvider)
 
-		stateMap := map[string]*pb.GameState{
-			"game_id_1": &state,
-		}
-		readOnlyProvider := read_only_in_memory_game_state.NewReadOnlyInMemoryGameState(stateMap)
-		readOnlyServer := New(readOnlyProvider)
-
 		t.Run("NilRequestReturnsValidationError", func(t *testing.T) {
 			res, err := staticServer.MakeMove(ctx, nil)
 			require.NoError(t, err)
@@ -155,6 +150,25 @@ func TestMakeMove(t *testing.T) {
 			assert.Error(t, err)
 		})
 
+		readOnlyState := pb.GameState{
+			Round: 1,
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{
+					{
+						Row: 1,
+						Column: 1,
+						Symbol: "O",
+					},
+				},
+			},
+		}
+		readOnlyStateMap := map[string]*pb.GameState{
+			"game_id_1": &readOnlyState,
+		}
+		readOnlyProvider := read_only_in_memory_game_state.NewReadOnlyInMemoryGameState(readOnlyStateMap)
+		readOnlyServer := New(readOnlyProvider)
 		t.Run("InvalidSetStateReturnsInfraError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
@@ -168,7 +182,36 @@ func TestMakeMove(t *testing.T) {
 			assert.Error(t, err)
 		})
 
+		inMemoryState := pb.GameState{
+			Round: 1,
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{
+					{
+						Row: 1,
+						Column: 1,
+						Symbol: "O",
+					},
+				},
+			},
+		}
+		inMemoryStateMap := map[string]*pb.GameState{
+			"game_id_1": &inMemoryState,
+		}
+		inMemoryProvider := in_memory_game_state.NewInMemoryGameState(inMemoryStateMap)
+		inMemoryServer := New(inMemoryProvider)
 		t.Run("SuccessfulSetReturnsSuccess", func(t *testing.T) {
+			request := pbserver.MakeMoveRequest{
+				GameId: "game_id_1",
+				Move: &pb.BoardMarker{
+					Row: 2,
+					Column: 2,
+					Symbol: "X",
+				},
+			}
+			_, err := inMemoryServer.MakeMove(ctx, &request)
+			require.NoError(t, err)
 			assert.Empty(t, "TODO")
 		})
 	})
