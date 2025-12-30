@@ -12,8 +12,8 @@ message GameState {
     // Reflects the state of a game at a given moment in time.
     // Players change this state by taking valid actions.
 
-    int32 turn = 1;
-    int32 round = 2;
+    uint32 turn = 1;
+    uint32 round = 2;
     bool finished = 3;
     repeated Score scores = 4;
     Board board = 5;

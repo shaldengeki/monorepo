@@ -33,12 +33,8 @@ func TestValidateState(t *testing.T) {
 		require.NoError(t, err)
 		assert.Empty(t, res.ValidationErrors)
 
-		// Turn = <= 0
+		// Turn = 0
 		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 0, Round: 1}}
-		res, err = server.ValidateState(ctx, &request)
-		require.NoError(t, err)
-		assert.NotEmpty(t, res.ValidationErrors)
-		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: -1, Round: 1}}
 		res, err = server.ValidateState(ctx, &request)
 		require.NoError(t, err)
 		assert.NotEmpty(t, res.ValidationErrors)
@@ -51,12 +47,8 @@ func TestValidateState(t *testing.T) {
 		require.NoError(t, err)
 		assert.Empty(t, res.ValidationErrors)
 
-		// Round = <= 0
+		// Round = 0
 		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 1, Round: 0}}
-		res, err = server.ValidateState(ctx, &request)
-		require.NoError(t, err)
-		assert.NotEmpty(t, res.ValidationErrors)
-		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 1, Round: -1}}
 		res, err = server.ValidateState(ctx, &request)
 		require.NoError(t, err)
 		assert.NotEmpty(t, res.ValidationErrors)
@@ -82,7 +74,9 @@ func TestMakeMove(t *testing.T) {
 		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
 				Move: &pb.BoardMarker{
-					Row: -1,
+					Row: 1,
+					Column: 1,
+					Symbol: "",
 				},
 			}
 			res, err := server.MakeMove(ctx, &request)
@@ -130,7 +124,9 @@ func TestMakeMove(t *testing.T) {
 		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
 				Move: &pb.BoardMarker{
-					Row: -1,
+					Row: 1,
+					Column: 1,
+					Symbol: "",
 				},
 			}
 			res, err := staticServer.MakeMove(ctx, &request)
@@ -188,6 +184,7 @@ func TestMakeMove(t *testing.T) {
 			// This test mutates game state, so we set up a separate set of structs.
 			inMemoryState := pb.GameState{
 				Round: 1,
+				Turn: 1,
 				Board: &pb.Board{
 					Rows: 3,
 					Columns: 3,
@@ -214,9 +211,28 @@ func TestMakeMove(t *testing.T) {
 					Symbol: "X",
 				},
 			}
-			_, err := inMemoryServer.MakeMove(ctx, &request)
+			res, err := inMemoryServer.MakeMove(ctx, &request)
 			require.NoError(t, err)
-			assert.Empty(t, "TODO")
+			require.NotNil(t, res)
+			assert.Empty(t, res.ValidationErrors)
+
+
+			require.NotNil(t, res.GameState)
+			finalState := res.GameState
+			assert.Equal(t, int(finalState.Turn), 2)
+			assert.Equal(t, int(finalState.Round), 1)
+			assert.False(t, finalState.Finished)
+			assert.Empty(t, finalState.Scores)
+
+			require.NotNil(t, finalState.Board)
+			board := finalState.Board
+			require.Len(t, board.Markers, 2)
+			assert.Equal(t, int(board.Markers[0].Row), 1)
+			assert.Equal(t, int(board.Markers[0].Column), 1)
+			assert.Equal(t, board.Markers[0].Symbol, "O")
+			assert.Equal(t, int(board.Markers[1].Row), 2)
+			assert.Equal(t, int(board.Markers[1].Column), 2)
+			assert.Equal(t, board.Markers[1].Symbol, "X")
 		})
 	})
 
