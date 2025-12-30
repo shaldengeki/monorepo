@@ -113,28 +113,23 @@ func TestMakeMove(t *testing.T) {
 		})
 
 		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
-			// TODO
-			assert.NotNil(t, nil)
+			assert.Empty(t, "TODO")
 		})
 
 		t.Run("CollidingMoveReturnsInfraError", func(t *testing.T) {
-			// TODO
-			assert.NotNil(t, nil)
+			assert.Empty(t, "TODO")
 		})
 
 		t.Run("InvalidFinalStateReturnsValidationError", func(t *testing.T) {
-			// TODO
-			assert.NotNil(t, nil)
+			assert.Empty(t, "TODO")
 		})
 
 		t.Run("InvalidSetStateReturnsInfraError", func(t *testing.T) {
-			// TODO
-			assert.NotNil(t, nil)
+			assert.Empty(t, "TODO")
 		})
 
 		t.Run("SuccessfulSetReturnsSuccess", func(t *testing.T) {
-			// TODO
-			assert.NotNil(t, nil)
+			assert.Empty(t, "TODO")
 		})
 	})
 
