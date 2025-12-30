@@ -12,8 +12,7 @@ type EmptyGameState struct {
 }
 
 func (s EmptyGameState) GetState(ctx context.Context, gameId string) (*proto.GameState, error) {
-	gs := proto.GameState{}
-	return &gs, nil
+	return nil, nil
 }
 
 func (s EmptyGameState) SetState(ctx context.Context, gameId string, newState proto.GameState) error {

@@ -78,13 +78,26 @@ func TestMakeMove(t *testing.T) {
 		})
 
 		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
-			// TODO
-			assert.NotNil(t, nil)
+			request := pbserver.MakeMoveRequest{
+				Move: &pb.BoardMarker{
+					Row: -1,
+				},
+			}
+			res, err := server.MakeMove(ctx, &request)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
 		t.Run("ValidMoveReturnsInfraError", func(t *testing.T) {
-			// TODO
-			assert.NotNil(t, nil)
+			request := pbserver.MakeMoveRequest{
+				Move: &pb.BoardMarker{
+					Row: 1,
+					Column: 1,
+					Symbol: "X",
+				},
+			}
+			_, err := server.MakeMove(ctx, &request)
+			assert.Error(t, err)
 		})
 	})
 
