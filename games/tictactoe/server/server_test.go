@@ -216,7 +216,6 @@ func TestMakeMove(t *testing.T) {
 			require.NotNil(t, res)
 			assert.Empty(t, res.ValidationErrors)
 
-
 			require.NotNil(t, res.GameState)
 			finalState := res.GameState
 			assert.Equal(t, int(finalState.Turn), 2)
@@ -233,6 +232,26 @@ func TestMakeMove(t *testing.T) {
 			assert.Equal(t, int(board.Markers[1].Row), 2)
 			assert.Equal(t, int(board.Markers[1].Column), 2)
 			assert.Equal(t, board.Markers[1].Symbol, "X")
+
+			request = pbserver.MakeMoveRequest{
+				GameId: "game_id_1",
+				Move: &pb.BoardMarker{
+					Row: 0,
+					Column: 0,
+					Symbol: "O",
+				},
+			}
+			res, err = inMemoryServer.MakeMove(ctx, &request)
+			require.NoError(t, err)
+			require.NotNil(t, res)
+			assert.Empty(t, res.ValidationErrors)
+
+			require.NotNil(t, res.GameState)
+			finalState = res.GameState
+			assert.Equal(t, int(finalState.Turn), 1)
+			assert.Equal(t, int(finalState.Round), 2)
+			assert.False(t, finalState.Finished)
+			assert.Empty(t, finalState.Scores)
 		})
 
 		t.Run("GameEnd", func(t *testing.T) {

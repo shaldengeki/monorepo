@@ -226,11 +226,14 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 	}
 	newState := priorState
 	newState.Board.Markers = append(newState.Board.Markers, move)
-	newState.Turn += 1
 	if s.MoveFinishesGame(ctx, move, &newState) {
 		newState.Finished = true
+		// TODO: add score
 	}
-	// TODO: scores, round
+
+	// TODO: round
+	// To set this correctly, we need access to the players in the game, which is only set on Game, and not GameState.
+	newState.Turn += 1
 
 	return &newState, nil
 }
