@@ -5,8 +5,9 @@ import (
 	"net"
 
 	pbserver "github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
-	"github.com/shaldengeki/monorepo/games/tictactoe/server"
+	servergrpc "github.com/shaldengeki/monorepo/games/tictactoe/server/grpc"
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/in_memory_game_state"
+	"github.com/shaldengeki/monorepo/games/tictactoe/rule_set/default_rule_set"
 
 	"google.golang.org/grpc"
 )
@@ -18,7 +19,13 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	pbserver.RegisterGameServiceServer(grpcServer, server.New(in_memory_game_state.NewInMemoryGameState(nil)))
+	pbserver.RegisterGameServiceServer(
+		grpcServer,
+		servergrpc.New(
+			in_memory_game_state.NewInMemoryGameState(nil),
+			default_rule_set.NewDefaultRuleSet(),
+		),
+	)
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Fatal error when serving request: %v", err)
 	}

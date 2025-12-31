@@ -8,13 +8,15 @@ import (
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/in_memory_game_state"
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/read_only_in_memory_game_state"
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/static_game_state"
+	"github.com/shaldengeki/monorepo/games/tictactoe/rule_set/default_rule_set"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestValidateState(t *testing.T) {
 	gameState := empty_game_state.NewEmptyGameState()
-	grpcServer := New(gameState)
+	ruleSet := default_rule_set.NewDefaultRuleSet()
+	grpcServer := New(gameState, ruleSet)
 
 	t.Run("ValidWithEmptyState", func(t *testing.T) {
 		request := pbserver.ValidateStateRequest{}
@@ -67,7 +69,8 @@ func TestValidateState(t *testing.T) {
 func TestMakeMove(t *testing.T) {
 	t.Run("EmptyState", func(t *testing.T) {
 		gameState := empty_game_state.NewEmptyGameState()
-		grpcServer := New(gameState)
+		ruleSet := default_rule_set.NewDefaultRuleSet()
+		grpcServer := New(gameState, ruleSet)
 
 		t.Run("NilRequestReturnsValidationError", func(t *testing.T) {
 			res, err := grpcServer.MakeMove(t.Context(), nil)
@@ -117,7 +120,8 @@ func TestMakeMove(t *testing.T) {
 			},
 		}
 		gameState := static_game_state.NewStaticGameState(&state)
-		grpcServer := New(gameState)
+		ruleSet := default_rule_set.NewDefaultRuleSet()
+		grpcServer := New(gameState, ruleSet)
 
 		t.Run("NilRequestReturnsValidationError", func(t *testing.T) {
 			res, err := grpcServer.MakeMove(t.Context(), nil)
@@ -174,7 +178,8 @@ func TestMakeMove(t *testing.T) {
 				"game_id_1": &readOnlyState,
 			}
 			gameState := read_only_in_memory_game_state.NewReadOnlyInMemoryGameState(readOnlyStateMap)
-			grpcServer := New(gameState)
+			ruleSet := default_rule_set.NewDefaultRuleSet()
+			grpcServer := New(gameState, ruleSet)
 
 			request := pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
@@ -213,7 +218,8 @@ func TestMakeMove(t *testing.T) {
 				"game_id_1": &inMemoryState,
 			}
 			gameState := in_memory_game_state.NewInMemoryGameState(inMemoryStateMap)
-			grpcServer := New(gameState)
+			ruleSet := default_rule_set.NewDefaultRuleSet()
+			grpcServer := New(gameState, ruleSet)
 
 			request := pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
@@ -306,7 +312,8 @@ func TestMakeMove(t *testing.T) {
 				"game_id_1": &inMemoryState,
 			}
 			gameState := in_memory_game_state.NewInMemoryGameState(inMemoryStateMap)
-			grpcServer := New(gameState)
+			ruleSet := default_rule_set.NewDefaultRuleSet()
+			grpcServer := New(gameState, ruleSet)
 
 			request := pbserver.MakeMoveRequest{
 				GameId: "game_id_1",

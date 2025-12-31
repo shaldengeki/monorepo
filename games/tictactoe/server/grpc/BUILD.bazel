@@ -7,9 +7,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//games/tictactoe/game_state",
-        "//games/tictactoe/proto:proto_go_proto",
         "//games/tictactoe/proto/server:server_go_proto",
-        "//games/tictactoe/server",
+        "//games/tictactoe/rule_set",
     ],
 )
 
@@ -25,6 +24,7 @@ go_test(
         "//games/tictactoe/game_state/static_game_state",
         "//games/tictactoe/proto:proto_go_proto",
         "//games/tictactoe/proto/server:server_go_proto",
+        "//games/tictactoe/rule_set/default_rule_set",
         "@com_github_stretchr_testify//assert:go_default_library",
         "@com_github_stretchr_testify//require:go_default_library",
     ],

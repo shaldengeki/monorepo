@@ -15,7 +15,8 @@ go_library(
         "//games/tictactoe/game_state/in_memory_game_state",
         "//games/tictactoe/proto:proto_go_proto",
         "//games/tictactoe/proto/server:server_go_proto",
-        "//games/tictactoe/server",
+        "//games/tictactoe/rule_set/default_rule_set",
+        "//games/tictactoe/server/grpc",
         "@rules_go//go/runfiles:go_default_library",
     ],
 )

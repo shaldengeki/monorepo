@@ -6,23 +6,26 @@ import (
 	"fmt"
 
 	"github.com/shaldengeki/monorepo/games/tictactoe/game_state"
-	"github.com/shaldengeki/monorepo/games/tictactoe/server"
-
-	"github.com/shaldengeki/monorepo/games/tictactoe/proto"
+	"github.com/shaldengeki/monorepo/games/tictactoe/rule_set"
 	pbserver "github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
 )
 
 type grpcServer struct {
 	pbserver.UnimplementedGameServiceServer
 
-	gameServer server.GameServer
+	ruleSet rule_set.RuleSet
 	gameStateProvider game_state.GameState
 	gameCount int
 }
 
 func (s *grpcServer) CreateGame(ctx context.Context, request *pbserver.CreateGameRequest) (*pbserver.CreateGameResponse, error) {
 	gameId := fmt.Sprintf("%d", s.gameCount)
-	err := s.gameStateProvider.SetState(ctx, gameId, proto.GameState{Turn: 0, Round: 1, Finished: false, Board: &proto.Board{Rows: 3, Columns: 3}, Players: []*proto.Player{{Id: "1", Symbol: "X"}, {Id: "2", Symbol: "O"}}})
+	initialState, err := s.ruleSet.InitialState(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("could not set up initial game state: %w", err)
+	}
+
+	err = s.gameStateProvider.SetState(ctx, gameId, *initialState)
 	if err != nil {
 		return nil, fmt.Errorf("could not create game with id %d: %w", gameId, err)
 	}
@@ -53,7 +56,7 @@ func (s *grpcServer) ValidateState(ctx context.Context, request *pbserver.Valida
 		return &pbserver.ValidateStateResponse{}, nil
 	}
 
-	violations, err := s.gameServer.ValidateGameState(ctx, *request.GameState)
+	violations, err := s.ruleSet.ValidateState(ctx, *request.GameState)
 	if err != nil {
 		return nil, fmt.Errorf("could not validate state: %w", err)
 	}
@@ -67,7 +70,7 @@ func (s *grpcServer) MakeMove(ctx context.Context, request *pbserver.MakeMoveReq
 	}
 
 	// First, validate the move prospectively.
-	validationErrors, err := s.gameServer.ValidateMarker(ctx, request.Move)
+	validationErrors, err := s.ruleSet.ValidateMarker(ctx, request.Move)
 	if err != nil {
 		return nil, fmt.Errorf("could not validate move request: %w", err)
 	}
@@ -84,13 +87,13 @@ func (s *grpcServer) MakeMove(ctx context.Context, request *pbserver.MakeMoveReq
 	}
 
 	// Next, apply the move.
-	updatedGameState, err := s.gameServer.ApplyMove(ctx, *priorState, request.Move)
+	updatedGameState, err := s.ruleSet.ApplyMove(ctx, *priorState, request.Move)
 	if err != nil {
 		return nil, fmt.Errorf("could not apply move to prior state for game %s: %w", request.GameId, err)
 	}
 
 	// Next, validate the resulting state.
-	updatedValidationErrors, err := s.gameServer.ValidateGameState(ctx, *updatedGameState)
+	updatedValidationErrors, err := s.ruleSet.ValidateState(ctx, *updatedGameState)
 	if err != nil {
 		return nil, fmt.Errorf("could not validate updated game state: %w", err)
 	}
@@ -107,6 +110,6 @@ func (s *grpcServer) MakeMove(ctx context.Context, request *pbserver.MakeMoveReq
 	return &pbserver.MakeMoveResponse{GameState: updatedGameState}, nil
 }
 
-func New(gameState game_state.GameState) grpcServer {
-	return grpcServer{gameStateProvider: gameState, gameServer: server.New(gameState)}
+func New(gameState game_state.GameState, ruleSet rule_set.RuleSet) *grpcServer {
+	return &grpcServer{gameStateProvider: gameState, ruleSet: ruleSet}
 }
