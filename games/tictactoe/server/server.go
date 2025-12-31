@@ -11,14 +11,14 @@ import (
 	"github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
 )
 
-type gameServer struct {
+type GameServer struct {
 	server.UnimplementedGameServiceServer
 
 	gameStateProvider game_state.GameState
 	gameCount int
 }
 
-func (s *gameServer) CreateGame(ctx context.Context, request *server.CreateGameRequest) (*server.CreateGameResponse, error) {
+func (s *GameServer) CreateGame(ctx context.Context, request *server.CreateGameRequest) (*server.CreateGameResponse, error) {
 	gameId := fmt.Sprintf("%d", s.gameCount)
 	err := s.gameStateProvider.SetState(ctx, gameId, proto.GameState{Turn: 0, Round: 1, Finished: false, Board: &proto.Board{Rows: 3, Columns: 3}, Players: []*proto.Player{{Id: "1", Symbol: "X"}, {Id: "2", Symbol: "O"}}})
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *gameServer) CreateGame(ctx context.Context, request *server.CreateGameR
 	}, nil
 }
 
-func (s *gameServer) GetState(ctx context.Context, request *server.GetStateRequest) (*server.GetStateResponse, error) {
+func (s *GameServer) GetState(ctx context.Context, request *server.GetStateRequest) (*server.GetStateResponse, error) {
 	if request.GameId == "" {
 		return nil, errors.New("Game ID not provided")
 	}
@@ -46,7 +46,7 @@ func (s *gameServer) GetState(ctx context.Context, request *server.GetStateReque
 	return &r, nil
 }
 
-func (s *gameServer) ValidateState(ctx context.Context, request *server.ValidateStateRequest) (*server.ValidateStateResponse, error) {
+func (s *GameServer) ValidateState(ctx context.Context, request *server.ValidateStateRequest) (*server.ValidateStateResponse, error) {
 	if request.GameState == nil {
 		return &server.ValidateStateResponse{}, nil
 	}
@@ -59,7 +59,7 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 	return &server.ValidateStateResponse{ValidationErrors: violations}, nil
 }
 
-func (s *gameServer) ValidateGameState(ctx context.Context, gameState proto.GameState) (violations []string, err error) {
+func (s *GameServer) ValidateGameState(ctx context.Context, gameState proto.GameState) (violations []string, err error) {
 	if gameState.Turn < 1 {
 		violations = append(violations, "Turn count should be >= 1")
 	} else if gameState.Players != nil && int(gameState.Turn) > len(gameState.Players) {
@@ -89,7 +89,7 @@ func (s *gameServer) ValidateGameState(ctx context.Context, gameState proto.Game
 	return violations, nil
 }
 
-func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Score) ([]string, error) {
+func (s *GameServer) ValidateStateScores(ctx context.Context, scores []*proto.Score) ([]string, error) {
 	violations := []string{}
 
 	hasPoints := false
@@ -108,7 +108,7 @@ func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Sc
 	return violations, nil
 }
 
-func (s *gameServer) ValidateStateBoard(ctx context.Context, board *proto.Board, finished bool) ([]string, error) {
+func (s *GameServer) ValidateStateBoard(ctx context.Context, board *proto.Board, finished bool) ([]string, error) {
 	violations := []string{}
 
 	if board == nil {
@@ -126,7 +126,7 @@ func (s *gameServer) ValidateStateBoard(ctx context.Context, board *proto.Board,
 	return violations, nil
 }
 
-func (s *gameServer) ValidateBoard(ctx context.Context, board *proto.Board) ([]string, error) {
+func (s *GameServer) ValidateBoard(ctx context.Context, board *proto.Board) ([]string, error) {
 	violations := []string{}
 
 	if board.Rows < 1 {
@@ -165,7 +165,7 @@ func (s *gameServer) ValidateBoard(ctx context.Context, board *proto.Board) ([]s
 	return violations, nil
 }
 
-func (s *gameServer) ValidateMarker(ctx context.Context, marker *proto.BoardMarker) ([]string, error) {
+func (s *GameServer) ValidateMarker(ctx context.Context, marker *proto.BoardMarker) ([]string, error) {
 	violations := []string{}
 
 	if marker.Row < 0 {
@@ -185,7 +185,7 @@ func (s *gameServer) ValidateMarker(ctx context.Context, marker *proto.BoardMark
 	return violations, nil
 }
 
-func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveRequest) (*server.MakeMoveResponse, error) {
+func (s *GameServer) MakeMove(ctx context.Context, request *server.MakeMoveRequest) (*server.MakeMoveResponse, error) {
 	if request == nil {
 		return &server.MakeMoveResponse{ValidationErrors: []string{"move must be non-empty"}}, nil
 	}
@@ -231,7 +231,7 @@ func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveReque
 	return &server.MakeMoveResponse{GameState: updatedGameState}, nil
 }
 
-func (s *gameServer) CurrentPlayer(ctx context.Context, currentState *proto.GameState) (*proto.Player, error) {
+func (s *GameServer) CurrentPlayer(ctx context.Context, currentState *proto.GameState) (*proto.Player, error) {
 	if currentState == nil {
 		return nil, fmt.Errorf("cannot determine current player for nil game state")
 	}
@@ -250,7 +250,7 @@ func (s *gameServer) CurrentPlayer(ctx context.Context, currentState *proto.Game
 	return currentState.Players[playerIdx], nil
 }
 
-func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, move *proto.BoardMarker) (*proto.GameState, error) {
+func (s *GameServer) ApplyMove(ctx context.Context, priorState proto.GameState, move *proto.BoardMarker) (*proto.GameState, error) {
 	if priorState.Finished {
 		return nil, fmt.Errorf("game is already finished, can't make more moves")
 	}
@@ -307,7 +307,7 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 	return &newState, nil
 }
 
-func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, board *proto.Board) (bool, error) {
+func (s *GameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, board *proto.Board) (bool, error) {
 	if board == nil {
 		return false, fmt.Errorf("cannot check if move finished game for state with nil board")
 	}
@@ -357,6 +357,6 @@ func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMark
 	return false, nil
 }
 
-func New(gameStateProvider game_state.GameState) *gameServer {
-	return &gameServer{gameStateProvider: gameStateProvider}
+func New(gameStateProvider game_state.GameState) GameServer {
+	return GameServer{gameStateProvider: gameStateProvider}
 }
