@@ -47,6 +47,8 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 func (s *gameServer) ValidateGameState(ctx context.Context, gameState proto.GameState) (violations []string, err error) {
 	if gameState.Turn < 1 {
 		violations = append(violations, "Turn count should be >= 1")
+	} else if gameState.Players != nil && int(gameState.Turn) > len(gameState.Players) {
+		violations = append(violations, "Turn count must be <= # of players")
 	}
 
 	if gameState.Round < 1 {
@@ -214,6 +216,25 @@ func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveReque
 	return &server.MakeMoveResponse{GameState: updatedGameState}, nil
 }
 
+func (s *gameServer) CurrentPlayer(ctx context.Context, currentState *proto.GameState) (*proto.Player, error) {
+	if currentState == nil {
+		return nil, fmt.Errorf("cannot determine current player for nil game state")
+	}
+
+	if len(currentState.Players) == 0 {
+		return nil, fmt.Errorf("cannot determine current player for empty player set")
+	}
+
+	// First, handle the start of game.
+	if currentState.Turn == 0 {
+		return currentState.Players[0], nil
+	}
+
+	// Use the turn count to determine which player is current.
+	playerIdx := int(currentState.Turn) % len(currentState.Players)
+	return currentState.Players[playerIdx], nil
+}
+
 func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, move *proto.BoardMarker) (*proto.GameState, error) {
 	if priorState.Finished {
 		return nil, fmt.Errorf("game is already finished, can't make more moves")
@@ -221,6 +242,15 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 
 	if len(priorState.Players) == 0 {
 		return nil, fmt.Errorf("cannot make moves in a game with no players")
+	}
+
+	currentPlayer, err := s.CurrentPlayer(ctx, &priorState)
+	if err != nil {
+		return nil, fmt.Errorf("could not determine current player when applying move on prior state %v: %w", priorState, err)
+	}
+
+	if move.Symbol != currentPlayer.Symbol {
+		return nil, fmt.Errorf("it is not %s's turn to play (it is %s's)", move.Symbol, currentPlayer.Symbol)
 	}
 
 	for _, otherMarker := range priorState.Board.Markers {

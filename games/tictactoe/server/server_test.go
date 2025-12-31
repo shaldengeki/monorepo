@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"testing"
 	pb "github.com/shaldengeki/monorepo/games/tictactoe/proto"
 	pbserver "github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
@@ -14,14 +13,13 @@ import (
 )
 
 func TestValidateState(t *testing.T) {
-	ctx := context.Background()
 	emptyProvider := empty_game_state.NewEmptyGameState()
 	server := New(emptyProvider)
 
 	t.Run("ValidWithEmptyState", func(t *testing.T) {
 		request := pbserver.ValidateStateRequest{}
 
-		res, err := server.ValidateState(ctx, &request)
+		res, err := server.ValidateState(t.Context(), &request)
 		require.NoError(t, err)
 		assert.Empty(t, res.ValidationErrors)
 	})
@@ -29,27 +27,34 @@ func TestValidateState(t *testing.T) {
 	t.Run("Turn", func(t *testing.T) {
 		// Turn = 1
 		request := pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 1, Round: 1}}
-		res, err := server.ValidateState(ctx, &request)
+		res, err := server.ValidateState(t.Context(), &request)
 		require.NoError(t, err)
 		assert.Empty(t, res.ValidationErrors)
 
 		// Turn = 0
 		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 0, Round: 1}}
-		res, err = server.ValidateState(ctx, &request)
+		res, err = server.ValidateState(t.Context(), &request)
 		require.NoError(t, err)
 		assert.NotEmpty(t, res.ValidationErrors)
+
+		// Turn > # players
+		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 3, Round: 1, Players: []*pb.Player{{Symbol: "X"}, {Symbol: "O"}}}}
+		res, err = server.ValidateState(t.Context(), &request)
+		require.NoError(t, err)
+		assert.NotEmpty(t, res.ValidationErrors)
+
 	})
 
 	t.Run("Round", func(t *testing.T) {
 		// Round = 1
 		request := pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 1, Round: 1}}
-		res, err := server.ValidateState(ctx, &request)
+		res, err := server.ValidateState(t.Context(), &request)
 		require.NoError(t, err)
 		assert.Empty(t, res.ValidationErrors)
 
 		// Round = 0
 		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 1, Round: 0}}
-		res, err = server.ValidateState(ctx, &request)
+		res, err = server.ValidateState(t.Context(), &request)
 		require.NoError(t, err)
 		assert.NotEmpty(t, res.ValidationErrors)
 	})
@@ -59,15 +64,171 @@ func TestValidateState(t *testing.T) {
 	// repeated Player players = 6;
 }
 
-func TestMakeMove(t *testing.T) {
-	ctx := context.Background()
+func TestCurrentPlayer(t *testing.T) {
+	emptyProvider := empty_game_state.NewEmptyGameState()
+	server := New(emptyProvider)
 
+	t.Run("Nil", func(t *testing.T) {
+		_, err := server.CurrentPlayer(t.Context(), nil)
+		require.Error(t, err)
+	})
+
+	t.Run("EmptyPlayers", func(t *testing.T) {
+		_, err := server.CurrentPlayer(t.Context(), &pb.GameState{Players: []*pb.Player{}})
+		require.Error(t, err)
+	})
+
+	t.Run("Start", func(t *testing.T) {
+		state := pb.GameState{
+			Round: 1,
+			Turn: 0,
+			Players: []*pb.Player{
+				{Id: "1", Symbol: "O"},
+				{Id: "2", Symbol: "X"},
+			},
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{},
+			},
+		}
+		player, err := server.CurrentPlayer(t.Context(), &state)
+		require.NoError(t, err)
+		assert.Equal(t, "1", player.Id)
+		assert.Equal(t, "O", player.Symbol)
+	})
+
+	t.Run("Middle", func(t *testing.T) {
+		state := pb.GameState{
+			Round: 2,
+			Turn: 1,
+			Players: []*pb.Player{
+				{Id: "1", Symbol: "O"},
+				{Id: "2", Symbol: "X"},
+			},
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{
+					{
+						Row: 1,
+						Column: 1,
+						Symbol: "O",
+					},
+					{
+						Row: 2,
+						Column: 1,
+						Symbol: "X",
+					},
+					{
+						Row: 0,
+						Column: 1,
+						Symbol: "O",
+					},
+				},
+			},
+		}
+		player, err := server.CurrentPlayer(t.Context(), &state)
+		require.NoError(t, err)
+		assert.Equal(t, "2", player.Id)
+		assert.Equal(t, "X", player.Symbol)
+	})
+}
+
+func TestApplyMove(t *testing.T) {
+	provider := empty_game_state.NewEmptyGameState()
+	server := New(provider)
+
+	t.Run("WrongPlayer", func(t *testing.T) {
+		// Wrong first player.
+		state := pb.GameState{
+			Round: 1,
+			Turn: 0,
+			Players: []*pb.Player{
+				{Id: "1", Symbol: "O"},
+				{Id: "2", Symbol: "X"},
+			},
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{},
+			},
+		}
+		move := pb.BoardMarker{
+			Row: 2,
+			Column: 2,
+			Symbol: "X",
+		}
+		_, err := server.ApplyMove(t.Context(), state, &move)
+		assert.Error(t, err)
+
+		// Wrong player, further in.
+		state = pb.GameState{
+			Round: 2,
+			Turn: 1,
+			Players: []*pb.Player{
+				{Id: "1", Symbol: "O"},
+				{Id: "2", Symbol: "X"},
+			},
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{
+					{
+						Row: 1,
+						Column: 1,
+						Symbol: "O",
+					},
+					{
+						Row: 2,
+						Column: 1,
+						Symbol: "X",
+					},
+					{
+						Row: 0,
+						Column: 1,
+						Symbol: "O",
+					},
+				},
+			},
+		}
+		move = pb.BoardMarker{
+			Row: 2,
+			Column: 2,
+			Symbol: "O",
+		}
+		_, err = server.ApplyMove(t.Context(), state, &move)
+		assert.Error(t, err)
+	})
+
+	t.Run("ZeroPlayers", func(t *testing.T) {
+		state := pb.GameState{
+			Round: 1,
+			Turn: 0,
+			Players: []*pb.Player{},
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{},
+			},
+		}
+		move := pb.BoardMarker{
+			Row: 2,
+			Column: 2,
+			Symbol: "X",
+		}
+		_, err := server.ApplyMove(t.Context(), state, &move)
+		assert.Error(t, err)
+	})
+}
+
+func TestMakeMove(t *testing.T) {
 	t.Run("EmptyState", func(t *testing.T) {
 		emptyProvider := empty_game_state.NewEmptyGameState()
 		server := New(emptyProvider)
 
 		t.Run("NilRequestReturnsValidationError", func(t *testing.T) {
-			res, err := server.MakeMove(ctx, nil)
+			res, err := server.MakeMove(t.Context(), nil)
 			require.NoError(t, err)
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
@@ -80,7 +241,7 @@ func TestMakeMove(t *testing.T) {
 					Symbol: "",
 				},
 			}
-			res, err := server.MakeMove(ctx, &request)
+			res, err := server.MakeMove(t.Context(), &request)
 			require.NoError(t, err)
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
@@ -93,7 +254,7 @@ func TestMakeMove(t *testing.T) {
 					Symbol: "X",
 				},
 			}
-			_, err := server.MakeMove(ctx, &request)
+			_, err := server.MakeMove(t.Context(), &request)
 			assert.Error(t, err)
 		})
 	})
@@ -117,7 +278,7 @@ func TestMakeMove(t *testing.T) {
 		staticServer := New(staticProvider)
 
 		t.Run("NilRequestReturnsValidationError", func(t *testing.T) {
-			res, err := staticServer.MakeMove(ctx, nil)
+			res, err := staticServer.MakeMove(t.Context(), nil)
 			require.NoError(t, err)
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
@@ -130,7 +291,7 @@ func TestMakeMove(t *testing.T) {
 					Symbol: "",
 				},
 			}
-			res, err := staticServer.MakeMove(ctx, &request)
+			res, err := staticServer.MakeMove(t.Context(), &request)
 			require.NoError(t, err)
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
@@ -143,7 +304,7 @@ func TestMakeMove(t *testing.T) {
 					Symbol: "X",
 				},
 			}
-			_, err := staticServer.MakeMove(ctx, &request)
+			_, err := staticServer.MakeMove(t.Context(), &request)
 			assert.Error(t, err)
 		})
 
@@ -181,7 +342,7 @@ func TestMakeMove(t *testing.T) {
 					Symbol: "X",
 				},
 			}
-			_, err := readOnlyServer.MakeMove(ctx, &request)
+			_, err := readOnlyServer.MakeMove(t.Context(), &request)
 			assert.Error(t, err)
 		})
 
@@ -220,7 +381,7 @@ func TestMakeMove(t *testing.T) {
 					Symbol: "X",
 				},
 			}
-			res, err := inMemoryServer.MakeMove(ctx, &request)
+			res, err := inMemoryServer.MakeMove(t.Context(), &request)
 			require.NoError(t, err)
 			require.NotNil(t, res)
 			assert.Empty(t, res.ValidationErrors)
@@ -250,7 +411,7 @@ func TestMakeMove(t *testing.T) {
 					Symbol: "O",
 				},
 			}
-			res, err = inMemoryServer.MakeMove(ctx, &request)
+			res, err = inMemoryServer.MakeMove(t.Context(), &request)
 			require.NoError(t, err)
 			require.NotNil(t, res)
 			assert.Empty(t, res.ValidationErrors)
@@ -263,9 +424,6 @@ func TestMakeMove(t *testing.T) {
 			assert.Empty(t, finalState.Scores)
 		})
 
-		// TODO: test for wrong player attempting to make a move
-
-		// TODO: test for zero players ending state
 		t.Run("GameEnd", func(t *testing.T) {
 			// This test mutates game state, so we set up a separate set of structs.
 			inMemoryState := pb.GameState{
@@ -316,7 +474,7 @@ func TestMakeMove(t *testing.T) {
 					Symbol: "O",
 				},
 			}
-			res, err := inMemoryServer.MakeMove(ctx, &request)
+			res, err := inMemoryServer.MakeMove(t.Context(), &request)
 			require.NoError(t, err)
 			require.NotNil(t, res)
 			assert.Empty(t, res.ValidationErrors)
@@ -337,8 +495,6 @@ func TestMakeMove(t *testing.T) {
 }
 
 func TestMoveFinishesGame(t *testing.T) {
-	ctx := context.Background()
-
 	// XO
 	// XXO
 	//   O
@@ -398,7 +554,7 @@ func TestMoveFinishesGame(t *testing.T) {
 			Column: 0,
 			Symbol: "O",
 		}
-		finished, err := server.MoveFinishesGame(ctx, &move, &board)
+		finished, err := server.MoveFinishesGame(t.Context(), &move, &board)
 		require.NoError(t, err)
 		assert.False(t, finished)
 	})
@@ -408,7 +564,7 @@ func TestMoveFinishesGame(t *testing.T) {
 			Column: 2,
 			Symbol: "O",
 		}
-		finished, err := server.MoveFinishesGame(ctx, &move, &board)
+		finished, err := server.MoveFinishesGame(t.Context(), &move, &board)
 		require.NoError(t, err)
 		assert.True(t, finished)
 	})
