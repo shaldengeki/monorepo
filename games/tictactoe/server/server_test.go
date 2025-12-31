@@ -200,6 +200,26 @@ func TestApplyMove(t *testing.T) {
 		_, err = server.ApplyMove(t.Context(), state, &move)
 		assert.Error(t, err)
 	})
+
+	t.Run("ZeroPlayers", func(t *testing.T) {
+		state := pb.GameState{
+			Round: 1,
+			Turn: 0,
+			Players: []*pb.Player{},
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{},
+			},
+		}
+		move := pb.BoardMarker{
+			Row: 2,
+			Column: 2,
+			Symbol: "X",
+		}
+		_, err := server.ApplyMove(t.Context(), state, &move)
+		assert.Error(t, err)
+	})
 }
 
 func TestMakeMove(t *testing.T) {
@@ -404,7 +424,6 @@ func TestMakeMove(t *testing.T) {
 			assert.Empty(t, finalState.Scores)
 		})
 
-		// TODO: test for zero players ending state
 		t.Run("GameEnd", func(t *testing.T) {
 			// This test mutates game state, so we set up a separate set of structs.
 			inMemoryState := pb.GameState{
