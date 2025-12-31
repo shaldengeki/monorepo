@@ -56,6 +56,7 @@ func TestValidateState(t *testing.T) {
 	// bool finished = 3;
 	// repeated Score scores = 4;
 	// Board board = 5;
+	// repeated Player players = 6;
 }
 
 func TestMakeMove(t *testing.T) {
@@ -161,6 +162,10 @@ func TestMakeMove(t *testing.T) {
 						},
 					},
 				},
+				Players: []*pb.Player{
+					{Id: "1", Symbol: "O"},
+					{Id: "2", Symbol: "X"},
+				},
 			}
 			readOnlyStateMap := map[string]*pb.GameState{
 				"game_id_1": &readOnlyState,
@@ -185,6 +190,10 @@ func TestMakeMove(t *testing.T) {
 			inMemoryState := pb.GameState{
 				Round: 1,
 				Turn: 1,
+				Players: []*pb.Player{
+					{Id: "1", Symbol: "O"},
+					{Id: "2", Symbol: "X"},
+				},
 				Board: &pb.Board{
 					Rows: 3,
 					Columns: 3,
@@ -218,20 +227,20 @@ func TestMakeMove(t *testing.T) {
 
 			require.NotNil(t, res.GameState)
 			finalState := res.GameState
-			assert.Equal(t, int(finalState.Turn), 2)
-			assert.Equal(t, int(finalState.Round), 1)
+			assert.Equal(t, 2, int(finalState.Turn))
+			assert.Equal(t, 1, int(finalState.Round))
 			assert.False(t, finalState.Finished)
 			assert.Empty(t, finalState.Scores)
 
 			require.NotNil(t, finalState.Board)
 			board := finalState.Board
 			require.Len(t, board.Markers, 2)
-			assert.Equal(t, int(board.Markers[0].Row), 1)
-			assert.Equal(t, int(board.Markers[0].Column), 1)
-			assert.Equal(t, board.Markers[0].Symbol, "O")
-			assert.Equal(t, int(board.Markers[1].Row), 2)
-			assert.Equal(t, int(board.Markers[1].Column), 2)
-			assert.Equal(t, board.Markers[1].Symbol, "X")
+			assert.Equal(t, 1, int(board.Markers[0].Row))
+			assert.Equal(t, 1, int(board.Markers[0].Column))
+			assert.Equal(t, "O", board.Markers[0].Symbol)
+			assert.Equal(t, 2, int(board.Markers[1].Row))
+			assert.Equal(t, 2, int(board.Markers[1].Column))
+			assert.Equal(t, "X", board.Markers[1].Symbol)
 
 			request = pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
@@ -248,19 +257,24 @@ func TestMakeMove(t *testing.T) {
 
 			require.NotNil(t, res.GameState)
 			finalState = res.GameState
-			assert.Equal(t, int(finalState.Turn), 1)
-			assert.Equal(t, int(finalState.Round), 2)
+			assert.Equal(t, 1, int(finalState.Turn))
+			assert.Equal(t, 2, int(finalState.Round))
 			assert.False(t, finalState.Finished)
 			assert.Empty(t, finalState.Scores)
 		})
 
 		// TODO: test for wrong player attempting to make a move
 
+		// TODO: test for zero players ending state
 		t.Run("GameEnd", func(t *testing.T) {
 			// This test mutates game state, so we set up a separate set of structs.
 			inMemoryState := pb.GameState{
-				Round: 3,
-				Turn: 1,
+				Round: 2,
+				Turn: 2,
+				Players: []*pb.Player{
+					{Id: "1", Symbol: "O"},
+					{Id: "2", Symbol: "X"},
+				},
 				Board: &pb.Board{
 					Rows: 3,
 					Columns: 3,
@@ -309,15 +323,15 @@ func TestMakeMove(t *testing.T) {
 
 			require.NotNil(t, res.GameState)
 			finalState := res.GameState
-			assert.Equal(t, int(finalState.Turn), 2)
-			assert.Equal(t, int(finalState.Round), 3)
+			assert.Equal(t, 1, int(finalState.Turn))
+			assert.Equal(t, 3, int(finalState.Round))
 			assert.True(t, finalState.Finished)
 
 			require.NotEmpty(t, finalState.Scores)
 			scores := finalState.Scores
 			require.Len(t, scores, 1)
-			assert.Equal(t, scores[0].Player.Symbol, "O")
-			assert.Equal(t, int(scores[0].Score), 1)
+			assert.Equal(t, "O", scores[0].Player.Symbol)
+			assert.Equal(t, 1, int(scores[0].Score))
 		})
 	})
 }

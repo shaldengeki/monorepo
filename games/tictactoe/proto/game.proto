@@ -9,6 +9,5 @@ import "games/tictactoe/proto/game_state.proto";
 
 message Game {
     string id = 1;
-    repeated Player players = 2;
     GameState state = 3;
 }

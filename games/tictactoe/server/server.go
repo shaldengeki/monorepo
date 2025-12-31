@@ -219,6 +219,10 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 		return nil, fmt.Errorf("game is already finished, can't make more moves")
 	}
 
+	if len(priorState.Players) == 0 {
+		return nil, fmt.Errorf("cannot make moves in a game with no players")
+	}
+
 	for _, otherMarker := range priorState.Board.Markers {
 		if move.Row == otherMarker.Row && move.Column == otherMarker.Column {
 			return nil, fmt.Errorf("another player (%s) has already claimed row %d, col %d", otherMarker.Symbol, otherMarker.Row, otherMarker.Column)
@@ -226,19 +230,25 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 	}
 	newState := priorState
 	newState.Board.Markers = append(newState.Board.Markers, move)
+	newState.Turn += 1
+
+	if (int(newState.Turn) - 1) % len(newState.Players) == 0 {
+		newState.Round += 1
+		newState.Turn = 1
+	}
+
 	if s.MoveFinishesGame(ctx, move, &newState) {
 		newState.Finished = true
 		// TODO: add score
 	}
 
-	// TODO: round
-	// To set this correctly, we need access to the players in the game, which is only set on Game, and not GameState.
-	newState.Turn += 1
-
 	return &newState, nil
 }
 
 func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, currentState *proto.GameState) bool {
+	if len(currentState.Players) == 0 {
+		return true
+	}
 	// TODO
 	return false
 }

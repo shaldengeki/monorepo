@@ -5,7 +5,7 @@ package games.tictactoe.proto;
 option go_package = "github.com/shaldengeki/monorepo/games/tictactoe/proto";
 
 import "games/tictactoe/proto/board.proto";
-// import "games/tictactoe/proto/player.proto";
+import "games/tictactoe/proto/player.proto";
 import "games/tictactoe/proto/score.proto";
 
 message GameState {
@@ -17,4 +17,5 @@ message GameState {
     bool finished = 3;
     repeated Score scores = 4;
     Board board = 5;
+    repeated Player players = 6;
 }
