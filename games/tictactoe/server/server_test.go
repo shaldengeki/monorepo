@@ -57,9 +57,21 @@ func TestValidateState(t *testing.T) {
 	// repeated Player players = 6;
 }
 
-func TestApplyMove(t *testing.T) {
-	t.Run("WrongPlayer", func(t *testing.T) {
-		// This test mutates game state, so we set up a separate set of structs.
+func TestCurrentPlayer(t *testing.T) {
+	emptyProvider := empty_game_state.NewEmptyGameState()
+	server := New(emptyProvider)
+
+	t.Run("Nil", func(t *testing.T) {
+		_, err := server.CurrentPlayer(t.Context(), nil)
+		require.Error(t, err)
+	})
+
+	t.Run("EmptyPlayers", func(t *testing.T) {
+		_, err := server.CurrentPlayer(t.Context(), &pb.GameState{Players: []*pb.Player{}})
+		require.Error(t, err)
+	})
+
+	t.Run("Start", func(t *testing.T) {
 		state := pb.GameState{
 			Round: 1,
 			Turn: 0,
@@ -73,13 +85,68 @@ func TestApplyMove(t *testing.T) {
 				Markers: []*pb.BoardMarker{},
 			},
 		}
-		stateMap := map[string]*pb.GameState{
-			"game_id_1": &state,
-		}
-		provider := in_memory_game_state.NewInMemoryGameState(stateMap)
-		server := New(provider)
+		player, err := server.CurrentPlayer(t.Context(), &state)
+		require.NoError(t, err)
+		assert.Equal(t, "1", player.Id)
+		assert.Equal(t, "O", player.Symbol)
+	})
 
+	t.Run("Middle", func(t *testing.T) {
+		state := pb.GameState{
+			Round: 2,
+			Turn: 1,
+			Players: []*pb.Player{
+				{Id: "1", Symbol: "O"},
+				{Id: "2", Symbol: "X"},
+			},
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{
+					{
+						Row: 1,
+						Column: 1,
+						Symbol: "O",
+					},
+					{
+						Row: 2,
+						Column: 1,
+						Symbol: "X",
+					},
+					{
+						Row: 0,
+						Column: 1,
+						Symbol: "O",
+					},
+				},
+			},
+		}
+		player, err := server.CurrentPlayer(t.Context(), &state)
+		require.NoError(t, err)
+		assert.Equal(t, "2", player.Id)
+		assert.Equal(t, "X", player.Symbol)
+	})
+}
+
+func TestApplyMove(t *testing.T) {
+	provider := empty_game_state.NewEmptyGameState()
+	server := New(provider)
+
+	t.Run("WrongPlayer", func(t *testing.T) {
 		// Wrong first player.
+		state := pb.GameState{
+			Round: 1,
+			Turn: 0,
+			Players: []*pb.Player{
+				{Id: "1", Symbol: "O"},
+				{Id: "2", Symbol: "X"},
+			},
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{},
+			},
+		}
 		move := pb.BoardMarker{
 			Row: 2,
 			Column: 2,
@@ -329,8 +396,6 @@ func TestMakeMove(t *testing.T) {
 			assert.False(t, finalState.Finished)
 			assert.Empty(t, finalState.Scores)
 		})
-
-		// TODO: test for wrong player attempting to make a move
 
 		// TODO: test for zero players ending state
 		t.Run("GameEnd", func(t *testing.T) {
