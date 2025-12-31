@@ -273,12 +273,18 @@ func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMark
 
 	// Count the number of markers in the current entry's row, column, and diagonal, if square.
 	// If it equals the length of the board in that dimension, they've won.
-	numRow := 0
-	numColumn := 0
-	numDiagPositive := 0
-	numDiagNegative := 0
+	// Start with 1 in every count, to account for the current move.
+	numRow := 1
+	numColumn := 1
+	numDiagPositive := 1
+	numDiagNegative := 1
 	for _, marker := range board.Markers {
 		if marker.Symbol != move.Symbol {
+			continue
+		}
+
+		// Skip the current move.
+		if marker.Row == move.Row && marker.Column == move.Column {
 			continue
 		}
 
