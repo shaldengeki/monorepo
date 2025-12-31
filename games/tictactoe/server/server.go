@@ -237,7 +237,7 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 		newState.Turn = 1
 	}
 
-	finished, err := s.MoveFinishesGame(ctx, move, &newState)
+	finished, err := s.MoveFinishesGame(ctx, move, newState.Board)
 	if err != nil {
 		return nil, fmt.Errorf("could not check if move finished game with state %v: %w", newState, err)
 	}
@@ -262,20 +262,12 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 	return &newState, nil
 }
 
-func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, currentState *proto.GameState) (bool, error) {
-	if len(currentState.Players) == 0 {
-		return true, nil
-	}
-
-	if currentState == nil {
-		return false, fmt.Errorf("cannot check if move finished game for nil state")
-	}
-
-	if currentState.Board == nil {
+func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, board *proto.Board) (bool, error) {
+	if board == nil {
 		return false, fmt.Errorf("cannot check if move finished game for state with nil board")
 	}
 
-	if currentState.Board.Markers == nil {
+	if board.Markers == nil {
 		return false, fmt.Errorf("cannot check if move finished game for state with nil markers")
 	}
 
@@ -285,18 +277,17 @@ func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMark
 	numColumn := 0
 	numDiagPositive := 0
 	numDiagNegative := 0
-	for _, marker := range currentState.Board.Markers {
+	for _, marker := range board.Markers {
 		if marker.Symbol != move.Symbol {
 			continue
 		}
 
 		if marker.Row == move.Row {
 			numRow += 1
-		}
-		if marker.Column == move.Column {
+		} else if marker.Column == move.Column {
 			numColumn += 1
 		}
-		if currentState.Board.Rows == currentState.Board.Columns {
+		if board.Rows == board.Columns {
 			if (marker.Column - move.Column) == (marker.Row - move.Row) && (marker.Column - move.Column) >= 0 {
 				numDiagPositive += 1
 			}
@@ -305,10 +296,10 @@ func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMark
 			}
 		}
 	}
-	if numRow == int(currentState.Board.Rows) || numColumn == int(currentState.Board.Columns) {
+	if numRow == int(board.Rows) || numColumn == int(board.Columns) {
 		return true, nil
 	}
-	if currentState.Board.Rows == currentState.Board.Columns && (numDiagPositive == int(currentState.Board.Rows) || numDiagNegative == int(currentState.Board.Rows)) {
+	if board.Rows == board.Columns && (numDiagPositive == int(board.Rows) || numDiagNegative == int(board.Rows)) {
 		return true, nil
 	}
 
