@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"html/template"
 	"log"
@@ -9,7 +10,13 @@ import (
 	"strconv"
 
 	"github.com/bazelbuild/rules_go/go/runfiles"
+	pb "github.com/shaldengeki/monorepo/games/tictactoe/proto"
+	serverpb "github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
+	"github.com/shaldengeki/monorepo/games/tictactoe/server"
+	"github.com/shaldengeki/monorepo/games/tictactoe/game_state/in_memory_game_state"
 )
+
+var gameStateServer = server.New(in_memory_game_state.NewInMemoryGameState(map[string]*pb.GameState{}))
 
 func resolveTemplatePath(p string) (string, error) {
 	return runfiles.Rlocation(filepath.Join("_main", "games", "tictactoe", "web", "ui", p))
@@ -68,5 +75,11 @@ func gameCreate(w http.ResponseWriter, r *http.Request) {
 
 func gameCreatePost(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Create a new game..."))
+	resp, err := gameStateServer.CreateGame(context.Background(), &serverpb.CreateGameRequest{})
+	if err != nil {
+		log.Print(err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+	output := fmt.Sprintf("Before: %v | After: %v", resp)
+	w.Write([]byte(output))
 }

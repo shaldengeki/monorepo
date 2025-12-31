@@ -15,6 +15,21 @@ type gameServer struct {
 	server.UnimplementedGameServiceServer
 
 	gameStateProvider game_state.GameState
+	gameCount int
+}
+
+func (s *gameServer) CreateGame(ctx context.Context, request *server.CreateGameRequest) (*server.CreateGameResponse, error) {
+	gameId := fmt.Sprintf("%d", s.gameCount)
+	err := s.gameStateProvider.SetState(ctx, gameId, proto.GameState{Turn: 0, Round: 1, Finished: false, Board: &proto.Board{Rows: 3, Columns: 3}, Players: []*proto.Player{{Id: "1", Symbol: "X"}, {Id: "2", Symbol: "O"}}})
+	if err != nil {
+		return nil, fmt.Errorf("could not create game with id %d: %w", gameId, err)
+	}
+
+	s.gameCount += 1
+
+	return &server.CreateGameResponse{
+		GameId: gameId,
+	}, nil
 }
 
 func (s *gameServer) GetState(ctx context.Context, request *server.GetStateRequest) (*server.GetStateResponse, error) {
