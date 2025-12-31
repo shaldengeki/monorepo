@@ -284,8 +284,7 @@ func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMark
 
 		if marker.Row == move.Row {
 			numRow += 1
-		}
-		if marker.Column == move.Column {
+		} else if marker.Column == move.Column {
 			numColumn += 1
 		}
 		if board.Rows == board.Columns {
