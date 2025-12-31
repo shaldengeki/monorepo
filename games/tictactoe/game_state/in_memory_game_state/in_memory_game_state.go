@@ -28,6 +28,6 @@ func (s InMemoryGameState) SetState(ctx context.Context, gameId string, newState
 	return nil
 }
 
-func NewInMemoryGameState(initialState map[string]*proto.GameState) game_state.GameState {
+func New(initialState map[string]*proto.GameState) game_state.GameState {
 	return InMemoryGameState{gameStates: initialState}
 }

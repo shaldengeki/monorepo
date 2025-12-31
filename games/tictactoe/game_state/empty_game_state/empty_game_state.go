@@ -19,6 +19,6 @@ func (s EmptyGameState) SetState(ctx context.Context, gameId string, newState pr
 	return nil
 }
 
-func NewEmptyGameState() game_state.GameState {
+func New() game_state.GameState {
 	return EmptyGameState{}
 }

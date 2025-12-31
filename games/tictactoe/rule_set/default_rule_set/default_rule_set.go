@@ -268,6 +268,6 @@ func (self DefaultRuleSet) CurrentPlayer(ctx context.Context, currentState *prot
 	return currentState.Players[playerIdx], nil
 }
 
-func NewDefaultRuleSet() rule_set.RuleSet {
+func New() rule_set.RuleSet {
 	return DefaultRuleSet{}
 }

@@ -18,8 +18,8 @@ import (
 )
 
 var gameStateServer = grpc.New(
-	in_memory_game_state.NewInMemoryGameState(map[string]*pb.GameState{}),
-	default_rule_set.NewDefaultRuleSet(),
+	in_memory_game_state.New(map[string]*pb.GameState{}),
+	default_rule_set.New(),
 )
 
 func resolveTemplatePath(p string) (string, error) {

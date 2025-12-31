@@ -14,8 +14,8 @@ import (
 )
 
 func TestValidateState(t *testing.T) {
-	gameState := empty_game_state.NewEmptyGameState()
-	ruleSet := default_rule_set.NewDefaultRuleSet()
+	gameState := empty_game_state.New()
+	ruleSet := default_rule_set.New()
 	grpcServer := New(gameState, ruleSet)
 
 	t.Run("ValidWithEmptyState", func(t *testing.T) {
@@ -68,8 +68,8 @@ func TestValidateState(t *testing.T) {
 
 func TestMakeMove(t *testing.T) {
 	t.Run("EmptyState", func(t *testing.T) {
-		gameState := empty_game_state.NewEmptyGameState()
-		ruleSet := default_rule_set.NewDefaultRuleSet()
+		gameState := empty_game_state.New()
+		ruleSet := default_rule_set.New()
 		grpcServer := New(gameState, ruleSet)
 
 		t.Run("NilRequestReturnsValidationError", func(t *testing.T) {
@@ -119,8 +119,8 @@ func TestMakeMove(t *testing.T) {
 				},
 			},
 		}
-		gameState := static_game_state.NewStaticGameState(&state)
-		ruleSet := default_rule_set.NewDefaultRuleSet()
+		gameState := static_game_state.New(&state)
+		ruleSet := default_rule_set.New()
 		grpcServer := New(gameState, ruleSet)
 
 		t.Run("NilRequestReturnsValidationError", func(t *testing.T) {
@@ -177,8 +177,8 @@ func TestMakeMove(t *testing.T) {
 			readOnlyStateMap := map[string]*pb.GameState{
 				"game_id_1": &readOnlyState,
 			}
-			gameState := read_only_in_memory_game_state.NewReadOnlyInMemoryGameState(readOnlyStateMap)
-			ruleSet := default_rule_set.NewDefaultRuleSet()
+			gameState := read_only_in_memory_game_state.New(readOnlyStateMap)
+			ruleSet := default_rule_set.New()
 			grpcServer := New(gameState, ruleSet)
 
 			request := pbserver.MakeMoveRequest{
@@ -217,8 +217,8 @@ func TestMakeMove(t *testing.T) {
 			inMemoryStateMap := map[string]*pb.GameState{
 				"game_id_1": &inMemoryState,
 			}
-			gameState := in_memory_game_state.NewInMemoryGameState(inMemoryStateMap)
-			ruleSet := default_rule_set.NewDefaultRuleSet()
+			gameState := in_memory_game_state.New(inMemoryStateMap)
+			ruleSet := default_rule_set.New()
 			grpcServer := New(gameState, ruleSet)
 
 			request := pbserver.MakeMoveRequest{
@@ -311,8 +311,8 @@ func TestMakeMove(t *testing.T) {
 			inMemoryStateMap := map[string]*pb.GameState{
 				"game_id_1": &inMemoryState,
 			}
-			gameState := in_memory_game_state.NewInMemoryGameState(inMemoryStateMap)
-			ruleSet := default_rule_set.NewDefaultRuleSet()
+			gameState := in_memory_game_state.New(inMemoryStateMap)
+			ruleSet := default_rule_set.New()
 			grpcServer := New(gameState, ruleSet)
 
 			request := pbserver.MakeMoveRequest{

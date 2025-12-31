@@ -21,6 +21,6 @@ func (s StaticGameState) SetState(ctx context.Context, gameId string, newState p
 	return nil
 }
 
-func NewStaticGameState(state *proto.GameState) game_state.GameState {
+func New(state *proto.GameState) game_state.GameState {
 	return StaticGameState{staticState: state}
 }

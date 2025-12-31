@@ -8,7 +8,7 @@ import (
 )
 
 func TestValidateState(t *testing.T) {
-	ruleSet := NewDefaultRuleSet()
+	ruleSet := New()
 
 	t.Run("InvalidWithEmptyState", func(t *testing.T) {
 		state := pb.GameState{}
@@ -58,7 +58,7 @@ func TestValidateState(t *testing.T) {
 }
 
 func TestCurrentPlayer(t *testing.T) {
-	ruleSet := NewDefaultRuleSet()
+	ruleSet := New()
 
 	t.Run("Nil", func(t *testing.T) {
 		_, err := ruleSet.CurrentPlayer(t.Context(), nil)
@@ -128,7 +128,7 @@ func TestCurrentPlayer(t *testing.T) {
 }
 
 func TestApplyMove(t *testing.T) {
-	ruleSet := NewDefaultRuleSet()
+	ruleSet := New()
 
 	t.Run("WrongPlayer", func(t *testing.T) {
 		// Wrong first player.
@@ -253,7 +253,7 @@ func TestMoveFinishesGame(t *testing.T) {
 			},
 		},
 	}
-	ruleSet := NewDefaultRuleSet()
+	ruleSet := New()
 
 	t.Run("NonFinishingMove", func(t *testing.T) {
 		move := pb.BoardMarker{

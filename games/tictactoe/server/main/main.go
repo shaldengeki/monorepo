@@ -22,8 +22,8 @@ func main() {
 	pbserver.RegisterGameServiceServer(
 		grpcServer,
 		servergrpc.New(
-			in_memory_game_state.NewInMemoryGameState(nil),
-			default_rule_set.NewDefaultRuleSet(),
+			in_memory_game_state.New(nil),
+			default_rule_set.New(),
 		),
 	)
 	if err := grpcServer.Serve(lis); err != nil {
