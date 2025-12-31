@@ -57,6 +57,77 @@ func TestValidateState(t *testing.T) {
 	// repeated Player players = 6;
 }
 
+func TestApplyMove(t *testing.T) {
+	t.Run("WrongPlayer", func(t *testing.T) {
+		// This test mutates game state, so we set up a separate set of structs.
+		state := pb.GameState{
+			Round: 1,
+			Turn: 0,
+			Players: []*pb.Player{
+				{Id: "1", Symbol: "O"},
+				{Id: "2", Symbol: "X"},
+			},
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{},
+			},
+		}
+		stateMap := map[string]*pb.GameState{
+			"game_id_1": &state,
+		}
+		provider := in_memory_game_state.NewInMemoryGameState(stateMap)
+		server := New(provider)
+
+		// Wrong first player.
+		move := pb.BoardMarker{
+			Row: 2,
+			Column: 2,
+			Symbol: "X",
+		}
+		_, err := server.ApplyMove(t.Context(), state, &move)
+		assert.Error(t, err)
+
+		// Wrong player, further in.
+		state = pb.GameState{
+			Round: 2,
+			Turn: 1,
+			Players: []*pb.Player{
+				{Id: "1", Symbol: "O"},
+				{Id: "2", Symbol: "X"},
+			},
+			Board: &pb.Board{
+				Rows: 3,
+				Columns: 3,
+				Markers: []*pb.BoardMarker{
+					{
+						Row: 1,
+						Column: 1,
+						Symbol: "O",
+					},
+					{
+						Row: 2,
+						Column: 1,
+						Symbol: "X",
+					},
+					{
+						Row: 0,
+						Column: 1,
+						Symbol: "O",
+					},
+				},
+			},
+		}
+		move = pb.BoardMarker{
+			Row: 2,
+			Column: 2,
+			Symbol: "O",
+		}
+		_, err = server.ApplyMove(t.Context(), state, &move)
+		assert.Error(t, err)
+	})
+}
+
 func TestMakeMove(t *testing.T) {
 	t.Run("EmptyState", func(t *testing.T) {
 		emptyProvider := empty_game_state.NewEmptyGameState()
