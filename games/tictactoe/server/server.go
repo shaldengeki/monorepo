@@ -237,7 +237,12 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 		newState.Turn = 1
 	}
 
-	if s.MoveFinishesGame(ctx, move, &newState) {
+	finished, err := s.MoveFinishesGame(ctx, move, &newState)
+	if err != nil {
+		return nil, fmt.Errorf("could not check if move finished game with state %v: %w", newState, err)
+	}
+
+	if finished {
 		newState.Finished = true
 		// TODO: add score
 	}
@@ -245,12 +250,57 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 	return &newState, nil
 }
 
-func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, currentState *proto.GameState) bool {
+func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, currentState *proto.GameState) (bool, error) {
 	if len(currentState.Players) == 0 {
-		return true
+		return true, nil
 	}
-	// TODO
-	return false
+
+	if currentState == nil {
+		return false, fmt.Errorf("cannot check if move finished game for nil state")
+	}
+
+	if currentState.Board == nil {
+		return false, fmt.Errorf("cannot check if move finished game for state with nil board")
+	}
+
+	if currentState.Board.Markers == nil {
+		return false, fmt.Errorf("cannot check if move finished game for state with nil markers")
+	}
+
+	// Count the number of markers in the current entry's row, column, and diagonal, if square.
+	// If it equals the length of the board in that dimension, they've won.
+	numRow := 0
+	numColumn := 0
+	numDiagPositive := 0
+	numDiagNegative := 0
+	for _, marker := range currentState.Board.Markers {
+		if marker.Symbol != move.Symbol {
+			continue
+		}
+
+		if marker.Row == move.Row {
+			numRow += 1
+		}
+		if marker.Column == move.Column {
+			numColumn += 1
+		}
+		if currentState.Board.Rows == currentState.Board.Columns {
+			if (marker.Column - move.Column) == (marker.Row - move.Row) && (marker.Column - move.Column) >= 0 {
+				numDiagPositive += 1
+			}
+			if (marker.Column - move.Column) == (marker.Row - move.Row) && (marker.Column - move.Column) <= 0 {
+				numDiagNegative += 1
+			}
+		}
+	}
+	if numRow == int(currentState.Board.Rows) || numColumn == int(currentState.Board.Columns) {
+		return true, nil
+	}
+	if currentState.Board.Rows == currentState.Board.Columns && (numDiagPositive == int(currentState.Board.Rows) || numDiagNegative == int(currentState.Board.Rows)) {
+		return true, nil
+	}
+
+	return false, nil
 }
 
 func New(gameStateProvider game_state.GameState) *gameServer {
