@@ -78,12 +78,13 @@ func gameCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func gameCreatePost(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusCreated)
 	resp, err := gameStateServer.CreateGame(context.Background(), &serverpb.CreateGameRequest{})
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 	output := fmt.Sprintf("Before: %v | After: %v", resp, gameStateServer)
+
+	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(output))
 }
