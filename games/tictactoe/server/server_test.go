@@ -335,3 +335,81 @@ func TestMakeMove(t *testing.T) {
 		})
 	})
 }
+
+func TestMoveFinishesGame(t *testing.T) {
+	ctx := context.Background()
+
+	// XO
+	// XXO
+	//   O
+	board := pb.Board{
+		Rows: 3,
+		Columns: 3,
+		Markers: []*pb.BoardMarker{
+			{
+				Row: 0,
+				Column: 1,
+				Symbol: "O",
+			},
+			{
+				Row: 1,
+				Column: 0,
+				Symbol: "X",
+			},
+			{
+				Row: 1,
+				Column: 2,
+				Symbol: "O",
+			},
+			{
+				Row: 1,
+				Column: 1,
+				Symbol: "X",
+			},
+			{
+				Row: 2,
+				Column: 2,
+				Symbol: "O",
+			},
+			{
+				Row: 0,
+				Column: 0,
+				Symbol: "X",
+			},
+		},
+	}
+	state := pb.GameState{
+		Round: 1,
+		Turn: 1,
+		Players: []*pb.Player{
+			{Id: "1", Symbol: "O"},
+			{Id: "2", Symbol: "X"},
+		},
+		Board: &board,
+	}
+	stateMap := map[string]*pb.GameState{
+		"game_id_1": &state,
+	}
+	provider := in_memory_game_state.NewInMemoryGameState(stateMap)
+	server := New(provider)
+	t.Run("NonFinishingMove", func(t *testing.T) {
+		move := pb.BoardMarker{
+			Row: 2,
+			Column: 0,
+			Symbol: "O",
+		}
+		finished, err := server.MoveFinishesGame(ctx, &move, &board)
+		require.NoError(t, err)
+		assert.False(t, finished)
+	})
+	t.Run("FinishingMove", func(t *testing.T) {
+		move := pb.BoardMarker{
+			Row: 0,
+			Column: 2,
+			Symbol: "O",
+		}
+		finished, err := server.MoveFinishesGame(ctx, &move, &board)
+		require.NoError(t, err)
+		assert.True(t, finished)
+	})
+}
