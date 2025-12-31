@@ -4,7 +4,6 @@ package games.tictactoe.proto;
 
 option go_package = "github.com/shaldengeki/monorepo/games/tictactoe/proto";
 
-import "games/tictactoe/proto/player.proto";
 import "games/tictactoe/proto/game_state.proto";
 
 message Game {

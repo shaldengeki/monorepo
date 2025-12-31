@@ -50,10 +50,7 @@ proto_library(
     name = "game_proto",
     srcs = ["game.proto"],
     visibility = ["//visibility:public"],
-    deps = [
-        ":game_state_proto",
-        ":player_proto",
-    ],
+    deps = [":game_state_proto"],
 )
 
 proto_library(

@@ -244,7 +244,19 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 
 	if finished {
 		newState.Finished = true
-		// TODO: add score
+
+		var finishingPlayer *proto.Player
+		for _, player := range newState.Players {
+			if player.Symbol == move.Symbol {
+				finishingPlayer = player
+			}
+		}
+
+		if finishingPlayer == nil {
+			return nil, fmt.Errorf("could not find player who played finishing move %v", &move)
+		}
+
+		newState.Scores = append(newState.Scores, &proto.Score{Player: finishingPlayer, Score: 1})
 	}
 
 	return &newState, nil
