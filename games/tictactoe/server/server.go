@@ -47,6 +47,8 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 func (s *gameServer) ValidateGameState(ctx context.Context, gameState proto.GameState) (violations []string, err error) {
 	if gameState.Turn < 1 {
 		violations = append(violations, "Turn count should be >= 1")
+	} else if gameState.Players != nil && int(gameState.Turn) > len(gameState.Players) {
+		violations = append(violations, "Turn count must be <= # of players")
 	}
 
 	if gameState.Round < 1 {

@@ -36,6 +36,13 @@ func TestValidateState(t *testing.T) {
 		res, err = server.ValidateState(t.Context(), &request)
 		require.NoError(t, err)
 		assert.NotEmpty(t, res.ValidationErrors)
+
+		// Turn > # players
+		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 3, Round: 1, Players: []*pb.Player{{Symbol: "X"}, {Symbol: "O"}}}}
+		res, err = server.ValidateState(t.Context(), &request)
+		require.NoError(t, err)
+		assert.NotEmpty(t, res.ValidationErrors)
+
 	})
 
 	t.Run("Round", func(t *testing.T) {
