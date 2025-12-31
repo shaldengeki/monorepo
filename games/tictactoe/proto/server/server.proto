@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package games.tictactoe.proto.server;
 
+import "games/tictactoe/proto/board_marker.proto";
 import "games/tictactoe/proto/game_state.proto";
 
 option go_package = "github.com/shaldengeki/monorepo/games/tictactoe/proto/server";
@@ -29,8 +30,19 @@ message ValidateStateResponse {
     repeated string validation_errors = 1;
 }
 
+message MakeMoveRequest {
+    string game_id = 1;
+    tictactoe.proto.BoardMarker move = 2;
+}
+
+message MakeMoveResponse {
+    tictactoe.proto.GameState game_state = 1;
+    repeated string validation_errors = 2;
+}
+
 service GameService {
     rpc CreateGame(CreateGameRequest) returns (CreateGameResponse);
     rpc GetState(GetStateRequest) returns (GetStateResponse);
     rpc ValidateState(ValidateStateRequest) returns (ValidateStateResponse);
+    rpc MakeMove(MakeMoveRequest) returns (MakeMoveResponse);
 }

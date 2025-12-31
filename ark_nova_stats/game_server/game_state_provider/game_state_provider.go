@@ -23,16 +23,16 @@ func NewEmptyGameStateProvider() GameStateProvider {
 	return EmptyGameStateProvider{}
 }
 
-type StaticGameStateProvider struct {
+type StaticGameState struct {
 	GameStateProvider
 
 	staticState *game_state.GameState
 }
 
-func (s StaticGameStateProvider) GetState(ctx context.Context, gameId int64) (*game_state.GameState, error) {
+func (s StaticGameState) GetState(ctx context.Context, gameId int64) (*game_state.GameState, error) {
 	return s.staticState, nil
 }
 
-func NewStaticGameStateProvider(state *game_state.GameState) GameStateProvider {
-	return StaticGameStateProvider{staticState: state}
+func NewStaticGameState(state *game_state.GameState) GameStateProvider {
+	return StaticGameState{staticState: state}
 }

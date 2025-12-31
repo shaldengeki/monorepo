@@ -41,7 +41,7 @@ func TestGetState_WhenEmptyStateProviderGiven_ReturnsEmptyState(t *testing.T) {
 
 func TestGetState_WhenStaticStateProviderGiven_ReturnsPopulatedState(t *testing.T) {
 	state := game_state.GameState{Round: 1, BreakCount: 2, BreakMax: 3}
-	s := New(game_state_provider.NewStaticGameStateProvider(&state))
+	s := New(game_state_provider.NewStaticGameState(&state))
 	r := server.GetStateRequest{GameId: 1}
 	actual, err := s.GetState(nil, &r)
 	if err != nil {

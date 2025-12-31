@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/shaldengeki/monorepo/games/tictactoe/game_state_provider"
+	"github.com/shaldengeki/monorepo/games/tictactoe/game_state"
 
 	"github.com/shaldengeki/monorepo/games/tictactoe/proto"
 	"github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
@@ -14,7 +14,7 @@ import (
 type gameServer struct {
 	server.UnimplementedGameServiceServer
 
-	gameStateProvider game_state_provider.GameStateProvider
+	gameStateProvider game_state.GameState
 }
 
 func (s *gameServer) GetState(ctx context.Context, request *server.GetStateRequest) (*server.GetStateResponse, error) {
@@ -36,17 +36,24 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		return &server.ValidateStateResponse{}, nil
 	}
 
-	violations := []string{}
+	violations, err := s.ValidateGameState(ctx, *request.GameState)
+	if err != nil {
+		return nil, fmt.Errorf("could not validate state: %w", err)
+	}
 
-	if request.GameState.Turn < 1 {
+	return &server.ValidateStateResponse{ValidationErrors: violations}, nil
+}
+
+func (s *gameServer) ValidateGameState(ctx context.Context, gameState proto.GameState) (violations []string, err error) {
+	if gameState.Turn < 1 {
 		violations = append(violations, "Turn count should be >= 1")
 	}
 
-	if request.GameState.Round < 1 {
+	if gameState.Round < 1 {
 		violations = append(violations, "Round count should be >= 1")
 	}
 
-	scoreViolations, err := s.ValidateStateScores(ctx, request.GameState.Scores)
+	scoreViolations, err := s.ValidateStateScores(ctx, gameState.Scores)
 	if err != nil {
 		return nil, fmt.Errorf("Could not validate scores in state: %w", err)
 	}
@@ -54,7 +61,7 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		violations = append(violations, v)
 	}
 
-	boardViolations, err := s.ValidateStateBoard(ctx, request.GameState.Board, request.GameState.Finished)
+	boardViolations, err := s.ValidateStateBoard(ctx, gameState.Board, gameState.Finished)
 	if err != nil {
 		return nil, fmt.Errorf("Could not validate board in state: %w", err)
 	}
@@ -62,7 +69,7 @@ func (s *gameServer) ValidateState(ctx context.Context, request *server.Validate
 		violations = append(violations, v)
 	}
 
-	return &server.ValidateStateResponse{ValidationErrors: violations}, nil
+	return violations, nil
 }
 
 func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Score) ([]string, error) {
@@ -86,6 +93,10 @@ func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Sc
 
 func (s *gameServer) ValidateStateBoard(ctx context.Context, board *proto.Board, finished bool) ([]string, error) {
 	violations := []string{}
+
+	if board == nil {
+		return violations, nil
+	}
 
 	boardViolations, err := s.ValidateBoard(ctx, board)
 	if err != nil {
@@ -157,6 +168,153 @@ func (s *gameServer) ValidateMarker(ctx context.Context, marker *proto.BoardMark
 	return violations, nil
 }
 
-func New(gameStateProvider game_state_provider.GameStateProvider) *gameServer {
+func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveRequest) (*server.MakeMoveResponse, error) {
+	if request == nil {
+		return &server.MakeMoveResponse{ValidationErrors: []string{"move must be non-empty"}}, nil
+	}
+
+	// First, validate the move prospectively.
+	validationErrors, err := s.ValidateMarker(ctx, request.Move)
+	if err != nil {
+		return nil, fmt.Errorf("could not validate move request: %w", err)
+	}
+	if len(validationErrors) > 0 {
+		return &server.MakeMoveResponse{ValidationErrors: validationErrors}, nil
+	}
+
+	// TODO: this won't work with any sort of concurrency; we'll need some sort of locking.
+
+	// Next, fetch this game's state.
+	priorState, err := s.gameStateProvider.GetState(ctx, request.GameId)
+	if err != nil || priorState == nil {
+		return nil, fmt.Errorf("could not get game state to make move for game %s: prior state %v, err %w", request.GameId, priorState, err)
+	}
+
+	// Next, apply the move.
+	updatedGameState, err := s.ApplyMove(ctx, *priorState, request.Move)
+	if err != nil {
+		return nil, fmt.Errorf("could not apply move to prior state for game %s: %w", request.GameId, err)
+	}
+
+	// Next, validate the resulting state.
+	updatedValidationErrors, err := s.ValidateGameState(ctx, *updatedGameState)
+	if err != nil {
+		return nil, fmt.Errorf("could not validate updated game state: %w", err)
+	}
+	if len(updatedValidationErrors) > 0 {
+		return &server.MakeMoveResponse{ValidationErrors: updatedValidationErrors}, nil
+	}
+
+	// Finally, commit the result.
+	err = s.gameStateProvider.SetState(ctx, request.GameId, *updatedGameState)
+	if err != nil {
+		return nil, fmt.Errorf("could not set updated state for game %s: %w", request.GameId, err)
+	}
+
+	return &server.MakeMoveResponse{GameState: updatedGameState}, nil
+}
+
+func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, move *proto.BoardMarker) (*proto.GameState, error) {
+	if priorState.Finished {
+		return nil, fmt.Errorf("game is already finished, can't make more moves")
+	}
+
+	if len(priorState.Players) == 0 {
+		return nil, fmt.Errorf("cannot make moves in a game with no players")
+	}
+
+	for _, otherMarker := range priorState.Board.Markers {
+		if move.Row == otherMarker.Row && move.Column == otherMarker.Column {
+			return nil, fmt.Errorf("another player (%s) has already claimed row %d, col %d", otherMarker.Symbol, otherMarker.Row, otherMarker.Column)
+		}
+	}
+	newState := priorState
+	newState.Board.Markers = append(newState.Board.Markers, move)
+	newState.Turn += 1
+
+	if (int(newState.Turn) - 1) % len(newState.Players) == 0 {
+		newState.Round += 1
+		newState.Turn = 1
+	}
+
+	finished, err := s.MoveFinishesGame(ctx, move, &newState)
+	if err != nil {
+		return nil, fmt.Errorf("could not check if move finished game with state %v: %w", newState, err)
+	}
+
+	if finished {
+		newState.Finished = true
+
+		var finishingPlayer *proto.Player
+		for _, player := range newState.Players {
+			if player.Symbol == move.Symbol {
+				finishingPlayer = player
+			}
+		}
+
+		if finishingPlayer == nil {
+			return nil, fmt.Errorf("could not find player who played finishing move %v", &move)
+		}
+
+		newState.Scores = append(newState.Scores, &proto.Score{Player: finishingPlayer, Score: 1})
+	}
+
+	return &newState, nil
+}
+
+func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, currentState *proto.GameState) (bool, error) {
+	if len(currentState.Players) == 0 {
+		return true, nil
+	}
+
+	if currentState == nil {
+		return false, fmt.Errorf("cannot check if move finished game for nil state")
+	}
+
+	if currentState.Board == nil {
+		return false, fmt.Errorf("cannot check if move finished game for state with nil board")
+	}
+
+	if currentState.Board.Markers == nil {
+		return false, fmt.Errorf("cannot check if move finished game for state with nil markers")
+	}
+
+	// Count the number of markers in the current entry's row, column, and diagonal, if square.
+	// If it equals the length of the board in that dimension, they've won.
+	numRow := 0
+	numColumn := 0
+	numDiagPositive := 0
+	numDiagNegative := 0
+	for _, marker := range currentState.Board.Markers {
+		if marker.Symbol != move.Symbol {
+			continue
+		}
+
+		if marker.Row == move.Row {
+			numRow += 1
+		}
+		if marker.Column == move.Column {
+			numColumn += 1
+		}
+		if currentState.Board.Rows == currentState.Board.Columns {
+			if (marker.Column - move.Column) == (marker.Row - move.Row) && (marker.Column - move.Column) >= 0 {
+				numDiagPositive += 1
+			}
+			if (marker.Column - move.Column) == (marker.Row - move.Row) && (marker.Column - move.Column) <= 0 {
+				numDiagNegative += 1
+			}
+		}
+	}
+	if numRow == int(currentState.Board.Rows) || numColumn == int(currentState.Board.Columns) {
+		return true, nil
+	}
+	if currentState.Board.Rows == currentState.Board.Columns && (numDiagPositive == int(currentState.Board.Rows) || numDiagNegative == int(currentState.Board.Rows)) {
+		return true, nil
+	}
+
+	return false, nil
+}
+
+func New(gameStateProvider game_state.GameState) *gameServer {
 	return &gameServer{gameStateProvider: gameStateProvider}
 }
