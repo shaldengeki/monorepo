@@ -22,8 +22,8 @@ func (s ReadOnlyInMemoryGameState) SetState(ctx context.Context, gameId string, 
 	return fmt.Errorf("cannot set state in read-only game state provider")
 }
 
-func NewReadOnlyInMemoryGameState(initialState map[string]*proto.GameState) game_state.GameState {
-	inMemoryProvider := in_memory_game_state.NewInMemoryGameState(initialState).(in_memory_game_state.InMemoryGameState)
+func New(initialState map[string]*proto.GameState) game_state.GameState {
+	inMemoryProvider := in_memory_game_state.New(initialState).(in_memory_game_state.InMemoryGameState)
 	return ReadOnlyInMemoryGameState{
 		inMemoryProvider: inMemoryProvider,
 	}

@@ -1,50 +1,22 @@
-package server
+package default_rule_set
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
-	"github.com/shaldengeki/monorepo/games/tictactoe/game_state"
-
 	"github.com/shaldengeki/monorepo/games/tictactoe/proto"
-	"github.com/shaldengeki/monorepo/games/tictactoe/proto/server"
+	"github.com/shaldengeki/monorepo/games/tictactoe/rule_set"
 )
 
-type gameServer struct {
-	server.UnimplementedGameServiceServer
-
-	gameStateProvider game_state.GameState
+type DefaultRuleSet struct {
+	rule_set.RuleSet
 }
 
-func (s *gameServer) GetState(ctx context.Context, request *server.GetStateRequest) (*server.GetStateResponse, error) {
-	if request.GameId == "" {
-		return nil, errors.New("Game ID not provided")
-	}
-
-	state, err := s.gameStateProvider.GetState(ctx, request.GameId)
-	if err != nil {
-		return nil, fmt.Errorf("Could not fetch game state: %v", err)
-	}
-
-	r := server.GetStateResponse{GameState: state}
-	return &r, nil
+func (self DefaultRuleSet) InitialState(ctx context.Context) (*proto.GameState, error) {
+	return &proto.GameState{Turn: 0, Round: 1, Finished: false, Board: &proto.Board{Rows: 3, Columns: 3}, Players: []*proto.Player{{Id: "1", Symbol: "X"}, {Id: "2", Symbol: "O"}}}, nil
 }
 
-func (s *gameServer) ValidateState(ctx context.Context, request *server.ValidateStateRequest) (*server.ValidateStateResponse, error) {
-	if request.GameState == nil {
-		return &server.ValidateStateResponse{}, nil
-	}
-
-	violations, err := s.ValidateGameState(ctx, *request.GameState)
-	if err != nil {
-		return nil, fmt.Errorf("could not validate state: %w", err)
-	}
-
-	return &server.ValidateStateResponse{ValidationErrors: violations}, nil
-}
-
-func (s *gameServer) ValidateGameState(ctx context.Context, gameState proto.GameState) (violations []string, err error) {
+func (self DefaultRuleSet) ValidateState(ctx context.Context, gameState proto.GameState) (violations []string, err error) {
 	if gameState.Turn < 1 {
 		violations = append(violations, "Turn count should be >= 1")
 	} else if gameState.Players != nil && int(gameState.Turn) > len(gameState.Players) {
@@ -55,7 +27,7 @@ func (s *gameServer) ValidateGameState(ctx context.Context, gameState proto.Game
 		violations = append(violations, "Round count should be >= 1")
 	}
 
-	scoreViolations, err := s.ValidateStateScores(ctx, gameState.Scores)
+	scoreViolations, err := self.ValidateStateScores(ctx, gameState.Scores)
 	if err != nil {
 		return nil, fmt.Errorf("Could not validate scores in state: %w", err)
 	}
@@ -63,7 +35,7 @@ func (s *gameServer) ValidateGameState(ctx context.Context, gameState proto.Game
 		violations = append(violations, v)
 	}
 
-	boardViolations, err := s.ValidateStateBoard(ctx, gameState.Board, gameState.Finished)
+	boardViolations, err := self.ValidateStateBoard(ctx, gameState.Board, gameState.Finished)
 	if err != nil {
 		return nil, fmt.Errorf("Could not validate board in state: %w", err)
 	}
@@ -74,7 +46,7 @@ func (s *gameServer) ValidateGameState(ctx context.Context, gameState proto.Game
 	return violations, nil
 }
 
-func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Score) ([]string, error) {
+func (self DefaultRuleSet) ValidateStateScores(ctx context.Context, scores []*proto.Score) ([]string, error) {
 	violations := []string{}
 
 	hasPoints := false
@@ -93,14 +65,14 @@ func (s *gameServer) ValidateStateScores(ctx context.Context, scores []*proto.Sc
 	return violations, nil
 }
 
-func (s *gameServer) ValidateStateBoard(ctx context.Context, board *proto.Board, finished bool) ([]string, error) {
+func (self DefaultRuleSet) ValidateStateBoard(ctx context.Context, board *proto.Board, finished bool) ([]string, error) {
 	violations := []string{}
 
 	if board == nil {
 		return violations, nil
 	}
 
-	boardViolations, err := s.ValidateBoard(ctx, board)
+	boardViolations, err := self.ValidateBoard(ctx, board)
 	if err != nil {
 		return nil, fmt.Errorf("Could not validate board: %w", err)
 	}
@@ -111,7 +83,7 @@ func (s *gameServer) ValidateStateBoard(ctx context.Context, board *proto.Board,
 	return violations, nil
 }
 
-func (s *gameServer) ValidateBoard(ctx context.Context, board *proto.Board) ([]string, error) {
+func (self DefaultRuleSet) ValidateBoard(ctx context.Context, board *proto.Board) ([]string, error) {
 	violations := []string{}
 
 	if board.Rows < 1 {
@@ -124,7 +96,7 @@ func (s *gameServer) ValidateBoard(ctx context.Context, board *proto.Board) ([]s
 
 	positions := map[string]string{}
 	for _, marker := range board.Markers {
-		markerViolations, err := s.ValidateMarker(ctx, marker)
+		markerViolations, err := self.ValidateMarker(ctx, marker)
 		if err != nil {
 			return nil, fmt.Errorf("Could not validate marker: %w", err)
 		}
@@ -150,7 +122,7 @@ func (s *gameServer) ValidateBoard(ctx context.Context, board *proto.Board) ([]s
 	return violations, nil
 }
 
-func (s *gameServer) ValidateMarker(ctx context.Context, marker *proto.BoardMarker) ([]string, error) {
+func (self DefaultRuleSet) ValidateMarker(ctx context.Context, marker *proto.BoardMarker) ([]string, error) {
 	violations := []string{}
 
 	if marker.Row < 0 {
@@ -170,72 +142,7 @@ func (s *gameServer) ValidateMarker(ctx context.Context, marker *proto.BoardMark
 	return violations, nil
 }
 
-func (s *gameServer) MakeMove(ctx context.Context, request *server.MakeMoveRequest) (*server.MakeMoveResponse, error) {
-	if request == nil {
-		return &server.MakeMoveResponse{ValidationErrors: []string{"move must be non-empty"}}, nil
-	}
-
-	// First, validate the move prospectively.
-	validationErrors, err := s.ValidateMarker(ctx, request.Move)
-	if err != nil {
-		return nil, fmt.Errorf("could not validate move request: %w", err)
-	}
-	if len(validationErrors) > 0 {
-		return &server.MakeMoveResponse{ValidationErrors: validationErrors}, nil
-	}
-
-	// TODO: this won't work with any sort of concurrency; we'll need some sort of locking.
-
-	// Next, fetch this game's state.
-	priorState, err := s.gameStateProvider.GetState(ctx, request.GameId)
-	if err != nil || priorState == nil {
-		return nil, fmt.Errorf("could not get game state to make move for game %s: prior state %v, err %w", request.GameId, priorState, err)
-	}
-
-	// Next, apply the move.
-	updatedGameState, err := s.ApplyMove(ctx, *priorState, request.Move)
-	if err != nil {
-		return nil, fmt.Errorf("could not apply move to prior state for game %s: %w", request.GameId, err)
-	}
-
-	// Next, validate the resulting state.
-	updatedValidationErrors, err := s.ValidateGameState(ctx, *updatedGameState)
-	if err != nil {
-		return nil, fmt.Errorf("could not validate updated game state: %w", err)
-	}
-	if len(updatedValidationErrors) > 0 {
-		return &server.MakeMoveResponse{ValidationErrors: updatedValidationErrors}, nil
-	}
-
-	// Finally, commit the result.
-	err = s.gameStateProvider.SetState(ctx, request.GameId, *updatedGameState)
-	if err != nil {
-		return nil, fmt.Errorf("could not set updated state for game %s: %w", request.GameId, err)
-	}
-
-	return &server.MakeMoveResponse{GameState: updatedGameState}, nil
-}
-
-func (s *gameServer) CurrentPlayer(ctx context.Context, currentState *proto.GameState) (*proto.Player, error) {
-	if currentState == nil {
-		return nil, fmt.Errorf("cannot determine current player for nil game state")
-	}
-
-	if len(currentState.Players) == 0 {
-		return nil, fmt.Errorf("cannot determine current player for empty player set")
-	}
-
-	// First, handle the start of game.
-	if currentState.Turn == 0 {
-		return currentState.Players[0], nil
-	}
-
-	// Use the turn count to determine which player is current.
-	playerIdx := int(currentState.Turn) % len(currentState.Players)
-	return currentState.Players[playerIdx], nil
-}
-
-func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, move *proto.BoardMarker) (*proto.GameState, error) {
+func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameState, move *proto.BoardMarker) (*proto.GameState, error) {
 	if priorState.Finished {
 		return nil, fmt.Errorf("game is already finished, can't make more moves")
 	}
@@ -244,7 +151,7 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 		return nil, fmt.Errorf("cannot make moves in a game with no players")
 	}
 
-	currentPlayer, err := s.CurrentPlayer(ctx, &priorState)
+	currentPlayer, err := self.CurrentPlayer(ctx, &priorState)
 	if err != nil {
 		return nil, fmt.Errorf("could not determine current player when applying move on prior state %v: %w", priorState, err)
 	}
@@ -267,7 +174,7 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 		newState.Turn = 1
 	}
 
-	finished, err := s.MoveFinishesGame(ctx, move, newState.Board)
+	finished, err := self.MoveFinishesGame(ctx, move, newState.Board)
 	if err != nil {
 		return nil, fmt.Errorf("could not check if move finished game with state %v: %w", newState, err)
 	}
@@ -292,7 +199,7 @@ func (s *gameServer) ApplyMove(ctx context.Context, priorState proto.GameState, 
 	return &newState, nil
 }
 
-func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, board *proto.Board) (bool, error) {
+func (self DefaultRuleSet) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, board *proto.Board) (bool, error) {
 	if board == nil {
 		return false, fmt.Errorf("cannot check if move finished game for state with nil board")
 	}
@@ -342,6 +249,25 @@ func (s *gameServer) MoveFinishesGame(ctx context.Context, move *proto.BoardMark
 	return false, nil
 }
 
-func New(gameStateProvider game_state.GameState) *gameServer {
-	return &gameServer{gameStateProvider: gameStateProvider}
+func (self DefaultRuleSet) CurrentPlayer(ctx context.Context, currentState *proto.GameState) (*proto.Player, error) {
+	if currentState == nil {
+		return nil, fmt.Errorf("cannot determine current player for nil game state")
+	}
+
+	if len(currentState.Players) == 0 {
+		return nil, fmt.Errorf("cannot determine current player for empty player set")
+	}
+
+	// First, handle the start of game.
+	if currentState.Turn == 0 {
+		return currentState.Players[0], nil
+	}
+
+	// Use the turn count to determine which player is current.
+	playerIdx := int(currentState.Turn) % len(currentState.Players)
+	return currentState.Players[playerIdx], nil
+}
+
+func New() rule_set.RuleSet {
+	return DefaultRuleSet{}
 }

@@ -1,0 +1,24 @@
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "default_rule_set",
+    srcs = ["default_rule_set.go"],
+    importpath = "github.com/shaldengeki/monorepo/games/tictactoe/rule_set/default_rule_set",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//games/tictactoe/proto:proto_go_proto",
+        "//games/tictactoe/rule_set",
+    ],
+)
+
+go_test(
+    name = "default_rule_set_test",
+    size = "small",
+    srcs = ["default_rule_set_test.go"],
+    embed = [":default_rule_set"],
+    deps = [
+        "//games/tictactoe/proto:proto_go_proto",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)
