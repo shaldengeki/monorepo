@@ -14,32 +14,32 @@ Following up on [my predictions for 2024]({{< ref "predictions-2024-followup" >}
 # US
 
 ## National
-- US enters a recession: 10%
+- ❌ US enters a recession: 10%
 - [Median YoY CPI inflation](https://fred.stlouisfed.org/series/MEDCPIM158SFRBCLE) <2%: 40%
-- US GDP >$30T: 60%
+- ✅ US GDP >$30T: 60%
 
 ## NYC
 
 ### Housing
 - ❌ 2024 estimated annual population change is <=0%: 80%
 - ❌ 2024 new housing starts down from 2023 (27,980): 70%
-- 2025 new housing permits issued up from 2024: 50%
+- ❌ [2025 new housing permits issued](https://fred.stlouisfed.org/series/NYBPPRIVSA) up from 2024: 50%
 - [Median listing $/sqft in the NY/Newark/Jersey City MSA](https://fred.stlouisfed.org/series/MEDLISPRIPERSQUFEE35620) <$500: 20%
 
 ### Congestion pricing
-- Remains in place, without significant rollbacks, by the end of the year: 70%
+- ✅ Remains in place, without significant rollbacks, by the end of the year: 70%
 - ✅ I notice reduced traffic volumes in my neighborhood: 10%
 
 ### Second Avenue Subway
 - ✅ Phase 2 construction [starts](https://web.archive.org/web/20250821154822/https://www.governor.ny.gov/sites/default/files/2025-08/Presentation_2025-08-15_SAS2_NOTES_SCRUBBED.pdf#page=18) before end of year: 90%
-- Phase 2 budget exceeds $9 billion at some point: 20%
-- Future phases officially cancelled: 10%
+- ❌ Phase 2 budget exceeds $9 billion at some point: 20%
+- ❌ Future phases officially cancelled: 10%
 
 ## California
 
 ### Housing
 - ✅ 2024 estimated population change is >=0%: 70%
-- 2025 new housing permits issued up from 2024: 50%
+- [2025 new housing permits issued](https://fred.stlouisfed.org/series/CABPPRIV) up from 2024: 50%
 - [Median listing $/sqft in the SF/Oakland/Hayward MSA](https://fred.stlouisfed.org/series/MEDLISPRIPERSQUFEE41860) <$640: 20%
 
 ### HSR
@@ -64,15 +64,15 @@ I'll assess these only if the CAHSR [releases a new project update report](https
 - ❌ Conservatives win a plurality of the legislature: 60%
 
 ## Ukraine
-- Admitted to NATO: 20%
-- Cedes territory to Russia: 30%
+- ❌ Admitted to NATO: 20%
+- ❌ Cedes territory to Russia: 30%
 
 ## China
-- Enters a recognized recession: 10%
-- Formally revokes Hong Kong SAR status: 10%
-- Xi Jinping still in power at end of year: 90%
-- Invades Taiwan: 10%
-- BRICS loses a member: 10%
+- ❌ Enters a recognized recession: 10%
+- ❌ Formally revokes Hong Kong SAR status: 10%
+- ✅ Xi Jinping still in power at end of year: 90%
+- ❌ Invades Taiwan: 10%
+- ❌ BRICS loses a member: 10%
   - Any of Brazil, Russia, India, China, South Africa, Egypt, Ethiopia, Iran, and the UAE, or any member that joins during 2025.
 
 ## Argentina
@@ -84,32 +84,31 @@ I'll assess these only if the CAHSR [releases a new project update report](https
 ## AI
   - ✅ OpenAI announces GPT-5: 70%
    - ✅ ... and it's available to consumers: 60%
-  - OpenAI gets a new CEO: 30%
-  - We achieve AGI: 5%
+  - ❌ OpenAI gets a new CEO: 30%
+  - ❌ We achieve AGI: 5%
 
 ## Other
-- Alphabet, Amazon, or Apple are forced via lawsuit to spin off at least one company: 10%
-- At least one company offers widely-available self-driving cars: 30%
-- Twitter files for bankruptcy: 20%
-- Amazon, Google, Apple, or Steam accept Bitcoin: 5%
+- ❌ Alphabet, Amazon, or Apple are forced via lawsuit to spin off at least one company: 10%
+- ❌ At least one company offers widely-available self-driving cars: 30%
+- ❌ Twitter files for bankruptcy: 20%
+- ❌ Amazon, Google, Apple, or Steam accept Bitcoin: 5%
 - ✅AGDQ 2025 raises at least $2.5M: 60% ([$2.6M](https://web.archive.org/web/20250610024614/https://tracker.gamesdonequick.com/tracker/event/AGDQ2025))
-- Apple releases a foldable iPhone: 10%
+- ❌ Apple releases a foldable iPhone: 10%
 
 # Pop culture
 
-- Marvel films will have total revenue over 1.5 billion dollars (international box office): 60%
+- ❌ Marvel films will have [total revenue](https://web.archive.org/web/20251224030954/https://www.the-numbers.com/movies/franchise/Marvel-Cinematic-Universe)  over 1.5 billion dollars (international box office): 60%
 - ❌ Marvel films will [average greater than 650 million](https://web.archive.org/web/20251004030031/https://www.the-numbers.com/movies/franchise/Marvel-Cinematic-Universe#tab=summary) in international box office: 40%
 - ✅ There are [>5 movies](https://web.archive.org/web/20251002074401/https://www.the-numbers.com/market/2025/summary) with domestic box office >250 million: 25%
-- There are >10 movies with domestic box office >250 million: 10%
+- ❌ There are [>10 movies](https://web.archive.org/web/20251206092733/https://www.the-numbers.com/market/2025/summary) with domestic box office >250 million: 10%
 - ❌ An A24 movie will win the Best Picture Oscar: 40%
 - ✅ Kieran Culkin will win the Best Supporting Actor Oscar: 75%
 - ❌ Challengers will win an Oscar: 60%
 - ❌ The live action Snow White will make more than 200 million dollars in domestic box office: 60%
-- A streaming service will close down / be merged into another: 30%
+- ❌ A streaming service will close down / be merged into another: 30%
   - Max, Peacock, Paramount, Hulu, Disney+, Amazon Prime Video, Netflix, Apple TV+, Mubi
 - ✅ The book that spends the [longest at the top of the NYT bestseller list](https://en.wikipedia.org/wiki/List_of_The_New_York_Times_number-one_books_of_2025) is a romance: 60%
 - ✅ The [highest grossing movie of the year domestically](https://web.archive.org/web/20251002074401/https://www.the-numbers.com/market/2025/summary) is a sequel or part of an ongoing franchise (like Marvel, with previous entries): 80%
-  - This one is deaateable. Minecraft has had previous movie-like video games (Story Mode, a Telltale adaptation), and a documentary film (The Story of Mojang). Think the latter is close enough to just barely count.
 
 # Sports
 
