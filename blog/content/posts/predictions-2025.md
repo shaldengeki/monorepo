@@ -15,7 +15,7 @@ Following up on [my predictions for 2024]({{< ref "predictions-2024-followup" >}
 
 ## National
 - ❌ US enters a recession: 10%
-- [Median YoY CPI inflation](https://fred.stlouisfed.org/series/MEDCPIM158SFRBCLE) <2%: 40%
+- ❌ [Median YoY CPI inflation](https://fred.stlouisfed.org/series/MEDCPIM158SFRBCLE) <2%: 40%
 - ✅ US GDP >$30T: 60%
 
 ## NYC
@@ -24,7 +24,7 @@ Following up on [my predictions for 2024]({{< ref "predictions-2024-followup" >}
 - ❌ 2024 estimated annual population change is <=0%: 80%
 - ❌ 2024 new housing starts down from 2023 (27,980): 70%
 - ❌ [2025 new housing permits issued](https://fred.stlouisfed.org/series/NYBPPRIVSA) up from 2024: 50%
-- [Median listing $/sqft in the NY/Newark/Jersey City MSA](https://fred.stlouisfed.org/series/MEDLISPRIPERSQUFEE35620) <$500: 20%
+- ❌ [Median listing $/sqft in the NY/Newark/Jersey City MSA](https://fred.stlouisfed.org/series/MEDLISPRIPERSQUFEE35620) <$500: 20%
 
 ### Congestion pricing
 - ✅ Remains in place, without significant rollbacks, by the end of the year: 70%
@@ -40,7 +40,7 @@ Following up on [my predictions for 2024]({{< ref "predictions-2024-followup" >}
 ### Housing
 - ✅ 2024 estimated population change is >=0%: 70%
 - [2025 new housing permits issued](https://fred.stlouisfed.org/series/CABPPRIV) up from 2024: 50%
-- [Median listing $/sqft in the SF/Oakland/Hayward MSA](https://fred.stlouisfed.org/series/MEDLISPRIPERSQUFEE41860) <$640: 20%
+- ✅ [Median listing $/sqft in the SF/Oakland/Hayward MSA](https://fred.stlouisfed.org/series/MEDLISPRIPERSQUFEE41860) <$640: 20%
 
 ### HSR
 
