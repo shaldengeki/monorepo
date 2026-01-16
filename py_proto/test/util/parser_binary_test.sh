@@ -9,7 +9,7 @@ for f in $LOCAL_PROTOS; do
 done
 
 echo "Google protos:"
-GOOGLE_PROTOS=$(find ./external/com_google_protobuf/src/google/protobuf -name "*.proto" | xargs grep --files-without-match "proto2" | sort)
+GOOGLE_PROTOS=$(find ./external/protobuf/src/google/protobuf -name "*.proto" | xargs grep --files-without-match "proto2" | sort)
 for f in $GOOGLE_PROTOS; do
     echo $f
     ./py_proto/util/parser_binary $f > /dev/null
