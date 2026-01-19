@@ -30,8 +30,7 @@ class EnumTest(unittest.TestCase):
 
     def test_enum_all_features(self):
         parsed_enum_multiple_values = ProtoEnum.match(
-            dedent(
-                """
+            dedent("""
             enum FooEnum {
                 reserved 1, 2, 5 to max;
                 FE_NEGATIVE = -1 [ foo = false ];
@@ -46,8 +45,7 @@ class EnumTest(unittest.TestCase):
                 reserved "FE_RESERVED", "FE_OLD";
                 FE_VALTWO = 2;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             parsed_enum_multiple_values.node.nodes,
@@ -114,8 +112,7 @@ class EnumTest(unittest.TestCase):
         # TODO: The serialization of the multi-line comment here is obviously off.
         self.assertEqual(
             parsed_enum_multiple_values.node.serialize(),
-            dedent(
-                """
+            dedent("""
             enum FooEnum {
             reserved 1, 2, 5 to max;
             FE_NEGATIVE = -1 [ foo = false ];
@@ -131,8 +128,7 @@ class EnumTest(unittest.TestCase):
             reserved "FE_RESERVED", "FE_OLD";
             FE_VALTWO = 2;
             }
-            """
-            ).strip(),
+            """).strip(),
         )
 
     def test_empty_enum(self):
@@ -141,41 +137,35 @@ class EnumTest(unittest.TestCase):
         self.assertEqual(parsed_empty_enum.node.name, ProtoIdentifier("FooEnum"))
 
         parsed_spaced_enum = ProtoEnum.match(
-            dedent(
-                """
+            dedent("""
             enum FooEnum {
 
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertIsNotNone(parsed_spaced_enum)
         self.assertEqual(parsed_spaced_enum.node.name, ProtoIdentifier("FooEnum"))
 
     def test_enum_empty_statements(self):
         empty_statement_enum = ProtoEnum.match(
-            dedent(
-                """
+            dedent("""
             enum FooEnum {
                 ;
                 ;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertIsNotNone(empty_statement_enum)
         self.assertEqual(empty_statement_enum.node.name, ProtoIdentifier("FooEnum"))
 
     def test_enum_optionals(self):
         parsed_enum_with_optionals = ProtoEnum.match(
-            dedent(
-                """
+            dedent("""
             enum FooEnum {
                 option java_package = "foobar";
                 option (foo.bar).baz = false;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertIsNotNone(
             parsed_enum_with_optionals.node.options,
@@ -196,13 +186,11 @@ class EnumTest(unittest.TestCase):
 
     def test_enum_single_value(self):
         parsed_enum_single_value = ProtoEnum.match(
-            dedent(
-                """
+            dedent("""
             enum FooEnum {
                 FE_UNDEFINED = 0;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             parsed_enum_single_value.node.nodes,
@@ -216,16 +204,14 @@ class EnumTest(unittest.TestCase):
 
     def test_enum_multiple_values(self):
         parsed_enum_multiple_values = ProtoEnum.match(
-            dedent(
-                """
+            dedent("""
             enum FooEnum {
                 FE_NEGATIVE = -1;
                 FE_UNDEFINED = 0;
                 FE_VALONE = 1;
                 FE_VALTWO = 2;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             parsed_enum_multiple_values.node.nodes,
@@ -251,8 +237,7 @@ class EnumTest(unittest.TestCase):
 
     def test_enum_comments(self):
         parsed_enum_multiple_values = ProtoEnum.match(
-            dedent(
-                """
+            dedent("""
             enum FooEnum {
                 FE_NEGATIVE = -1; // test single-line comment
                 FE_UNDEFINED = 0; /* test multiple
@@ -261,8 +246,7 @@ class EnumTest(unittest.TestCase):
                 FE_VALONE = 1;
                 FE_VALTWO = 2;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             parsed_enum_multiple_values.node.nodes,
@@ -292,8 +276,7 @@ class EnumTest(unittest.TestCase):
 
     def test_enum_normalize_away_comments(self):
         parsed_enum_multiple_values = ProtoEnum.match(
-            dedent(
-                """
+            dedent("""
             enum FooEnum {
                 FE_NEGATIVE = -1; // test single-line comment
                 FE_UNDEFINED = 0; /* test multiple
@@ -302,8 +285,7 @@ class EnumTest(unittest.TestCase):
                 FE_VALONE = 1;
                 FE_VALTWO = 2;
             }
-        """.strip()
-            ),
+        """.strip()),
         ).node.normalize()
         self.assertEqual(
             parsed_enum_multiple_values.nodes,

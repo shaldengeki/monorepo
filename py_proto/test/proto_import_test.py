@@ -65,11 +65,9 @@ class ImportTest(unittest.TestCase):
 
     def test_weak_mixed_imports(self):
         first_parsed_import = ProtoImport.match(
-            dedent(
-                """import "foo.proto";
+            dedent("""import "foo.proto";
             import weak "bar/baz.proto";
-            import "bat.proto";"""
-            ),
+            import "bat.proto";"""),
         )
         self.assertEqual(first_parsed_import.node.path.value, "foo.proto")
         self.assertEqual(first_parsed_import.node.weak, False)
@@ -113,11 +111,9 @@ class ImportTest(unittest.TestCase):
 
     def test_public_mixed_imports(self):
         first_parsed_import = ProtoImport.match(
-            dedent(
-                """import "foo.proto";
+            dedent("""import "foo.proto";
             import public "bar/baz.proto";
-            import public "bat.proto";"""
-            ),
+            import public "bat.proto";"""),
         )
         self.assertEqual(first_parsed_import.node.path.value, "foo.proto")
         self.assertEqual(first_parsed_import.node.public, False)

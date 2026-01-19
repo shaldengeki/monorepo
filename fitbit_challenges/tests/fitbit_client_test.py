@@ -56,9 +56,7 @@ def test_verify_signature_correct() -> None:
     "ownerType": "user",
     "subscriptionId": "1234"
   }
-]""".encode(
-        "utf-8"
-    )
+]""".encode("utf-8")
 
     assert c.verify_signature("Oyv+HBziS4dH/fHJ735cToXX6vs=", json_body)
 
@@ -78,9 +76,7 @@ def test_verify_signature_invalid_header() -> None:
     "ownerType": "user",
     "subscriptionId": "1234"
   }
-]""".encode(
-        "utf-8"
-    )
+]""".encode("utf-8")
 
     assert not c.verify_signature("WRONG-HEADER-SIGNATURE", json_body)
 
@@ -100,9 +96,7 @@ def test_verify_signature_invalid_body() -> None:
     "ownerType": "user",
     "subscriptionId": "1234"
   }
-]""".encode(
-        "utf-8"
-    )
+]""".encode("utf-8")
 
     assert not c.verify_signature("Oyv+HBziS4dH/fHJ735cToXX6vs=", json_body)
 

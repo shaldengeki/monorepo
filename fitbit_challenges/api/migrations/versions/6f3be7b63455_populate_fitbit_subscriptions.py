@@ -19,20 +19,16 @@ depends_on: Optional[str] = None
 
 
 def upgrade():
-    op.execute(
-        """
+    op.execute("""
             insert into fitbit_subscriptions (id, fitbit_user_id)
             select cast(fitbit_subscription_id as integer), fitbit_user_id
             from users
             where fitbit_subscription_id IS NOT NULL
                 and fitbit_subscription_id != 'None'
-        """
-    )
+        """)
 
 
 def downgrade():
-    op.execute(
-        """
+    op.execute("""
             truncate table fitbit_subscriptions
-        """
-    )
+        """)

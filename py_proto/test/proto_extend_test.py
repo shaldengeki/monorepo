@@ -22,13 +22,11 @@ class ExtendTest(unittest.TestCase):
         self.assertEqual(parsed_empty_extend.node.serialize(), "extend FooMessage {\n}")
 
         parsed_spaced_extend = ProtoExtend.match(
-            dedent(
-                """
+            dedent("""
             extend FooMessage {
 
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertIsNotNone(parsed_spaced_extend)
         self.assertEqual(
@@ -40,13 +38,11 @@ class ExtendTest(unittest.TestCase):
         )
 
         parsed_scoped_extend = ProtoExtend.match(
-            dedent(
-                """
+            dedent("""
             extend google.protobuf.FooMessage {
 
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertIsNotNone(parsed_scoped_extend)
         self.assertEqual(
@@ -60,14 +56,12 @@ class ExtendTest(unittest.TestCase):
 
     def test_extend_empty_statements(self):
         empty_statement_message = ProtoExtend.match(
-            dedent(
-                """
+            dedent("""
             extend FooMessage {
                 ;
                 ;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertIsNotNone(empty_statement_message)
         self.assertEqual(
@@ -80,13 +74,11 @@ class ExtendTest(unittest.TestCase):
 
     def test_extend_simple_field(self):
         parsed_extend_with_single_field = ProtoExtend.match(
-            dedent(
-                """
+            dedent("""
             extend FooMessage {
                 string single_field = 1;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             parsed_extend_with_single_field.node,
@@ -103,13 +95,11 @@ class ExtendTest(unittest.TestCase):
         )
         self.assertEqual(
             parsed_extend_with_single_field.node.serialize(),
-            dedent(
-                """
+            dedent("""
             extend FooMessage {
             string single_field = 1;
             }
-            """
-            ).strip(),
+            """).strip(),
         )
 
 

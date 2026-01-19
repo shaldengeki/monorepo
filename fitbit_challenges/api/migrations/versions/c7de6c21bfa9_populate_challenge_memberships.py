@@ -19,17 +19,13 @@ depends_on: Optional[str] = None
 
 
 def upgrade():
-    op.execute(
-        """
+    op.execute("""
             insert into challenge_memberships (challenge_id, fitbit_user_id, created_at)
             select id, unnest(string_to_array(challenges.users, ',')), created_at from challenges
-        """
-    )
+        """)
 
 
 def downgrade():
-    op.execute(
-        """
+    op.execute("""
             truncate table challenge_memberships
-        """
-    )
+        """)
