@@ -38,9 +38,7 @@ class IntTest(unittest.TestCase):
     maxDiff = None
 
     def test_parser(self):
-        proto_file = Parser.loads(
-            dedent(
-                """
+        proto_file = Parser.loads(dedent("""
                 syntax = "proto3";
 
                 package foo.bar.baz;
@@ -94,9 +92,7 @@ class IntTest(unittest.TestCase):
                     rpc TwoRPC (TwoRPCRequest) returns (stream TwoRPCResponse);
                     rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
                 }
-                """
-            )
-        )
+                """))
 
         self.assertEqual(proto_file.syntax.syntax.value, ProtoSyntaxType.PROTO3.value)
         self.assertEqual(
@@ -310,9 +306,7 @@ class IntTest(unittest.TestCase):
 
     def test_parser_no_syntax(self):
         with self.assertRaises(ParseError):
-            Parser.loads(
-                dedent(
-                    """
+            Parser.loads(dedent("""
                     package foo.bar.baz;
 
                     import public "foo.proto";
@@ -321,39 +315,27 @@ class IntTest(unittest.TestCase):
 
                     option java_package = "my.test.package";
                     option (fully.qualified).option = .314159265e1;
-                    """
-                )
-            )
+                    """))
 
     def test_parser_typo(self):
         with self.assertRaises(ParseError):
-            Parser.loads(
-                dedent(
-                    """
+            Parser.loads(dedent("""
                     syntax = "proto3";
 
                     package foo.bar.baz
-                    """
-                )
-            )
+                    """))
         with self.assertRaises(ParseError):
-            Parser.loads(
-                dedent(
-                    """
+            Parser.loads(dedent("""
                     syntax = "proto3";
 
                     package foo.bar.baz;
 
                     import public "foo.proto";
                     import weak "ba
-                    """
-                )
-            )
+                    """))
 
     def test_serialize(self):
-        proto_file = Parser.loads(
-            dedent(
-                """
+        proto_file = Parser.loads(dedent("""
                 syntax = "proto3";
 
                 package foo.bar.baz;
@@ -407,13 +389,10 @@ class IntTest(unittest.TestCase):
                     rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
                 }
 
-                """
-            )
-        )
+                """))
         self.assertEqual(
             proto_file.serialize(),
-            dedent(
-                """
+            dedent("""
                     syntax = "proto3";
 
                     package foo.bar.baz;
@@ -468,8 +447,7 @@ class IntTest(unittest.TestCase):
                     rpc TwoRPC (TwoRPCRequest) returns (stream TwoRPCResponse);
                     rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
                     }
-                    """
-            ).strip(),
+                    """).strip(),
         )
 
 

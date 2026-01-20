@@ -683,7 +683,7 @@ class BingoCard(Base):  # type: ignore
             )
 
             # Assign a coordinate
-            (step_tile.coordinate_x, step_tile.coordinate_y) = coordinates.pop()
+            step_tile.coordinate_x, step_tile.coordinate_y = coordinates.pop()
 
             # Set whether or not it's required for a win.
             step_tile.required_for_win = pattern.required_coordinate(

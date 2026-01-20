@@ -22,8 +22,7 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_all_features(self):
         test_service_all_features = ProtoService.match(
-            dedent(
-                """
+            dedent("""
             service FooService {
                 option (foo.bar).baz = "bat";
                 // single-line comment!
@@ -36,8 +35,7 @@ class ServiceTest(unittest.TestCase):
                 */
                 rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             test_service_all_features.node,
@@ -86,8 +84,7 @@ class ServiceTest(unittest.TestCase):
         )
         self.assertEqual(
             test_service_all_features.node.serialize(),
-            dedent(
-                """
+            dedent("""
             service FooService {
             option (foo.bar).baz = "bat";
             // single-line comment!
@@ -100,8 +97,7 @@ class ServiceTest(unittest.TestCase):
                             */
             rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
             }
-            """
-            ).strip(),
+            """).strip(),
         )
 
     def test_service_empty(self):
@@ -110,13 +106,11 @@ class ServiceTest(unittest.TestCase):
         self.assertEqual(parsed_empty_service.node.name, ProtoIdentifier("FooService"))
 
         parsed_spaced_service = ProtoService.match(
-            dedent(
-                """
+            dedent("""
             service FooService {
 
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertIsNotNone(parsed_spaced_service)
         self.assertEqual(
@@ -126,14 +120,12 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_empty_statements(self):
         empty_statement_service = ProtoService.match(
-            dedent(
-                """
+            dedent("""
             service FooService {
                 ;
                 ;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertIsNotNone(empty_statement_service)
         self.assertEqual(
@@ -143,13 +135,11 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_option(self):
         service_with_options = ProtoService.match(
-            dedent(
-                """
+            dedent("""
             service FooService {
                 option (foo.bar).baz = "bat";
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             service_with_options.node.nodes,
@@ -163,15 +153,13 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_rpc_basic(self):
         service_with_options = ProtoService.match(
-            dedent(
-                """
+            dedent("""
             service FooService {
                 rpc OneRPC (OneRPCRequest) returns (OneRPCResponse);
                 rpc TwoRPC (TwoRPCRequest) returns (TwoRPCResponse);
                 rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse);
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             service_with_options.node.nodes,
@@ -196,14 +184,12 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_rpc_stream(self):
         service_with_options = ProtoService.match(
-            dedent(
-                """
+            dedent("""
             service FooService {
                 rpc OneRPC (stream OneRPCRequest) returns (OneRPCResponse);
                 rpc TwoRPC (TwoRPCRequest) returns (stream TwoRPCResponse);
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             service_with_options.node.nodes,
@@ -227,14 +213,12 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_rpc_options(self):
         service_with_options = ProtoService.match(
-            dedent(
-                """
+            dedent("""
             service FooService {
                 rpc OneRPC (OneRPCRequest) returns (OneRPCResponse) { ; ; ; }
                 rpc TwoRPC (TwoRPCRequest) returns (TwoRPCResponse) { option java_package = "com.example.foo"; option (foo.bar).baz = false; }
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             service_with_options.node.nodes,
@@ -266,8 +250,7 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_parses_comments(self):
         service_with_comments = ProtoService.match(
-            dedent(
-                """
+            dedent("""
             service FooService {
                 rpc OneRPC (OneRPCRequest) returns (OneRPCResponse);
                 // single-line comment!
@@ -279,8 +262,7 @@ class ServiceTest(unittest.TestCase):
                 */
                 rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse);
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             service_with_comments.node.nodes,
@@ -309,8 +291,7 @@ class ServiceTest(unittest.TestCase):
 
     def test_service_normalize_removes_comments(self):
         normalized_service = ProtoService.match(
-            dedent(
-                """
+            dedent("""
             service FooService {
                 rpc OneRPC (OneRPCRequest) returns (OneRPCResponse);
                 // single-line comment!
@@ -322,8 +303,7 @@ class ServiceTest(unittest.TestCase):
                 */
                 rpc ThreeRPC (ThreeRPCRequest) returns (ThreeRPCResponse);
             }
-        """.strip()
-            ),
+        """.strip()),
         ).node.normalize()
         self.assertEqual(
             normalized_service.nodes,
