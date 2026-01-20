@@ -36,8 +36,7 @@ class MessageTest(unittest.TestCase):
 
     def test_message_all_features(self):
         parsed_message_multiple_fields = ProtoMessage.match(
-            dedent(
-                """
+            dedent("""
             message FooMessage {
                 option (foo.bar).baz = "bat";
                 enum MyEnum {
@@ -60,8 +59,7 @@ class MessageTest(unittest.TestCase):
                 map <string, string> string_map = 11 [ java_package = "com.example.foo", baz.bat = 48 ];
                 extensions 8 to max;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             parsed_message_multiple_fields.node.nodes,
@@ -184,8 +182,7 @@ class MessageTest(unittest.TestCase):
         )
         self.assertEqual(
             parsed_message_multiple_fields.node.serialize(),
-            dedent(
-                """
+            dedent("""
             message FooMessage {
             option (foo.bar).baz = "bat";
             enum MyEnum {
@@ -209,8 +206,7 @@ class MessageTest(unittest.TestCase):
             map <string, string> string_map = 11 [ java_package = "com.example.foo", baz.bat = 48 ];
             extensions 8 to max;
             }
-            """
-            ).strip(),
+            """).strip(),
         )
 
     def test_empty_message(self):
@@ -219,27 +215,23 @@ class MessageTest(unittest.TestCase):
         self.assertEqual(parsed_empty_message.node.name, ProtoIdentifier("FooMessage"))
 
         parsed_spaced_message = ProtoMessage.match(
-            dedent(
-                """
+            dedent("""
             message FooMessage {
 
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertIsNotNone(parsed_spaced_message)
         self.assertEqual(parsed_spaced_message.node.name, ProtoIdentifier("FooMessage"))
 
     def test_message_empty_statements(self):
         empty_statement_message = ProtoMessage.match(
-            dedent(
-                """
+            dedent("""
             message FooMessage {
                 ;
                 ;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertIsNotNone(empty_statement_message)
         self.assertEqual(
@@ -248,14 +240,12 @@ class MessageTest(unittest.TestCase):
 
     def test_message_optionals(self):
         parsed_message_with_optionals = ProtoMessage.match(
-            dedent(
-                """
+            dedent("""
             message FooMessage {
                 option java_package = "foobar";
                 option (foo.bar).baz = false;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertIsNotNone(
             parsed_message_with_optionals.node.options,
@@ -276,8 +266,7 @@ class MessageTest(unittest.TestCase):
 
     def test_message_nested_enum(self):
         parsed_message_with_enum = ProtoMessage.match(
-            dedent(
-                """
+            dedent("""
             message FooMessage {
                 enum MyEnum {
                     ME_UNDEFINED = 0;
@@ -285,8 +274,7 @@ class MessageTest(unittest.TestCase):
                     ME_VALONE = 1;
                 }
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             parsed_message_with_enum.node,
@@ -316,13 +304,11 @@ class MessageTest(unittest.TestCase):
 
     def test_message_nested_message(self):
         parsed_message_with_enum = ProtoMessage.match(
-            dedent(
-                """
+            dedent("""
             message FooMessage {
                 message NestedMessage {}
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             parsed_message_with_enum.node,
@@ -336,14 +322,12 @@ class MessageTest(unittest.TestCase):
 
     def test_message_reserved_single_field(self):
         parsed_message_with_reserved_single_field = ProtoMessage.match(
-            dedent(
-                """
+            dedent("""
             message FooMessage {
                 reserved 38, 48 to 100, 72 to max;
                 reserved "foo", "barBaz";
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             parsed_message_with_reserved_single_field.node,
@@ -375,13 +359,11 @@ class MessageTest(unittest.TestCase):
 
     def test_message_simple_field(self):
         parsed_message_with_single_field_simple = ProtoMessage.match(
-            dedent(
-                """
+            dedent("""
             message FooMessage {
                 string single_field = 1;
             }
-        """.strip()
-            ),
+        """.strip()),
         )
         self.assertEqual(
             parsed_message_with_single_field_simple.node,
@@ -399,8 +381,7 @@ class MessageTest(unittest.TestCase):
 
     def test_message_parses_comments(self):
         parsed_comments = ProtoMessage.match(
-            dedent(
-                """
+            dedent("""
                 message MyMessage {
                     string foo = 1;
                     // single-line comment!
@@ -412,8 +393,7 @@ class MessageTest(unittest.TestCase):
                     */
                     string baz = 3;
                 }
-                """.strip()
-            ),
+                """.strip()),
         )
         self.assertEqual(
             parsed_comments.node.nodes,
@@ -442,16 +422,14 @@ class MessageTest(unittest.TestCase):
 
     def test_message_extends(self):
         parsed_extends = ProtoMessage.match(
-            dedent(
-                """
+            dedent("""
                 message MyMessage {
                     string foo = 1;
                     extend SomeOtherMessage {
                         string foo = 2;
                     }
                 }
-                """.strip()
-            ),
+                """.strip()),
         )
         self.assertEqual(
             parsed_extends.node.nodes,
@@ -476,8 +454,7 @@ class MessageTest(unittest.TestCase):
 
     def test_message_normalizes_away_comments(self):
         parsed_comments = ProtoMessage.match(
-            dedent(
-                """
+            dedent("""
                 message MyMessage {
                     string foo = 1;
                     // single-line comment!
@@ -489,8 +466,7 @@ class MessageTest(unittest.TestCase):
                     */
                     string baz = 3;
                 }
-                """.strip()
-            ),
+                """.strip()),
         ).node.normalize()
         self.assertEqual(
             parsed_comments.nodes,

@@ -40,12 +40,10 @@ class OneOfTest(unittest.TestCase):
 
     def test_oneof_empty_statements(self):
         parsed_oneof_empty = ProtoOneOf.match(
-            dedent(
-                """oneof one_of_field {
+            dedent("""oneof one_of_field {
                 ;
                 ;
-            }""".strip()
-            ),
+            }""".strip()),
         )
         self.assertEqual(
             parsed_oneof_empty.node,
@@ -57,12 +55,10 @@ class OneOfTest(unittest.TestCase):
 
     def test_oneof_basic_fields(self):
         parsed_oneof_basic_fields = ProtoOneOf.match(
-            dedent(
-                """oneof one_of_field {
+            dedent("""oneof one_of_field {
                 string name = 4;
                 SubMessage sub_message = 9;
-            }""".strip()
-            ),
+            }""".strip()),
         )
         self.assertEqual(
             parsed_oneof_basic_fields.node,
@@ -89,11 +85,9 @@ class OneOfTest(unittest.TestCase):
 
     def test_oneof_options(self):
         parsed_oneof_options = ProtoOneOf.match(
-            dedent(
-                """oneof one_of_field {
+            dedent("""oneof one_of_field {
                 option java_package = "com.example.foo";
-            }""".strip()
-            ),
+            }""".strip()),
         )
         self.assertEqual(
             parsed_oneof_options.node,
@@ -110,11 +104,9 @@ class OneOfTest(unittest.TestCase):
 
     def test_oneof_field_option(self):
         parsed_oneof_field_option = ProtoOneOf.match(
-            dedent(
-                """oneof one_of_field {
+            dedent("""oneof one_of_field {
                 string name = 4 [ (bar.baz).bat = "bat", baz.bat = -100 ];
-            }""".strip()
-            ),
+            }""".strip()),
         )
         self.assertEqual(
             parsed_oneof_field_option.node,
@@ -145,13 +137,11 @@ class OneOfTest(unittest.TestCase):
 
     def test_oneof_with_comment(self):
         parsed_oneof_with_comment = ProtoOneOf.match(
-            dedent(
-                """oneof one_of_field {
+            dedent("""oneof one_of_field {
                 string name = 4;
                 // single-line comment!
                 SubMessage sub_message = 9;
-            }""".strip()
-            ),
+            }""".strip()),
         )
         self.assertEqual(
             parsed_oneof_with_comment.node,
@@ -179,13 +169,11 @@ class OneOfTest(unittest.TestCase):
 
     def test_oneof_normalize_removes_comment(self):
         normalized_oneof = ProtoOneOf.match(
-            dedent(
-                """oneof one_of_field {
+            dedent("""oneof one_of_field {
                 string name = 4;
                 // single-line comment!
                 SubMessage sub_message = 9;
-            }""".strip()
-            ),
+            }""".strip()),
         ).node.normalize()
         self.assertEqual(
             normalized_oneof.nodes,

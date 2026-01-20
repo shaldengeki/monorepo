@@ -30,8 +30,7 @@ def downgrade():
         ),
     )
 
-    op.execute(
-        """
+    op.execute("""
         update users
         set fitbit_subscription_id = (
             select id from fitbit_subscriptions
@@ -41,5 +40,4 @@ def downgrade():
             select * from fitbit_subscriptions
             where fitbit_subscriptions.fitbit_user_id = users.fitbit_user_id
         )
-        """
-    )
+        """)
