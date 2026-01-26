@@ -27,6 +27,7 @@ manifest:
     distlib: distlib
     docker: docker
     exceptiongroup: exceptiongroup
+    fd7dcdb10166ebd4db98__mypyc: pytokens
     filelock: filelock
     flask: flask
     flask_cors: flask_cors
@@ -87,4 +88,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: fe4e1cde3e4e8e6899aac26aa7413bf42edb65bc9737a319f6273773156688d7
+integrity: 61407e772755ff7b5fc206065d14d4424e9ab2452a066d2ffe7f28ef878ae1a3
