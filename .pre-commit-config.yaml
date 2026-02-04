@@ -38,7 +38,7 @@ repos:
                     - types-requests==2.31.0.20240218
                     - types-protobuf==5.27.0.20240626
     -   repo: https://github.com/pre-commit/mirrors-eslint
-        rev: 'v10.0.0-rc.1'
+        rev: 'v10.0.0-rc.2'
         hooks:
             -   id: eslint
                 files: \.[jt]sx?$  # *.js, *.jsx, *.ts and *.tsx
