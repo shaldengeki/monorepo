@@ -4,7 +4,6 @@ load("//tools/build_rules/worker:defs.bzl", "worker")
 py_binary(
     name = "binary",
     srcs = ["app.py"],
-    imports = [".."],
     main = "app.py",
     visibility = ["//:__subpackages__"],
     deps = ["//skeleton:config_py"],

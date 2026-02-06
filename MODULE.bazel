@@ -3,35 +3,37 @@ module(
     repo_name = "com_github_shaldengeki_monorepo",
 )
 
-bazel_dep(name = "aspect_bazel_lib", version = "2.21.2")
+bazel_dep(name = "aspect_bazel_lib", version = "2.22.5")
 bazel_dep(name = "bazel_skylib", version = "1.9.0")
 
 bazel_dep(name = "platforms", version = "1.0.0", dev_dependency = True)
 
 bazel_dep(name = "rules_foreign_cc", version = "0.15.1")
-bazel_dep(name = "protobuf", version = "33.4")
+bazel_dep(name = "protobuf", version = "33.5")
 bazel_dep(name = "rules_proto", version = "7.1.0")
+
+# Can't upgrade to 1.8.3; breaks graphql-server for some reason.
 bazel_dep(name = "rules_python", version = "1.6.3")
-bazel_dep(name = "rules_oci", version = "2.2.6")
-bazel_dep(name = "aspect_rules_js", version = "2.6.0")
-bazel_dep(name = "aspect_rules_ts", version = "3.7.0")
+bazel_dep(name = "rules_oci", version = "2.2.7")
+bazel_dep(name = "aspect_rules_js", version = "2.9.2")
+bazel_dep(name = "aspect_rules_ts", version = "3.8.3")
 bazel_dep(name = "aspect_rules_webpack", version = "0.17.1")
-bazel_dep(name = "rules_nodejs", version = "6.6.2")
-bazel_dep(name = "rules_pkg", version = "1.1.0")
+bazel_dep(name = "rules_nodejs", version = "6.7.3")
+bazel_dep(name = "rules_pkg", version = "1.2.0")
 bazel_dep(name = "rules_go", version = "0.59.0")
-bazel_dep(name = "gazelle", version = "0.45.0")
-bazel_dep(name = "rules_python_gazelle_plugin", version = "1.6.3")
-bazel_dep(name = "rules_java", version = "8.15.2")
-bazel_dep(name = "contrib_rules_jvm", version = "0.30.0")
-bazel_dep(name = "gazelle_cc", version = "0.1.0")
-bazel_dep(name = "rules_cc", version = "0.2.14")
+bazel_dep(name = "gazelle", version = "0.47.0")
+bazel_dep(name = "rules_python_gazelle_plugin", version = "1.8.3")
+bazel_dep(name = "rules_java", version = "9.3.0")
+bazel_dep(name = "contrib_rules_jvm", version = "0.32.0")
+bazel_dep(name = "gazelle_cc", version = "0.5.0")
+bazel_dep(name = "rules_cc", version = "0.2.16")
 bazel_dep(name = "googletest", version = "1.17.0.bcr.2")
 bazel_dep(name = "rules_buf", version = "0.5.2")
-bazel_dep(name = "boost.algorithm", version = "1.87.0")
-bazel_dep(name = "boost.asio", version = "1.87.0.bcr.1")
-bazel_dep(name = "boost.lexical_cast", version = "1.87.0")
-bazel_dep(name = "boost.mysql", version = "1.87.0")
-bazel_dep(name = "boost.program_options", version = "1.87.0")
+bazel_dep(name = "boost.algorithm", version = "1.89.0.bcr.2")
+bazel_dep(name = "boost.asio", version = "1.89.0.bcr.2")
+bazel_dep(name = "boost.lexical_cast", version = "1.89.0.bcr.2")
+bazel_dep(name = "boost.mysql", version = "1.89.0.bcr.2")
+bazel_dep(name = "boost.program_options", version = "1.89.0.bcr.2")
 bazel_dep(name = "rules_shell", version = "0.6.1")
 
 #### Protoc
@@ -174,18 +176,18 @@ go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.module(
     # build_file_proto_mode = "disable",
     path = "google.golang.org/grpc",
-    sum = "h1:/ODCNEuf9VghjgO3rqLcfg8fiOP0nSluljWFlDxELLI=",
-    version = "v1.75.1",
+    sum = "h1:K1XZG/yGDJnzMdd/uZHAkVqJE+xIDOcmdSFZkBUicNc=",
+    version = "v1.78.0",
 )
 go_deps.module(
     path = "golang.org/x/net",
-    sum = "h1:evd8IRDyfNBMBTTY5XRF1vaZlD+EmWx6x8PkhR04H/I=",
-    version = "v0.44.0",
+    sum = "h1:eeHFmOGUTtaaPSGNmjBKpbng9MulQsJURQUAfUwY++o=",
+    version = "v0.49.0",
 )
 go_deps.module(
     path = "golang.org/x/text",
-    sum = "h1:1neNs90w9YzJ9BocxfsQNHKuAT4pkghyXc4nhZ6sJvk=",
-    version = "v0.29.0",
+    sum = "h1:B3njUFyqtHDUI5jMn1YIr5B0IE2U0qck04r6d4KPAxE=",
+    version = "v0.33.0",
 )
 go_deps.module(
     path = "github.com/stretchr/testify",
