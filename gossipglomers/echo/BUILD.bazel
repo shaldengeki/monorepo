@@ -1,0 +1,15 @@
+load("@rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "echo_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/shaldengeki/monorepo/gossipglomers/echo",
+    visibility = ["//visibility:private"],
+    deps = ["@com_github_jepsen_io_maelstrom_demo_go//:go_default_library"],  # keep
+)
+
+go_binary(
+    name = "echo",
+    embed = [":echo_lib"],
+    visibility = ["//visibility:public"],
+)
