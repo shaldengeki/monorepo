@@ -174,10 +174,14 @@ use_repo(rules_ts_ext, "npm_typescript")
 #### Golang
 go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.module(
-    # build_file_proto_mode = "disable",
-    path = "google.golang.org/grpc",
-    sum = "h1:K1XZG/yGDJnzMdd/uZHAkVqJE+xIDOcmdSFZkBUicNc=",
-    version = "v1.78.0",
+    path = "github.com/jepsen-io/maelstrom/demo/go",
+    sum = "h1:j2FpC/930Px9SWIn8lgzxEiEZOvaQ9EUs37+e1QCNLA=",
+    version = "v0.0.0-20251128144731-cb7f07239012",
+)
+go_deps.module(
+    path = "github.com/stretchr/testify",
+    sum = "h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=",
+    version = "v1.11.1",
 )
 go_deps.module(
     path = "golang.org/x/net",
@@ -190,12 +194,13 @@ go_deps.module(
     version = "v0.33.0",
 )
 go_deps.module(
-    path = "github.com/stretchr/testify",
-    sum = "h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=",
-    version = "v1.11.1",
+    path = "google.golang.org/grpc",
+    sum = "h1:K1XZG/yGDJnzMdd/uZHAkVqJE+xIDOcmdSFZkBUicNc=",
+    version = "v1.78.0",
 )
 use_repo(
     go_deps,
+    "com_github_jepsen_io_maelstrom_demo_go",
     "com_github_stretchr_testify",
     "org_golang_google_grpc",
     "org_golang_x_net",
