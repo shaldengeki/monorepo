@@ -48,7 +48,7 @@ const Topic& DifferenceCursor::next() {
   std::vector<Cursor*>::const_iterator current_cursor = _cursors.cbegin();
   Cursor* first_cursor = *current_cursor;
 
-  for (Topic current_position = first_cursor->next(); position().id() != end().id(); first_cursor->next()) {
+  for (; position().id() != end().id(); first_cursor->next()) {
     if (position().id() != prev_position.id()) {
       break;
     }

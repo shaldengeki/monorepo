@@ -66,7 +66,6 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  delete message;
   close(s);
 
   return 0;
