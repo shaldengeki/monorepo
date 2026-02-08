@@ -126,7 +126,7 @@ int main(int argc, char* argv[]) {
   // All done!
   std::cout << "Loaded " << tagd->size() << " tags." << std::endl;
 
-  int local_sock, client_sock, t, len;
+  int local_sock, len;
   struct sockaddr_un local, remote;
   if ((local_sock = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
     perror("socket");
@@ -157,7 +157,6 @@ int main(int argc, char* argv[]) {
   fdmax = local_sock;
 
   int new_fd, curr_fd, n;
-  char remote_ip[INET6_ADDRSTRLEN];
   socklen_t addr_len;
 
   while(true) {

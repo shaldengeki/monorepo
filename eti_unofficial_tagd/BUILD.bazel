@@ -24,18 +24,21 @@ cc_library(
         "topic.hpp",
         "union_cursor.hpp",
     ],
+    copts = ["-Werror"],
     visibility = ["//visibility:public"],
 )
 
 cc_binary(
     name = "client",
     srcs = ["client.cpp"],
+    copts = ["-Werror"],
     deps = ["@boost.program_options//:boost.program_options"],
 )
 
 cc_binary(
     name = "main",
     srcs = ["main.cpp"],
+    copts = ["-Werror"],
     deps = [
         ":eti_unofficial_tagd",
         "@boost.algorithm//:boost.algorithm",
