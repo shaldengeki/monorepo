@@ -25,12 +25,10 @@ from ark_nova_stats.emu_cup.tables import EMU_CUP_GAME_TABLE_IDS
 
 def list_game_datafiles() -> list[Path]:
     r = Runfiles.Create()
-    known_game = Path(
-        r.Rlocation(
-            "_main/ark_nova_stats/emu_cup/data/531081985_Sirhk_sorryimlikethis_Awesometothemax_Pogstar.json"
-        )
+    known_game = Path(r.Rlocation("_main/ark_nova_stats/emu_cup/data/nonempty.json"))
+    return sorted(
+        [f for f in known_game.parent.glob("*.json") if f.name != "nonempty.json"]
     )
-    return sorted(known_game.parent.glob("*.json"))
 
 
 def main(working_dir: str) -> int:

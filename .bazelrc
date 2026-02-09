@@ -2,9 +2,6 @@
 
 try-import %workspace%/aspect.bazelrc
 
-# Enable Bzlmod for every Bazel command
-common --enable_bzlmod
-
 test --test_output=errors
 
 # Do NOT implicitly create empty __init__.py files in the runfiles tree.
@@ -28,17 +25,6 @@ common --per_file_copt=external/.*protobuf.*@--PROTOBUF_WAS_NOT_SUPPOSED_TO_BE_B
 common --host_per_file_copt=external/.*protobuf.*@--PROTOBUF_WAS_NOT_SUPPOSED_TO_BE_BUILT
 common --per_file_copt=external/.*grpc.*@--GRPC_WAS_NOT_SUPPOSED_TO_BE_BUILT
 common --host_per_file_copt=external/.*grpc.*@--GRPC_WAS_NOT_SUPPOSED_TO_BE_BUILT
-
-# Some of our globs are empty.
-common --incompatible_disallow_empty_glob=false
-
-# rules_hugo violates this rule, which we should migrate off of.
-common --incompatible_disallow_struct_provider_syntax=false
-
-# rules_buf requires this; otherwise the linting rules fail with:
-#  - file_descriptors[0].file_descriptor_proto: source_code_info must be present [source_code_info_present]
-# See https://github.com/bufbuild/rules_buf/issues/84
-common --experimental_proto_descriptor_sets_include_source_info
 
 # boost.asio & mysql have a dependency on an SSL implementation.
 # we have to explicitly tell them to use boringssl.
