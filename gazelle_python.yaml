@@ -50,6 +50,8 @@ manifest:
     librt.base64: librt
     librt.internal: librt
     librt.strings: librt
+    librt.time: librt
+    librt.vecs: librt
     mako: mako
     markupsafe: markupsafe
     mccabe: mccabe
@@ -88,4 +90,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 534e2983d3d3983756e9c5d54e3a7c4d9e098f7803d9403658497f1c6eb1b48b
+integrity: ee1d4fecf2e706b9b564fd28b33e2097d9cf7d180c4060ef0b67bf963a85e3f8
