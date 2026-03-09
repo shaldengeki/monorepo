@@ -9,6 +9,7 @@ manifest:
     30fcd23745efe32ce681__mypyc: black
     4c842c94c09923bae9e4__mypyc: mypy
     7bce59c0a152c0e01f70__mypyc: tomli
+    81d243bd2c585b0f4821__mypyc: charset_normalizer
     alembic: alembic
     asn1crypto: asn1crypto
     astroid: astroid
@@ -91,4 +92,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 7d3d092655eadbb32eee4843e563adf5772c3f2291cdca8cc29c22135a32a09f
+integrity: 1e50cef59a13b220373610301e0ecf0cda73aeefbfad1ea3aa3fea3e1f59db17
