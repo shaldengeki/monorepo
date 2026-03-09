@@ -55,7 +55,7 @@
         "@types/react-dom": "^19.2.3",
         "@types/react-plotly.js": "^2.6.4",
         "@vitest/coverage-istanbul": "^4.0.18",
-        "copy-webpack-plugin": "^13.0.1",
+        "copy-webpack-plugin": "^14.0.0",
         "css-loader": "^7.1.4",
         "dotenv-webpack": "^8.1.1",
         "file-loader": "^6.2.0",
