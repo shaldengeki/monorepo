@@ -15,8 +15,8 @@ dependencies:
     specifier: ^2.2.0
     version: 2.2.0(react@19.2.4)
   '@vitejs/plugin-react':
-    specifier: ^5.1.4
-    version: 5.1.4(vite@7.3.1)
+    specifier: ^5.2.0
+    version: 5.2.0(vite@7.3.1)
   d3-array:
     specifier: ^3.2.4
     version: 3.2.4
@@ -2000,11 +2000,11 @@ packages:
       '@types/yargs-parser': 21.0.3
     dev: true
 
-  /@vitejs/plugin-react@5.1.4(vite@7.3.1):
-    resolution: {integrity: sha512-VIcFLdRi/VYRU8OL/puL7QXMYafHmqOnwTZY50U1JPlCNj30PxCMx65c494b1K9be9hX83KVt0+gTEwTWLqToA==}
+  /@vitejs/plugin-react@5.2.0(vite@7.3.1):
+    resolution: {integrity: sha512-YmKkfhOAi3wsB1PhJq5Scj3GXMn3WvtQ/JC0xoopuHoXSdmtdStOpFrYaT1kie2YgFBcIe64ROzMYRjCrYOdYw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
-      vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
+      vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
