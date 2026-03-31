@@ -230,7 +230,7 @@ jobs:
           fetch-depth: 0
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Build site
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc build //blog:site
       - name: Upload artifact
