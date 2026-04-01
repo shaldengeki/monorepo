@@ -39,7 +39,7 @@ Following up on [my predictions for 2024]({{< ref "predictions-2024-followup" >}
 
 ### Housing
 - ✅ 2024 estimated population change is >=0%: 70%
-- [2025 new housing permits issued](https://fred.stlouisfed.org/series/CABPPRIV) up from 2024: 50%
+- ✅ [2025 new housing permits issued](https://fred.stlouisfed.org/series/CABPPRIV) up from 2024: 50%
 - ✅ [Median listing $/sqft in the SF/Oakland/Hayward MSA](https://fred.stlouisfed.org/series/MEDLISPRIPERSQUFEE41860) <$640: 20%
 
 ### HSR
