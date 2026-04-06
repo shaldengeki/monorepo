@@ -51,17 +51,17 @@ dependencies:
     specifier: ^5.3.0
     version: 5.3.0
   lodash:
-    specifier: ^4.17.23
-    version: 4.17.23
+    specifier: ^4.18.1
+    version: 4.18.1
   package.json:
     specifier: ^2.0.1
     version: 2.0.1
   plotly.js:
-    specifier: ^3.4.0
-    version: 3.4.0(mapbox-gl@1.13.3)
+    specifier: ^3.5.0
+    version: 3.5.0(mapbox-gl@1.13.3)
   plotly.js-basic-dist:
-    specifier: ^3.4.0
-    version: 3.4.0
+    specifier: ^3.5.0
+    version: 3.5.0
   react:
     specifier: ^19.2.4
     version: 19.2.4
@@ -73,16 +73,16 @@ dependencies:
     version: 19.2.4(react@19.2.4)
   react-plotly.js:
     specifier: ^2.6.0
-    version: 2.6.0(plotly.js@3.4.0)(react@19.2.4)
+    version: 2.6.0(plotly.js@3.5.0)(react@19.2.4)
   react-router-dom:
-    specifier: 7.13.2
-    version: 7.13.2(react-dom@19.2.4)(react@19.2.4)
+    specifier: 7.14.0
+    version: 7.14.0(react-dom@19.2.4)(react@19.2.4)
   typescript:
     specifier: ^6
     version: 6.0.2
   vite:
     specifier: ^7.3.1
-    version: 7.3.1(@types/node@25.5.0)
+    version: 7.3.1(@types/node@25.5.2)
   web-vitals:
     specifier: ^5.2.0
     version: 5.2.0
@@ -110,8 +110,8 @@ devDependencies:
     specifier: ^4.17.24
     version: 4.17.24
   '@types/node':
-    specifier: ^25.5.0
-    version: 25.5.0
+    specifier: ^25.5.2
+    version: 25.5.2
   '@types/plotly.js':
     specifier: ^3.0.10
     version: 3.0.10
@@ -162,10 +162,10 @@ devDependencies:
     version: 4.2.2
   vitest:
     specifier: ^4.1.2
-    version: 4.1.2(@types/node@25.5.0)(jsdom@29.0.1)(vite@7.3.1)
+    version: 4.1.2(@types/node@25.5.2)(jsdom@29.0.1)(vite@7.3.1)
   vitest-browser-react:
-    specifier: ^2.1.0
-    version: 2.1.0(@types/react-dom@19.2.3)(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)(vitest@4.1.2)
+    specifier: ^2.2.0
+    version: 2.2.0(@types/react-dom@19.2.3)(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)(vitest@4.1.2)
   webpack:
     specifier: ^5.105.4
     version: 5.105.4(webpack-cli@7.0.2)
@@ -853,7 +853,7 @@ packages:
       '@jest/fake-timers': 30.3.0
       '@jest/types': 30.3.0
       '@types/jsdom': 21.1.7
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       jest-mock: 30.3.0
       jest-util: 30.3.0
       jsdom: 26.1.0
@@ -865,7 +865,7 @@ packages:
     dependencies:
       '@jest/fake-timers': 30.3.0
       '@jest/types': 30.3.0
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       jest-mock: 30.3.0
     dev: true
 
@@ -882,7 +882,7 @@ packages:
     dependencies:
       '@jest/types': 30.3.0
       '@sinonjs/fake-timers': 15.1.1
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       jest-message-util: 30.3.0
       jest-mock: 30.3.0
       jest-util: 30.3.0
@@ -897,7 +897,7 @@ packages:
     resolution: {integrity: sha512-gWp7NfQW27LaBQz3TITS8L7ZCQ0TLvtmI//4OwlQRx4rnWxcPNIYjxZpDcN4+UlGxgm3jS5QPz8IPTCkb59wZA==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       jest-regex-util: 30.0.1
     dev: true
 
@@ -916,7 +916,7 @@ packages:
       '@jest/schemas': 30.0.5
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       '@types/yargs': 17.0.35
       chalk: 4.1.2
     dev: true
@@ -929,7 +929,7 @@ packages:
       '@jest/schemas': 30.0.5
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       '@types/yargs': 17.0.35
       chalk: 4.1.2
     dev: true
@@ -1912,7 +1912,7 @@ packages:
   /@types/jsdom@21.1.7:
     resolution: {integrity: sha512-yOriVnggzrnQ3a9OKOCxaVuSug3w3/SbOj5i7VwXWZEyUNl3bLF9V3MfxGbZKuwqJOQyRfqXyROBB1CoZLFWzA==}
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       '@types/tough-cookie': 4.0.5
       parse5: 7.3.0
     dev: true
@@ -1924,7 +1924,7 @@ packages:
   /@types/keyv@3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
     dev: false
 
   /@types/lodash@4.17.24:
@@ -1943,8 +1943,8 @@ packages:
       '@types/pbf': 3.0.5
     dev: false
 
-  /@types/node@25.5.0:
-    resolution: {integrity: sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==}
+  /@types/node@25.5.2:
+    resolution: {integrity: sha512-tO4ZIRKNC+MDWV4qKVZe3Ql/woTnmHDr5JD8UI5hn2pwBrHEwOEMZK7WlNb5RKB6EoJ02gwmQS9OrjuFnZYdpg==}
     dependencies:
       undici-types: 7.18.2
 
@@ -1980,7 +1980,7 @@ packages:
   /@types/responselike@1.0.3:
     resolution: {integrity: sha512-H/+L+UkTV33uf49PH5pCAUBVPNj2nDBXTN+qS1dOwyyg24l3CcicicCA7ca+HMvJBZcFgl5r8e+RR6elsb4Lyw==}
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
     dev: false
 
   /@types/stack-utils@2.0.3:
@@ -2019,7 +2019,7 @@ packages:
       '@rolldown/pluginutils': 1.0.0-rc.3
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
-      vite: 7.3.1(@types/node@25.5.0)
+      vite: 7.3.1(@types/node@25.5.2)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -2039,7 +2039,7 @@ packages:
       magicast: 0.5.2
       obug: 2.1.1
       tinyrainbow: 3.1.0
-      vitest: 4.1.2(@types/node@25.5.0)(jsdom@29.0.1)(vite@7.3.1)
+      vitest: 4.1.2(@types/node@25.5.2)(jsdom@29.0.1)(vite@7.3.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2069,7 +2069,7 @@ packages:
       '@vitest/spy': 4.1.2
       estree-walker: 3.0.3
       magic-string: 0.30.21
-      vite: 7.3.1(@types/node@25.5.0)
+      vite: 7.3.1(@types/node@25.5.2)
     dev: true
 
   /@vitest/pretty-format@4.1.2:
@@ -3828,7 +3828,7 @@ packages:
     dependencies:
       '@types/html-minifier-terser': 6.1.0
       html-minifier-terser: 6.1.0
-      lodash: 4.17.23
+      lodash: 4.18.1
       pretty-error: 4.0.0
       tapable: 2.3.0
       webpack: 5.105.4(webpack-cli@7.0.2)
@@ -4152,7 +4152,7 @@ packages:
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
     dependencies:
       '@jest/types': 30.2.0
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       jest-util: 30.2.0
     dev: true
 
@@ -4161,7 +4161,7 @@ packages:
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
     dependencies:
       '@jest/types': 30.3.0
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       jest-util: 30.3.0
     dev: true
 
@@ -4175,7 +4175,7 @@ packages:
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
     dependencies:
       '@jest/types': 30.2.0
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       chalk: 4.1.2
       ci-info: 4.4.0
       graceful-fs: 4.2.11
@@ -4187,7 +4187,7 @@ packages:
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
     dependencies:
       '@jest/types': 30.3.0
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       chalk: 4.1.2
       ci-info: 4.4.0
       graceful-fs: 4.2.11
@@ -4198,7 +4198,7 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: true
@@ -4467,8 +4467,8 @@ packages:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: false
 
-  /lodash@4.17.23:
-    resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
+  /lodash@4.18.1:
+    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
 
   /loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -4701,7 +4701,7 @@ packages:
     dependencies:
       debug: 3.2.7
       iconv-lite: 0.4.24
-      sax: 1.4.4
+      sax: 1.6.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -5003,12 +5003,12 @@ packages:
       find-up: 4.1.0
     dev: true
 
-  /plotly.js-basic-dist@3.4.0:
-    resolution: {integrity: sha512-55w1KumCZDDRmEM1eArgvZ7ydEuKbsqqS4Sthri7J33bB2RMFkP5zcUngimMqx03F19gLQI5rHcCf6vaf0GgZw==}
+  /plotly.js-basic-dist@3.5.0:
+    resolution: {integrity: sha512-hASGEcTx9CWpDTG+1xcSiNznvfhyBEQIO2Ja13jIsGww4OewCbjN4p5pEffEEARBkXqRWUB7LB+havjo0o3ETw==}
     dev: false
 
-  /plotly.js@3.4.0(mapbox-gl@1.13.3):
-    resolution: {integrity: sha512-jdWfHLB8AxlGUmVhqJTGEKdwjCKGn9Yi8yg16067/JyqseuSado7F6IOM1XPZspdZyO/cf8IPuy7ROlVhqZZNw==}
+  /plotly.js@3.5.0(mapbox-gl@1.13.3):
+    resolution: {integrity: sha512-a3AYQIMG7OdZmrJ/fJ65HSt3g1l5qDeludKqjjafU1dh5E+fwqDhsEBndW7VCYwjlducCfN6KtPdWdiWFcoBWw==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@plotly/d3': 3.8.2
@@ -5151,7 +5151,7 @@ packages:
   /pretty-error@4.0.0:
     resolution: {integrity: sha512-AoJ5YMAcXKYxKhuJGdcvse+Voc6v1RgnsR3nWcYU7q4t6z0Q6T86sv5Zq8VIRbOWWFpvdGE83LtdSMNd+6Y0xw==}
     dependencies:
-      lodash: 4.17.23
+      lodash: 4.18.1
       renderkid: 3.0.0
     dev: true
 
@@ -5293,13 +5293,13 @@ packages:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
     dev: true
 
-  /react-plotly.js@2.6.0(plotly.js@3.4.0)(react@19.2.4):
+  /react-plotly.js@2.6.0(plotly.js@3.5.0)(react@19.2.4):
     resolution: {integrity: sha512-g93xcyhAVCSt9kV1svqG1clAEdL6k3U+jjuSzfTV7owaSU9Go6Ph8bl25J+jKfKvIGAEYpe4qj++WHJuc9IaeA==}
     peerDependencies:
       plotly.js: '>1.34.0'
       react: '>0.13.0'
     dependencies:
-      plotly.js: 3.4.0(mapbox-gl@1.13.3)
+      plotly.js: 3.5.0(mapbox-gl@1.13.3)
       prop-types: 15.8.1
       react: 19.2.4
     dev: false
@@ -5309,8 +5309,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /react-router-dom@7.13.2(react-dom@19.2.4)(react@19.2.4):
-    resolution: {integrity: sha512-aR7SUORwTqAW0JDeiWF07e9SBE9qGpByR9I8kJT5h/FrBKxPMS6TiC7rmVO+gC0q52Bx7JnjWe8Z1sR9faN4YA==}
+  /react-router-dom@7.14.0(react-dom@19.2.4)(react@19.2.4):
+    resolution: {integrity: sha512-2G3ajSVSZMEtmTjIklRWlNvo8wICEpLihfD/0YMDxbWK2UyP5EGfnoIn9AIQGnF3G/FX0MRbHXdFcD+rL1ZreQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -5318,11 +5318,11 @@ packages:
     dependencies:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
-      react-router: 7.13.2(react-dom@19.2.4)(react@19.2.4)
+      react-router: 7.14.0(react-dom@19.2.4)(react@19.2.4)
     dev: false
 
-  /react-router@7.13.2(react-dom@19.2.4)(react@19.2.4):
-    resolution: {integrity: sha512-tX1Aee+ArlKQP+NIUd7SE6Li+CiGKwQtbS+FfRxPX6Pe4vHOo6nr9d++u5cwg+Z8K/x8tP+7qLmujDtfrAoUJA==}
+  /react-router@7.14.0(react-dom@19.2.4)(react@19.2.4):
+    resolution: {integrity: sha512-m/xR9N4LQLmAS0ZhkY2nkPA1N7gQ5TUVa5n8TgANuDTARbn1gt+zLPXEm7W0XDTbrQ2AJSJKhoa6yx1D8BcpxQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -5475,7 +5475,7 @@ packages:
       css-select: 4.3.0
       dom-converter: 0.2.0
       htmlparser2: 6.1.0
-      lodash: 4.17.23
+      lodash: 4.18.1
       strip-ansi: 6.0.1
     dev: true
 
@@ -5578,8 +5578,8 @@ packages:
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  /sax@1.4.4:
-    resolution: {integrity: sha512-1n3r/tGXO6b6VXMdFT54SHzT9ytu9yr7TaELowdYpMqY/Ao7EnlQGmAQ1+RatX7Tkkdm6hONI2owqNx2aZj5Sw==}
+  /sax@1.6.0:
+    resolution: {integrity: sha512-6R3J5M4AcbtLUdZmRv2SygeVaM7IhrLXu9BmnOGmmACak8fiUtOsYNWUS4uK7upbmHIBbLBeFeI//477BKLBzA==}
     engines: {node: '>=11.0.0'}
     dev: false
 
@@ -6152,7 +6152,7 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: false
 
-  /vite@7.3.1(@types/node@25.5.0):
+  /vite@7.3.1(@types/node@25.5.2):
     resolution: {integrity: sha512-w+N7Hifpc3gRjZ63vYBXA56dvvRlNWRczTdmCBBa+CotUzAPf5b7YMdMR/8CQoeYE5LX3W4wj6RYTgonm1b9DA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
@@ -6192,7 +6192,7 @@ packages:
       yaml:
         optional: true
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       esbuild: 0.27.2
       fdir: 6.5.0(picomatch@4.0.3)
       picomatch: 4.0.3
@@ -6202,8 +6202,8 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vitest-browser-react@2.1.0(@types/react-dom@19.2.3)(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)(vitest@4.1.2):
-    resolution: {integrity: sha512-/cOVQ+dZojhavfsbHjcfzB3zrUxG39HIbGdvK9vSBdGc8b8HRu5Bql0p8aXtKw4sb8/E8n5XEncQxvqHtfjjag==}
+  /vitest-browser-react@2.2.0(@types/react-dom@19.2.3)(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)(vitest@4.1.2):
+    resolution: {integrity: sha512-oY3KM6305kwJMa6nHo92vVtkOsih7mjEf12dLKuphaF+9ywWPEc+qanIBd394SZ6m5LadVEaG6dicvvizOzmjA==}
     peerDependencies:
       '@types/react': ^18.0.0 || ^19.0.0
       '@types/react-dom': ^18.0.0 || ^19.0.0
@@ -6220,10 +6220,10 @@ packages:
       '@types/react-dom': 19.2.3(@types/react@19.2.14)
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
-      vitest: 4.1.2(@types/node@25.5.0)(jsdom@29.0.1)(vite@7.3.1)
+      vitest: 4.1.2(@types/node@25.5.2)(jsdom@29.0.1)(vite@7.3.1)
     dev: true
 
-  /vitest@4.1.2(@types/node@25.5.0)(jsdom@29.0.1)(vite@7.3.1):
+  /vitest@4.1.2(@types/node@25.5.2)(jsdom@29.0.1)(vite@7.3.1):
     resolution: {integrity: sha512-xjR1dMTVHlFLh98JE3i/f/WePqJsah4A0FK9cc8Ehp9Udk0AZk6ccpIZhh1qJ/yxVWRZ+Q54ocnD8TXmkhspGg==}
     engines: {node: ^20.0.0 || ^22.0.0 || >=24.0.0}
     hasBin: true
@@ -6258,7 +6258,7 @@ packages:
       jsdom:
         optional: true
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 25.5.2
       '@vitest/expect': 4.1.2
       '@vitest/mocker': 4.1.2(vite@7.3.1)
       '@vitest/pretty-format': 4.1.2
@@ -6278,7 +6278,7 @@ packages:
       tinyexec: 1.0.4
       tinyglobby: 0.2.15
       tinyrainbow: 3.1.0
-      vite: 7.3.1(@types/node@25.5.0)
+      vite: 7.3.1(@types/node@25.5.2)
       why-is-node-running: 2.3.0
     transitivePeerDependencies:
       - msw
