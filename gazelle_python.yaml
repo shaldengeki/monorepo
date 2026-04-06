@@ -6,8 +6,8 @@
 ---
 manifest:
   modules_mapping:
+    0aca9ce3d91742c5b361__mypyc: mypy
     30fcd23745efe32ce681__mypyc: black
-    4c842c94c09923bae9e4__mypyc: mypy
     81d243bd2c585b0f4821__mypyc: charset_normalizer
     955cd85d9c9a4f4b30d3__mypyc: tomli
     alembic: alembic
@@ -92,4 +92,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 837d1a6c299269a69783f69bfa0805f539a815e6397c0efb2dbd0c29ef354d87
+integrity: 3db6107c8cf27223c4710cccb7daa9a251d2a382c43fb08d0249d00ec5fdd2d7
