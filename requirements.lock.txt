@@ -1027,9 +1027,9 @@ types-flask-migrate==4.1.0.20250809 \
     --hash=sha256:92ad2c0d4000a53bf1e2f7813dd067edbbcc4c503961158a763e2b0ae297555d \
     --hash=sha256:fdf97a262c86aca494d75874a2374e84f2d37bef6467d9540fa3b054b67db04e
     # via -r requirements.txt
-types-protobuf==6.32.1.20260221 \
-    --hash=sha256:6d5fb060a616bfb076cbb61b4b3c3969f5fc8bec5810f9a2f7e648ee5cbcbf6e \
-    --hash=sha256:da7cdd947975964a93c30bfbcc2c6841ee646b318d3816b033adc2c4eb6448e4
+types-protobuf==7.34.1.20260403 \
+    --hash=sha256:16d9bbca52ab0f306279958878567df2520f3f5579059419b0ce149a0ad1e332 \
+    --hash=sha256:8d7881867888e667eb9563c08a916fccdc12bdb5f9f34c31d217cce876e36765
     # via -r requirements.txt
 types-requests==2.33.0.20260327 \
     --hash=sha256:f4f74f0b44f059e3db420ff17bd1966e3587cdd34062fe38a23cda97868f8dd8 \
