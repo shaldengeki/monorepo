@@ -1037,9 +1037,9 @@ types-protobuf==7.34.1.20260503 \
     --hash=sha256:75fd66121d56785c91828b8bf7b511f39ba847f11e682573e41847f01e9cd1de \
     --hash=sha256:effbc819aa17e02448dde99f089c6794662d66f4b2797e922f185ffe0b24e766
     # via -r requirements.txt
-types-requests==2.33.0.20260408 \
-    --hash=sha256:81f31d5ea4acb39f03be7bc8bed569ba6d5a9c5d97e89f45ac43d819b68ca50f \
-    --hash=sha256:95b9a86376807a216b2fb412b47617b202091c3ea7c078f47cc358d5528ccb7b
+types-requests==2.33.0.20260503 \
+    --hash=sha256:02aaa7e3577a13471715bb1bddb693cc985ea514f754b503bf033e6a09a3e528 \
+    --hash=sha256:9721b2d9dbee7131f2fb39f20f0ebb1999c18cef4b512c9a7932f3722de7c5f4
     # via -r requirements.txt
 types-s3transfer==0.16.0 \
     --hash=sha256:1c0cd111ecf6e21437cb410f5cddb631bfb2263b77ad973e79b9c6d0cb24e0ef \
