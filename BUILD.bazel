@@ -1,5 +1,5 @@
 load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
-load("@gazelle//:def.bzl", "gazelle_binary")
+load("@aspect_gazelle_prebuilt//:def.bzl", "aspect_gazelle")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@py_deps//:requirements.bzl", "all_whl_requirements")
 load("@rules_buf//buf:defs.bzl", "buf_format")
@@ -81,18 +81,18 @@ gazelle_python_manifest(
 
 # gazelle:resolve go github.com/bazelbuild/rules_go/go/runfiles @rules_go//go/runfiles:go_default_library
 
-gazelle_binary(
-    name = "gazelle",
-    languages = [
-        "@gazelle//language/proto",
-        "@rules_python_gazelle_plugin//python",
-        "@gazelle//language/go",
-        # This messes with the Python plugin for some reason.
-        # "@gazelle_cc//language/cc",
-        "@rules_buf//gazelle/buf:buf",
-    ],
-)
-
 buf_format(
     name = "buf_format",
+)
+
+aspect_gazelle(
+    name = "gazelle",
+    languages = [
+        "proto",
+        "python",
+        "go",
+        "cc",
+        "buf",
+    ],
+    repo_config = "@bazel_gazelle_go_repository_config//:WORKSPACE",
 )
