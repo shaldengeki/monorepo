@@ -703,7 +703,7 @@
     "@@rules_buf+//buf:extensions.bzl%buf": {
       "general": {
         "bzlTransitiveDigest": "IjW2he5lp+L/zEfsBKIilXijyHH6PC4Lf3y19MA6G4c=",
-        "usagesDigest": "7RnEQSNeBJp3IhG2ToUihAbxo+PfKUxmjsM9TSShf8Q=",
+        "usagesDigest": "cffucUlmcn0nTNkw3QzVbCkb4Ckmr5KLJwD4n5TxVR0=",
         "recordedInputs": [
           "REPO_MAPPING:rules_buf+,bazel_tools bazel_tools"
         ],
