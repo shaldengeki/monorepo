@@ -25,7 +25,7 @@ go_test(
         "//games/tictactoe/proto:proto_go_proto",
         "//games/tictactoe/proto/server:server_go_proto",
         "//games/tictactoe/rule_set/default_rule_set",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

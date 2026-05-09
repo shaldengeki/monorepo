@@ -19,7 +19,7 @@ go_test(
     embed = [":floating_point_token"],
     deps = [
         "//proto_parser/tokenizer/errors",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

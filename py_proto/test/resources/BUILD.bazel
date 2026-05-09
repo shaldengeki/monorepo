@@ -1,3 +1,4 @@
+load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
 load("@protobuf//bazel:proto_library.bzl", "proto_library")
 load("@rules_buf//buf:defs.bzl", "buf_lint_test")
 load("@rules_go//proto:def.bzl", "go_proto_library")
@@ -51,4 +52,16 @@ buf_lint_test(
     config = "//:buf.yaml",
     tags = ["manual"],
     targets = [":single_message_proto"],
+)
+
+cc_proto_library(
+    name = "empty_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":empty_proto"],
+)
+
+cc_proto_library(
+    name = "single_message_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":single_message_proto"],
 )

@@ -1,3 +1,4 @@
+load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
 load("@protobuf//bazel:proto_library.bzl", "proto_library")
 load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
 load("@rules_buf//buf:defs.bzl", "buf_lint_test")
@@ -171,4 +172,64 @@ buf_lint_test(
     name = "stats_proto_lint",
     config = "//:buf.yaml",
     targets = [":stats_proto"],
+)
+
+cc_proto_library(
+    name = "action_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":action_proto"],
+)
+
+cc_proto_library(
+    name = "animals_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":animals_proto"],
+)
+
+cc_proto_library(
+    name = "associate_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":associate_proto"],
+)
+
+cc_proto_library(
+    name = "build_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":build_proto"],
+)
+
+cc_proto_library(
+    name = "cards_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":cards_proto"],
+)
+
+cc_proto_library(
+    name = "game_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":game_proto"],
+)
+
+cc_proto_library(
+    name = "map_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":map_proto"],
+)
+
+cc_proto_library(
+    name = "ratings_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":ratings_proto"],
+)
+
+cc_proto_library(
+    name = "sponsors_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":sponsors_proto"],
+)
+
+cc_proto_library(
+    name = "stats_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":stats_proto"],
 )

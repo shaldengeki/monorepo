@@ -9,7 +9,7 @@ go_library(
     deps = [
         "//ark_nova_stats/game_server",
         "//ark_nova_stats/game_server/proto:go_default_library",
-        "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_grpc//:grpc",
     ],
 )
 
