@@ -33,13 +33,16 @@ bazel_dep(name = "boost.asio", version = "1.90.0.bcr.1")
 bazel_dep(name = "boost.lexical_cast", version = "1.90.0.bcr.1")
 bazel_dep(name = "boost.mysql", version = "1.90.0.bcr.1")
 bazel_dep(name = "boost.program_options", version = "1.90.0.bcr.1")
-bazel_dep(name = "rules_shell", version = "0.6.1")
+bazel_dep(name = "rules_shell", version = "0.8.0")
 
 #### Protoc
 register_toolchains("//tools/protoc:all")
 
 buf = use_extension("@rules_buf//buf:extensions.bzl", "buf")
-buf.toolchains(version = "v1.57.0")
+buf.toolchains(
+    version = "v1.68.4",
+    sha256 = "4b068cfcff9168d713fe67ed6e3b715093e0f08ccaccea962169e7cd9d1726b1",
+)
 use_repo(buf, "rules_buf_toolchains")
 
 #### Python
