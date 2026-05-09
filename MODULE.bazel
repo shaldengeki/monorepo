@@ -181,18 +181,18 @@ go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.module(
     # build_file_proto_mode = "disable",
     path = "google.golang.org/grpc",
-    sum = "h1:K1XZG/yGDJnzMdd/uZHAkVqJE+xIDOcmdSFZkBUicNc=",
-    version = "v1.78.0",
+    sum = "h1:W3G9N3KQf3BU+YuCtGKJk0CmxQNbAISICD/9AORxLIw=",
+    version = "v1.81.0",
 )
 go_deps.module(
     path = "golang.org/x/net",
-    sum = "h1:eeHFmOGUTtaaPSGNmjBKpbng9MulQsJURQUAfUwY++o=",
-    version = "v0.49.0",
+    sum = "h1:2zJIZAxAHV/OHCDTCOHAYehQzLfSXuf/5SoL/Dv6w/w=",
+    version = "v0.54.0",
 )
 go_deps.module(
     path = "golang.org/x/text",
-    sum = "h1:B3njUFyqtHDUI5jMn1YIr5B0IE2U0qck04r6d4KPAxE=",
-    version = "v0.33.0",
+    sum = "h1:Cqjiwd9eSg8e0QAkyCaQTNHFIIzWtidPahFWR83rTrc=",
+    version = "v0.37.0",
 )
 go_deps.module(
     path = "github.com/stretchr/testify",
