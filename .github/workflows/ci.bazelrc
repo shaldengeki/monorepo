@@ -7,7 +7,6 @@ import %workspace%/.github/workflows/aspect.bazelrc
 # Custom settings.
 build --disk_cache=~/.cache/bazel-disk
 build --repository_cache=~/.cache/bazel-repo
-build --build_tag_filters=-manual
 
 test --test_output=errors
 test --test_tag_filters=-manual
