@@ -1,5 +1,5 @@
+load("@protobuf//bazel/toolchains:proto_lang_toolchain.bzl", "proto_lang_toolchain")
 load("@py_deps//:requirements.bzl", "requirement")
-load("@rules_proto//proto:defs.bzl", "proto_lang_toolchain")
 
 # Configure protoc to have the right arguments for generating Python stubs.
 proto_lang_toolchain(

@@ -59,6 +59,7 @@ gazelle_python_manifest(
 
 # gazelle:prefix github.com/shaldengeki/monorepo
 # gazelle:proto file
+# gazelle:map_kind proto_library proto_library @protobuf//bazel:proto_library.bzl
 # gazelle:go_grpc_compilers @rules_go//proto:go_grpc
 
 # Don't generate BUILD.bazel files in migration directories.
