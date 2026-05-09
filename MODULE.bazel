@@ -13,15 +13,15 @@ bazel_dep(name = "protobuf", version = "33.5")
 
 # Can't upgrade to 1.8.3; breaks graphql-server for some reason.
 bazel_dep(name = "rules_python", version = "2.0.0")
-bazel_dep(name = "rules_oci", version = "2.2.7")
+bazel_dep(name = "gazelle", version = "0.47.0")
+bazel_dep(name = "rules_python_gazelle_plugin", version = "2.0.0")
+bazel_dep(name = "rules_oci", version = "2.3.0")
 bazel_dep(name = "aspect_rules_js", version = "2.9.2")
 bazel_dep(name = "aspect_rules_ts", version = "3.8.3")
 bazel_dep(name = "aspect_rules_webpack", version = "0.17.1")
-bazel_dep(name = "rules_nodejs", version = "6.7.3")
+bazel_dep(name = "rules_nodejs", version = "6.7.4")
 bazel_dep(name = "rules_pkg", version = "1.2.0")
 bazel_dep(name = "rules_go", version = "0.59.0")
-bazel_dep(name = "gazelle", version = "0.47.0")
-bazel_dep(name = "rules_python_gazelle_plugin", version = "1.8.3")
 bazel_dep(name = "rules_java", version = "9.3.0")
 bazel_dep(name = "contrib_rules_jvm", version = "0.32.0")
 bazel_dep(name = "gazelle_cc", version = "0.5.0")
@@ -153,6 +153,9 @@ npm.npm_translate_lock(
     # To update, run bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
     pnpm_lock = "//:pnpm-lock.yaml",
     verify_node_modules_ignored = "//:.bazelignore",
+    data = [
+        "package.json",
+    ],
 )
 use_repo(npm, "npm")
 
