@@ -12,6 +12,7 @@ bazel_dep(name = "platforms", version = "1.0.0", dev_dependency = True)
 
 bazel_dep(name = "rules_foreign_cc", version = "0.15.1")
 bazel_dep(name = "protobuf", version = "33.5")
+# Can't be upgraded to 2.0.0; breaks container builds, python binary runtime deps can't be found
 bazel_dep(name = "rules_python", version = "1.9.0")
 bazel_dep(name = "rules_python_gazelle_plugin", version = "2.0.0")
 bazel_dep(name = "rules_oci", version = "2.3.0")
