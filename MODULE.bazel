@@ -12,7 +12,6 @@ bazel_dep(name = "platforms", version = "1.0.0", dev_dependency = True)
 
 bazel_dep(name = "rules_foreign_cc", version = "0.15.1")
 bazel_dep(name = "protobuf", version = "33.5")
-
 bazel_dep(name = "rules_python", version = "2.0.0")
 bazel_dep(name = "rules_python_gazelle_plugin", version = "2.0.0")
 bazel_dep(name = "rules_oci", version = "2.3.0")
@@ -39,8 +38,8 @@ register_toolchains("//tools/protoc:all")
 
 buf = use_extension("@rules_buf//buf:extensions.bzl", "buf")
 buf.toolchains(
-    version = "v1.68.4",
     sha256 = "4b068cfcff9168d713fe67ed6e3b715093e0f08ccaccea962169e7cd9d1726b1",
+    version = "v1.68.4",
 )
 use_repo(buf, "rules_buf_toolchains")
 
@@ -151,13 +150,13 @@ npm = use_extension(
 )
 npm.npm_translate_lock(
     name = "npm",
+    data = [
+        "package.json",
+    ],
     npmrc = "//:.npmrc",
     # To update, run bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
     pnpm_lock = "//:pnpm-lock.yaml",
     verify_node_modules_ignored = "//:.bazelignore",
-    data = [
-        "package.json",
-    ],
 )
 use_repo(npm, "npm")
 
