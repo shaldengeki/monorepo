@@ -10,7 +10,7 @@ go_library(
         "//games/tictactoe/proto/server:server_go_proto",
         "//games/tictactoe/rule_set/default_rule_set",
         "//games/tictactoe/server/grpc",
-        "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_grpc//:grpc",
     ],
 )
 

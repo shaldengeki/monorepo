@@ -1,3 +1,4 @@
+load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
 load("@protobuf//bazel:proto_library.bzl", "proto_library")
 load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
 load("@rules_buf//buf:defs.bzl", "buf_lint_test")
@@ -175,4 +176,40 @@ buf_lint_test(
     name = "player_game_state_proto_lint",
     config = "//:buf.yaml",
     targets = [":player_game_state_proto"],
+)
+
+cc_proto_library(
+    name = "associate_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":associate_proto"],
+)
+
+cc_proto_library(
+    name = "build_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":build_proto"],
+)
+
+cc_proto_library(
+    name = "cards_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":cards_proto"],
+)
+
+cc_proto_library(
+    name = "display_state_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":display_state_proto"],
+)
+
+cc_proto_library(
+    name = "game_state_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":game_state_proto"],
+)
+
+cc_proto_library(
+    name = "player_game_state_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":player_game_state_proto"],
 )
