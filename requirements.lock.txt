@@ -1029,9 +1029,9 @@ types-flask-cors==6.0.0.20260408 \
     --hash=sha256:8c440c158c335819bb9286870c9770687ae6d943510fdd97e4b573324f8d2178 \
     --hash=sha256:ccd8801862b3ebd27754734b84fc3dcfebd0f8056380ae88254c7dd799d64a39
     # via -r requirements.txt
-types-flask-migrate==4.1.0.20260408 \
-    --hash=sha256:65ef927584777eac9a4591eb8320c09eb6eb8862d2ffdd6e23ad485a2869b228 \
-    --hash=sha256:ffdacb78f6697422aa09bdebba34f4133b2443a95a59761c279fc5d368c009d9
+types-flask-migrate==4.1.0.20260508 \
+    --hash=sha256:af42934032789f8b4e778c0d07ea22d670e7920894481589bfa18dcfa776376e \
+    --hash=sha256:f22dfd36fe2c14eb533361ad021a26fc7c89079026c3b3b0ebb2d6a48a80b8e0
     # via -r requirements.txt
 types-protobuf==7.34.1.20260503 \
     --hash=sha256:75fd66121d56785c91828b8bf7b511f39ba847f11e682573e41847f01e9cd1de \
