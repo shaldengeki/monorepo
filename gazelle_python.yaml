@@ -50,6 +50,7 @@ manifest:
     lazy_object_proxy: lazy_object_proxy
     librt.base64: librt
     librt.internal: librt
+    librt.random: librt
     librt.strings: librt
     librt.time: librt
     librt.vecs: librt
@@ -92,4 +93,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: ea1fa5259b6ca63a20e7343ee3e62d7d9cf979ca95c115131d9ee404030f4055
+integrity: 39a89fa34129c757470abd4917e5c744133b5e9c1600f2eb317adcd07c79c9b3
