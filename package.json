@@ -38,7 +38,7 @@
         "react-plotly.js": "^2.6.0",
         "react-router-dom": "7.15.1",
         "typescript": "^6",
-        "vite": "^7.3.3",
+        "vite": "^8.0.13",
         "web-vitals": "^5.2.0"
     },
     "devDependencies": {
