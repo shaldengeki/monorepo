@@ -1060,9 +1060,9 @@ types-awscrt==0.31.3 \
     --hash=sha256:09d3eaf00231e0f47e101bd9867e430873bc57040050e2a3bd8305cb4fc30865 \
     --hash=sha256:e5ce65a00a2ab4f35eacc1e3d700d792338d56e4823ee7b4dbe017f94cfc4458
     # via botocore-stubs
-types-flask-cors==6.0.0.20260508 \
-    --hash=sha256:2d70dc8f8e42e5018ae1d9b26e031809af032d74b780ce7840da0a730c1433f0 \
-    --hash=sha256:b44b005f8dae482a5d979fef7bbaef90bf0429a695a5007cc52b0e3f6d2a7d99
+types-flask-cors==6.0.0.20260518 \
+    --hash=sha256:3cdd77a038600ab5a76b9e535865928887601423dd232de1a7583b48a53d30f6 \
+    --hash=sha256:b749cd935c9e906644de16edb3b2ee64d503f92a4af7d6e10c69a3f5b22d245a
     # via -r requirements.txt
 types-flask-migrate==4.1.0.20260508 \
     --hash=sha256:af42934032789f8b4e778c0d07ea22d670e7920894481589bfa18dcfa776376e \
