@@ -47,9 +47,9 @@ ast-serialize==0.5.0 \
     --hash=sha256:f66173891548c9f2726bf27957b41cabce12fa679dc6da505ddbde4d4b3b31cf \
     --hash=sha256:f8015cd071ac1339924ee2b8098c93e00e155f30a16f40ec9816fcf84f4753f6
     # via mypy
-astroid==4.1.2 \
-    --hash=sha256:21312e682c0866dc5a309ee57e4b88ea92751b9955a58b1c31371cbbeb088707 \
-    --hash=sha256:d6c4a52bfcda4bbeb7359dead642b0248b90f7d9a07e690230bd86fefd6d37f1
+astroid==4.0.4 \
+    --hash=sha256:52f39653876c7dec3e3afd4c2696920e05c83832b9737afc21928f2d2eb7a753 \
+    --hash=sha256:986fed8bcf79fb82c78b18a53352a0b287a73817d6dbcfba3162da36667c49a0
     # via
     #   -r requirements.txt
     #   pylint
