@@ -86,17 +86,17 @@ blinker==1.9.0 \
     --hash=sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf \
     --hash=sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc
     # via flask
-boto3==1.43.18 \
-    --hash=sha256:33138883e984eb1937d1553da699182c8ad2099138091e885b65c9accbccea16 \
-    --hash=sha256:7b62ce5c0a51428d692aa4f2adc9dc2a4a4c2989bf65a0a12834eeffa99b0b84
+boto3==1.43.24 \
+    --hash=sha256:b18ef745274ef548a9660d733d985d4a971b16bd8a6af88165ea9d0e40913b86 \
+    --hash=sha256:ba5afa266bf7265e0c1a454fcfd48bffe5939cb16ed223bebc669c3dc8ee0bc8
     # via -r requirements.txt
-boto3-stubs==1.43.18 \
-    --hash=sha256:09bf480c62bc54cf59bd0ad13b3db0ed9a00592675fd01248bcba4f93eaa7660 \
-    --hash=sha256:c4215090a2945339d0f32065520fb2df54fec25fc5cbc8b266779984c2c5540d
+boto3-stubs==1.43.24 \
+    --hash=sha256:1b60837a40179f668a6b2f5206fd67acb4bf636aff2cd401f84fcf651cb4c988 \
+    --hash=sha256:d5d8c00769d46970efedbbe24fb99c26568dfa4cc12a9acb2ddba8667160dcc1
     # via -r requirements.txt
-botocore==1.43.18 \
-    --hash=sha256:dc8c105351b49688c667065cd5a45fc5b9db982657cefc9e3fbfb9417a55c7df \
-    --hash=sha256:e2610fce16df9f89deab5f3c163430a814e6804034eb95bef8957c8db60b7dbc
+botocore==1.43.24 \
+    --hash=sha256:0c02f2b40e99419d496ece0ea2dcdedb5c45998c16fd1674276c7dbb30767a16 \
+    --hash=sha256:42903b4bfafd8f15a735ed940473f28e4ba21b2ea67a9b9aaa11dfa7fcb19fd5
     # via
     #   boto3
     #   s3transfer
@@ -258,9 +258,9 @@ dill==0.4.1 \
     # via
     #   -r requirements.txt
     #   pylint
-distlib==0.4.0 \
-    --hash=sha256:9659f7d87e46584a30b5780e43ac7a2143098441670ff0a49d5f9034c54a6c16 \
-    --hash=sha256:feec40075be03a04501a973d81f633735b4b69f98b05450592310c0f401a4e0d
+distlib==0.4.1 \
+    --hash=sha256:9c2c552c68cbadc619f2d0ed3a69e27c351a3f4c9baa9ffb7df9e9cdc3d19a97 \
+    --hash=sha256:c3804d0d2d4b5fcd44036eb860cb6660485fcdf5c2aba53dc324d805837ea65b
     # via
     #   -r requirements.txt
     #   virtualenv
@@ -272,9 +272,9 @@ exceptiongroup==1.3.1 \
     --hash=sha256:8b412432c6055b0b7d14c310000ae93352ed6754f70fa8f7c34141f91c4e3219 \
     --hash=sha256:a7a39a3bd276781e98394987d3a5701d0c4edffb633bb7a5144577f82c773598
     # via -r requirements.txt
-filelock==3.29.0 \
-    --hash=sha256:69974355e960702e789734cb4871f884ea6fe50bd8404051a3530bc07809cf90 \
-    --hash=sha256:96f5f6344709aa1572bbf631c640e4ebeeb519e08da902c39a001882f30ac258
+filelock==3.29.1 \
+    --hash=sha256:85199dfd706869641b72b2e8955d5416a4b2b7dc4b0e8e6d97b4cc1299a6983b \
+    --hash=sha256:d97e6b1b9757569626c58caa07dc4beb1613f4a2938b1e8cc81afca398906c9e
     # via
     #   -r requirements.txt
     #   python-discovery
@@ -290,9 +290,9 @@ flask==3.1.3 \
     #   graphql-server
     #   types-flask-cors
     #   types-flask-migrate
-flask-cors==6.0.2 \
-    --hash=sha256:6e118f3698249ae33e429760db98ce032a8bf9913638d085ca0f4c5534ad2423 \
-    --hash=sha256:e57544d415dfd7da89a9564e1e3a9e515042df76e12130641ca6f3f2f03b699a
+flask-cors==6.0.4 \
+    --hash=sha256:adb537b3923788b327187dd375ddb09be4ed0b5595cab016bac2ed30a0de7b79 \
+    --hash=sha256:cf3db91a0874aecde0a276565bf4adf4a458edcfd42e668fb0a260549f129317
     # via -r requirements.txt
 flask-migrate==4.1.0 \
     --hash=sha256:1a336b06eb2c3ace005f5f2ded8641d534c18798d64061f6ff11f79e1434126d \
@@ -305,9 +305,9 @@ flask-sqlalchemy==3.1.1 \
     #   -r requirements.txt
     #   flask-migrate
     #   types-flask-migrate
-graphql-core==3.2.8 \
-    --hash=sha256:015457da5d996c924ddf57a43f4e959b0b94fb695b85ed4c29446e508ed65cf3 \
-    --hash=sha256:cbee07bee1b3ed5e531723685369039f32ff815ef60166686e0162f540f1520c
+graphql-core==3.2.11 \
+    --hash=sha256:0b3e35ff41e9adba53021ab0cef475eb18f57c7f53f0f2ca55567fbf3c537ea0 \
+    --hash=sha256:e7e156d10beb127cab5c89ff0da71416fc73d27c484a4757d3b2d35633774802
     # via
     #   -r requirements.txt
     #   graphql-server
@@ -402,9 +402,9 @@ identify==2.6.19 \
     # via
     #   -r requirements.txt
     #   pre-commit
-idna==3.17 \
-    --hash=sha256:466e48829084efe2548012b855df21540b96f2e20e51bd124c851536556a592c \
-    --hash=sha256:5eb0cb53bc467c12eadcf6de83163ad8527cec9416f44b9b61b19caedad2b87f
+idna==3.18 \
+    --hash=sha256:7f952cbe720b688055e3f87de14f5c3e5fdaa8bc3928985c4077ca689de849a2 \
+    --hash=sha256:ffb385a7e039654cef1ab9ef32c6fafe283c0c0467bba1d9029738ce4a14a848
     # via requests
 importlib-metadata==9.0.0 \
     --hash=sha256:2d21d1cc5a017bd0559e36150c21c830ab1dc304dedd1b7ea85d20f45ef3edd7 \
@@ -926,9 +926,9 @@ pyyaml==6.0.3 \
     # via
     #   -r requirements.txt
     #   pre-commit
-qbittorrent-api==2026.5.3 \
-    --hash=sha256:2fd286be5dfab793dbc94c03182214ddf6d341f454d8c0c95c8a1ae1fd04615a \
-    --hash=sha256:757b49c88b85784129a2a7313e5353092f45cd9f0e993e68565d0faa0a243321
+qbittorrent-api==2026.6.0 \
+    --hash=sha256:95b6b3dd34cfdbfbde0f745dc5f8af35491bc184af009efe139437239cdf9a30 \
+    --hash=sha256:f2e25bf070960b906035917a10759042b0c288ac6adf191baf4f4848890b8213
     # via -r requirements.txt
 requests==2.34.2 \
     --hash=sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0 \
@@ -1071,9 +1071,9 @@ tomlkit==0.15.0 \
     # via
     #   -r requirements.txt
     #   pylint
-types-awscrt==0.33.0 \
-    --hash=sha256:803bc7e7e2f6172a0abd71df6593368f82fc23127ca15d287f360e9fcbd3a977 \
-    --hash=sha256:95adb57388e1cacc6e7e96fb7ddc735e60096a6151930640bdbe496d9400493a
+types-awscrt==0.34.1 \
+    --hash=sha256:20c752b6031544d8f694803c35174aee129f1be5ddf886ae46d22f7ffd9b7d75 \
+    --hash=sha256:559aa04250f6a419a617dfb788f3e10903aaf74700ef23e521b64a411b83b803
     # via botocore-stubs
 types-flask-cors==6.0.0.20260518 \
     --hash=sha256:3cdd77a038600ab5a76b9e535865928887601423dd232de1a7583b48a53d30f6 \
