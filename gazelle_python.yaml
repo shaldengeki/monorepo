@@ -7,8 +7,8 @@
 manifest:
   modules_mapping:
     30fcd23745efe32ce681__mypyc: black
-    81d243bd2c585b0f4821__mypyc: charset_normalizer
     955cd85d9c9a4f4b30d3__mypyc: tomli
+    ada92cb5d92a588d1b93__mypyc: charset_normalizer
     alembic: alembic
     asn1crypto: asn1crypto
     ast_serialize: ast_serialize
@@ -53,6 +53,7 @@ manifest:
     librt.internal: librt
     librt.random: librt
     librt.strings: librt
+    librt.threading: librt
     librt.time: librt
     librt.vecs: librt
     mako: mako
@@ -94,4 +95,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 6181ed037ac2291f38ce890ab0fc2bc0a99d47cadbb761dd7e26c90dca6a1021
+integrity: 3e7e015477fd2485b64c2afbc1f747cf2961fe599ed772d33749e784da0e1f3d
