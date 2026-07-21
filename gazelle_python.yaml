@@ -6,6 +6,7 @@
 ---
 manifest:
   modules_mapping:
+    08ae81f72d5a2b5fa9e0__mypyc: mypy
     30fcd23745efe32ce681__mypyc: black
     955cd85d9c9a4f4b30d3__mypyc: tomli
     ada92cb5d92a588d1b93__mypyc: charset_normalizer
@@ -28,7 +29,6 @@ manifest:
     distlib: distlib
     docker: docker
     exceptiongroup: exceptiongroup
-    fb62009ad6f7d3457273__mypyc: mypy
     fd7dcdb10166ebd4db98__mypyc: pytokens
     filelock: filelock
     flask: flask
@@ -95,4 +95,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 3e7e015477fd2485b64c2afbc1f747cf2961fe599ed772d33749e784da0e1f3d
+integrity: 27c9b9c62b6b0ff07095e5a4f2b8d9c135927f1610237f785835d2ba0ce1db84
