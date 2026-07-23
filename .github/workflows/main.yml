@@ -46,7 +46,7 @@ jobs:
       - name: bazel test //...
         run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc test //...
       - name: Validate MODULE.bazel.lock
-        run: git diff --quiet MODULE.bazel.lock
+        run: git diff MODULE.bazel.lock
   validate-fly:
     runs-on: ubuntu-latest
     env:

@@ -1,5 +1,5 @@
 {
-  "lockFileVersion": 26,
+  "lockFileVersion": 28,
   "registryFileHashes": {
     "https://bcr.bazel.build/bazel_registry.json": "8a28e4aff06ee60aed2a8c281907fb8bcbf3b753c91fb5a5c57da3215d5b3497",
     "https://bcr.bazel.build/modules/abseil-cpp/20210324.2/MODULE.bazel": "7cd0312e064fde87c8d1cd79ba06c876bd23630c83466e9500321be55c96ace2",
@@ -438,7 +438,7 @@
   "moduleExtensions": {
     "//tools/build_rules/hugo:defs.bzl%hugo_extension": {
       "general": {
-        "bzlTransitiveDigest": "/cCQjKASf5P7FmedT7FkWbwm6/w8FIexnik6KAWw1OI=",
+        "bzlTransitiveDigest": "YZvPveVGqSNnyzXyGQ+5uwA/m0xiQ0Wfb232Yk1EWL0=",
         "usagesDigest": "1DJYFz9vwaSGP7PoZ3JR0IftKi9bZ/hZqR3+lTtyi/Y=",
         "recordedInputs": [
           "REPO_MAPPING:,rules_hugo +rules_hugo_extension+rules_hugo",
@@ -457,7 +457,7 @@
     },
     "//tools/build_rules/rules_hugo:defs.bzl%rules_hugo_extension": {
       "general": {
-        "bzlTransitiveDigest": "Qd/Vd0YOrjYKON6VsLUnpc3+q7GY/M/+KZktLXTsHok=",
+        "bzlTransitiveDigest": "6Jbm8sYgzXyzEcoKrNamMf74Aic1hPdvgFY3DWAcbM8=",
         "usagesDigest": "meAXMPQgjiXOftaH3lBFX/rjfO4nf1M3tDI4zdXitX4=",
         "recordedInputs": [
           "REPO_MAPPING:,bazel_tools bazel_tools"
@@ -476,7 +476,7 @@
     },
     "//tools/build_rules/rules_vitest:defs.bzl%rules_vitest_extension": {
       "general": {
-        "bzlTransitiveDigest": "jCYNawT/z1+uZzz11vn2O0y6DTncK9DH5ZKL7x9sidM=",
+        "bzlTransitiveDigest": "x51k6+5hqqmMVCLfP1caUJlAGO6UcMYbH7FSyIK+QvE=",
         "usagesDigest": "QE+GxWWEpIjp0OkqwndVyOjPGoknkQXIifb65N0wJ+s=",
         "recordedInputs": [
           "REPO_MAPPING:,bazel_tools bazel_tools"
@@ -493,152 +493,9 @@
         }
       }
     },
-    "@@apple_rules_lint+//lint:extensions.bzl%linter": {
-      "general": {
-        "bzlTransitiveDigest": "g7izj5kLCmsajh8IospHh4ZQ35dyM0FIrA8D4HapAsM=",
-        "usagesDigest": "f2EijVXcSr7xRc9XlBuj7JffjKnPMz6Gb5X0VLXQZFA=",
-        "recordedInputs": [],
-        "generatedRepoSpecs": {
-          "apple_linters": {
-            "repoRuleId": "@@apple_rules_lint+//lint/private:register_linters.bzl%register_linters",
-            "attributes": {
-              "linters": {}
-            }
-          }
-        }
-      }
-    },
-    "@@aspect_gazelle_prebuilt+//:extensions.bzl%prebuilt_extension": {
-      "general": {
-        "bzlTransitiveDigest": "diPtda+ga4HRBixis1ZtLeyyddxVHRbpwjvzB+SHRlA=",
-        "usagesDigest": "d+iY8S0Vi4egCEOZ75xvBmpPiqm68tadJjrHwH6BNrE=",
-        "recordedInputs": [
-          "REPO_MAPPING:aspect_gazelle_prebuilt+,bazel_tools bazel_tools"
-        ],
-        "generatedRepoSpecs": {
-          "aspect_gazelle_prebuilt_linux_amd64": {
-            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
-            "attributes": {
-              "executable": true,
-              "sha256": "0418095a77cd6259a58079cbc822825b5bdc08e13fb37dc956b4c71c4c3b19e8",
-              "urls": [
-                "https://github.com/aspect-build/aspect-gazelle/releases/download/prebuilt-v0.0.9/aspect_gazelle-linux_amd64"
-              ]
-            }
-          },
-          "aspect_gazelle_prebuilt_linux_arm64": {
-            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
-            "attributes": {
-              "executable": true,
-              "sha256": "cce92d7823164c6ba68e45db8a9398dc9ecc7d77525bd3f562470b48512a0601",
-              "urls": [
-                "https://github.com/aspect-build/aspect-gazelle/releases/download/prebuilt-v0.0.9/aspect_gazelle-linux_arm64"
-              ]
-            }
-          },
-          "aspect_gazelle_prebuilt_darwin_amd64": {
-            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
-            "attributes": {
-              "executable": true,
-              "sha256": "f0eef0ef03e10c96a36debcb0c6ea2fd77cc217b8818686cd70bb9621db029d1",
-              "urls": [
-                "https://github.com/aspect-build/aspect-gazelle/releases/download/prebuilt-v0.0.9/aspect_gazelle-darwin_amd64"
-              ]
-            }
-          },
-          "aspect_gazelle_prebuilt_darwin_arm64": {
-            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
-            "attributes": {
-              "executable": true,
-              "sha256": "e2a6d97f7bfbaaa9d783c76d38017713324cc4a9033eedb765e3ab6f6d76c317",
-              "urls": [
-                "https://github.com/aspect-build/aspect-gazelle/releases/download/prebuilt-v0.0.9/aspect_gazelle-darwin_arm64"
-              ]
-            }
-          }
-        }
-      }
-    },
-    "@@aspect_rules_js+//npm:extensions.bzl%pnpm": {
-      "general": {
-        "bzlTransitiveDigest": "nCzZw866AmgN5TaZb0cIDznumbWLJq9NqT6c3FeFw4c=",
-        "usagesDigest": "Hhyjbq6tWJ0kigQjv7VGU+cvjlfinhSx9F8QGjQNlYo=",
-        "recordedInputs": [
-          "REPO_MAPPING:aspect_bazel_lib+,bazel_lib bazel_lib+",
-          "REPO_MAPPING:aspect_bazel_lib+,bazel_skylib bazel_skylib+",
-          "REPO_MAPPING:aspect_bazel_lib+,bazel_tools bazel_tools",
-          "REPO_MAPPING:aspect_bazel_lib+,tar.bzl tar.bzl+",
-          "REPO_MAPPING:aspect_rules_js+,aspect_bazel_lib aspect_bazel_lib+",
-          "REPO_MAPPING:aspect_rules_js+,aspect_rules_js aspect_rules_js+",
-          "REPO_MAPPING:aspect_rules_js+,aspect_tools_telemetry_report aspect_tools_telemetry++telemetry+aspect_tools_telemetry_report",
-          "REPO_MAPPING:aspect_rules_js+,bazel_features bazel_features+",
-          "REPO_MAPPING:aspect_rules_js+,bazel_lib bazel_lib+",
-          "REPO_MAPPING:aspect_rules_js+,bazel_skylib bazel_skylib+",
-          "REPO_MAPPING:aspect_rules_js+,bazel_tools bazel_tools",
-          "REPO_MAPPING:bazel_features+,bazel_features_globals bazel_features++version_extension+bazel_features_globals",
-          "REPO_MAPPING:bazel_features+,bazel_features_version bazel_features++version_extension+bazel_features_version",
-          "REPO_MAPPING:bazel_lib+,bazel_skylib bazel_skylib+",
-          "REPO_MAPPING:bazel_lib+,bazel_tools bazel_tools",
-          "REPO_MAPPING:tar.bzl+,bazel_lib bazel_lib+",
-          "REPO_MAPPING:tar.bzl+,bazel_skylib bazel_skylib+",
-          "REPO_MAPPING:tar.bzl+,tar.bzl tar.bzl+"
-        ],
-        "generatedRepoSpecs": {
-          "pnpm": {
-            "repoRuleId": "@@aspect_rules_js+//npm/private:npm_import.bzl%npm_import_rule",
-            "attributes": {
-              "package": "pnpm",
-              "version": "8.15.9",
-              "root_package": "",
-              "link_workspace": "",
-              "link_packages": {},
-              "integrity": "sha512-SZQ0ydj90aJ5Tr9FUrOyXApjOrzuW7Fee13pDzL0e1E6ypjNXP0AHDHw20VLw4BO3M1XhQHkyik6aBYWa72fgQ==",
-              "url": "",
-              "commit": "",
-              "patch_args": [
-                "-p0"
-              ],
-              "patches": [],
-              "custom_postinstall": "",
-              "npm_auth": "",
-              "npm_auth_basic": "",
-              "npm_auth_username": "",
-              "npm_auth_password": "",
-              "lifecycle_hooks": [],
-              "extra_build_content": "load(\"@aspect_rules_js//js:defs.bzl\", \"js_binary\")\njs_binary(name = \"pnpm\", data = glob([\"package/**\"]), entry_point = \"package/dist/pnpm.cjs\", visibility = [\"//visibility:public\"])",
-              "extract_full_archive": true,
-              "exclude_package_contents": []
-            }
-          },
-          "pnpm__links": {
-            "repoRuleId": "@@aspect_rules_js+//npm/private:npm_import.bzl%npm_import_links",
-            "attributes": {
-              "package": "pnpm",
-              "version": "8.15.9",
-              "dev": false,
-              "root_package": "",
-              "link_packages": {},
-              "deps": {},
-              "transitive_closure": {},
-              "lifecycle_build_target": false,
-              "lifecycle_hooks_env": [],
-              "lifecycle_hooks_execution_requirements": [
-                "no-sandbox"
-              ],
-              "lifecycle_hooks_use_default_shell_env": false,
-              "bins": {},
-              "package_visibility": [
-                "//visibility:public"
-              ],
-              "exclude_package_contents": []
-            }
-          }
-        }
-      }
-    },
     "@@aspect_rules_ts+//ts:extensions.bzl%ext": {
       "general": {
-        "bzlTransitiveDigest": "YFVdiQyIFr6lWButTYSCgVw57sTf+4KYluxTalZt7Pw=",
+        "bzlTransitiveDigest": "kRjwdl65bQI3ei8F65IXI19f2U9JHLujf6nA9V5hpoQ=",
         "usagesDigest": "HNPG7PJNe3yUrufI1/1QGmdmxmwRlakgsMjCM8ddjOU=",
         "recordedInputs": [
           "REPO_MAPPING:aspect_rules_ts+,aspect_rules_ts aspect_rules_ts+",
@@ -680,26 +537,6 @@
         }
       }
     },
-    "@@pybind11_bazel+//:internal_configure.bzl%internal_configure_extension": {
-      "general": {
-        "bzlTransitiveDigest": "RWNeAcCsBPGOS5WS5YNdDD2UDjpW7uqJe5YK8Ziul+Q=",
-        "usagesDigest": "tVQNvLoXMWAbiK39am3yovKGpwINdftfn7RpDyN+JZc=",
-        "recordedInputs": [
-          "REPO_MAPPING:pybind11_bazel+,bazel_tools bazel_tools"
-        ],
-        "generatedRepoSpecs": {
-          "pybind11": {
-            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
-            "attributes": {
-              "build_file": "@@pybind11_bazel+//:pybind11-BUILD.bazel",
-              "strip_prefix": "pybind11-2.13.6",
-              "url": "https://github.com/pybind/pybind11/archive/refs/tags/v2.13.6.tar.gz",
-              "integrity": "sha256-4Iy4f0dz2pf6e18DXeh2OrxlbYfVdz5i9toFh9Hw7CA="
-            }
-          }
-        }
-      }
-    },
     "@@rules_buf+//buf:extensions.bzl%buf": {
       "general": {
         "bzlTransitiveDigest": "IjW2he5lp+L/zEfsBKIilXijyHH6PC4Lf3y19MA6G4c=",
@@ -720,7 +557,7 @@
     },
     "@@rules_kotlin+//src/main/starlark/core/repositories:bzlmod_setup.bzl%rules_kotlin_extensions": {
       "general": {
-        "bzlTransitiveDigest": "Ga4z8lQy1YQ5rAMy+dOl0dqcCEBnYNCXku8x3YQmDZI=",
+        "bzlTransitiveDigest": "+Kp6j204mBZ3mxlIDDR0gBoP45BZ4jYRhRAcB8sU0qc=",
         "usagesDigest": "QI2z8ZUR+mqtbwsf2fLqYdJAkPOHdOV+tF2yVAUgRzw=",
         "recordedInputs": [
           "REPO_MAPPING:rules_kotlin+,bazel_tools bazel_tools"
@@ -1339,5 +1176,6 @@
         ]
       }
     }
-  }
+  },
+  "factsVersions": {}
 }
