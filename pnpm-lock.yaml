@@ -84,8 +84,8 @@ dependencies:
     specifier: ^7.3.5
     version: 7.3.5(@types/node@26.1.1)
   web-vitals:
-    specifier: ^5.3.0
-    version: 5.3.0
+    specifier: ^6.0.0
+    version: 6.0.0
 
 devDependencies:
   '@tailwindcss/cli':
@@ -6552,8 +6552,8 @@ packages:
     resolution: {integrity: sha512-lNR9aAefbGPpHO7AEnY0hCFjz1eTkWCXYvkTRrTHs9qv8zJp+SkVYpzfLIFXQQiG3tVvbNFQgVg2bQS8YGgxyw==}
     dev: false
 
-  /web-vitals@5.3.0:
-    resolution: {integrity: sha512-q6LWsLatGYZp5VGBIOvbTj6JBV2nOmC8KvWztXBmwJcfFAzhwKwbOxhUH306XY3CcaZDUlSmSuNPBsCn0bFu+g==}
+  /web-vitals@6.0.0:
+    resolution: {integrity: sha512-Guaibvy/+uNtL6Bsu4jmMJGzuSl91oeRH5iO9pPRbYftnFUr3yqT1TUNX/OE4o9HexuEMU3Kb/Wg7iKhlffZUA==}
     dev: false
 
   /webgl-context@2.2.0:
