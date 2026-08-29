@@ -303,8 +303,7 @@ class ProtoMessageFieldDiff(ProtoNodeDiff):
 
     def __eq__(self, other: object) -> bool:
         return (
-            super().__eq__(other)
-            and isinstance(other, ProtoMessageFieldDiff)
+            isinstance(other, ProtoMessageFieldDiff)
             and self.message == other.message
             and self.message_field == other.message_field
         )

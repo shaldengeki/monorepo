@@ -385,8 +385,7 @@ class ProtoEnumValueDiff(ProtoNodeDiff):
 
     def __eq__(self, other: object) -> bool:
         return (
-            super().__eq__(other)
-            and isinstance(other, ProtoEnumValueDiff)
+            isinstance(other, ProtoEnumValueDiff)
             and self.enum_value == other.enum_value
         )
 
