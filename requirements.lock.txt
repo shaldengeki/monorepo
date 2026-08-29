@@ -71,9 +71,9 @@ ast-serialize==0.8.0 \
     --hash=sha256:fdc0d5b18ff8fb364e87923e47c0a91d0d69dbcaeaa274591f7fd26892cc3a3a \
     --hash=sha256:ffa5e7cb08f96fed9121f77b224151e41caf88feab9d652bb46c78202b6fbeda
     # via mypy
-astroid==4.3.1 \
-    --hash=sha256:bb359253d8ced6635a3881c17ebcbbc0e0b65ca23b555a9bd03c92a3cbf4caa7 \
-    --hash=sha256:de41129d6de1e86cfedb698b8064c83a881853f98d6ea34de9e711f6bb420dfe
+astroid==4.0.4 \
+    --hash=sha256:52f39653876c7dec3e3afd4c2696920e05c83832b9737afc21928f2d2eb7a753 \
+    --hash=sha256:986fed8bcf79fb82c78b18a53352a0b287a73817d6dbcfba3162da36667c49a0
     # via
     #   -r requirements.txt
     #   pylint
@@ -887,7 +887,6 @@ platformdirs==4.11.3 \
     #   -r requirements.txt
     #   black
     #   pylint
-    #   python-discovery
     #   virtualenv
 pluggy==1.6.0 \
     --hash=sha256:7dcc130b76258d33b90f61b658791dede3486c3e6bfb003ee5c9bfb396dd22f3 \
@@ -1187,10 +1186,6 @@ tomlkit==0.15.1 \
     # via
     #   -r requirements.txt
     #   pylint
-types-awscrt==0.36.2 \
-    --hash=sha256:7d94abfa5f839c1052fc88fdc8e9a085fcda5da739bb1da92c080c19eef1c72a \
-    --hash=sha256:9bd66995d210acb8e92a70e0d1078752b0833a36bca73f088742bc3fd8a6b363
-    # via botocore-stubs
 types-flask-cors==6.0.3.20260712 \
     --hash=sha256:05d6dd4c49e2e8e64076b84caf6389d51327e9c4f3a37d4ccf0278b5b0d8daa1 \
     --hash=sha256:308ecfa65c17abc59edbed74258d24099c82f5e94cb1bc4f3016313df4e5e4f0
