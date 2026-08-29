@@ -49,14 +49,14 @@ use_repo(buf, "rules_buf_toolchains")
 #### Python
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
-    python_version = "3.13.4",
+    python_version = "3.14.4",
 )
-use_repo(python, "python_3_13_4")
+use_repo(python, "python_3_14_4")
 
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(
     hub_name = "py_deps",
-    python_version = "3.13.4",
+    python_version = "3.14.4",
     requirements_lock = "//:requirements.lock.txt",
 )
 use_repo(pip, "py_deps")
@@ -65,7 +65,7 @@ use_repo(pip, "py_deps")
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 oci.pull(
     name = "ubuntu_image",
-    digest = "sha256:67211c14fa74f070d27cc59d69a7fa9aeff8e28ea118ef3babc295a0428a6d21",
+    digest = "sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b",
     image = "ubuntu",
     platforms = [
         "linux/arm64/v8",
@@ -74,7 +74,7 @@ oci.pull(
 )
 oci.pull(
     name = "python3_image",
-    digest = "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
+    digest = "sha256:4a15376f41633421c86c2dda11809afb72b9fa945f6b731e1dffc143e373fc5f",
     image = "python",
     platforms = [
         "linux/386",
@@ -88,7 +88,7 @@ oci.pull(
 )
 oci.pull(
     name = "nginx_debian_slim",
-    digest = "sha256:6b06964cdbbc517102ce5e0cef95152f3c6a7ef703e4057cb574539de91f72e6",
+    digest = "sha256:b34848eff6db786b6b1282d3a9c3fd0b5563dfb6d261df4923378b419e0d24f0",
     image = "docker.io/library/nginx",
     platforms = [
         "linux/386",
@@ -102,7 +102,7 @@ oci.pull(
 )
 oci.pull(
     name = "nginx_mainline_alpine",
-    digest = "sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8",
+    digest = "sha256:db35bfc6b2951e7f8a72db5db120288c127ffaeeb4a6d4b95a26fead017d5913",
     image = "docker.io/library/nginx",
     platforms = [
         "linux/386",
