@@ -15,8 +15,8 @@ bazel_dep(name = "protobuf", version = "36.0.bcr.1")
 bazel_dep(name = "grpc", version = "1.83.0")
 
 # Can't be upgraded to 2.0.0; breaks container builds, python binary runtime deps can't be found
-bazel_dep(name = "rules_python", version = "1.9.0")
-bazel_dep(name = "rules_python_gazelle_plugin", version = "2.0.0")
+bazel_dep(name = "rules_python", version = "2.3.2")
+bazel_dep(name = "rules_python_gazelle_plugin", version = "2.3.2")
 bazel_dep(name = "rules_oci", version = "2.3.0")
 bazel_dep(name = "aspect_rules_js", version = "2.9.2")
 bazel_dep(name = "aspect_rules_ts", version = "3.8.3")
