@@ -32,7 +32,7 @@ cc_binary(
     name = "client",
     srcs = ["client.cpp"],
     copts = ["-Werror"],
-    deps = ["@boost.program_options//:boost.program_options"],
+    deps = ["@boost.program_options"],
 )
 
 cc_binary(
@@ -41,10 +41,10 @@ cc_binary(
     copts = ["-Werror"],
     deps = [
         ":eti_unofficial_tagd",
-        "@boost.algorithm//:boost.algorithm",
-        "@boost.asio//:boost.asio",
-        "@boost.lexical_cast//:boost.lexical_cast",
+        "@boost.algorithm",
+        "@boost.asio",
+        "@boost.lexical_cast",
         "@boost.mysql//:boost.mysql",  # keep
-        "@boost.program_options//:boost.program_options",
+        "@boost.program_options",
     ],
 )
