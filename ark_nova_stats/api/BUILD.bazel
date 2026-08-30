@@ -15,7 +15,8 @@ py_library(
 graphql_api_image(
     name = "api_image",
     app_package = "ark_nova_stats.api.app",
-    docker_hub_repository = "docker.io/shaldengeki/ark-nova-stats-api",
-    repo_tags = ["shaldengeki/ark-nova-stats-api:latest"],
+    registry = "docker.io",
+    repository = "shaldengeki/ark-nova-stats-api",
+    tag = "latest",
     deps = [":app"],
 )

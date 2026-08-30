@@ -25,7 +25,7 @@ def grpc_api_image(
         name (str): Name of rule to generate.
         binary (label): Binary that should be invoked by the container.
         repository (str): Repository on Docker Hub that the container images should be pushed to.
-        tag (str): List of repo + tag pairs that the container images should be loaded under.
+        tag (str): Tag that the container images should be loaded under.
         registry (str): Container image registry to push to. Defaults to ghcr.io.
         additional_srcs (list[label]): Additional source files to bundle with the binary.
         base (label): Base image to build off of.
