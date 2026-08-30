@@ -6,9 +6,11 @@ built using webpack.
 """
 
 load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle")
-load("@rules_oci//oci:defs.bzl", "oci_image")
+load("@rules_img//img:image.bzl", "image_index", "image_manifest")
+load("@rules_img//img:layer.bzl", "layer_from_tar")
+load("@rules_img//img:load.bzl", "image_load")
+load("@rules_img//img:push.bzl", "image_push")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
-load("//tools/build_rules:cross_platform_image.bzl", "cross_platform_image")
 load("//tools/build_rules:nginx_conf.bzl", "nginx_conf")
 
 # Third-party dependencies required to build our application.
@@ -38,14 +40,15 @@ def frontend_image(
         server_name,
         node_modules,
         webpack_conf,
-        repo_tags,
-        docker_hub_repository,
+        repository,
+        tag,
+        registry = "ghcr.io",
+        base = "@nginx_mainline_alpine",
         build_env = {},
-        base_image = "@nginx_mainline_alpine",
-        stamp_file = "//:stamped",
         webpack_deps = [],
         visibility = None,
-        entry_point = "src/index.js"):
+        entry_point = "src/index.js",
+        tags = None):
     """
     Defines a set of frontend images for our application.
 
@@ -55,26 +58,28 @@ def frontend_image(
         server_name (str): Name of the application to use in the nginx configuration.
         node_modules (label): Target containing the node_modules deps. Should have at least webpack in it.
         webpack_conf (file): Webpack configuration file.
-        repo_tags (list[str]): List of repo + tag pairs that the container images should be loaded under.
-        docker_hub_repository (str): Repository on Docker Hub that the container images should be pushed to.
+        repository (str): Repository on Docker Hub that the container images should be pushed to.
+        tag (str): Tag that the container images should be loaded under.
+        registry (str): Container image registry to push to. Defaults to ghcr.io.
+        base (label): Base container image to use.
         build_env (dict[str, str]): Environment variables to set in the build.
-        base_image (label): Base container image to use.
-        stamp_file (file): File containing image tags that the image should be pushed under.
         webpack_deps (list[label]): Dependencies to inject into the webpack build.
         visibility (list[str]): Visibility to set on all the targets.
         entry_point (file): JS entrypoint file for the image.
-
-    You're probably interested in the oci_tarball & oci_push targets,
-    which build a container image & push it to Docker Hub, respectively.
+        tags (list[str]): List of tags to apply to targets.
     """
 
     if visibility == None:
         visibility = ["//visibility:public"]
 
+    if tags == None:
+        tags = ["manual"]
+
     nginx_conf(
         name = name + "_nginx_conf",
         server_name = server_name,
         visibility = visibility,
+        tags = tags,
     )
 
     # Define a container layer for just our nginx configuration.
@@ -83,6 +88,15 @@ def frontend_image(
         srcs = [name + "_nginx_conf"],
         package_dir = "/etc/nginx/conf.d",
         visibility = visibility,
+        tags = tags,
+    )
+
+    layer_from_tar(
+        name = name + "_layer_nginx",
+        src = name + "_webpack_tar",
+        compress = "zstd",
+        optimize = True,
+        tags = tags,
     )
 
     # Bundle our application.
@@ -105,6 +119,7 @@ def frontend_image(
         output_dir = True,
         env = build_env,
         visibility = visibility,
+        tags = tags,
     )
 
     # Define a container layer for our application, for use in nginx.
@@ -113,30 +128,54 @@ def frontend_image(
         srcs = [name + "_webpack"],
         package_dir = "/usr/share/nginx/html",
         strip_prefix = name + "_webpack",
-        tags = ["manual"],
         visibility = visibility,
+        tags = tags,
     )
 
-    # Define an nginx container image with all of our layers.
-    oci_image(
-        name = name + "_image",
-        base = base_image,
-        tars = [
-            name + "_webpack_tar",
-            name + "_nginx_default_tar",
+    layer_from_tar(
+        name = name + "_layer_app",
+        src = name + "_webpack_tar",
+        compress = "zstd",
+        optimize = True,
+        tags = tags,
+    )
+
+    image_manifest(
+        name = name,
+        base = base,
+        layers = [
+            name + "_layer_nginx",
+            name + "_layer_app",
         ],
-        # Intentionally omit cmd/entrypoint to default to the base nginx container's cmd/entrypoint.
-        # entrypoint = [],
-        # cmd = [],
-        tags = ["manual"],
+        tags = tags,
         visibility = visibility,
     )
 
-    cross_platform_image(
-        name = name + "_cross_platform_image",
-        image = name + "_image",
-        repository = docker_hub_repository,
-        repo_tags = repo_tags,
-        stamp_file = stamp_file,
+    image_index(
+        name = name + "_multiarch",
+        manifests = [name],  # Single manifest
+        platforms = [
+            "//tools/build_rules:linux_arm64",
+            "//tools/build_rules:linux_amd64",
+        ],
+    )
+
+    image_push(
+        name = name + "_push",
+        image = name,
+        registry = registry,
+        repository = repository,
+        tag = tag,
+        tags = tags,
+        visibility = visibility,
+    )
+
+    image_load(
+        name = name + "_pull",
+        image = name,
+        registry = registry,
+        repository = repository,
+        tag = tag,
+        tags = tags,
         visibility = visibility,
     )

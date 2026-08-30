@@ -18,13 +18,7 @@ def build_api() -> None:
 
 
 def build_frontend() -> None:
-    subprocess.run(
-        [
-            "bazel",
-            "run",
-            "frontend:development_cross_platform_image_tarball",
-        ]
-    )
+    print("TODO")
 
 
 def build_worker() -> None:
