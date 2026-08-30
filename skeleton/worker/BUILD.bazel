@@ -1,17 +1,17 @@
 load("@rules_python//python:defs.bzl", "py_binary")
 load("//tools/build_rules/worker:defs.bzl", "worker")
 
-py_binary(
-    name = "binary",
-    srcs = ["app.py"],
-    main = "app.py",
-    visibility = ["//:__subpackages__"],
+worker(
+    name = "worker",
+    registry = "docker.io",
+    repository = "shaldengeki/skeleton-worker",
+    tag = "latest",
     deps = ["//skeleton:config_py"],
 )
 
-worker(
-    name = "worker",
-    binary = "//skeleton/worker:binary",
-    docker_hub_repository = "docker.io/shaldengeki/skeleton-worker",
-    repo_tags = ["shaldengeki/skeleton-worker:latest"],
+py_binary(
+    name = "app",
+    srcs = ["app.py"],
+    visibility = ["//:__subpackages__"],
+    deps = ["//skeleton:config_py"],
 )

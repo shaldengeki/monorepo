@@ -4,29 +4,35 @@ worker.bzl: Defines the standard worker application used across the monorepo.
 
 """
 
-load("//tools/build_rules:cross_platform_image.bzl", "cross_platform_image")
-load("//tools/build_rules:py_layer.bzl", "py_oci_image")
+load("@rules_img//img:image.bzl", "image_from_binary")
+load("@rules_img//img:load.bzl", "image_load")
+load("@rules_img//img:push.bzl", "image_push")
+load("@rules_python//python:defs.bzl", "py_binary")
 
 def worker(
         name,
-        binary,
-        repo_tags,
-        docker_hub_repository,
+        repository,
+        tag,
+        registry = "ghcr.io",
+        base = "@rules_img_python3_image",
         env = None,
-        visibility = None):
+        visibility = None,
+        tags = None,
+        deps = None):
     """
     Defines the standard worker application, including container images.
 
     Args:
         name (str): Name to use as a prefix to generated rules.
-        binary (Label): py_binary target that should be the entrypoint of the worker.
-        repo_tags (list[str]): List of tags to apply to the container. See cross_platform_image.
-        docker_hub_repository (str): URL of the dockerhub repository to push to. See cross_platform_image.
+        repository (str): Repository on Docker Hub that the container images should be pushed to.
+        tag (str): Tag that the container images should be loaded under.
+        registry (str): Container image registry to push to. Defaults to ghcr.io.
+        base (label): Base container image to use.
         env (dict[str, str]): Additional environment variables to set in the Python image. See py_oci_image.
         visibility: The default visibility to set on the generated rules. Defaults to public.
+        tags (list[str]): List of tags to apply to targets.
+        deps (list[label]): List of dependencies for the binary.
     """
-
-    binary = Label(binary)
 
     if env == None:
         env = {}
@@ -50,30 +56,51 @@ def worker(
     if visibility == None:
         visibility = ["//visibility:public"]
 
-    py_oci_image(
-        name = name + "_base_image",
-        base = "@python3_image",
-        binaries = [
-            "//scripts:wait_for_postgres",
-            binary,
+    if tags == None:
+        tags = ["manual"]
+
+    py_binary(
+        name = name + "_binary",
+        srcs = [
+            "__init__.py",
+            "app.py",
         ],
-        cmd = [
-            "/" + binary.package + "/" + binary.name,
-        ],
-        entrypoint = [
-            "/scripts/wait_for_postgres",
-        ],
-        env = all_env,
+        imports = [".."],
+        main = "app.py",
         visibility = visibility,
-        tags = ["manual"],
+        deps = deps,
+        env = all_env,
+        tags = tags,
     )
 
-    # $ bazel run //skeleton/worker:worker_image_tarball
-    # $ docker run --rm shaldengeki/skeleton-worker:latest
-    cross_platform_image(
-        name = name + "_image",
-        image = ":" + name + "_base_image",
-        repo_tags = repo_tags,
-        repository = docker_hub_repository,
+    image_from_binary(
+        name = name,
+        base = base,
+        binary = name + "_binary",
+        tags = tags,
+        platforms = [
+            "//tools/build_rules:linux_arm64",
+            "//tools/build_rules:linux_amd64",
+        ],
+        visibility = visibility,
+    )
+
+    image_push(
+        name = name + "_push",
+        image = name,
+        registry = registry,
+        repository = repository,
+        tag = tag,
+        tags = tags,
+        visibility = visibility,
+    )
+
+    image_load(
+        name = name + "_pull",
+        image = name,
+        registry = registry,
+        repository = repository,
+        tag = tag,
+        tags = tags,
         visibility = visibility,
     )
