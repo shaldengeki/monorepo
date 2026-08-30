@@ -22,8 +22,9 @@ py_library(
 graphql_api_image(
     name = "api_image",
     app_package = "mc_manager.api.app",
-    docker_hub_repository = "docker.io/shaldengeki/mc-manager-api",
-    repo_tags = ["shaldengeki/mc-manager-api:latest"],
+    registry = "docker.io",
+    repository = "shaldengeki/mc-manager-api",
+    tag = "latest",
     deps = [":api_lib"],
 )
 
