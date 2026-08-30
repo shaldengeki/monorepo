@@ -14,7 +14,7 @@ def worker(
         repository,
         tag,
         registry = "ghcr.io",
-        base = "@rules_img_python3_image",
+        base = "@python3_image",
         env = None,
         visibility = None,
         tags = None,

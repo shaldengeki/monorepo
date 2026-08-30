@@ -19,7 +19,7 @@ def graphql_api_image(
         registry = "ghcr.io",
         migration_binary = None,
         env = None,
-        base = "@rules_img_python3_image",
+        base = "@python3_image",
         visibility = None,
         tags = None):
     """

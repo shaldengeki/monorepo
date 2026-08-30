@@ -64,20 +64,6 @@ use_repo(pip, "py_deps")
 #### rules_oci
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 oci.pull(
-    name = "python3_image",
-    digest = "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
-    image = "python",
-    platforms = [
-        "linux/386",
-        "linux/amd64",
-        "linux/arm/v5",
-        "linux/arm/v7",
-        "linux/arm64/v8",
-        "linux/ppc64le",
-        "linux/s390x",
-    ],
-)
-oci.pull(
     name = "nginx_mainline_alpine",
     digest = "sha256:db35bfc6b2951e7f8a72db5db120288c127ffaeeb4a6d4b95a26fead017d5913",
     image = "docker.io/library/nginx",
@@ -101,14 +87,6 @@ use_repo(
     "nginx_mainline_alpine_linux_arm_v7",
     "nginx_mainline_alpine_linux_ppc64le",
     "nginx_mainline_alpine_linux_s390x",
-    "python3_image",
-    "python3_image_linux_386",
-    "python3_image_linux_amd64",
-    "python3_image_linux_arm64_v8",
-    "python3_image_linux_arm_v5",
-    "python3_image_linux_arm_v7",
-    "python3_image_linux_ppc64le",
-    "python3_image_linux_s390x",
 )
 
 #### rules_img
@@ -123,7 +101,7 @@ pull(
 )
 
 pull(
-    name = "rules_img_python3_image",
+    name = "python3_image",
     digest = "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
     registry = "index.docker.io",
     repository = "library/python",
