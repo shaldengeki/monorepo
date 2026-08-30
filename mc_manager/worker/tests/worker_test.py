@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from mc_manager.worker.worker import (
+from mc_manager.worker.app import (
     fetch_expected_servers,
     record_server_status,
     split_s3_path,

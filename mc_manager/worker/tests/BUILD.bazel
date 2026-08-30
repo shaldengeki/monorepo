@@ -5,7 +5,7 @@ py_test(
     size = "small",
     srcs = ["worker_test.py"],
     deps = [
-        "//mc_manager/worker:binary",
+        "//mc_manager/worker:app",
         "@py_deps//pytest",
         "@py_deps//requests",
     ],

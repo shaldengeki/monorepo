@@ -1,24 +1,8 @@
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load("//tools/build_rules/worker:defs.bzl", "worker")
 
-py_binary(
-    name = "binary",
-    srcs = ["app.py"],
-    main = "app.py",
-    visibility = ["//:__subpackages__"],
-    deps = [
-        ":archives",
-        "//ark_nova_stats:config_py",
-        "//ark_nova_stats:models_py",
-        "//ark_nova_stats/bga_log_parser:game_log",
-        "@py_deps//boto3",
-    ],
-)
-
 worker(
     name = "worker",
-    binary = "//ark_nova_stats/worker:binary",
-    docker_hub_repository = "docker.io/shaldengeki/ark-nova-stats-worker",
     env = {
         "DATABASE_URL": "test-database-url",
         "AWS_ACCESS_KEY_ID": "test-aws-access-key-id",
@@ -28,7 +12,16 @@ worker(
         "BUCKET_NAME": "test-bucket-name",
         "TIGRIS_CUSTOM_DOMAIN_HOST": "test-tigris-custom-domain-host",
     },
-    repo_tags = ["shaldengeki/ark-nova-stats-worker:latest"],
+    registry = "docker.io",
+    repository = "shaldengeki/ark-nova-stats-worker",
+    tag = "latest",
+    deps = [
+        ":archives",
+        "//ark_nova_stats:config_py",
+        "//ark_nova_stats:models_py",
+        "//ark_nova_stats/bga_log_parser:game_log",
+        "@py_deps//boto3",
+    ],
 )
 
 py_library(
@@ -40,5 +33,18 @@ py_library(
         "//ark_nova_stats:models_py",
         "//ark_nova_stats/emu_cup:tables",
         "@py_deps//sqlalchemy",
+    ],
+)
+
+py_binary(
+    name = "app",
+    srcs = ["app.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":archives",
+        "//ark_nova_stats:config_py",
+        "//ark_nova_stats:models_py",
+        "//ark_nova_stats/bga_log_parser:game_log",
+        "@py_deps//boto3",
     ],
 )

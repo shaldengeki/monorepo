@@ -1,45 +1,21 @@
 load("@py_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
-load("//tools/build_rules:cross_platform_image.bzl", "cross_platform_image")
-load("//tools/build_rules:py_layer.bzl", "py_oci_image")
-
-DEPS = [
-    "//scripts:wait_for_postgres",
-    requirement("boto3"),
-    requirement("docker"),
-    requirement("requests"),
-]
+load("//tools/build_rules/worker:defs.bzl", "worker")
 
 py_library(
     name = "library",
     srcs = glob(["**/*.py"]),
     visibility = ["//mc_manager/worker:__subpackages__"],
-    deps = DEPS,
-)
-
-py_binary(
-    name = "binary",
-    srcs = ["worker.py"],
-    main = "worker.py",
-    visibility = ["//:__subpackages__"],
     deps = [
-        "@py_deps//boto3",
-        "@py_deps//docker",
-        "@py_deps//requests",
+        "//scripts:wait_for_postgres",
+        requirement("boto3"),
+        requirement("docker"),
+        requirement("requests"),
     ],
 )
 
-py_oci_image(
-    name = "base_image",
-    base = "@python3_image",
-    binaries = [
-        "//scripts:wait_for_postgres",
-        ":binary",
-    ],
-    cmd = [
-        "/scripts/wait_for_postgres",
-        "/mc_manager/worker/binary",
-    ],
+worker(
+    name = "worker",
     env = {
         "API_HOST": "api",
         "API_PORT": "5000",
@@ -48,15 +24,23 @@ py_oci_image(
         "HOST_PATH": "/var/minecraft",
         "S3_BUCKET": "",
     },
-    tags = ["manual"],
+    registry = "docker.io",
+    repository = "shaldengeki/mc-manager-worker",
+    tag = "latest",
+    deps = [
+        "@py_deps//boto3",
+        "@py_deps//docker",
+        "@py_deps//requests",
+    ],
 )
 
-# $ bazel run //mc_manager/worker:image_tarball
-# $ docker run --rm shaldengeki/mc-manager-worker:latest
-cross_platform_image(
-    name = "image",
-    image = ":base_image",
-    repo_tags = ["shaldengeki/mc-manager-worker:latest"],
-    repository = "docker.io/shaldengeki/mc-manager-worker",
-    visibility = ["//mc_manager/worker:__subpackages__"],
+py_binary(
+    name = "app",
+    srcs = ["app.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "@py_deps//boto3",
+        "@py_deps//docker",
+        "@py_deps//requests",
+    ],
 )

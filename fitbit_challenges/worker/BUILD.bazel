@@ -1,14 +1,17 @@
 load("@rules_python//python:defs.bzl", "py_binary")
 load("//tools/build_rules/worker:defs.bzl", "worker")
 
-py_binary(
-    name = "binary",
-    srcs = [
-        "__init__.py",
-        "app.py",
-    ],
-    imports = [".."],
-    main = "app.py",
+worker(
+    name = "worker",
+    env = {
+        "DATABASE_URL": "test-database-url",
+        "FITBIT_CLIENT_ID": "testing",
+        "FITBIT_CLIENT_SECRET": "testing",
+        "FITBIT_VERIFICATION_CODE": "testing",
+    },
+    registry = "docker.io",
+    repository = "shaldengeki/fitbit-challenges-worker",
+    tag = "latest",
     deps = [
         "//fitbit_challenges:config_py",
         "//fitbit_challenges:fitbit_client_py",
@@ -18,19 +21,6 @@ py_binary(
         "@py_deps//requests",
         "@py_deps//sqlalchemy",
     ],
-)
-
-worker(
-    name = "worker",
-    binary = "//fitbit_challenges/worker:binary",
-    docker_hub_repository = "docker.io/shaldengeki/fitbit-challenges-worker",
-    env = {
-        "DATABASE_URL": "test-database-url",
-        "FITBIT_CLIENT_ID": "testing",
-        "FITBIT_CLIENT_SECRET": "testing",
-        "FITBIT_VERIFICATION_CODE": "testing",
-    },
-    repo_tags = ["shaldengeki/fitbit-challenges-worker:latest"],
 )
 
 py_binary(
