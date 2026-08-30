@@ -58,6 +58,10 @@ pip.parse(
     hub_name = "py_deps",
     python_version = "3.14.4",
     requirements_lock = "//:requirements.lock.txt",
+    target_platforms = [
+        "linux_aarch64",
+        "linux_x86_64",
+    ],
 )
 use_repo(pip, "py_deps")
 
