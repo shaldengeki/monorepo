@@ -28,7 +28,7 @@ def worker(
         tag (str): Tag that the container images should be loaded under.
         registry (str): Container image registry to push to. Defaults to ghcr.io.
         base (label): Base container image to use.
-        env (dict[str, str]): Additional environment variables to set in the Python image. See py_oci_image.
+        env (dict[str, str]): Additional environment variables to set in the Python image.
         visibility: The default visibility to set on the generated rules. Defaults to public.
         tags (list[str]): List of tags to apply to targets.
         deps (list[label]): List of dependencies for the binary.
