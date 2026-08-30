@@ -15,7 +15,7 @@ def grpc_api_image(
         tag,
         registry = "ghcr.io",
         additional_srcs = None,
-        base = "@rules_img_ubuntu_image",
+        base = "@ubuntu_image",
         visibility = None,
         tags = None):
     """

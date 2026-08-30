@@ -64,15 +64,6 @@ use_repo(pip, "py_deps")
 #### rules_oci
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 oci.pull(
-    name = "ubuntu_image",
-    digest = "sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b",
-    image = "ubuntu",
-    platforms = [
-        "linux/arm64/v8",
-        "linux/amd64",
-    ],
-)
-oci.pull(
     name = "python3_image",
     digest = "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
     image = "python",
@@ -140,16 +131,13 @@ use_repo(
     "python3_image_linux_arm_v7",
     "python3_image_linux_ppc64le",
     "python3_image_linux_s390x",
-    "ubuntu_image",
-    "ubuntu_image_linux_amd64",
-    "ubuntu_image_linux_arm64_v8",
 )
 
 #### rules_img
 pull = use_repo_rule("@rules_img//img:pull.bzl", "pull")
 
 pull(
-    name = "rules_img_ubuntu_image",
+    name = "ubuntu_image",
     digest = "sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b",
     registry = "index.docker.io",
     repository = "library/ubuntu",
