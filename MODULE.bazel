@@ -78,20 +78,6 @@ oci.pull(
     ],
 )
 oci.pull(
-    name = "nginx_debian_slim",
-    digest = "sha256:b34848eff6db786b6b1282d3a9c3fd0b5563dfb6d261df4923378b419e0d24f0",
-    image = "docker.io/library/nginx",
-    platforms = [
-        "linux/386",
-        "linux/amd64",
-        "linux/arm/v5",
-        "linux/arm/v7",
-        "linux/arm64/v8",
-        "linux/ppc64le",
-        "linux/s390x",
-    ],
-)
-oci.pull(
     name = "nginx_mainline_alpine",
     digest = "sha256:db35bfc6b2951e7f8a72db5db120288c127ffaeeb4a6d4b95a26fead017d5913",
     image = "docker.io/library/nginx",
@@ -107,14 +93,6 @@ oci.pull(
 )
 use_repo(
     oci,
-    "nginx_debian_slim",
-    "nginx_debian_slim_linux_386",
-    "nginx_debian_slim_linux_amd64",
-    "nginx_debian_slim_linux_arm64_v8",
-    "nginx_debian_slim_linux_arm_v5",
-    "nginx_debian_slim_linux_arm_v7",
-    "nginx_debian_slim_linux_ppc64le",
-    "nginx_debian_slim_linux_s390x",
     "nginx_mainline_alpine",
     "nginx_mainline_alpine_linux_386",
     "nginx_mainline_alpine_linux_amd64",
@@ -150,14 +128,6 @@ pull(
     registry = "index.docker.io",
     repository = "library/python",
     tag = "3.14.7-trixie",
-)
-
-pull(
-    name = "rules_img_nginx_debian_slim",
-    digest = "sha256:b34848eff6db786b6b1282d3a9c3fd0b5563dfb6d261df4923378b419e0d24f0",
-    registry = "index.docker.io",
-    repository = "library/nginx",
-    tag = "alpine-slim",
 )
 
 pull(
