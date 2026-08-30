@@ -12,10 +12,9 @@ bazel_dep(name = "platforms", version = "1.1.0", dev_dependency = True)
 
 bazel_dep(name = "rules_foreign_cc", version = "0.15.1")
 bazel_dep(name = "protobuf", version = "36.0.bcr.1")
-
-# Can't be upgraded to 2.0.0; breaks container builds, python binary runtime deps can't be found
-bazel_dep(name = "rules_python", version = "1.9.0")
-bazel_dep(name = "rules_python_gazelle_plugin", version = "2.0.0")
+bazel_dep(name = "grpc", version = "1.83.0")
+bazel_dep(name = "rules_python", version = "2.3.2")
+bazel_dep(name = "rules_python_gazelle_plugin", version = "2.3.2")
 bazel_dep(name = "rules_img", version = "0.3.19")
 bazel_dep(name = "aspect_rules_js", version = "2.9.2")
 bazel_dep(name = "aspect_rules_ts", version = "3.8.3")
@@ -48,15 +47,19 @@ use_repo(buf, "rules_buf_toolchains")
 #### Python
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
-    python_version = "3.13.4",
+    python_version = "3.14.4",
 )
-use_repo(python, "python_3_13_4")
+use_repo(python, "python_3_14_4")
 
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(
     hub_name = "py_deps",
-    python_version = "3.13.4",
+    python_version = "3.14.4",
     requirements_lock = "//:requirements.lock.txt",
+    target_platforms = [
+        "linux_aarch64",
+        "linux_x86_64",
+    ],
 )
 use_repo(pip, "py_deps")
 
