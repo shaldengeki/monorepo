@@ -78,8 +78,8 @@ def frontend_image(
     nginx_conf(
         name = name + "_nginx_conf",
         server_name = server_name,
-        visibility = visibility,
         tags = tags,
+        visibility = visibility,
     )
 
     # Define a container layer for just our nginx configuration.
@@ -87,8 +87,8 @@ def frontend_image(
         name = name + "_nginx_default_tar",
         srcs = [name + "_nginx_conf"],
         package_dir = "/etc/nginx/conf.d",
-        visibility = visibility,
         tags = tags,
+        visibility = visibility,
     )
 
     layer_from_tar(
@@ -97,6 +97,7 @@ def frontend_image(
         compress = "zstd",
         optimize = True,
         tags = tags,
+        visibility = visibility,
     )
 
     # Bundle our application.
@@ -118,8 +119,8 @@ def frontend_image(
         webpack_config = webpack_conf,
         output_dir = True,
         env = build_env,
-        visibility = visibility,
         tags = tags,
+        visibility = visibility,
     )
 
     # Define a container layer for our application, for use in nginx.
@@ -128,8 +129,8 @@ def frontend_image(
         srcs = [name + "_webpack"],
         package_dir = "/usr/share/nginx/html",
         strip_prefix = name + "_webpack",
-        visibility = visibility,
         tags = tags,
+        visibility = visibility,
     )
 
     layer_from_tar(
@@ -138,6 +139,7 @@ def frontend_image(
         compress = "zstd",
         optimize = True,
         tags = tags,
+        visibility = visibility,
     )
 
     image_manifest(
@@ -158,6 +160,8 @@ def frontend_image(
             "//tools/build_rules:linux_arm64",
             "//tools/build_rules:linux_amd64",
         ],
+        tags = tags,
+        visibility = visibility,
     )
 
     image_push(
