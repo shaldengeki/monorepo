@@ -7,6 +7,7 @@
 manifest:
   modules_mapping:
     08ae81f72d5a2b5fa9e0__mypyc: mypy
+    24eba0d76380778f559b__mypyc: isort
     30fcd23745efe32ce681__mypyc: black
     955cd85d9c9a4f4b30d3__mypyc: tomli
     alembic: alembic
@@ -70,7 +71,6 @@ manifest:
     pre_commit: pre_commit
     py: pytest
     pygments: pygments
-    pylint: pylint
     pytest: pytest
     python_discovery: python_discovery
     pytokens: pytokens
@@ -94,4 +94,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 293f9d6076078de97c01bbd31af93c9047a9234d481b11b8374eb2cc41d6d00f
+integrity: 3acd2bdc3cb29f351b001ba84296d7a24f77fdd4014dc916bd59a771ae617c3b
