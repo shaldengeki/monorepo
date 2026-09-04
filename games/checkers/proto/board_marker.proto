@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package games.checkers.proto;
+
+option go_package = "github.com/shaldengeki/monorepo/games/checkers/proto";
+
+message BoardMarker {
+    uint32 row = 1;
+    uint32 column = 2;
+    string symbol = 3;
+}

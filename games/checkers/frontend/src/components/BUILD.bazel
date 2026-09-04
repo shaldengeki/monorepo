@@ -1,0 +1,100 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@fremtind_rules_vitest//vitest:defs.bzl", "vitest_test")
+
+copy_file(
+    name = "vitestsetupjs",
+    src = "//react_library:vitest.setup.js",
+    out = "vitest.setup.js",
+)
+
+ts_project(
+    name = "Square",
+    srcs = [
+        "Square.test.tsx",
+        "Square.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//games/checkers/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+    ],
+)
+
+vitest_test(
+    name = "SquareTest",
+    size = "small",
+    config = "//react_library:vitestconfigts",
+    data = [
+        ":Square",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
+        "//react_library:testfixtures",
+    ],
+    flaky = False,
+    log_level = "info",
+    node_modules = "//:node_modules",
+)
+
+ts_project(
+    name = "Board",
+    srcs = [
+        "Board.test.tsx",
+        "Board.tsx",
+    ],
+    allow_js = True,
+    composite = True,
+    declaration = True,
+    out_dir = ".",
+    resolve_json_module = True,
+    transpiler = "tsc",
+    tsconfig = "//games/checkers/frontend:tsconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":Square",
+        "//:node_modules/@apollo/client",
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/react",
+        "//:node_modules/jest-environment-jsdom",
+        "//:node_modules/jsdom",
+        "//:node_modules/react",
+    ],
+)
+
+vitest_test(
+    name = "BoardTest",
+    size = "small",
+    config = "//react_library:vitestconfigts",
+    data = [
+        ":Board",
+        ":vitest.setup.js",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@vitejs/plugin-react",
+        "//:node_modules/react",
+        "//:node_modules/react-dom",
+        "//:node_modules/vitest",
+        "//react_library:testfixtures",
+    ],
+    flaky = False,
+    log_level = "info",
+    node_modules = "//:node_modules",
+)

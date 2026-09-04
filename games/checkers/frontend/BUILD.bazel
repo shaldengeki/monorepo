@@ -1,0 +1,72 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("//tools/build_rules:frontend_image.bzl", "frontend_image")
+
+copy_to_bin(
+    name = "packagejson",
+    srcs = ["package.json"],
+    visibility = ["//games/checkers/frontend:__subpackages__"],
+)
+
+copy_to_bin(
+    name = "testfixtures",
+    srcs = [
+        "package.json",
+        "//react_library:testfixtures",
+    ],
+    visibility = ["//games/checkers/frontend:__subpackages__"],
+)
+
+copy_file(
+    name = "tsconfig",
+    src = "//react_library:tsconfig",
+    out = "tsconfig.json",
+    visibility = ["//games/checkers/frontend:__subpackages__"],
+)
+
+copy_file(
+    name = "tailwindconfig",
+    src = "//react_library:tailwindconfig",
+    out = "tailwind.config.js",
+    visibility = ["//games/checkers/frontend:__subpackages__"],
+)
+
+frontend_image(
+    name = "production",
+    srcs = glob(["public/**/*"]) + [
+        "//games/checkers/frontend/src:index",
+        "//games/checkers/frontend/src:tailwindcss",
+    ],
+    build_env = {
+        "REACT_APP_API_HOST": "api.checkers.ouguo.us",
+        "REACT_APP_API_PORT": "443",
+        "REACT_APP_API_PROTOCOL": "https",
+    },
+    entry_point = "//games/checkers/frontend/src:index.js",
+    node_modules = "//:node_modules",
+    registry = "docker.io",
+    repository = "shaldengeki/checkers-frontend",
+    server_name = "checkers.games.ouguo.us",
+    tag = "latest",
+    webpack_conf = ":webpack.config.js",
+)
+
+frontend_image(
+    name = "development",
+    srcs = glob(["public/**/*"]) + [
+        "//games/checkers/frontend/src:index",
+        "//games/checkers/frontend/src:tailwindcss",
+    ],
+    build_env = {
+        "REACT_APP_API_HOST": "localhost",
+        "REACT_APP_API_PORT": "5000",
+        "REACT_APP_API_PROTOCOL": "http",
+    },
+    entry_point = "//games/checkers/frontend/src:index.js",
+    node_modules = "//:node_modules",
+    registry = "docker.io",
+    repository = "shaldengeki/checkers-frontend",
+    server_name = "checkers.games.ouguo.us",
+    tag = "latest",
+    webpack_conf = ":webpack.config.js",
+)

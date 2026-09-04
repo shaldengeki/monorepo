@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package games.checkers.proto;
+
+option go_package = "github.com/shaldengeki/monorepo/games/checkers/proto";
+
+import "games/checkers/proto/game_state.proto";
+
+message Game {
+    string id = 1;
+    GameState state = 3;
+}

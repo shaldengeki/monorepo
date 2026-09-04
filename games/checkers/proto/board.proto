@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package games.checkers.proto;
+
+option go_package = "github.com/shaldengeki/monorepo/games/checkers/proto";
+
+import "games/checkers/proto/board_marker.proto";
+
+message Board {
+    // The game board.
+
+    uint32 rows = 1;
+    uint32 columns = 2;
+
+    repeated BoardMarker markers = 3;
+}

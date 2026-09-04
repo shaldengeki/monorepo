@@ -1,0 +1,21 @@
+load("@rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "main_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/shaldengeki/monorepo/games/checkers/server/main",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//games/checkers/game_state/in_memory_game_state",
+        "//games/checkers/proto/server:server_go_proto",
+        "//games/checkers/rule_set/default_rule_set",
+        "//games/checkers/server/grpc",
+        "@org_golang_google_grpc//:grpc",
+    ],
+)
+
+go_binary(
+    name = "main",
+    embed = [":main_lib"],
+    visibility = ["//visibility:public"],
+)
