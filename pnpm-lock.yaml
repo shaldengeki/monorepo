@@ -56,9 +56,6 @@ dependencies:
   package.json:
     specifier: ^2.0.1
     version: 2.0.1
-  plotly.js:
-    specifier: ^4.0.0
-    version: 4.1.0
   plotly.js-basic-dist:
     specifier: ^4.0.0
     version: 4.1.0
