@@ -38,7 +38,6 @@ manifest:
     google.protobuf: protobuf
     graphql: graphql_core
     graphql_server: graphql_server
-    greenlet: greenlet
     identify: identify
     idna: idna
     importlib_metadata: importlib_metadata
@@ -94,4 +93,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: c7563b2aadd74e5c94f4f555d03a0377101bc789111d5daba93fcb6bf7a25322
+integrity: 680d5d03c363f38aec75bb102c06e2f64a6a988771afea766a171d87c995a2af
