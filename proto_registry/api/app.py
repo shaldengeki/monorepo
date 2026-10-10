@@ -51,10 +51,10 @@ def check_subject_schema(subject_name: str) -> str:
 
     schema = data["schema"]
     schema_type_name: str = data.get("schemaType", "AVRO")
-    if schema_type_name not in SchemaType:
+    try:
+        schema_type = SchemaType[schema_type_name]
+    except KeyError:
         abort(400)
-
-    schema_type = SchemaType[schema_type_name]
 
     references: list[dict] = data.get("references", [])
     reference_names = set(
