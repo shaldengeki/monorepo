@@ -6,9 +6,9 @@
 ---
 manifest:
   modules_mapping:
-    08ae81f72d5a2b5fa9e0__mypyc: mypy
     24eba0d76380778f559b__mypyc: isort
     30fcd23745efe32ce681__mypyc: black
+    6ec57f84c680d3a3778b__mypyc: mypy
     955cd85d9c9a4f4b30d3__mypyc: tomli
     alembic: alembic
     asn1crypto: asn1crypto
@@ -93,4 +93,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: e021b69ca909b9412a7eaae6de5ea225570ccc5edff63a6a942f8e9896633bd7
+integrity: 0219bce2b03ee7e198b636f15f50529c4755d2d229d0fb83109a97b788a136b3
