@@ -149,6 +149,7 @@ func (self DefaultRuleSet) ValidateMarker(ctx context.Context, marker *proto.Boa
 		violations = append(violations, "Marker column must be >= 0")
 	}
 
+	// TODO: Allow a user to not pass the type, and inherit pre-existing value.
 	if marker.Type == proto.BoardMarkerType_BOARD_MARKER_TYPE_UNKNOWN {
 		violations = append(violations, "Marker symbol must be set")
 	}

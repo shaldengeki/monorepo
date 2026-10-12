@@ -70,9 +70,13 @@ func (s *grpcServer) MakeMove(ctx context.Context, request *pbserver.MakeMoveReq
 	}
 
 	// First, validate the move prospectively.
-	validationErrors, err := s.ruleSet.ValidateMarker(ctx, request.Move)
-	if err != nil {
-		return nil, fmt.Errorf("could not validate move request: %w", err)
+	validationErrors := []string{}
+	for _, jump := range request.Jumps {
+		jumpErrors, err := s.ruleSet.ValidateMarker(ctx, jump)
+		if err != nil {
+			return nil, fmt.Errorf("could not validate jump: %w", err)
+		}
+		validationErrors = append(validationErrors, jumpErrors...)
 	}
 	if len(validationErrors) > 0 {
 		return &pbserver.MakeMoveResponse{ValidationErrors: validationErrors}, nil
@@ -87,7 +91,7 @@ func (s *grpcServer) MakeMove(ctx context.Context, request *pbserver.MakeMoveReq
 	}
 
 	// Next, apply the move.
-	updatedGameState, err := s.ruleSet.ApplyMove(ctx, *priorState, request.Move)
+	updatedGameState, err := s.ruleSet.ApplyMove(ctx, *priorState, request.Jumps)
 	if err != nil {
 		return nil, fmt.Errorf("could not apply move to prior state for game %s: %w", request.GameId, err)
 	}

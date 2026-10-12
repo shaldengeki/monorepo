@@ -40,7 +40,7 @@ func TestValidateState(t *testing.T) {
 		assert.NotEmpty(t, res.ValidationErrors)
 
 		// Turn > # players
-		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 3, Round: 1, Players: []*pb.Player{{Symbol: "X"}, {Symbol: "O"}}}}
+		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 3, Round: 1, Players: []*pb.Player{{Id: "X"}, {Id: "O"}}}}
 		res, err = grpcServer.ValidateState(t.Context(), &request)
 		require.NoError(t, err)
 		assert.NotEmpty(t, res.ValidationErrors)
@@ -80,10 +80,9 @@ func TestMakeMove(t *testing.T) {
 
 		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
-				Move: &pb.BoardMarker{
-					Row: 1,
-					Column: 1,
-					Symbol: "",
+				Jumps: []*pb.BoardMarker{
+					{Row: 1, Column: 1, Player: &pb.Player{Id: ""}},
+					{Row: 1, Column: 1, Player: &pb.Player{Id: ""}},
 				},
 			}
 			res, err := grpcServer.MakeMove(t.Context(), &request)
@@ -93,10 +92,9 @@ func TestMakeMove(t *testing.T) {
 
 		t.Run("ValidMoveReturnsInfraError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
-				Move: &pb.BoardMarker{
-					Row: 1,
-					Column: 1,
-					Symbol: "X",
+				Jumps: []*pb.BoardMarker{
+					{Row: 1, Column: 1, Player: &pb.Player{Id: "X"}},
+					{Row: 2, Column: 1, Player: &pb.Player{Id: "X"}},
 				},
 			}
 			_, err := grpcServer.MakeMove(t.Context(), &request)
@@ -114,7 +112,12 @@ func TestMakeMove(t *testing.T) {
 					{
 						Row: 1,
 						Column: 1,
-						Symbol: "O",
+						Player: &pb.Player{Id: "O"},
+					},
+					{
+						Row: 2,
+						Column: 1,
+						Player: &pb.Player{Id: "X"},
 					},
 				},
 			},
@@ -131,10 +134,8 @@ func TestMakeMove(t *testing.T) {
 
 		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
-				Move: &pb.BoardMarker{
-					Row: 1,
-					Column: 1,
-					Symbol: "",
+				Jumps: []*pb.BoardMarker{
+					{Row: 1, Column: 1, Player: &pb.Player{Id: ""}},
 				},
 			}
 			res, err := grpcServer.MakeMove(t.Context(), &request)
@@ -144,10 +145,9 @@ func TestMakeMove(t *testing.T) {
 
 		t.Run("CollidingMoveReturnsInfraError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
-				Move: &pb.BoardMarker{
-					Row: 1,
-					Column: 1,
-					Symbol: "X",
+				Jumps: []*pb.BoardMarker{
+					{Row: 2, Column: 1, Player: &pb.Player{Id: "X"}},
+					{Row: 1, Column: 1, Player: &pb.Player{Id: "X"}},
 				},
 			}
 			_, err := grpcServer.MakeMove(t.Context(), &request)
@@ -165,13 +165,13 @@ func TestMakeMove(t *testing.T) {
 						{
 							Row: 1,
 							Column: 1,
-							Symbol: "O",
+							Player: &pb.Player{Id: "O"},
 						},
 					},
 				},
 				Players: []*pb.Player{
-					{Id: "1", Symbol: "O"},
-					{Id: "2", Symbol: "X"},
+					{Id: "O"},
+					{Id: "X"},
 				},
 			}
 			readOnlyStateMap := map[string]*pb.GameState{
@@ -183,10 +183,8 @@ func TestMakeMove(t *testing.T) {
 
 			request := pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
-				Move: &pb.BoardMarker{
-					Row: 2,
-					Column: 2,
-					Symbol: "X",
+				Jumps: []*pb.BoardMarker{
+					{Row: 2, Column: 2, Player: &pb.Player{Id: "X"}},
 				},
 			}
 			_, err := grpcServer.MakeMove(t.Context(), &request)
@@ -199,17 +197,30 @@ func TestMakeMove(t *testing.T) {
 				Round: 1,
 				Turn: 1,
 				Players: []*pb.Player{
-					{Id: "1", Symbol: "O"},
-					{Id: "2", Symbol: "X"},
+					{Id: "O"},
+					{Id: "X"},
 				},
 				Board: &pb.Board{
 					Rows: 3,
 					Columns: 3,
 					Markers: []*pb.BoardMarker{
 						{
+							Row: 2,
+							Column: 0,
+							Player: &pb.Player{Id: "O"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+						{
 							Row: 1,
 							Column: 1,
-							Symbol: "O",
+							Player: &pb.Player{Id: "O"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+						{
+							Row: 0,
+							Column: 0,
+							Player: &pb.Player{Id: "X"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
 						},
 					},
 				},
@@ -223,10 +234,9 @@ func TestMakeMove(t *testing.T) {
 
 			request := pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
-				Move: &pb.BoardMarker{
-					Row: 2,
-					Column: 2,
-					Symbol: "X",
+				Jumps: []*pb.BoardMarker{
+					{Row: 0, Column: 0, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN, Player: &pb.Player{Id: "X"}},
+					{Row: 2, Column: 2, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN, Player: &pb.Player{Id: "X"}},
 				},
 			}
 			res, err := grpcServer.MakeMove(t.Context(), &request)
@@ -246,17 +256,16 @@ func TestMakeMove(t *testing.T) {
 			require.Len(t, board.Markers, 2)
 			assert.Equal(t, 1, int(board.Markers[0].Row))
 			assert.Equal(t, 1, int(board.Markers[0].Column))
-			assert.Equal(t, "O", board.Markers[0].Symbol)
+			assert.Equal(t, "O", board.Markers[0].Player.Id)
 			assert.Equal(t, 2, int(board.Markers[1].Row))
 			assert.Equal(t, 2, int(board.Markers[1].Column))
-			assert.Equal(t, "X", board.Markers[1].Symbol)
+			assert.Equal(t, "X", board.Markers[1].Player.Id)
 
 			request = pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
-				Move: &pb.BoardMarker{
-					Row: 0,
-					Column: 0,
-					Symbol: "O",
+				Jumps: []*pb.BoardMarker{
+					{Row: 2, Column: 0, Player: &pb.Player{Id: "O"}},
+					{Row: 1, Column: 1, Player: &pb.Player{Id: "O"}},
 				},
 			}
 			res, err = grpcServer.MakeMove(t.Context(), &request)
@@ -278,8 +287,8 @@ func TestMakeMove(t *testing.T) {
 				Round: 2,
 				Turn: 2,
 				Players: []*pb.Player{
-					{Id: "1", Symbol: "O"},
-					{Id: "2", Symbol: "X"},
+					{Id: "O"},
+					{Id: "X"},
 				},
 				Board: &pb.Board{
 					Rows: 3,
@@ -288,22 +297,14 @@ func TestMakeMove(t *testing.T) {
 						{
 							Row: 0,
 							Column: 0,
-							Symbol: "O",
-						},
-						{
-							Row: 1,
-							Column: 0,
-							Symbol: "X",
-						},
-						{
-							Row: 0,
-							Column: 1,
-							Symbol: "O",
+							Player: &pb.Player{Id: "O"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
 						},
 						{
 							Row: 1,
 							Column: 1,
-							Symbol: "X",
+							Player: &pb.Player{Id: "X"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
 						},
 					},
 				},
@@ -317,10 +318,9 @@ func TestMakeMove(t *testing.T) {
 
 			request := pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
-				Move: &pb.BoardMarker{
-					Row: 0,
-					Column: 2,
-					Symbol: "O",
+				Jumps: []*pb.BoardMarker{
+					{Row: 0, Column: 0, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN, Player: &pb.Player{Id: "O"}},
+					{Row: 2, Column: 2, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN, Player: &pb.Player{Id: "O"}},
 				},
 			}
 			res, err := grpcServer.MakeMove(t.Context(), &request)
@@ -337,7 +337,7 @@ func TestMakeMove(t *testing.T) {
 			require.NotEmpty(t, finalState.Scores)
 			scores := finalState.Scores
 			require.Len(t, scores, 1)
-			assert.Equal(t, "O", scores[0].Player.Symbol)
+			assert.Equal(t, "O", scores[0].Player.Id)
 			assert.Equal(t, 1, int(scores[0].Score))
 		})
 	})
