@@ -13,7 +13,22 @@ type DefaultRuleSet struct {
 }
 
 func (self DefaultRuleSet) InitialState(ctx context.Context) (*proto.GameState, error) {
-	return &proto.GameState{Turn: 0, Round: 1, Finished: false, Board: &proto.Board{Rows: 3, Columns: 3}, Players: []*proto.Player{{Id: "1", Symbol: "X"}, {Id: "2", Symbol: "O"}}}, nil
+	return &proto.GameState{
+		Turn: 0,
+		Round: 1,
+		Finished: false,
+		Board: &proto.Board{
+			Rows: 8,
+			Columns: 8,
+			Markers: []*proto.BoardMarker{
+				{Row: 0, Column: 0, Type: proto.BoardMarkerType_BOARD_MARKER_TYPE_PAWN, Player: &proto.Player{Id: "1"}},
+			},
+		},
+		Players: []*proto.Player{
+			{Id: "1"},
+			{Id: "2"},
+		},
+	}, nil
 }
 
 func (self DefaultRuleSet) ValidateState(ctx context.Context, gameState proto.GameState) (violations []string, err error) {
@@ -113,9 +128,9 @@ func (self DefaultRuleSet) ValidateBoard(ctx context.Context, board *proto.Board
 		}
 
 		if before, ok := positions[coord]; ok {
-			violations = append(violations, fmt.Sprintf("More than one marker found at %s, pre-existing marker %s, conflicts with %s", coord, before, marker.Symbol))
+			violations = append(violations, fmt.Sprintf("More than one marker found at %s, pre-existing marker %s, conflicts with %s", coord, before, marker.Player.Id))
 		} else {
-			positions[coord] = marker.Symbol
+			positions[coord] = marker.Player.Id
 		}
 	}
 
@@ -133,16 +148,20 @@ func (self DefaultRuleSet) ValidateMarker(ctx context.Context, marker *proto.Boa
 		violations = append(violations, "Marker column must be >= 0")
 	}
 
-	if marker.Symbol == "" {
+	if marker.Type == proto.BoardMarkerType_BOARD_MARKER_TYPE_UNKNOWN {
 		violations = append(violations, "Marker symbol must be set")
-	} else if len(marker.Symbol) > 1 {
-		violations = append(violations, "Marker symbol must only be a single character")
+	}
+
+	if marker.Player == nil {
+		violations = append(violations, "Marker player must be set")
+	} else if marker.Player.Id == "" {
+		violations = append(violations, "Marker player ID must be set")
 	}
 
 	return violations, nil
 }
 
-func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameState, move *proto.BoardMarker) (*proto.GameState, error) {
+func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameState, jumps []*proto.BoardMarker) (*proto.GameState, error) {
 	if priorState.Finished {
 		return nil, fmt.Errorf("game is already finished, can't make more moves")
 	}
@@ -156,17 +175,46 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 		return nil, fmt.Errorf("could not determine current player when applying move on prior state %v: %w", priorState, err)
 	}
 
-	if move.Symbol != currentPlayer.Symbol {
-		return nil, fmt.Errorf("it is not %s's turn to play (it is %s's)", move.Symbol, currentPlayer.Symbol)
+	if len(jumps) < 2 {
+		return nil, fmt.Errorf("jump must have at least starting and ending location")
 	}
 
-	for _, otherMarker := range priorState.Board.Markers {
-		if move.Row == otherMarker.Row && move.Column == otherMarker.Column {
-			return nil, fmt.Errorf("another player (%s) has already claimed row %d, col %d", otherMarker.Symbol, otherMarker.Row, otherMarker.Column)
+	jumpedMarkerLocations := map[int]map[int]bool{}
+	// currentLocation := jumps[0]
+	for _, jump := range jumps {
+		// TODO: walk through jumps, identifying which pieces were jumped over, and accumulating jumped-over pieces.
+		if jump.Player.Id != currentPlayer.Id {
+			return nil, fmt.Errorf("it is not %s's turn to play (it is %s's)", jump.Player.Id, currentPlayer.Id)
+		}
+
+		// TODO: validate that this jump traveled in an allowed direction.
+		// Check if we're landing in a location with an un-jumped marker.
+		for _, otherMarker := range priorState.Board.Markers {
+			if jump.Row == otherMarker.Row && jump.Column == otherMarker.Column {
+				return nil, fmt.Errorf("another player (%s) has already claimed row %d, col %d", otherMarker.Player.Id, otherMarker.Row, otherMarker.Column)
+			}
+		}
+		// Check if we're just moving.
+		// Otherwise, check if we're jumping over a piece; accumulate in jumpedMarkerLocations if so.
+	}
+
+	updatedMarkers := []*proto.BoardMarker{}
+	for _, marker := range priorState.Board.Markers {
+		// This marker wasn't affected if it didn't move and wasn't jumped over.
+		cols, rowFound := jumpedMarkerLocations[int(marker.Row)]
+		_, colFound := cols[int(marker.Column)]
+		wasJumped := rowFound && (colFound)
+		movingPiece := marker.Row == jumps[0].Row && marker.Column == jumps[0].Column
+
+		if !movingPiece && !wasJumped {
+			updatedMarkers = append(updatedMarkers, marker)
 		}
 	}
+	// Append moving piece at the end.
+	updatedMarkers = append(updatedMarkers, jumps[len(jumps)-1])
+
 	newState := priorState
-	newState.Board.Markers = append(newState.Board.Markers, move)
+	newState.Board.Markers = updatedMarkers
 	newState.Turn += 1
 
 	if (int(newState.Turn) - 1) % len(newState.Players) == 0 {
@@ -174,23 +222,24 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 		newState.Turn = 1
 	}
 
-	finished, err := self.MoveFinishesGame(ctx, move, newState.Board)
+	finished, err := self.MoveFinishesGame(ctx, newState.Board)
 	if err != nil {
 		return nil, fmt.Errorf("could not check if move finished game with state %v: %w", newState, err)
 	}
 
+	lastJump := jumps[len(jumps)-1]
 	if finished {
 		newState.Finished = true
 
 		var finishingPlayer *proto.Player
 		for _, player := range newState.Players {
-			if player.Symbol == move.Symbol {
+			if player.Id == lastJump.Player.Id {
 				finishingPlayer = player
 			}
 		}
 
 		if finishingPlayer == nil {
-			return nil, fmt.Errorf("could not find player who played finishing move %v", &move)
+			return nil, fmt.Errorf("could not find player who played finishing move %v", &lastJump)
 		}
 
 		newState.Scores = append(newState.Scores, &proto.Score{Player: finishingPlayer, Score: 1})
@@ -199,7 +248,7 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 	return &newState, nil
 }
 
-func (self DefaultRuleSet) MoveFinishesGame(ctx context.Context, move *proto.BoardMarker, board *proto.Board) (bool, error) {
+func (self DefaultRuleSet) MoveFinishesGame(ctx context.Context, board *proto.Board) (bool, error) {
 	if board == nil {
 		return false, fmt.Errorf("cannot check if move finished game for state with nil board")
 	}
@@ -208,45 +257,18 @@ func (self DefaultRuleSet) MoveFinishesGame(ctx context.Context, move *proto.Boa
 		return false, fmt.Errorf("cannot check if move finished game for state with nil markers")
 	}
 
-	// Count the number of markers in the current entry's row, column, and diagonal, if square.
-	// If it equals the length of the board in that dimension, they've won.
-	// Start with 1 in every count, to account for the current move.
-	numRow := 1
-	numColumn := 1
-	numDiagPositive := 1
-	numDiagNegative := 1
+	// Check whether only one player has pieces on the board.
+	singleAllowedPlayerId := ""
 	for _, marker := range board.Markers {
-		if marker.Symbol != move.Symbol {
-			continue
+		if singleAllowedPlayerId == "" {
+			singleAllowedPlayerId = marker.Player.Id
 		}
-
-		// Skip the current move.
-		if marker.Row == move.Row && marker.Column == move.Column {
-			continue
-		}
-
-		if marker.Row == move.Row {
-			numRow += 1
-		} else if marker.Column == move.Column {
-			numColumn += 1
-		}
-		if board.Rows == board.Columns {
-			if (marker.Column - move.Column) == (marker.Row - move.Row) && (marker.Column - move.Column) >= 0 {
-				numDiagPositive += 1
-			}
-			if (marker.Column - move.Column) == (marker.Row - move.Row) && (marker.Column - move.Column) <= 0 {
-				numDiagNegative += 1
-			}
+		if marker.Player.Id != singleAllowedPlayerId {
+			return false, nil
 		}
 	}
-	if numRow == int(board.Rows) || numColumn == int(board.Columns) {
-		return true, nil
-	}
-	if board.Rows == board.Columns && (numDiagPositive == int(board.Rows) || numDiagNegative == int(board.Rows)) {
-		return true, nil
-	}
 
-	return false, nil
+	return true, nil
 }
 
 func (self DefaultRuleSet) CurrentPlayer(ctx context.Context, currentState *proto.GameState) (*proto.Player, error) {

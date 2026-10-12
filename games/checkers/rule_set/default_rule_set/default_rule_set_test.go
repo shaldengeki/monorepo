@@ -32,7 +32,7 @@ func TestValidateState(t *testing.T) {
 		assert.NotEmpty(t, violations)
 
 		// Turn > # players
-		state = pb.GameState{Turn: 3, Round: 1, Players: []*pb.Player{{Symbol: "X"}, {Symbol: "O"}}}
+		state = pb.GameState{Turn: 3, Round: 1, Players: []*pb.Player{{}, {}}}
 		violations, err = ruleSet.ValidateState(t.Context(), state)
 		require.NoError(t, err)
 		assert.NotEmpty(t, violations)
@@ -75,19 +75,18 @@ func TestCurrentPlayer(t *testing.T) {
 			Round: 1,
 			Turn: 0,
 			Players: []*pb.Player{
-				{Id: "1", Symbol: "O"},
-				{Id: "2", Symbol: "X"},
+				{Id: "1"},
+				{Id: "2"},
 			},
 			Board: &pb.Board{
-				Rows: 3,
-				Columns: 3,
+				Rows: 8,
+				Columns: 8,
 				Markers: []*pb.BoardMarker{},
 			},
 		}
 		player, err := ruleSet.CurrentPlayer(t.Context(), &state)
 		require.NoError(t, err)
 		assert.Equal(t, "1", player.Id)
-		assert.Equal(t, "O", player.Symbol)
 	})
 
 	t.Run("Middle", func(t *testing.T) {
@@ -95,8 +94,8 @@ func TestCurrentPlayer(t *testing.T) {
 			Round: 2,
 			Turn: 1,
 			Players: []*pb.Player{
-				{Id: "1", Symbol: "O"},
-				{Id: "2", Symbol: "X"},
+				{Id: "1"},
+				{Id: "2"},
 			},
 			Board: &pb.Board{
 				Rows: 3,
@@ -105,17 +104,14 @@ func TestCurrentPlayer(t *testing.T) {
 					{
 						Row: 1,
 						Column: 1,
-						Symbol: "O",
 					},
 					{
 						Row: 2,
 						Column: 1,
-						Symbol: "X",
 					},
 					{
 						Row: 0,
 						Column: 1,
-						Symbol: "O",
 					},
 				},
 			},
@@ -123,7 +119,6 @@ func TestCurrentPlayer(t *testing.T) {
 		player, err := ruleSet.CurrentPlayer(t.Context(), &state)
 		require.NoError(t, err)
 		assert.Equal(t, "2", player.Id)
-		assert.Equal(t, "X", player.Symbol)
 	})
 }
 
@@ -136,8 +131,8 @@ func TestApplyMove(t *testing.T) {
 			Round: 1,
 			Turn: 0,
 			Players: []*pb.Player{
-				{Id: "1", Symbol: "O"},
-				{Id: "2", Symbol: "X"},
+				{Id: "1"},
+				{Id: "2"},
 			},
 			Board: &pb.Board{
 				Rows: 3,
@@ -148,7 +143,6 @@ func TestApplyMove(t *testing.T) {
 		move := pb.BoardMarker{
 			Row: 2,
 			Column: 2,
-			Symbol: "X",
 		}
 		_, err := ruleSet.ApplyMove(t.Context(), state, &move)
 		assert.Error(t, err)
@@ -158,8 +152,8 @@ func TestApplyMove(t *testing.T) {
 			Round: 2,
 			Turn: 1,
 			Players: []*pb.Player{
-				{Id: "1", Symbol: "O"},
-				{Id: "2", Symbol: "X"},
+				{Id: "1"},
+				{Id: "2"},
 			},
 			Board: &pb.Board{
 				Rows: 3,
@@ -168,17 +162,14 @@ func TestApplyMove(t *testing.T) {
 					{
 						Row: 1,
 						Column: 1,
-						Symbol: "O",
 					},
 					{
 						Row: 2,
 						Column: 1,
-						Symbol: "X",
 					},
 					{
 						Row: 0,
 						Column: 1,
-						Symbol: "O",
 					},
 				},
 			},
@@ -186,7 +177,6 @@ func TestApplyMove(t *testing.T) {
 		move = pb.BoardMarker{
 			Row: 2,
 			Column: 2,
-			Symbol: "O",
 		}
 		_, err = ruleSet.ApplyMove(t.Context(), state, &move)
 		assert.Error(t, err)
@@ -206,7 +196,6 @@ func TestApplyMove(t *testing.T) {
 		move := pb.BoardMarker{
 			Row: 2,
 			Column: 2,
-			Symbol: "X",
 		}
 		_, err := ruleSet.ApplyMove(t.Context(), state, &move)
 		assert.Error(t, err)
@@ -224,32 +213,26 @@ func TestMoveFinishesGame(t *testing.T) {
 			{
 				Row: 0,
 				Column: 1,
-				Symbol: "O",
 			},
 			{
 				Row: 1,
 				Column: 0,
-				Symbol: "X",
 			},
 			{
 				Row: 1,
 				Column: 2,
-				Symbol: "O",
 			},
 			{
 				Row: 1,
 				Column: 1,
-				Symbol: "X",
 			},
 			{
 				Row: 2,
 				Column: 2,
-				Symbol: "O",
 			},
 			{
 				Row: 0,
 				Column: 0,
-				Symbol: "X",
 			},
 		},
 	}
@@ -259,7 +242,6 @@ func TestMoveFinishesGame(t *testing.T) {
 		move := pb.BoardMarker{
 			Row: 2,
 			Column: 0,
-			Symbol: "O",
 		}
 		finished, err := ruleSet.MoveFinishesGame(t.Context(), &move, &board)
 		require.NoError(t, err)
@@ -269,7 +251,6 @@ func TestMoveFinishesGame(t *testing.T) {
 		move := pb.BoardMarker{
 			Row: 0,
 			Column: 2,
-			Symbol: "O",
 		}
 		finished, err := ruleSet.MoveFinishesGame(t.Context(), &move, &board)
 		require.NoError(t, err)

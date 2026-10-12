@@ -4,8 +4,17 @@ package games.checkers.proto;
 
 option go_package = "github.com/shaldengeki/monorepo/games/checkers/proto";
 
+import "games/checkers/proto/player.proto";
+
+enum BoardMarkerType {
+    BOARD_MARKER_TYPE_UNKNOWN = 0;
+    BOARD_MARKER_TYPE_PAWN = 1;
+    BOARD_MARKER_TYPE_KING = 2;
+}
+
 message BoardMarker {
     uint32 row = 1;
     uint32 column = 2;
-    string symbol = 3;
+    BoardMarkerType type = 3;
+    Player player = 4;
 }

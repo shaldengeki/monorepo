@@ -45,6 +45,7 @@ proto_library(
     name = "board_marker_proto",
     srcs = ["board_marker.proto"],
     visibility = ["//visibility:public"],
+    deps = [":player_proto"],
 )
 
 proto_library(

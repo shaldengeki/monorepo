@@ -32,7 +32,12 @@ message ValidateStateResponse {
 
 message MakeMoveRequest {
     string game_id = 1;
-    checkers.proto.BoardMarker move = 2;
+
+    // jumps is the player's move,
+    // starting with the BoardMarker's current location,
+    // with one entry per intervening location the marker lands,
+    // and with an entry at the end for the final position.
+    repeated checkers.proto.BoardMarker jumps = 2;
 }
 
 message MakeMoveResponse {
