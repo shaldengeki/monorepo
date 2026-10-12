@@ -1,4 +1,5 @@
 load("@rules_go//go:def.bzl", "go_binary", "go_library")
+load("//tools/build_rules/api:defs.bzl", "grpc_api_image")
 
 go_library(
     name = "main_lib",
@@ -18,4 +19,12 @@ go_binary(
     name = "main",
     embed = [":main_lib"],
     visibility = ["//visibility:public"],
+)
+
+grpc_api_image(
+    name = "image",
+    binary = "//games/tictactoe/server/main:main",
+    registry = "docker.io",
+    repository = "shaldengeki/tictactoe-server",
+    tag = "latest",
 )
