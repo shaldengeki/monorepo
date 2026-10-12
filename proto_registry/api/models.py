@@ -1,6 +1,5 @@
 import datetime
 import enum
-import json
 
 from sqlalchemy import Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -29,7 +28,7 @@ class Subject(Base):
         return f"<Subject name={self.name}>"
 
 
-class SchemaType(enum.Enum):
+class SchemaType(enum.IntEnum):
     AVRO = 1
     PROTOBUF = 2
     JSONSCHEMA = 3
