@@ -20,6 +20,7 @@ func (self DefaultRuleSet) InitialState(ctx context.Context) (*proto.GameState, 
 		Board: &proto.Board{
 			Rows: 8,
 			Columns: 8,
+			// TODO: fill this out.
 			Markers: []*proto.BoardMarker{
 				{Row: 0, Column: 0, Type: proto.BoardMarkerType_BOARD_MARKER_TYPE_PAWN, Player: &proto.Player{Id: "1"}},
 			},
