@@ -183,7 +183,7 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 
 	jumpedMarkerLocations := map[int]map[int]bool{}
 	// currentLocation := jumps[0]
-	for _, jump := range jumps {
+	for idx, jump := range jumps {
 		// TODO: walk through jumps, identifying which pieces were jumped over, and accumulating jumped-over pieces.
 		if jump.Player.Id != currentPlayer.Id {
 			return nil, fmt.Errorf("it is not %s's turn to play (it is %s's)", jump.Player.Id, currentPlayer.Id)
@@ -192,7 +192,7 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 		// TODO: validate that this jump traveled in an allowed direction.
 		// Check if we're landing in a location with an un-jumped marker.
 		for _, otherMarker := range priorState.Board.Markers {
-			if jump.Row == otherMarker.Row && jump.Column == otherMarker.Column {
+			if idx != 0 && jump.Row == otherMarker.Row && jump.Column == otherMarker.Column {
 				return nil, fmt.Errorf("another player (%s) has already claimed row %d, col %d", otherMarker.Player.Id, otherMarker.Row, otherMarker.Column)
 			}
 		}
