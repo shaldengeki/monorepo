@@ -137,14 +137,15 @@ func TestApplyMove(t *testing.T) {
 			Board: &pb.Board{
 				Rows: 3,
 				Columns: 3,
+				// TODO: Set up an initial board.
 				Markers: []*pb.BoardMarker{},
 			},
 		}
-		move := pb.BoardMarker{
-			Row: 2,
-			Column: 2,
+		jumps := []*pb.BoardMarker{
+			{Row: 2, Column: 2, Player: &pb.Player{Id: "2"}},
+			{Row: 2, Column: 2, Player: &pb.Player{Id: "2"}},
 		}
-		_, err := ruleSet.ApplyMove(t.Context(), state, &move)
+		_, err := ruleSet.ApplyMove(t.Context(), state, jumps)
 		assert.Error(t, err)
 
 		// Wrong player, further in.
@@ -174,9 +175,8 @@ func TestApplyMove(t *testing.T) {
 				},
 			},
 		}
-		move = pb.BoardMarker{
-			Row: 2,
-			Column: 2,
+		jumps = []*pb.BoardMarker{
+			{Row: 2, Column: 2},
 		}
 		_, err = ruleSet.ApplyMove(t.Context(), state, &move)
 		assert.Error(t, err)
