@@ -97,17 +97,26 @@ func TestMakeMove(t *testing.T) {
 			Board: &pb.Board{
 				Rows: 3,
 				Columns: 3,
+				//
+				//  O
+				// X O
 				Markers: []*pb.BoardMarker{
 					{
-						Row: 1,
-						Column: 1,
+						Row: 0,
+						Column: 0,
+						Player: &pb.Player{Id: "X"},
+						Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+					},
+					{
+						Row: 0,
+						Column: 2,
 						Player: &pb.Player{Id: "O"},
 						Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
 					},
 					{
-						Row: 2,
+						Row: 1,
 						Column: 1,
-						Player: &pb.Player{Id: "X"},
+						Player: &pb.Player{Id: "O"},
 						Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
 					},
 				},
@@ -134,11 +143,15 @@ func TestMakeMove(t *testing.T) {
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
+		t.Run("NonExistentPieceReturnsValidationError", func(t *testing.T) {
+			assert.Empty(t, "TODO")
+		})
+
 		t.Run("CollidingMoveReturnsInfraError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
-					{Row: 2, Column: 1, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
-					{Row: 1, Column: 1, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+					{Row: 0, Column: 2, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+					{Row: 1, Column: 1, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
 				},
 			}
 			res, err := grpcServer.MakeMove(t.Context(), &request)
@@ -147,11 +160,39 @@ func TestMakeMove(t *testing.T) {
 		})
 
 		t.Run("EmptyJumpsReturnsInfraError", func(t *testing.T) {
-			assert.Empty(t, "TODO")
+			request := pbserver.MakeMoveRequest{
+				Jumps: []*pb.BoardMarker{},
+			}
+			res, err := grpcServer.MakeMove(t.Context(), &request)
+			assert.Nil(t, res)
+			assert.Error(t, err)
+
+			request = pbserver.MakeMoveRequest{}
+			res, err = grpcServer.MakeMove(t.Context(), &request)
+			assert.Nil(t, res)
+			assert.Error(t, err)
 		})
 
 		t.Run("InvalidJumpDirectionReturnsInfraError", func(t *testing.T) {
-			assert.Empty(t, "TODO")
+			request := pbserver.MakeMoveRequest{
+				Jumps: []*pb.BoardMarker{
+					{Row: 1, Column: 1, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+					{Row: 2, Column: 0, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+				},
+			}
+			res, err := grpcServer.MakeMove(t.Context(), &request)
+			assert.Nil(t, res)
+			assert.Error(t, err)
+
+			request = pbserver.MakeMoveRequest{
+				Jumps: []*pb.BoardMarker{
+					{Row: 1, Column: 1, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+					{Row: 1, Column: 0, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+				},
+			}
+			res, err = grpcServer.MakeMove(t.Context(), &request)
+			assert.Nil(t, res)
+			assert.Error(t, err)
 		})
 
 		t.Run("JumpOntoJumpedOverPieceReturnsSuccess", func(t *testing.T) {
