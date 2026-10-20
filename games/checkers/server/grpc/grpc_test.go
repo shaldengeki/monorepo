@@ -146,6 +146,22 @@ func TestMakeMove(t *testing.T) {
 			assert.Error(t, err)
 		})
 
+		t.Run("EmptyJumpsReturnsInfraError", func(t *testing.T) {
+			assert.Empty(t, "TODO")
+		})
+
+		t.Run("InvalidJumpDirectionReturnsInfraError", func(t *testing.T) {
+			assert.Empty(t, "TODO")
+		})
+
+		t.Run("JumpOntoJumpedOverPieceReturnsSuccess", func(t *testing.T) {
+			assert.Empty(t, "TODO")
+		})
+
+		t.Run("SingleMoveIntoEmptySpaceReturnsSuccess", func(t *testing.T) {
+			assert.Empty(t, "TODO")
+		})
+
 		t.Run("InvalidSetStateReturnsInfraError", func(t *testing.T) {
 			// This test mutates game state, so we set up a separate set of structs.
 			readOnlyState := pb.GameState{
