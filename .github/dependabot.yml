@@ -36,3 +36,27 @@ updates:
         update-types:
           - "minor"
           - "patch"
+  - package-ecosystem: "bazel"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      bazel:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      pip:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
