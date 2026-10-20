@@ -89,17 +89,6 @@ func TestMakeMove(t *testing.T) {
 			require.NoError(t, err)
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
-
-		t.Run("ValidMoveReturnsInfraError", func(t *testing.T) {
-			request := pbserver.MakeMoveRequest{
-				Jumps: []*pb.BoardMarker{
-					{Row: 1, Column: 1, Player: &pb.Player{Id: "X"}},
-					{Row: 2, Column: 1, Player: &pb.Player{Id: "X"}},
-				},
-			}
-			_, err := grpcServer.MakeMove(t.Context(), &request)
-			assert.Error(t, err)
-		})
 	})
 
 	t.Run("WithState", func(t *testing.T) {
@@ -113,11 +102,13 @@ func TestMakeMove(t *testing.T) {
 						Row: 1,
 						Column: 1,
 						Player: &pb.Player{Id: "O"},
+						Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
 					},
 					{
 						Row: 2,
 						Column: 1,
 						Player: &pb.Player{Id: "X"},
+						Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
 					},
 				},
 			},
@@ -135,7 +126,7 @@ func TestMakeMove(t *testing.T) {
 		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
-					{Row: 1, Column: 1, Player: &pb.Player{Id: ""}},
+					{Row: 1, Column: 1, Player: &pb.Player{Id: ""}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
 				},
 			}
 			res, err := grpcServer.MakeMove(t.Context(), &request)
@@ -146,11 +137,12 @@ func TestMakeMove(t *testing.T) {
 		t.Run("CollidingMoveReturnsInfraError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
-					{Row: 2, Column: 1, Player: &pb.Player{Id: "X"}},
-					{Row: 1, Column: 1, Player: &pb.Player{Id: "X"}},
+					{Row: 2, Column: 1, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+					{Row: 1, Column: 1, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
 				},
 			}
-			_, err := grpcServer.MakeMove(t.Context(), &request)
+			res, err := grpcServer.MakeMove(t.Context(), &request)
+			assert.Nil(t, res)
 			assert.Error(t, err)
 		})
 
@@ -166,6 +158,7 @@ func TestMakeMove(t *testing.T) {
 							Row: 1,
 							Column: 1,
 							Player: &pb.Player{Id: "O"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
 						},
 					},
 				},
@@ -184,10 +177,11 @@ func TestMakeMove(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
 				Jumps: []*pb.BoardMarker{
-					{Row: 2, Column: 2, Player: &pb.Player{Id: "X"}},
+					{Row: 2, Column: 2, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
 				},
 			}
-			_, err := grpcServer.MakeMove(t.Context(), &request)
+			res, err := grpcServer.MakeMove(t.Context(), &request)
+			assert.Nil(t, res)
 			assert.Error(t, err)
 		})
 

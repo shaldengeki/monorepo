@@ -151,7 +151,7 @@ func (self DefaultRuleSet) ValidateMarker(ctx context.Context, marker *proto.Boa
 
 	// TODO: Allow a user to not pass the type, and inherit pre-existing value.
 	if marker.Type == proto.BoardMarkerType_BOARD_MARKER_TYPE_UNKNOWN {
-		violations = append(violations, "Marker symbol must be set")
+		violations = append(violations, "Marker type must be set")
 	}
 
 	if marker.Player == nil {
@@ -182,22 +182,31 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 	}
 
 	jumpedMarkerLocations := map[int]map[int]bool{}
-	// currentLocation := jumps[0]
-	for idx, jump := range jumps {
+	occupiedSpaces := map[uint32]map[uint32]string{}
+	for _, marker := range priorState.Board.Markers {
+		if _, found := occupiedSpaces[marker.Row]; !found {
+			occupiedSpaces[marker.Row] = map[uint32]string{}
+		}
+		occupiedSpaces[marker.Row][marker.Column] = marker.Player.Id
+	}
+
+	for _, jump := range jumps[1:] {
 		// TODO: walk through jumps, identifying which pieces were jumped over, and accumulating jumped-over pieces.
 		if jump.Player.Id != currentPlayer.Id {
 			return nil, fmt.Errorf("it is not %s's turn to play (it is %s's)", jump.Player.Id, currentPlayer.Id)
 		}
 
 		// TODO: validate that this jump traveled in an allowed direction.
+
 		// Check if we're landing in a location with an un-jumped marker.
-		for _, otherMarker := range priorState.Board.Markers {
-			if idx != 0 && jump.Row == otherMarker.Row && jump.Column == otherMarker.Column {
-				return nil, fmt.Errorf("another player (%s) has already claimed row %d, col %d", otherMarker.Player.Id, otherMarker.Row, otherMarker.Column)
-			}
+
+		if otherMarker, found := occupiedSpaces[jump.Row][jump.Column]; found {
+				return nil, fmt.Errorf("another player (%s) has already claimed row %d, col %d", otherMarker, jump.Row, jump.Column)
 		}
+
 		// Check if we're just moving.
 		// Otherwise, check if we're jumping over a piece; accumulate in jumpedMarkerLocations if so.
+		// Also, remove from occupiedSpaces.
 	}
 
 	updatedMarkers := []*proto.BoardMarker{}
