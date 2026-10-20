@@ -101,7 +101,6 @@ npm.npm_translate_lock(
     data = [
         "package.json",
     ],
-    npmrc = "//:.npmrc",
     # To update, run bazel run -- @pnpm//:pnpm --dir $PWD install --lockfile-only
     pnpm_lock = "//:pnpm-lock.yaml",
     verify_node_modules_ignored = "//:.bazelignore",
