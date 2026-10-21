@@ -279,6 +279,12 @@ func (self DefaultRuleSet) ValidateJumps(ctx context.Context, jumps []*proto.Boa
 		return []string{"Must have at least two locations in jumps"}, nil
 	}
 
+	_, found := startingLocations[jumps[0].Row][jumps[0].Column]
+	if !found {
+		return []string{fmt.Sprintf("there is no piece at (%d,%d) to jump with", jumps[0].Row, jumps[0].Column)}, nil
+	}
+
+
 	violations := []string{}
 	currentLocation := jumps[0]
 	regularMoves := 0
