@@ -37,6 +37,7 @@
     "https://bcr.bazel.build/modules/apple_support/1.24.1/MODULE.bazel": "f46e8ddad60aef170ee92b2f3d00ef66c147ceafea68b6877cb45bd91737f5f8",
     "https://bcr.bazel.build/modules/apple_support/1.24.2/MODULE.bazel": "0e62471818affb9f0b26f128831d5c40b074d32e6dda5a0d3852847215a41ca4",
     "https://bcr.bazel.build/modules/apple_support/2.3.0/MODULE.bazel": "d48f824ae8eeea5f837eb3038cef3615075d996d3e82eb9187192c2820605a81",
+    "https://bcr.bazel.build/modules/apple_support/2.5.2/MODULE.bazel": "bb1b7081e390a8d3885f642cb0073dfcf8e7a36525e079fa8f5835af7079c0fe",
     "https://bcr.bazel.build/modules/apple_support/2.8.0/MODULE.bazel": "c45f5176057092afba0be6c48a9ea02101666802f8be536947e099e94757f8ed",
     "https://bcr.bazel.build/modules/apple_support/2.9.1/MODULE.bazel": "fb209b83ed172af587419acb3340389cfe3260669e5f1c05e1ac3974aca614e0",
     "https://bcr.bazel.build/modules/apple_support/2.9.1/source.json": "247d9f86d94c546533fb01e6e18b018486f9a6dff5faccae8838ef12e659b2a7",
@@ -700,7 +701,7 @@
   "moduleExtensions": {
     "//tools/build_rules/hugo:defs.bzl%hugo_extension": {
       "general": {
-        "bzlTransitiveDigest": "YZvPveVGqSNnyzXyGQ+5uwA/m0xiQ0Wfb232Yk1EWL0=",
+        "bzlTransitiveDigest": "Bvt/HGka7AVcE/hBX72+fl71fbC5m5Yp6OKwGl8iFqY=",
         "usagesDigest": "1DJYFz9vwaSGP7PoZ3JR0IftKi9bZ/hZqR3+lTtyi/Y=",
         "recordedInputs": [
           "REPO_MAPPING:,rules_hugo +rules_hugo_extension+rules_hugo",
@@ -719,7 +720,7 @@
     },
     "//tools/build_rules/rules_hugo:defs.bzl%rules_hugo_extension": {
       "general": {
-        "bzlTransitiveDigest": "6Jbm8sYgzXyzEcoKrNamMf74Aic1hPdvgFY3DWAcbM8=",
+        "bzlTransitiveDigest": "ZveCrzHhR1JV8NE7u2Do91PeHlSb+wSma9ewLN6X32k=",
         "usagesDigest": "meAXMPQgjiXOftaH3lBFX/rjfO4nf1M3tDI4zdXitX4=",
         "recordedInputs": [
           "REPO_MAPPING:,bazel_tools bazel_tools"
@@ -738,7 +739,7 @@
     },
     "//tools/build_rules/rules_vitest:defs.bzl%rules_vitest_extension": {
       "general": {
-        "bzlTransitiveDigest": "x51k6+5hqqmMVCLfP1caUJlAGO6UcMYbH7FSyIK+QvE=",
+        "bzlTransitiveDigest": "YQ4l4Xi320P+VpNTF8R49RxOn6GEbHDv9uD+gFAg/Jk=",
         "usagesDigest": "QE+GxWWEpIjp0OkqwndVyOjPGoknkQXIifb65N0wJ+s=",
         "recordedInputs": [
           "REPO_MAPPING:,bazel_tools bazel_tools"
@@ -757,7 +758,7 @@
     },
     "@@aspect_gazelle_prebuilt+//:extensions.bzl%prebuilt_extension": {
       "general": {
-        "bzlTransitiveDigest": "kVr0xUdADA5oDM6uVx6tsEhQnuAyNJaCyRGrkjX0D84=",
+        "bzlTransitiveDigest": "doZWUEOlJlUCZ6RjAYgAac/8oH6X0Jvr9GBQWxiDiFY=",
         "usagesDigest": "lOdNxw5vY0H2TbwgIoLtqCFrDaofl9uUKU5Dq3weXIg=",
         "recordedInputs": [
           "REPO_MAPPING:aspect_gazelle_prebuilt+,bazel_tools bazel_tools"
@@ -885,7 +886,7 @@
     },
     "@@aspect_rules_ts+//ts:extensions.bzl%ext": {
       "general": {
-        "bzlTransitiveDigest": "kRjwdl65bQI3ei8F65IXI19f2U9JHLujf6nA9V5hpoQ=",
+        "bzlTransitiveDigest": "bGbDANcJHqNlD+Ye+RLAC61CvvhiL0S0+rcNU2ujtpU=",
         "usagesDigest": "HNPG7PJNe3yUrufI1/1QGmdmxmwRlakgsMjCM8ddjOU=",
         "recordedInputs": [
           "REPO_MAPPING:aspect_rules_ts+,aspect_rules_ts aspect_rules_ts+",
@@ -949,7 +950,7 @@
     },
     "@@rules_buf+//buf:extensions.bzl%buf": {
       "general": {
-        "bzlTransitiveDigest": "IjW2he5lp+L/zEfsBKIilXijyHH6PC4Lf3y19MA6G4c=",
+        "bzlTransitiveDigest": "hb1ZKLNRx7AnhgftOwNRaO75TIWBlBWVwMweZWgccNY=",
         "usagesDigest": "cffucUlmcn0nTNkw3QzVbCkb4Ckmr5KLJwD4n5TxVR0=",
         "recordedInputs": [
           "REPO_MAPPING:rules_buf+,bazel_tools bazel_tools"
@@ -967,7 +968,7 @@
     },
     "@@rules_python+//python/uv:uv.bzl%uv": {
       "general": {
-        "bzlTransitiveDigest": "DafUArm1CsjJZcemT0FvUq9rUch+pq38+JqfOBJCpm8=",
+        "bzlTransitiveDigest": "+9d3Xk+XLM+3cS8xVHR6XRn3dYpPmBavXbfU8v/qtnc=",
         "usagesDigest": "mM5nr0rInol5uct6JfVpNViqAYYCaAo3qdfPr4gsFGQ=",
         "recordedInputs": [
           "REPO_MAPPING:rules_python+,bazel_tools bazel_tools",
