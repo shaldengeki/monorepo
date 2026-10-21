@@ -163,8 +163,66 @@ func (self DefaultRuleSet) ValidateMarker(ctx context.Context, marker *proto.Boa
 	return violations, nil
 }
 
-func (self DefaultRuleSet) AllowedJumps(ctx context.Context, marker *proto.BoardMarker, startingLocations map[uint32]map[uint32]string) (map[uint32]map[uint32]bool, error) {
-	return nil, nil
+func (self DefaultRuleSet) PlayerIdAtPosition(ctx context.Context, startingLocations map[uint32]map[uint32]string, row uint32, column uint32) string {
+	startingColumns, found := startingLocations[row]
+	if !found {
+		return ""
+	}
+
+	startingLocationPlayerId, found := startingColumns[column]
+	if !found {
+		return ""
+	}
+
+	return startingLocationPlayerId
+}
+
+func (self DefaultRuleSet) AllowedJumps(ctx context.Context, marker *proto.BoardMarker, startingLocations map[uint32]map[uint32]string, board *proto.Board) (map[uint32]map[uint32]bool, error) {
+	allowedJumps := map[uint32]map[uint32]bool{}
+	directions := [][]int{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}}
+	for _, direction := range directions {
+		rowDelta, columnDelta := direction[0], direction[1]
+		landingRow, landingColumn := direction[0] + int(marker.Row), direction[1] + int(marker.Column)
+
+		// If this position is landable, add it and move on.
+		if landingRow < 0 || uint32(landingRow) >= board.Rows || landingColumn < 0 || uint32(landingColumn) >= board.Columns {
+			continue
+		}
+		landingRowTyped, landingColumnTyped := uint32(landingRow), uint32(landingColumn)
+
+		// Next, check to see if this spot is open. If it is, it's the only allowed jump in this direction.
+		playerAtPosition := self.PlayerIdAtPosition(ctx, startingLocations, landingRowTyped, landingColumnTyped)
+		if playerAtPosition == "" {
+			if _, found := allowedJumps[landingRowTyped]; !found {
+				allowedJumps[landingRowTyped] = map[uint32]bool{}
+			}
+			allowedJumps[landingRowTyped][landingColumnTyped] = true
+			continue
+		}
+
+		// Check to see if we can jump over a piece in this direction.
+		if playerAtPosition == marker.Player.Id {
+			continue
+		}
+
+		landingRow += rowDelta
+		landingColumn += columnDelta
+		if landingRow < 0 || uint32(landingRow) >= board.Rows || landingColumn < 0 || uint32(landingColumn) >= board.Columns {
+			continue
+		}
+		landingRowTyped, landingColumnTyped = uint32(landingRow), uint32(landingColumn)
+
+		playerAtPosition = self.PlayerIdAtPosition(ctx, startingLocations, landingRowTyped, landingColumnTyped)
+		if playerAtPosition == "" {
+			if _, found := allowedJumps[landingRowTyped]; !found {
+				allowedJumps[landingRowTyped] = map[uint32]bool{}
+			}
+			allowedJumps[landingRowTyped][landingColumnTyped] = true
+			continue
+		}
+	}
+
+	return allowedJumps, nil
 }
 
 func (self DefaultRuleSet) JumpIsRegularMove(ctx context.Context, before *proto.BoardMarker, after *proto.BoardMarker) bool {
@@ -215,7 +273,7 @@ func (self DefaultRuleSet) FindJumpedOverPiece(ctx context.Context, before *prot
 	}
 }
 
-func (self DefaultRuleSet) ValidateJumps(ctx context.Context, jumps []*proto.BoardMarker, startingLocations map[uint32]map[uint32]string) ([]string, error) {
+func (self DefaultRuleSet) ValidateJumps(ctx context.Context, jumps []*proto.BoardMarker, startingLocations map[uint32]map[uint32]string, board *proto.Board) ([]string, error) {
 	// TODO: enforce that the player can't move backwards unless it's a king.
 	if len(jumps) < 2 {
 		return []string{"Must have at least two locations in jumps"}, nil
@@ -233,7 +291,7 @@ func (self DefaultRuleSet) ValidateJumps(ctx context.Context, jumps []*proto.Boa
 
 		violations = append(violations, jumpErrors...)
 
-		allowedJumps, err := self.AllowedJumps(ctx, currentLocation, startingLocations)
+		allowedJumps, err := self.AllowedJumps(ctx, currentLocation, startingLocations, board)
 		if err != nil {
 			return violations, fmt.Errorf("calculating allowed jumps: %w", err)
 		}
