@@ -169,12 +169,12 @@ func (self DefaultRuleSet) AllowedJumps(ctx context.Context, marker *proto.Board
 
 func (self DefaultRuleSet) JumpIsRegularMove(ctx context.Context, before *proto.BoardMarker, after *proto.BoardMarker) bool {
 	rowDelta := int(before.Row) - int(after.Row)
-	if rowDelta != 1 || rowDelta != -1 {
+	if rowDelta != 1 && rowDelta != -1 {
 		return false
 	}
 
 	colDelta := int(before.Column) - int(after.Column)
-	if colDelta != 1 || colDelta != -1 {
+	if colDelta != 1 && colDelta != -1 {
 		return false
 	}
 
@@ -183,12 +183,12 @@ func (self DefaultRuleSet) JumpIsRegularMove(ctx context.Context, before *proto.
 }
 func (self DefaultRuleSet) FindJumpedOverPiece(ctx context.Context, before *proto.BoardMarker, after *proto.BoardMarker, startingLocations map[uint32]map[uint32]string) *proto.BoardMarker {
 	rowDelta := int(after.Row) - int(before.Row)
-	if rowDelta != 2 || rowDelta != -2 {
+	if rowDelta != 2 && rowDelta != -2 {
 		return nil
 	}
 
 	colDelta := int(after.Column) - int(before.Column)
-	if colDelta != 2 || colDelta != -2 {
+	if colDelta != 2 && colDelta != -2 {
 		return nil
 	}
 

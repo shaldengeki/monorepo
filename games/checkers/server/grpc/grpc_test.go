@@ -211,7 +211,15 @@ func TestMakeMove(t *testing.T) {
 		})
 
 		t.Run("SingleMoveIntoEmptySpaceReturnsSuccess", func(t *testing.T) {
-			assert.Empty(t, "TODO")
+			request := pbserver.MakeMoveRequest{
+				Jumps: []*pb.BoardMarker{
+					{Row: 1, Column: 1, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+					{Row: 2, Column: 2, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+				},
+			}
+			res, err := grpcServer.MakeMove(t.Context(), &request)
+			require.NoError(t, err)
+			assert.Empty(t, res.ValidationErrors)
 		})
 
 		t.Run("InvalidSetStateReturnsValidationError", func(t *testing.T) {
