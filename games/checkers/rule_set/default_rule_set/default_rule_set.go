@@ -163,6 +163,119 @@ func (self DefaultRuleSet) ValidateMarker(ctx context.Context, marker *proto.Boa
 	return violations, nil
 }
 
+func (self DefaultRuleSet) AllowedJumps(ctx context.Context, marker *proto.BoardMarker, startingLocations map[uint32]map[uint32]string) (map[uint32]map[uint32]bool, error) {
+	return nil, nil
+}
+
+func (self DefaultRuleSet) JumpIsRegularMove(ctx context.Context, before *proto.BoardMarker, after *proto.BoardMarker) bool {
+	rowDelta := int(before.Row) - int(after.Row)
+	if rowDelta != 1 || rowDelta != -1 {
+		return false
+	}
+
+	colDelta := int(before.Column) - int(after.Column)
+	if colDelta != 1 || colDelta != -1 {
+		return false
+	}
+
+	return true
+
+}
+func (self DefaultRuleSet) FindJumpedOverPiece(ctx context.Context, before *proto.BoardMarker, after *proto.BoardMarker, startingLocations map[uint32]map[uint32]string) *proto.BoardMarker {
+	rowDelta := int(after.Row) - int(before.Row)
+	if rowDelta != 2 || rowDelta != -2 {
+		return nil
+	}
+
+	colDelta := int(after.Column) - int(before.Column)
+	if colDelta != 2 || colDelta != -2 {
+		return nil
+	}
+
+	jumpedOverRow := uint32(int(before.Row) + rowDelta / 2)
+	locationCols, found := startingLocations[jumpedOverRow]
+	if !found {
+		return nil
+	}
+
+	jumpedOverColumn := uint32(int(before.Column) + colDelta / 2)
+	jumpedOverId, found := locationCols[jumpedOverColumn]
+	if !found {
+		return nil
+	}
+
+	if jumpedOverId != before.Player.Id {
+		return nil
+	}
+
+	return &proto.BoardMarker{
+		Row: jumpedOverRow,
+		Column: jumpedOverColumn,
+		Player: &proto.Player{Id: jumpedOverId},
+	}
+}
+
+func (self DefaultRuleSet) ValidateJumps(ctx context.Context, jumps []*proto.BoardMarker, startingLocations map[uint32]map[uint32]string) ([]string, error) {
+	// TODO: enforce that the player can't move backwards unless it's a king.
+	if len(jumps) < 2 {
+		return []string{"Must have at least two locations in jumps"}, nil
+	}
+
+	violations := []string{}
+	currentLocation := jumps[0]
+	regularMoves := 0
+	jumpMoves := 0
+	for _, jump := range jumps[1:] {
+		jumpErrors, err := self.ValidateMarker(ctx, jump)
+		if err != nil {
+			return violations, fmt.Errorf("validating marker for jump: %w", err)
+		}
+
+		violations = append(violations, jumpErrors...)
+
+		allowedJumps, err := self.AllowedJumps(ctx, currentLocation, startingLocations)
+		if err != nil {
+			return violations, fmt.Errorf("calculating allowed jumps: %w", err)
+		}
+		allowedCols, foundRow := allowedJumps[jump.Row]
+		if !foundRow {
+			violations = append(violations, fmt.Sprintf("not allowed to jump from (%d,%d) to (%d,%d)", currentLocation.Row, currentLocation.Column, jump.Row, jump.Column))
+		} else if _, foundCol := allowedCols[jump.Column]; !foundCol {
+			violations = append(violations, fmt.Sprintf("not allowed to jump from (%d,%d) to (%d,%d)", currentLocation.Row, currentLocation.Column, jump.Row, jump.Column))
+		}
+
+		// Check if we're just moving.
+		if self.JumpIsRegularMove(ctx, currentLocation, jump) {
+			regularMoves += 1
+		} else if jumpedOverPiece := self.FindJumpedOverPiece(ctx, currentLocation, jump, startingLocations); jumpedOverPiece != nil {
+			jumpMoves += 1
+			// Check if we're landing in a location with an un-jumped marker.
+			if otherMarker, found := startingLocations[jump.Row][jump.Column]; found {
+				violations = append(violations, fmt.Sprintf("another player (%s) has already claimed row %d, col %d", otherMarker, jump.Row, jump.Column))
+			}
+
+			delete(startingLocations[jumpedOverPiece.Row], jumpedOverPiece.Column)
+
+		} else {
+			violations = append(violations, fmt.Sprintf("jump from (%d,%d) to (%d,%d) is not a valid move", currentLocation.Row, currentLocation.Column, jump.Row, jump.Column))
+		}
+		currentLocation = jump
+	}
+
+	if regularMoves > 1 {
+		violations = append(violations, "cannot make more than one regular move")
+		if jumpMoves > 0 {
+			violations = append(violations, "cannot make a regular move and a jump-over-piece move")
+		}
+	}
+
+	if jumpMoves > 1 && jumps[0].Type != proto.BoardMarkerType_BOARD_MARKER_TYPE_KING {
+		violations = append(violations, "only kings can make more than one jump-over-piece move")
+	}
+
+	return violations, nil
+}
+
 func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameState, jumps []*proto.BoardMarker) (*proto.GameState, error) {
 	if priorState.Finished {
 		return nil, fmt.Errorf("game is already finished, can't make more moves")
@@ -181,7 +294,7 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 		return nil, fmt.Errorf("jump must have at least starting and ending location")
 	}
 
-	jumpedMarkerLocations := map[int]map[int]bool{}
+	jumpedMarkerLocations := map[uint32]map[uint32]bool{}
 	occupiedSpaces := map[uint32]map[uint32]string{}
 	for _, marker := range priorState.Board.Markers {
 		if _, found := occupiedSpaces[marker.Row]; !found {
@@ -199,30 +312,32 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 		return nil, fmt.Errorf("current player is %s, can't jump piece at (%d,%d) owned by %s", currentPlayer.Id, jumps[0].Row, jumps[0].Column, jumps[0].Player.Id)
 	}
 
+	currentLocation := jumps[0]
 	for _, jump := range jumps[1:] {
 		// TODO: walk through jumps, identifying which pieces were jumped over, and accumulating jumped-over pieces.
 		if jump.Player.Id != currentPlayer.Id {
 			return nil, fmt.Errorf("it is not %s's turn to play (it is %s's)", jump.Player.Id, currentPlayer.Id)
 		}
 
-		// TODO: validate that this jump traveled in an allowed direction.
+		// Check if we're jumping over a piece; accumulate in jumpedMarkerLocations if so.
+		if jumpedOverPiece := self.FindJumpedOverPiece(ctx, currentLocation, jump, occupiedSpaces); jumpedOverPiece != nil {
+			if _, found := jumpedMarkerLocations[jumpedOverPiece.Row]; !found {
+				jumpedMarkerLocations[jumpedOverPiece.Row] = map[uint32]bool{}
+			}
+			jumpedMarkerLocations[jumpedOverPiece.Row][jumpedOverPiece.Column] = true
 
-		// Check if we're landing in a location with an un-jumped marker.
-
-		if otherMarker, found := occupiedSpaces[jump.Row][jump.Column]; found {
-				return nil, fmt.Errorf("another player (%s) has already claimed row %d, col %d", otherMarker, jump.Row, jump.Column)
+			// Also, remove from occupiedSpaces.
+			delete(occupiedSpaces[jumpedOverPiece.Row], jumpedOverPiece.Column)
 		}
 
-		// Check if we're just moving.
-		// Otherwise, check if we're jumping over a piece; accumulate in jumpedMarkerLocations if so.
-		// Also, remove from occupiedSpaces.
+		currentLocation = jump
 	}
 
 	updatedMarkers := []*proto.BoardMarker{}
 	for _, marker := range priorState.Board.Markers {
 		// This marker wasn't affected if it didn't move and wasn't jumped over.
-		cols, rowFound := jumpedMarkerLocations[int(marker.Row)]
-		_, colFound := cols[int(marker.Column)]
+		cols, rowFound := jumpedMarkerLocations[marker.Row]
+		_, colFound := cols[marker.Column]
 		wasJumped := rowFound && (colFound)
 		movingPiece := marker.Row == jumps[0].Row && marker.Column == jumps[0].Column
 

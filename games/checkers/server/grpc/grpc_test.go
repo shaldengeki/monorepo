@@ -78,16 +78,15 @@ func TestMakeMove(t *testing.T) {
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
-		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
+		t.Run("InvalidMoveReturnsInfraError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
 					{Row: 1, Column: 1, Player: &pb.Player{Id: ""}},
 					{Row: 1, Column: 1, Player: &pb.Player{Id: ""}},
 				},
 			}
-			res, err := grpcServer.MakeMove(t.Context(), &request)
-			require.NoError(t, err)
-			assert.NotEmpty(t, res.ValidationErrors)
+			_, err := grpcServer.MakeMove(t.Context(), &request)
+			require.Error(t, err)
 		})
 	})
 
@@ -155,11 +154,11 @@ func TestMakeMove(t *testing.T) {
 				},
 			}
 			res, err := grpcServer.MakeMove(t.Context(), &request)
-			assert.Nil(t, res)
-			require.Error(t, err)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
-		t.Run("CollidingMoveReturnsInfraError", func(t *testing.T) {
+		t.Run("CollidingMoveReturnsValidationError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
 					{Row: 0, Column: 2, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
@@ -167,25 +166,25 @@ func TestMakeMove(t *testing.T) {
 				},
 			}
 			res, err := grpcServer.MakeMove(t.Context(), &request)
-			assert.Nil(t, res)
-			assert.Error(t, err)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
-		t.Run("EmptyJumpsReturnsInfraError", func(t *testing.T) {
+		t.Run("EmptyJumpsReturnsValidationError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{},
 			}
 			res, err := grpcServer.MakeMove(t.Context(), &request)
-			assert.Nil(t, res)
-			assert.Error(t, err)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
 
 			request = pbserver.MakeMoveRequest{}
 			res, err = grpcServer.MakeMove(t.Context(), &request)
-			assert.Nil(t, res)
-			assert.Error(t, err)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
-		t.Run("InvalidJumpDirectionReturnsInfraError", func(t *testing.T) {
+		t.Run("InvalidJumpDirectionReturnsValidationError", func(t *testing.T) {
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
 					{Row: 1, Column: 1, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
@@ -193,8 +192,8 @@ func TestMakeMove(t *testing.T) {
 				},
 			}
 			res, err := grpcServer.MakeMove(t.Context(), &request)
-			assert.Nil(t, res)
-			assert.Error(t, err)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
 
 			request = pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
@@ -203,8 +202,8 @@ func TestMakeMove(t *testing.T) {
 				},
 			}
 			res, err = grpcServer.MakeMove(t.Context(), &request)
-			assert.Nil(t, res)
-			assert.Error(t, err)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
 		t.Run("JumpOntoJumpedOverPieceReturnsSuccess", func(t *testing.T) {
@@ -215,7 +214,7 @@ func TestMakeMove(t *testing.T) {
 			assert.Empty(t, "TODO")
 		})
 
-		t.Run("InvalidSetStateReturnsInfraError", func(t *testing.T) {
+		t.Run("InvalidSetStateReturnsValidationError", func(t *testing.T) {
 			// This test mutates game state, so we set up a separate set of structs.
 			readOnlyState := pb.GameState{
 				Round: 1,
@@ -250,8 +249,8 @@ func TestMakeMove(t *testing.T) {
 				},
 			}
 			res, err := grpcServer.MakeMove(t.Context(), &request)
-			assert.Nil(t, res)
-			assert.Error(t, err)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
 		t.Run("SuccessfulSetReturnsSuccess", func(t *testing.T) {

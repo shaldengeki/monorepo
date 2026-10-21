@@ -69,25 +69,28 @@ func (s *grpcServer) MakeMove(ctx context.Context, request *pbserver.MakeMoveReq
 		return &pbserver.MakeMoveResponse{ValidationErrors: []string{"move must be non-empty"}}, nil
 	}
 
-	// First, validate the move prospectively.
-	validationErrors := []string{}
-	for _, jump := range request.Jumps {
-		jumpErrors, err := s.ruleSet.ValidateMarker(ctx, jump)
-		if err != nil {
-			return nil, fmt.Errorf("could not validate jump: %w", err)
-		}
-		validationErrors = append(validationErrors, jumpErrors...)
-	}
-	if len(validationErrors) > 0 {
-		return &pbserver.MakeMoveResponse{ValidationErrors: validationErrors}, nil
-	}
-
 	// TODO: this won't work with any sort of concurrency; we'll need some sort of locking.
 
-	// Next, fetch this game's state.
+	// Fetch this game's state.
 	priorState, err := s.gameStateProvider.GetState(ctx, request.GameId)
 	if err != nil || priorState == nil {
 		return nil, fmt.Errorf("could not get game state to make move for game %s: prior state %v, err %w", request.GameId, priorState, err)
+	}
+
+	// Validate the move prospectively.
+	occupiedSpaces := map[uint32]map[uint32]string{}
+	for _, marker := range priorState.Board.Markers {
+		if _, found := occupiedSpaces[marker.Row]; !found {
+			occupiedSpaces[marker.Row] = map[uint32]string{}
+		}
+		occupiedSpaces[marker.Row][marker.Column] = marker.Player.Id
+	}
+	validationErrors, err := s.ruleSet.ValidateJumps(ctx, request.Jumps, occupiedSpaces)
+	if err != nil {
+		return nil, fmt.Errorf("could not validate jump: %w", err)
+	}
+	if len(validationErrors) > 0 {
+		return &pbserver.MakeMoveResponse{ValidationErrors: validationErrors}, nil
 	}
 
 	// Next, apply the move.
