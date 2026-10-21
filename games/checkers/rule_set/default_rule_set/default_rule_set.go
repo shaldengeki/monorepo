@@ -190,6 +190,15 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 		occupiedSpaces[marker.Row][marker.Column] = marker.Player.Id
 	}
 
+	startingId, found := occupiedSpaces[jumps[0].Row][jumps[0].Column]
+	if !found {
+		return nil, fmt.Errorf("there is no piece at (%d,%d) to jump with", jumps[0].Row, jumps[0].Column)
+	}
+
+	if startingId != currentPlayer.Id {
+		return nil, fmt.Errorf("current player is %s, can't jump piece at (%d,%d) owned by %s", currentPlayer.Id, jumps[0].Row, jumps[0].Column, jumps[0].Player.Id)
+	}
+
 	for _, jump := range jumps[1:] {
 		// TODO: walk through jumps, identifying which pieces were jumped over, and accumulating jumped-over pieces.
 		if jump.Player.Id != currentPlayer.Id {

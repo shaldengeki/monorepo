@@ -94,6 +94,10 @@ func TestMakeMove(t *testing.T) {
 	t.Run("WithState", func(t *testing.T) {
 		state := pb.GameState{
 			Round: 1,
+			Players: []*pb.Player{
+				{Id: "O"},
+				{Id: "X"},
+			},
 			Board: &pb.Board{
 				Rows: 3,
 				Columns: 3,
@@ -144,7 +148,15 @@ func TestMakeMove(t *testing.T) {
 		})
 
 		t.Run("NonExistentPieceReturnsValidationError", func(t *testing.T) {
-			assert.Empty(t, "TODO")
+			request := pbserver.MakeMoveRequest{
+				Jumps: []*pb.BoardMarker{
+					{Row: 1, Column: 0, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+					{Row: 0, Column: 1, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+				},
+			}
+			res, err := grpcServer.MakeMove(t.Context(), &request)
+			assert.Nil(t, res)
+			require.Error(t, err)
 		})
 
 		t.Run("CollidingMoveReturnsInfraError", func(t *testing.T) {
