@@ -204,7 +204,7 @@ func (self DefaultRuleSet) FindJumpedOverPiece(ctx context.Context, before *prot
 		return nil
 	}
 
-	if jumpedOverId != before.Player.Id {
+	if jumpedOverId == before.Player.Id {
 		return nil
 	}
 
