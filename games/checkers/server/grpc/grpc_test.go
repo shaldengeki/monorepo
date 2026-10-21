@@ -324,8 +324,8 @@ func TestMakeMove(t *testing.T) {
 			require.NotNil(t, finalState.Board)
 			board := finalState.Board
 			require.Len(t, board.Markers, 2)
-			assert.Equal(t, 1, int(board.Markers[0].Row))
-			assert.Equal(t, 1, int(board.Markers[0].Column))
+			assert.Equal(t, 2, int(board.Markers[0].Row))
+			assert.Equal(t, 0, int(board.Markers[0].Column))
 			assert.Equal(t, "O", board.Markers[0].Player.Id)
 			assert.Equal(t, 2, int(board.Markers[1].Row))
 			assert.Equal(t, 2, int(board.Markers[1].Column))
@@ -334,8 +334,8 @@ func TestMakeMove(t *testing.T) {
 			request = pbserver.MakeMoveRequest{
 				GameId: "game_id_1",
 				Jumps: []*pb.BoardMarker{
-					{Row: 2, Column: 0, Player: &pb.Player{Id: "O"}},
-					{Row: 1, Column: 1, Player: &pb.Player{Id: "O"}},
+					{Row: 2, Column: 0, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+					{Row: 1, Column: 1, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
 				},
 			}
 			res, err = grpcServer.MakeMove(t.Context(), &request)

@@ -394,9 +394,11 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 	updatedMarkers := []*proto.BoardMarker{}
 	for _, marker := range priorState.Board.Markers {
 		// This marker wasn't affected if it didn't move and wasn't jumped over.
+		wasJumped := false
 		cols, rowFound := jumpedMarkerLocations[marker.Row]
-		_, colFound := cols[marker.Column]
-		wasJumped := rowFound && (colFound)
+		if rowFound {
+			_, wasJumped = cols[marker.Column]
+		}
 		movingPiece := marker.Row == jumps[0].Row && marker.Column == jumps[0].Column
 
 		if !movingPiece && !wasJumped {
