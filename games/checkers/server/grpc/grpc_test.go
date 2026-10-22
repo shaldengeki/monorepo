@@ -13,6 +13,48 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func copyState(state *pb.GameState) *pb.GameState {
+	players := make([]*pb.Player, len(state.Players))
+	playerMap := map[string]*pb.Player{}
+	for idx, player := range state.Players {
+		players[idx] = &pb.Player{Id: player.Id}
+		playerMap[player.Id] = players[idx]
+	}
+
+	scores := make([]*pb.Score, len(state.Scores))
+	for idx, score := range state.Scores {
+		scores[idx] = &pb.Score{
+			Player: playerMap[score.Player.Id],
+			Score: score.Score,
+		}
+	}
+
+	markers := make([]*pb.BoardMarker, len(state.Board.Markers))
+	for idx, marker := range state.Board.Markers {
+		markers[idx] = &pb.BoardMarker{
+			Row: marker.Row,
+			Column: marker.Column,
+			Type: marker.Type,
+			Player: playerMap[marker.Player.Id],
+		}
+	}
+
+	board := &pb.Board{
+		Rows: state.Board.Rows,
+		Columns: state.Board.Columns,
+		Markers: markers,
+	}
+
+	return &pb.GameState{
+		Turn: state.Turn,
+		Round: state.Round,
+		Finished: state.Finished,
+		Scores: scores,
+		Board: board,
+		Players: players,
+	}
+}
+
 func TestValidateState(t *testing.T) {
 	gameState := empty_game_state.New()
 	ruleSet := default_rule_set.New()
@@ -125,17 +167,22 @@ func TestMakeMove(t *testing.T) {
 				},
 			},
 		}
-		gameState := static_game_state.New(&state)
+
 		ruleSet := default_rule_set.New()
-		grpcServer := New(gameState, ruleSet)
 
 		t.Run("NilRequestReturnsValidationError", func(t *testing.T) {
+			gameState := static_game_state.New(copyState(&state))
+			grpcServer := New(gameState, ruleSet)
+
 			res, err := grpcServer.MakeMove(t.Context(), nil)
 			require.NoError(t, err)
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
 		t.Run("InvalidMoveReturnsValidationError", func(t *testing.T) {
+			gameState := static_game_state.New(copyState(&state))
+			grpcServer := New(gameState, ruleSet)
+
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
 					{Row: 1, Column: 1, Player: &pb.Player{Id: ""}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
@@ -147,6 +194,9 @@ func TestMakeMove(t *testing.T) {
 		})
 
 		t.Run("NonExistentPieceReturnsValidationError", func(t *testing.T) {
+			gameState := static_game_state.New(copyState(&state))
+			grpcServer := New(gameState, ruleSet)
+
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
 					{Row: 1, Column: 0, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
@@ -159,6 +209,9 @@ func TestMakeMove(t *testing.T) {
 		})
 
 		t.Run("CollidingMoveReturnsValidationError", func(t *testing.T) {
+			gameState := static_game_state.New(copyState(&state))
+			grpcServer := New(gameState, ruleSet)
+
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
 					{Row: 0, Column: 2, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
@@ -171,6 +224,9 @@ func TestMakeMove(t *testing.T) {
 		})
 
 		t.Run("EmptyJumpsReturnsValidationError", func(t *testing.T) {
+			gameState := static_game_state.New(copyState(&state))
+			grpcServer := New(gameState, ruleSet)
+
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{},
 			}
@@ -185,6 +241,9 @@ func TestMakeMove(t *testing.T) {
 		})
 
 		t.Run("InvalidJumpDirectionReturnsValidationError", func(t *testing.T) {
+			gameState := static_game_state.New(copyState(&state))
+			grpcServer := New(gameState, ruleSet)
+
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
 					{Row: 1, Column: 1, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
@@ -207,10 +266,16 @@ func TestMakeMove(t *testing.T) {
 		})
 
 		t.Run("JumpOntoJumpedOverPieceReturnsSuccess", func(t *testing.T) {
+			// gameState := static_game_state.New(copyState(&state))
+			// grpcServer := New(gameState, ruleSet)
+
 			assert.Empty(t, "TODO")
 		})
 
 		t.Run("SingleMoveIntoEmptySpaceReturnsSuccess", func(t *testing.T) {
+			gameState := static_game_state.New(copyState(&state))
+			grpcServer := New(gameState, ruleSet)
+
 			request := pbserver.MakeMoveRequest{
 				Jumps: []*pb.BoardMarker{
 					{Row: 1, Column: 1, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
