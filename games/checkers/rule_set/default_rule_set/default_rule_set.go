@@ -283,7 +283,7 @@ func (self DefaultRuleSet) ValidateJumps(ctx context.Context, jumps []*proto.Boa
 	if !found {
 		return []string{fmt.Sprintf("there is no piece at (%d,%d) to jump with, locations are %v", jumps[0].Row, jumps[0].Column, startingLocations)}, nil
 	}
-
+	delete(startingLocations[jumps[0].Row], jumps[0].Column)
 
 	violations := []string{}
 	currentLocation := jumps[0]
@@ -375,6 +375,8 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 	if startingId != currentPlayer.Id {
 		return nil, fmt.Errorf("current player is %s, can't jump piece at (%d,%d) owned by %s", currentPlayer.Id, jumps[0].Row, jumps[0].Column, jumps[0].Player.Id)
 	}
+
+	delete(occupiedSpaces[jumps[0].Row], jumps[0].Column)
 
 	currentLocation := jumps[0]
 	for _, jump := range jumps[1:] {

@@ -193,6 +193,21 @@ func TestMakeMove(t *testing.T) {
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
+		t.Run("MoveIntoSameSpaceReturnsValidationError", func(t *testing.T) {
+			gameState := static_game_state.New(copyState(&state))
+			grpcServer := New(gameState, ruleSet)
+
+			request := pbserver.MakeMoveRequest{
+				Jumps: []*pb.BoardMarker{
+					{Row: 0, Column: 2, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+					{Row: 0, Column: 2, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+				},
+			}
+			res, err := grpcServer.MakeMove(t.Context(), &request)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
+		})
+
 		t.Run("NonExistentPieceReturnsValidationError", func(t *testing.T) {
 			gameState := static_game_state.New(copyState(&state))
 			grpcServer := New(gameState, ruleSet)
@@ -265,11 +280,138 @@ func TestMakeMove(t *testing.T) {
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
-		t.Run("JumpOntoJumpedOverPieceReturnsSuccess", func(t *testing.T) {
-			// gameState := static_game_state.New(copyState(&state))
-			// grpcServer := New(gameState, ruleSet)
 
-			assert.Empty(t, "TODO")
+		t.Run("JumpIntoOriginalSpaceReturnsSuccess", func(t *testing.T) {
+			state := pb.GameState{
+				Round: 1,
+				Players: []*pb.Player{
+					{Id: "O"},
+					{Id: "X"},
+				},
+				Board: &pb.Board{
+					Rows: 5,
+					Columns: 5,
+					//   
+					//  X X
+					// O  
+					//  X X
+					//
+					Markers: []*pb.BoardMarker{
+						{
+							Row: 2,
+							Column: 0,
+							Player: &pb.Player{Id: "O"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING,
+						},
+						{
+							Row: 1,
+							Column: 1,
+							Player: &pb.Player{Id: "X"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+						{
+							Row: 1,
+							Column: 3,
+							Player: &pb.Player{Id: "X"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+						{
+							Row: 3,
+							Column: 1,
+							Player: &pb.Player{Id: "X"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+						{
+							Row: 3,
+							Column: 3,
+							Player: &pb.Player{Id: "X"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+					},
+				},
+			}
+			gameState := static_game_state.New(copyState(&state))
+			grpcServer := New(gameState, ruleSet)
+
+			request := pbserver.MakeMoveRequest{
+				Jumps: []*pb.BoardMarker{
+					{Row: 2, Column: 0, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING},
+					{Row: 4, Column: 2, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING},
+					{Row: 2, Column: 4, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING},
+					{Row: 0, Column: 2, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING},
+					{Row: 2, Column: 0, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING},
+				},
+			}
+			res, err := grpcServer.MakeMove(t.Context(), &request)
+			require.NoError(t, err)
+			assert.Empty(t, res.ValidationErrors)
+		})
+
+		t.Run("JumpOverAlreadyJumpedOverPieceReturnsValidationError", func(t *testing.T) {
+			state := pb.GameState{
+				Round: 1,
+				Players: []*pb.Player{
+					{Id: "O"},
+					{Id: "X"},
+				},
+				Board: &pb.Board{
+					Rows: 5,
+					Columns: 5,
+					//   
+					//  O O
+					// X  
+					//  O O
+					//
+					Markers: []*pb.BoardMarker{
+						{
+							Row: 2,
+							Column: 0,
+							Player: &pb.Player{Id: "X"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING,
+						},
+						{
+							Row: 1,
+							Column: 1,
+							Player: &pb.Player{Id: "O"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+						{
+							Row: 1,
+							Column: 3,
+							Player: &pb.Player{Id: "O"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+						{
+							Row: 3,
+							Column: 1,
+							Player: &pb.Player{Id: "O"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+						{
+							Row: 3,
+							Column: 3,
+							Player: &pb.Player{Id: "O"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+					},
+				},
+			}
+			gameState := static_game_state.New(copyState(&state))
+			grpcServer := New(gameState, ruleSet)
+
+			request := pbserver.MakeMoveRequest{
+				Jumps: []*pb.BoardMarker{
+					{Row: 2, Column: 0, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING},
+					{Row: 4, Column: 2, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING},
+					{Row: 2, Column: 4, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING},
+					{Row: 0, Column: 2, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING},
+					{Row: 2, Column: 0, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING},
+					{Row: 4, Column: 2, Player: &pb.Player{Id: "X"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_KING},
+				},
+			}
+			res, err := grpcServer.MakeMove(t.Context(), &request)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
 		t.Run("SingleMoveIntoEmptySpaceReturnsSuccess", func(t *testing.T) {
