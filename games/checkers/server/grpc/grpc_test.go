@@ -280,6 +280,57 @@ func TestMakeMove(t *testing.T) {
 			assert.NotEmpty(t, res.ValidationErrors)
 		})
 
+		t.Run("MultipleJumpWithPawnReturnsValidationError", func(t *testing.T) {
+			state := pb.GameState{
+				Round: 1,
+				Players: []*pb.Player{
+					{Id: "O"},
+					{Id: "X"},
+				},
+				Board: &pb.Board{
+					Rows: 5,
+					Columns: 5,
+					//   
+					//    X
+					//   
+					//  X
+					// O
+					Markers: []*pb.BoardMarker{
+						{
+							Row: 0,
+							Column: 0,
+							Player: &pb.Player{Id: "O"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+						{
+							Row: 1,
+							Column: 1,
+							Player: &pb.Player{Id: "X"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+						{
+							Row: 3,
+							Column: 3,
+							Player: &pb.Player{Id: "X"},
+							Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN,
+						},
+					},
+				},
+			}
+			gameState := static_game_state.New(copyState(&state))
+			grpcServer := New(gameState, ruleSet)
+
+			request := pbserver.MakeMoveRequest{
+				Jumps: []*pb.BoardMarker{
+					{Row: 0, Column: 0, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+					{Row: 2, Column: 2, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+					{Row: 4, Column: 4, Player: &pb.Player{Id: "O"}, Type: pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN},
+				},
+			}
+			res, err := grpcServer.MakeMove(t.Context(), &request)
+			require.NoError(t, err)
+			assert.NotEmpty(t, res.ValidationErrors)
+		})
 
 		t.Run("JumpIntoOriginalSpaceReturnsSuccess", func(t *testing.T) {
 			state := pb.GameState{
@@ -434,8 +485,8 @@ func TestMakeMove(t *testing.T) {
 			require.NoError(t, err)
 			assert.Empty(t, res.ValidationErrors)
 
-			assert.Equal(t, uint32(1), res.GameState.Turn))
-			
+			assert.Equal(t, uint32(1), res.GameState.Turn)
+
 			assert.Len(t, res.GameState.Board.Markers, 3)
 			marker := res.GameState.Board.Markers[2]
 			assert.Equal(t, uint32(2), marker.Row)
