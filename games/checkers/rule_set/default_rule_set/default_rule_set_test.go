@@ -32,7 +32,7 @@ func TestValidateState(t *testing.T) {
 		assert.NotEmpty(t, violations)
 
 		// Turn > # players
-		state = pb.GameState{Turn: 3, Round: 1, Players: []*pb.Player{{}, {}}}
+		state = pb.GameState{Turn: 3, Round: 1, PlayerStates: []*pb.PlayerGameState{{}, {}}}
 		violations, err = ruleSet.ValidateState(t.Context(), state)
 		require.NoError(t, err)
 		assert.NotEmpty(t, violations)
@@ -66,7 +66,7 @@ func TestCurrentPlayer(t *testing.T) {
 	})
 
 	t.Run("EmptyPlayers", func(t *testing.T) {
-		_, err := ruleSet.CurrentPlayer(t.Context(), &pb.GameState{Players: []*pb.Player{}})
+		_, err := ruleSet.CurrentPlayer(t.Context(), &pb.GameState{PlayerStates: []*pb.PlayerGameState{}})
 		require.Error(t, err)
 	})
 
@@ -74,9 +74,9 @@ func TestCurrentPlayer(t *testing.T) {
 		state := pb.GameState{
 			Round: 1,
 			Turn: 0,
-			Players: []*pb.Player{
-				{Id: "1"},
-				{Id: "2"},
+			PlayerStates: []*pb.PlayerGameState{
+				{Player: &pb.Player{Id: "1"}},
+				{Player: &pb.Player{Id: "2"}},
 			},
 			Board: &pb.Board{
 				Rows: 8,
@@ -93,9 +93,9 @@ func TestCurrentPlayer(t *testing.T) {
 		state := pb.GameState{
 			Round: 2,
 			Turn: 1,
-			Players: []*pb.Player{
-				{Id: "1"},
-				{Id: "2"},
+			PlayerStates: []*pb.PlayerGameState{
+				{Player: &pb.Player{Id: "1"}},
+				{Player: &pb.Player{Id: "2"}},
 			},
 			Board: &pb.Board{
 				Rows: 3,
@@ -130,9 +130,9 @@ func TestApplyMove(t *testing.T) {
 		state := pb.GameState{
 			Round: 1,
 			Turn: 0,
-			Players: []*pb.Player{
-				{Id: "1"},
-				{Id: "2"},
+			PlayerStates: []*pb.PlayerGameState{
+				{Player: &pb.Player{Id: "1"}},
+				{Player: &pb.Player{Id: "2"}},
 			},
 			Board: &pb.Board{
 				Rows: 3,
@@ -158,9 +158,9 @@ func TestApplyMove(t *testing.T) {
 		state = pb.GameState{
 			Round: 2,
 			Turn: 1,
-			Players: []*pb.Player{
-				{Id: "1"},
-				{Id: "2"},
+			PlayerStates: []*pb.PlayerGameState{
+				{Player: &pb.Player{Id: "1"}},
+				{Player: &pb.Player{Id: "2"}},
 			},
 			Board: &pb.Board{
 				Rows: 3,
@@ -185,7 +185,7 @@ func TestApplyMove(t *testing.T) {
 		state := pb.GameState{
 			Round: 1,
 			Turn: 0,
-			Players: []*pb.Player{},
+			PlayerStates: []*pb.PlayerGameState{},
 			Board: &pb.Board{
 				Rows: 3,
 				Columns: 3,

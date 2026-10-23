@@ -14,18 +14,18 @@ import (
 )
 
 func copyState(state *pb.GameState) *pb.GameState {
-	players := make([]*pb.Player, len(state.Players))
+	players := make([]*pb.Player, len(state.PlayerStates))
 	playerMap := map[string]*pb.Player{}
-	for idx, player := range state.Players {
-		players[idx] = &pb.Player{Id: player.Id}
-		playerMap[player.Id] = players[idx]
+	for idx, playerState := range state.PlayerStates {
+		players[idx] = &pb.Player{Id: playerState.Player.Id}
+		playerMap[playerState.Player.Id] = players[idx]
 	}
 
-	scores := make([]*pb.Score, len(state.Scores))
-	for idx, score := range state.Scores {
-		scores[idx] = &pb.Score{
-			Player: playerMap[score.Player.Id],
-			Score: score.Score,
+	playerStates := make([]*pb.PlayerGameState, len(state.PlayerStates))
+	for idx, playerState := range state.PlayerStates {
+		playerStates[idx] = &pb.PlayerGameState{
+			Player: playerMap[playerState.Player.Id],
+			Score: playerState.Score,
 		}
 	}
 
@@ -49,9 +49,8 @@ func copyState(state *pb.GameState) *pb.GameState {
 		Turn: state.Turn,
 		Round: state.Round,
 		Finished: state.Finished,
-		Scores: scores,
+		PlayerStates: playerStates,
 		Board: board,
-		Players: players,
 	}
 }
 
@@ -82,7 +81,7 @@ func TestValidateState(t *testing.T) {
 		assert.NotEmpty(t, res.ValidationErrors)
 
 		// Turn > # players
-		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 3, Round: 1, Players: []*pb.Player{{Id: "X"}, {Id: "O"}}}}
+		request = pbserver.ValidateStateRequest{GameState: &pb.GameState{Turn: 3, Round: 1, PlayerStates: []*pb.PlayerGameState{{Player: &pb.Player{Id: "X"}}, {Player: &pb.Player{Id: "O"}}}}}
 		res, err = grpcServer.ValidateState(t.Context(), &request)
 		require.NoError(t, err)
 		assert.NotEmpty(t, res.ValidationErrors)
@@ -135,9 +134,9 @@ func TestMakeMove(t *testing.T) {
 	t.Run("WithState", func(t *testing.T) {
 		state := pb.GameState{
 			Round: 1,
-			Players: []*pb.Player{
-				{Id: "O"},
-				{Id: "X"},
+			PlayerStates: []*pb.PlayerGameState{
+				{Player: &pb.Player{Id: "O"}},
+				{Player: &pb.Player{Id: "X"}},
 			},
 			Board: &pb.Board{
 				Rows: 3,
@@ -283,9 +282,9 @@ func TestMakeMove(t *testing.T) {
 		t.Run("MultipleJumpWithPawnReturnsValidationError", func(t *testing.T) {
 			state := pb.GameState{
 				Round: 1,
-				Players: []*pb.Player{
-					{Id: "O"},
-					{Id: "X"},
+				PlayerStates: []*pb.PlayerGameState{
+					{Player: &pb.Player{Id: "O"}},
+					{Player: &pb.Player{Id: "X"}},
 				},
 				Board: &pb.Board{
 					Rows: 5,
@@ -335,9 +334,9 @@ func TestMakeMove(t *testing.T) {
 		t.Run("JumpIntoOriginalSpaceReturnsSuccess", func(t *testing.T) {
 			state := pb.GameState{
 				Round: 1,
-				Players: []*pb.Player{
-					{Id: "O"},
-					{Id: "X"},
+				PlayerStates: []*pb.PlayerGameState{
+					{Player: &pb.Player{Id: "O"}},
+					{Player: &pb.Player{Id: "X"}},
 				},
 				Board: &pb.Board{
 					Rows: 5,
@@ -407,9 +406,9 @@ func TestMakeMove(t *testing.T) {
 		t.Run("JumpOverAlreadyJumpedOverPieceReturnsValidationError", func(t *testing.T) {
 			state := pb.GameState{
 				Round: 1,
-				Players: []*pb.Player{
-					{Id: "O"},
-					{Id: "X"},
+				PlayerStates: []*pb.PlayerGameState{
+					{Player: &pb.Player{Id: "O"}},
+					{Player: &pb.Player{Id: "X"}},
 				},
 				Board: &pb.Board{
 					Rows: 5,
@@ -511,9 +510,9 @@ func TestMakeMove(t *testing.T) {
 						},
 					},
 				},
-				Players: []*pb.Player{
-					{Id: "O"},
-					{Id: "X"},
+				PlayerStates: []*pb.PlayerGameState{
+					{Player: &pb.Player{Id: "O"}},
+					{Player: &pb.Player{Id: "X"}},
 				},
 			}
 			readOnlyStateMap := map[string]*pb.GameState{
@@ -539,9 +538,9 @@ func TestMakeMove(t *testing.T) {
 			inMemoryState := pb.GameState{
 				Round: 1,
 				Turn: 1,
-				Players: []*pb.Player{
-					{Id: "O"},
-					{Id: "X"},
+				PlayerStates: []*pb.PlayerGameState{
+					{Player: &pb.Player{Id: "O"}},
+					{Player: &pb.Player{Id: "X"}},
 				},
 				Board: &pb.Board{
 					Rows: 3,
@@ -592,7 +591,8 @@ func TestMakeMove(t *testing.T) {
 			assert.Equal(t, 2, int(finalState.Turn))
 			assert.Equal(t, 1, int(finalState.Round))
 			assert.False(t, finalState.Finished)
-			assert.Empty(t, finalState.Scores)
+			assert.Equal(t, 0, int(finalState.PlayerStates[0].Score))
+			assert.Equal(t, 0, int(finalState.PlayerStates[1].Score))
 
 			require.NotNil(t, finalState.Board)
 			board := finalState.Board
@@ -621,7 +621,8 @@ func TestMakeMove(t *testing.T) {
 			assert.Equal(t, 1, int(finalState.Turn))
 			assert.Equal(t, 2, int(finalState.Round))
 			assert.False(t, finalState.Finished)
-			assert.Empty(t, finalState.Scores)
+			assert.Equal(t, 0, int(finalState.PlayerStates[0].Score))
+			assert.Equal(t, 0, int(finalState.PlayerStates[1].Score))
 		})
 
 		t.Run("GameEnd", func(t *testing.T) {
@@ -629,9 +630,9 @@ func TestMakeMove(t *testing.T) {
 			inMemoryState := pb.GameState{
 				Round: 2,
 				Turn: 2,
-				Players: []*pb.Player{
-					{Id: "O"},
-					{Id: "X"},
+				PlayerStates: []*pb.PlayerGameState{
+					{Player: &pb.Player{Id: "O"}},
+					{Player: &pb.Player{Id: "X"}},
 				},
 				Board: &pb.Board{
 					Rows: 3,
@@ -677,11 +678,10 @@ func TestMakeMove(t *testing.T) {
 			assert.Equal(t, 3, int(finalState.Round))
 			assert.True(t, finalState.Finished)
 
-			require.NotEmpty(t, finalState.Scores)
-			scores := finalState.Scores
-			require.Len(t, scores, 1)
-			assert.Equal(t, "O", scores[0].Player.Id)
-			assert.Equal(t, 1, int(scores[0].Score))
+			assert.Equal(t, "O", finalState.PlayerStates[0].Player.Id)
+			assert.Equal(t, 1, int(finalState.PlayerStates[0].Score))
+			assert.Equal(t, "X", finalState.PlayerStates[1].Player.Id)
+			assert.Equal(t, 0, int(finalState.PlayerStates[1].Score))
 		})
 	})
 }

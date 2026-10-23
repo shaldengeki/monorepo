@@ -6,7 +6,12 @@ option go_package = "github.com/shaldengeki/monorepo/games/checkers/proto";
 
 import "games/checkers/proto/board.proto";
 import "games/checkers/proto/player.proto";
-import "games/checkers/proto/score.proto";
+
+message PlayerGameState {
+    Player player = 1;
+    int32 score = 2;
+    uint32 home_row = 3;
+}
 
 message GameState {
     // Reflects the state of a game at a given moment in time.
@@ -15,7 +20,6 @@ message GameState {
     uint32 turn = 1;
     uint32 round = 2;
     bool finished = 3;
-    repeated Score scores = 4;
-    Board board = 5;
-    repeated Player players = 6;
+    Board board = 4;
+    repeated PlayerGameState player_states = 5;
 }

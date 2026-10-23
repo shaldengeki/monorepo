@@ -17,7 +17,6 @@ proto_library(
     deps = [
         ":board_proto",
         ":player_proto",
-        ":score_proto",
     ],
 )
 
@@ -36,7 +35,6 @@ go_proto_library(
         ":game_proto",
         ":game_state_proto",
         ":player_proto",
-        ":score_proto",
     ],
     visibility = ["//visibility:public"],
 )
@@ -53,13 +51,6 @@ proto_library(
     srcs = ["game.proto"],
     visibility = ["//visibility:public"],
     deps = [":game_state_proto"],
-)
-
-proto_library(
-    name = "score_proto",
-    srcs = ["score.proto"],
-    visibility = ["//visibility:public"],
-    deps = [":player_proto"],
 )
 
 buf_lint_test(
@@ -92,12 +83,6 @@ buf_lint_test(
     targets = [":player_proto"],
 )
 
-buf_lint_test(
-    name = "score_proto_lint",
-    config = "//:buf.yaml",
-    targets = [":score_proto"],
-)
-
 cc_proto_library(
     name = "board_marker_cc_proto",
     visibility = ["//visibility:public"],
@@ -126,10 +111,4 @@ cc_proto_library(
     name = "player_cc_proto",
     visibility = ["//visibility:public"],
     deps = [":player_proto"],
-)
-
-cc_proto_library(
-    name = "score_cc_proto",
-    visibility = ["//visibility:public"],
-    deps = [":score_proto"],
 )

@@ -25,9 +25,9 @@ func (self DefaultRuleSet) InitialState(ctx context.Context) (*proto.GameState, 
 				{Row: 0, Column: 0, Type: proto.BoardMarkerType_BOARD_MARKER_TYPE_PAWN, Player: &proto.Player{Id: "1"}},
 			},
 		},
-		Players: []*proto.Player{
-			{Id: "1"},
-			{Id: "2"},
+		PlayerStates: []*proto.PlayerGameState{
+			{Player: &proto.Player{Id: "1"}},
+			{Player: &proto.Player{Id: "2"}},
 		},
 	}, nil
 }
@@ -35,7 +35,7 @@ func (self DefaultRuleSet) InitialState(ctx context.Context) (*proto.GameState, 
 func (self DefaultRuleSet) ValidateState(ctx context.Context, gameState proto.GameState) (violations []string, err error) {
 	if gameState.Turn < 1 {
 		violations = append(violations, "Turn count should be >= 1")
-	} else if gameState.Players != nil && int(gameState.Turn) > len(gameState.Players) {
+	} else if gameState.PlayerStates != nil && int(gameState.Turn) > len(gameState.PlayerStates) {
 		violations = append(violations, "Turn count must be <= # of players")
 	}
 
@@ -43,9 +43,9 @@ func (self DefaultRuleSet) ValidateState(ctx context.Context, gameState proto.Ga
 		violations = append(violations, "Round count should be >= 1")
 	}
 
-	scoreViolations, err := self.ValidateStateScores(ctx, gameState.Scores)
+	scoreViolations, err := self.ValidateStatePlayerStates(ctx, gameState.PlayerStates)
 	if err != nil {
-		return nil, fmt.Errorf("Could not validate scores in state: %w", err)
+		return nil, fmt.Errorf("Could not validate player states in state: %w", err)
 	}
 	for _, v := range scoreViolations {
 		violations = append(violations, v)
@@ -62,14 +62,14 @@ func (self DefaultRuleSet) ValidateState(ctx context.Context, gameState proto.Ga
 	return violations, nil
 }
 
-func (self DefaultRuleSet) ValidateStateScores(ctx context.Context, scores []*proto.Score) ([]string, error) {
+func (self DefaultRuleSet) ValidateStatePlayerStates(ctx context.Context, playerStates []*proto.PlayerGameState) ([]string, error) {
 	violations := []string{}
 
 	hasPoints := false
-	for _, score := range scores {
-		if score.Score < 0 {
-			violations = append(violations, fmt.Sprintf("Player %s score must be >= 0", score.Player))
-		} else if score.Score > 0 {
+	for _, playerState := range playerStates {
+		if playerState.Score < 0 {
+			violations = append(violations, fmt.Sprintf("Player %s score must be >= 0", playerState.Player.Id))
+		} else if playerState.Score > 0 {
 			if hasPoints {
 				violations = append(violations, "Only one player may have points")
 				break
@@ -345,7 +345,7 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 		return nil, fmt.Errorf("game is already finished, can't make more moves")
 	}
 
-	if len(priorState.Players) == 0 {
+	if len(priorState.PlayerStates) == 0 {
 		return nil, fmt.Errorf("cannot make moves in a game with no players")
 	}
 
@@ -420,7 +420,7 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 	newState.Board.Markers = updatedMarkers
 	newState.Turn += 1
 
-	if (int(newState.Turn) - 1) % len(newState.Players) == 0 {
+	if (int(newState.Turn) - 1) % len(newState.PlayerStates) == 0 {
 		newState.Round += 1
 		newState.Turn = 1
 	}
@@ -435,17 +435,16 @@ func (self DefaultRuleSet) ApplyMove(ctx context.Context, priorState proto.GameS
 		newState.Finished = true
 
 		var finishingPlayer *proto.Player
-		for _, player := range newState.Players {
-			if player.Id == lastJump.Player.Id {
-				finishingPlayer = player
+		for _, playerState := range newState.PlayerStates {
+			if playerState.Player.Id == lastJump.Player.Id {
+				playerState.Score = 1
+				finishingPlayer = playerState.Player
 			}
 		}
 
 		if finishingPlayer == nil {
 			return nil, fmt.Errorf("could not find player who played finishing move %v", &lastJump)
 		}
-
-		newState.Scores = append(newState.Scores, &proto.Score{Player: finishingPlayer, Score: 1})
 	}
 
 	return &newState, nil
@@ -479,18 +478,18 @@ func (self DefaultRuleSet) CurrentPlayer(ctx context.Context, currentState *prot
 		return nil, fmt.Errorf("cannot determine current player for nil game state")
 	}
 
-	if len(currentState.Players) == 0 {
+	if len(currentState.PlayerStates) == 0 {
 		return nil, fmt.Errorf("cannot determine current player for empty player set")
 	}
 
 	// First, handle the start of game.
 	if currentState.Turn == 0 {
-		return currentState.Players[0], nil
+		return currentState.PlayerStates[0].Player, nil
 	}
 
 	// Use the turn count to determine which player is current.
-	playerIdx := int(currentState.Turn) % len(currentState.Players)
-	return currentState.Players[playerIdx], nil
+	playerIdx := int(currentState.Turn) % len(currentState.PlayerStates)
+	return currentState.PlayerStates[playerIdx].Player, nil
 }
 
 func New() rule_set.RuleSet {
