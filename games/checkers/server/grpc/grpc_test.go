@@ -26,6 +26,7 @@ func copyState(state *pb.GameState) *pb.GameState {
 		playerStates[idx] = &pb.PlayerGameState{
 			Player: playerMap[playerState.Player.Id],
 			Score: playerState.Score,
+			HomeRow: playerState.HomeRow,
 		}
 	}
 
@@ -135,8 +136,8 @@ func TestMakeMove(t *testing.T) {
 		state := pb.GameState{
 			Round: 1,
 			PlayerStates: []*pb.PlayerGameState{
-				{Player: &pb.Player{Id: "O"}},
-				{Player: &pb.Player{Id: "X"}},
+				{Player: &pb.Player{Id: "O"}, HomeRow: 2},
+				{Player: &pb.Player{Id: "X"}, HomeRow: 0},
 			},
 			Board: &pb.Board{
 				Rows: 3,
@@ -539,8 +540,8 @@ func TestMakeMove(t *testing.T) {
 				Round: 1,
 				Turn: 1,
 				PlayerStates: []*pb.PlayerGameState{
-					{Player: &pb.Player{Id: "O"}},
-					{Player: &pb.Player{Id: "X"}},
+					{Player: &pb.Player{Id: "O"}, HomeRow: 2},
+					{Player: &pb.Player{Id: "X"}, HomeRow: 0},
 				},
 				Board: &pb.Board{
 					Rows: 3,

@@ -85,7 +85,8 @@ func (s *grpcServer) MakeMove(ctx context.Context, request *pbserver.MakeMoveReq
 		}
 		occupiedSpaces[marker.Row][marker.Column] = marker.Player.Id
 	}
-	validationErrors, err := s.ruleSet.ValidateJumps(ctx, request.Jumps, occupiedSpaces, priorState.Board)
+
+	validationErrors, err := s.ruleSet.ValidateJumps(ctx, request.Jumps, occupiedSpaces, priorState.Board, priorState.PlayerStates)
 	if err != nil {
 		return nil, fmt.Errorf("could not validate jump: %w", err)
 	}
