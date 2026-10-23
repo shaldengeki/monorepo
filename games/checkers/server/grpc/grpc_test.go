@@ -345,6 +345,12 @@ func TestMakeMove(t *testing.T) {
 			res, err := grpcServer.MakeMove(t.Context(), &request)
 			require.NoError(t, err)
 			assert.Empty(t, res.ValidationErrors)
+			assert.Len(t, res.GameState.Board.Markers, 1)
+			marker := res.GameState.Board.Markers[0]
+			assert.Equal(t, uint32(2), marker.Row)
+			assert.Equal(t, uint32(0), marker.Column)
+			assert.Equal(t, "O", marker.Player.Id)
+			assert.Equal(t, pb.BoardMarkerType_BOARD_MARKER_TYPE_KING, marker.Type)
 		})
 
 		t.Run("JumpOverAlreadyJumpedOverPieceReturnsValidationError", func(t *testing.T) {
@@ -427,6 +433,15 @@ func TestMakeMove(t *testing.T) {
 			res, err := grpcServer.MakeMove(t.Context(), &request)
 			require.NoError(t, err)
 			assert.Empty(t, res.ValidationErrors)
+
+			assert.Equal(t, uint32(1), res.GameState.Turn))
+			
+			assert.Len(t, res.GameState.Board.Markers, 3)
+			marker := res.GameState.Board.Markers[2]
+			assert.Equal(t, uint32(2), marker.Row)
+			assert.Equal(t, uint32(2), marker.Column)
+			assert.Equal(t, "O", marker.Player.Id)
+			assert.Equal(t, pb.BoardMarkerType_BOARD_MARKER_TYPE_PAWN, marker.Type)
 		})
 
 		t.Run("InvalidSetStateReturnsValidationError", func(t *testing.T) {
