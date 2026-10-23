@@ -26,8 +26,8 @@ func (self DefaultRuleSet) InitialState(ctx context.Context) (*proto.GameState, 
 			},
 		},
 		PlayerStates: []*proto.PlayerGameState{
-			{Player: &proto.Player{Id: "1"}},
-			{Player: &proto.Player{Id: "2"}},
+			{Player: &proto.Player{Id: "1"}, HomeRow: 0},
+			{Player: &proto.Player{Id: "2"}, HomeRow: 7},
 		},
 	}, nil
 }
