@@ -13,7 +13,7 @@ Flask
 flask-cors
 Flask-Migrate
 Flask-SQLAlchemy
-graphql-core==3.3.0
+graphql-core==3.2.12
 graphql-server[flask]
 identify
 importlib-metadata
