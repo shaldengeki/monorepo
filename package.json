@@ -13,7 +13,7 @@
         "skeleton/frontend/*"
     ],
     "dependencies": {
-        "@apollo/client": "^4.3.4",
+        "@apollo/client": "^4.3.5",
         "@headlessui/react": "^2.2.10",
         "@heroicons/react": "^2.2.0",
         "@vitejs/plugin-react": "^5.2.0",
@@ -37,7 +37,7 @@
         "react-plotly.js": "3.0.0",
         "react-router-dom": "7.18.4",
         "typescript": "^7",
-        "vite": "^7.3.5",
+        "vite": "^7.3.7",
         "web-vitals": "^6.2.3"
     },
     "devDependencies": {
@@ -47,7 +47,7 @@
         "@testing-library/user-event": "^14.6.8",
         "@tsconfig/create-react-app": "^2.0.11",
         "@types/jest": "^30.0.0",
-        "@types/lodash": "^4.17.26",
+        "@types/lodash": "^4.17.27",
         "@types/node": "^26.6.5",
         "@types/plotly.js": "^3.0.15",
         "@types/react": "^19.3.0",
@@ -66,10 +66,10 @@
         "react-canvas-confetti": "^2.0.7",
         "style-loader": "^4.0.0",
         "tailwindcss": "^4.3.3",
-        "typescript-eslint": "^8.71.2",
+        "typescript-eslint": "^8.72.0",
         "vitest": "^4.1.11",
         "vitest-browser-react": "^2.2.0",
-        "webpack": "^5.112.0",
+        "webpack": "^5.112.1",
         "webpack-cli": "^7.2.2"
     },
     "overrides": {
