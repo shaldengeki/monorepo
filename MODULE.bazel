@@ -72,7 +72,7 @@ pull = use_repo_rule("@rules_img//img:pull.bzl", "pull")
 
 pull(
     name = "ubuntu_image",
-    digest = "sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b",
+    digest = "sha256:157dc3d6e4a3e4f2c68d12df9df9ed6e808b59af6d4c3757b432b4f519916725",
     registry = "index.docker.io",
     repository = "library/ubuntu",
     tag = "26.04",
@@ -80,15 +80,15 @@ pull(
 
 pull(
     name = "python3_image",
-    digest = "sha256:5c73034c2bc151596ee0f1335610735162ee2b148816710706afec4757ad5b1e",
+    digest = "sha256:e35a8ecbf293f0a42c2ef359e6f231ce3eb00a1043bf0196fc0cf5f233de9694",
     registry = "index.docker.io",
     repository = "library/python",
-    tag = "3.14.7-trixie",
+    tag = "3.15.2-trixie",
 )
 
 pull(
     name = "nginx_mainline_alpine",
-    digest = "sha256:db35bfc6b2951e7f8a72db5db120288c127ffaeeb4a6d4b95a26fead017d5913",
+    digest = "sha256:785835ea65db4bba6f021acc0f3be91b0fef76a53fe41f8588c6698d2aed0606",
     registry = "index.docker.io",
     repository = "library/nginx",
     tag = "mainline-alpine",
