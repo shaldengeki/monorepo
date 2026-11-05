@@ -3,6 +3,10 @@ module(
     repo_name = "com_github_shaldengeki_monorepo",
 )
 
+# Fixes a compilation warning:
+# error: "Never use <bmi2intrin.h> directly; include <immintrin.h> instead."
+# https://github.com/abseil/abseil-cpp/commit/d851fdd768b27c02b3fb786fd0987faddd279ece
+bazel_dep(name = "abseil-cpp", version = "20260817.0")
 bazel_dep(name = "aspect_bazel_lib", version = "2.22.5")
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
 bazel_dep(name = "gazelle", version = "0.54.0")
