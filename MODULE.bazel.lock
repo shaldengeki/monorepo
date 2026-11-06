@@ -796,8 +796,8 @@
     },
     "@@aspect_gazelle_prebuilt+//:extensions.bzl%prebuilt_extension": {
       "general": {
-        "bzlTransitiveDigest": "PYoBaMDucThdgvTa6pRRhDSVUUSDr/L23AKC4QQh8AM=",
-        "usagesDigest": "lshITmF1VlUn6hVlWwFC2Va+NYfTKpZAbb+V11vw/1o=",
+        "bzlTransitiveDigest": "aON483qFpFHObpeIAF+lrb0kc7Hkz/BwqIc3Rnnnzr4=",
+        "usagesDigest": "oWszEVh5dfnHo7ssVqFyUt7p2noeRWcID0hDFjNS7PM=",
         "recordedInputs": [
           "REPO_MAPPING:aspect_gazelle_prebuilt+,bazel_tools bazel_tools"
         ],
