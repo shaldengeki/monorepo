@@ -99,14 +99,6 @@ test --experimental_fetch_all_coverage_outputs
 # Docs: https://bazel.build/reference/command-line-reference#flag--reuse_sandbox_directories
 build --experimental_reuse_sandbox_directories
 
-# Do not build runfiles symlink forests for external repositories under
-# `.runfiles/wsname/external/repo` (in addition to `.runfiles/repo`). This reduces runfiles &
-# sandbox creation times & prevents accidentally depending on this feature which may flip to off by
-# default in the future. Note, some rules may fail under this flag, please file issues with the rule
-# author.
-# Docs: https://bazel.build/reference/command-line-reference#flag--legacy_external_runfiles
-build --nolegacy_external_runfiles
-
 # Avoid creating a runfiles tree for binaries or tests until it is needed.
 # Docs: https://bazel.build/reference/command-line-reference#flag--build_runfile_links
 # See https://github.com/bazelbuild/bazel/issues/6627
@@ -187,10 +179,6 @@ query --noexperimental_check_external_repository_files
 # build.
 # Docs: https://bazel.build/reference/command-line-reference#flag--reuse_sandbox_directories
 build --reuse_sandbox_directories
-
-# Avoid this flag being enabled by remote_download_minimal or remote_download_toplevel
-# See https://meroton.com/blog/bazel-6-errors-build-without-the-bytes/
-build --noaction_cache_store_output_metadata
 
 # Speed up all builds by not checking if output files have been modified. Lets you make changes to
 # the output tree without triggering a build for local debugging. For example, you can modify
