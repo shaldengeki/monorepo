@@ -1263,9 +1263,9 @@ types-protobuf==7.35.1.20260906 \
     --hash=sha256:5155e48569e0dabff303fdf578db96cd31ea9a4a63b18018a4ceac6b0ae17462 \
     --hash=sha256:efd1a3862d4c967dad5512ef8d56b1530ac84f182c41735b94004756518c4998
     # via -r requirements.txt
-types-requests==2.33.0.20261006 \
-    --hash=sha256:0652999e9306aea345f40732d58fa49a7f6cade6a0d74d92119c5c8d82eddaf0 \
-    --hash=sha256:26cc8146505cab33cda9737991929e4144c559bebe05078ccc6998f27c4ca2c1
+types-requests==2.33.0.20261030 \
+    --hash=sha256:06cfc2e92399bf46eda78a65cd0e2203d29ebbeede78b4ab0a5922f749ce1492 \
+    --hash=sha256:42d75eb02ed0f8220904c8fc08d3129742e7fce42fd5cf706395c8bb4c0ad990
     # via -r requirements.txt
 types-s3transfer==0.19.3 \
     --hash=sha256:6843143f3b79e3cb73e58b6f45738e28e88d9f681fd32cc5ef7fa16f0c193356 \
