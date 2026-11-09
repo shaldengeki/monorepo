@@ -93,4 +93,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: 6a1caca65edb0ad0d6d42af9af4115c76c06a1e69f279ee466d72869279c5fdd
+integrity: 3486c671fdf75ddf4e66faa75af612c1860cc0c75afe8662936611cb42a4efd7
