@@ -847,8 +847,8 @@
     },
     "@@aspect_rules_js+//npm:extensions.bzl%pnpm": {
       "general": {
-        "bzlTransitiveDigest": "aZUXVpJBNWqGNZJrmcPPnile4AkJkr86z9p8sYKHSew=",
-        "usagesDigest": "Hhyjbq6tWJ0kigQjv7VGU+cvjlfinhSx9F8QGjQNlYo=",
+        "bzlTransitiveDigest": "LcPikaVEZGfd5nkz0AdYhZnwXBxIqyow+/7CbfuEW3E=",
+        "usagesDigest": "xeYy9LpH3uk1n6WaDADfzbkbwk2WcVcLx2v6TQCLPdE=",
         "recordedInputs": [
           "REPO_MAPPING:aspect_bazel_lib+,bazel_lib bazel_lib+",
           "REPO_MAPPING:aspect_bazel_lib+,bazel_skylib bazel_skylib+",
