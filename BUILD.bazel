@@ -50,11 +50,11 @@ modules_mapping(
 #   the manifest doesn't need to be updated
 gazelle_python_manifest(
     name = "gazelle_python_manifest",
+    lockfiles = "//:requirements.lock.txt",
     modules_mapping = ":modules_map",
     # This is what we called our `pip_parse` rule, where third-party
     # python libraries are loaded in BUILD files.
     pip_repository_name = "py_deps",
-    requirements = "//:requirements.lock.txt",
 )
 
 # gazelle:prefix github.com/shaldengeki/monorepo
