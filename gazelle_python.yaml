@@ -47,6 +47,7 @@ manifest:
     itsdangerous: itsdangerous
     jinja2: jinja2
     jmespath: jmespath
+    lazy_importer: lazy_importer
     lazy_object_proxy: lazy_object_proxy
     librt.base64: librt
     librt.internal: librt
@@ -93,4 +94,4 @@ manifest:
     zipp: zipp
   pip_repository:
     name: py_deps
-integrity: de20147b024e8696b0ef28e13efffb73a1016ae948113b6dff33c8b0cca22ebd
+integrity: 5f389a87eb31af221f3d81cdd49094ffecd40207afc2ce504ac36ae940abd110
